@@ -1,4 +1,12 @@
-import { useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+  type ReactNode,
+} from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { motion } from 'motion/react';
 import {
@@ -6,20 +14,19 @@ import {
   BookOpen,
   ChevronLeft,
   ChevronRight,
-  History as HistoryIcon,
-  ListOrdered,
   MonitorOff,
   MonitorPlay,
   MonitorUp,
-  NotebookText,
   Square,
   Flame,
 } from 'lucide-react';
 import {
   Button,
   Chip,
+  ChipButton,
   EmptyState,
   IconButton,
+  Menu,
   Tabs,
   Tooltip,
   cx,
@@ -38,6 +45,14 @@ import { isOutputOpen, openOutput } from './live/outputWindow';
 import { LiveScreen } from './LiveScreen';
 import { useShortcuts } from './useShortcuts';
 import { formatClock } from '@/slides/clock';
+import { useBible } from '@/features/bible/bibleStore';
+import { CommandBar } from './verses/CommandBar';
+import { focusCommandBar } from './verses/commandBarFocus';
+import { HistoryPanel, QueuePanel } from './verses/VersePanels';
+import { labelFor, useVerses } from './verses/verseStore';
+import { ShortcutSheet } from './ShortcutSheet';
+import { CommandPalette, type PaletteCommand } from './CommandPalette';
+import type { OverlayMode } from '@/schema/common';
 import styles from './PresentPage.module.css';
 
 type RailTab = 'queue' | 'history' | 'notes';
@@ -68,6 +83,9 @@ export function PresentPage() {
         theme: r.data.theme ?? defaultTheme,
         restore: readSavedLive(),
       });
+      useVerses
+        .getState()
+        .init(r.data, presentationTranslation(r.data), useSettings.getState().defaultOverlayMode);
       void markPresented(id);
       setState('ready');
     });
@@ -109,7 +127,15 @@ function ControlScreen() {
   const rev = useControl((s) => s.rev);
   const changedAt = useControl((s) => s.changedAt);
   const logoAssetId = useControl((s) => s.logoAssetId);
-  const [rail, setRail] = useState<RailTab>('notes');
+  const [rail, setRail] = useState<RailTab>('queue');
+  const [sheetOpen, setSheetOpen] = useState(false);
+  const [paletteOpen, setPaletteOpen] = useState(false);
+  const verses = useVerses();
+  const translations = useBible((s) => s.translations);
+  const overlayPages = useControl((s) => s.overlayPageCount);
+  const focusBar = useCallback(() => {
+    setTimeout(focusCommandBar, 50);
+  }, []);
 
   const template = getTemplate(live.theme);
   const slides = presentation.slides;
@@ -144,19 +170,38 @@ function ControlScreen() {
     }
   };
 
-  useShortcuts({
-    ArrowRight: () => dispatch({ type: 'next' }),
-    Space: () => dispatch({ type: 'next' }),
-    PageDown: () => dispatch({ type: 'next' }),
-    ArrowDown: () => dispatch({ type: 'next' }),
-    ArrowLeft: () => dispatch({ type: 'prev' }),
-    PageUp: () => dispatch({ type: 'prev' }),
-    ArrowUp: () => dispatch({ type: 'prev' }),
-    Enter: () => goLive(),
-    b: () => dispatch({ type: 'toggleScreen', screen: 'blank' }),
-    l: () => dispatch({ type: 'toggleScreen', screen: 'logo' }),
-    Home: () => dispatch({ type: 'goTo', index: 0 }),
-  });
+  useShortcuts(
+    {
+      ArrowRight: () => dispatch({ type: 'next' }),
+      Space: () => dispatch({ type: 'next' }),
+      PageDown: () => dispatch({ type: 'next' }),
+      ArrowDown: () => dispatch({ type: 'next' }),
+      ArrowLeft: () => dispatch({ type: 'prev' }),
+      PageUp: () => dispatch({ type: 'prev' }),
+      ArrowUp: () => dispatch({ type: 'prev' }),
+      Enter: () => {
+        if (useVerses.getState().preview) void useVerses.getState().goLivePreview();
+        else goLive();
+      },
+      '/': focusCommandBar,
+      Escape: () => {
+        if (useVerses.getState().preview) useVerses.getState().clearPreview();
+        else dispatch({ type: 'clearOverlay' });
+      },
+      '1': () => verses.setMode('lowerThird'),
+      '2': () => verses.setMode('sidePanel'),
+      '3': () => verses.setMode('fullScreen'),
+      'Alt+ArrowRight': () => void verses.step(1),
+      'Alt+ArrowLeft': () => void verses.step(-1),
+      t: () => void verses.cycleTranslation(),
+      '?': () => setSheetOpen(true),
+      'Mod+k': () => setPaletteOpen(true),
+      b: () => dispatch({ type: 'toggleScreen', screen: 'blank' }),
+      l: () => dispatch({ type: 'toggleScreen', screen: 'logo' }),
+      Home: () => dispatch({ type: 'goTo', index: 0 }),
+    },
+    ['Mod+k'],
+  );
 
   const buildTotal = liveSlide?.type === 'list' && liveSlide.build ? liveSlide.items.length : 0;
   const pageTotal = useControl((s) => (liveSlide ? (s.slidePageCounts[liveSlide.id] ?? 1) : 1));
@@ -175,11 +220,28 @@ function ControlScreen() {
             {[presentation.speaker, `${slides.length} slides`].filter(Boolean).join(' · ')}
           </p>
         </div>
-        <div className={styles.commandSlot} id="command-bar-slot" />
+        <div className={styles.commandSlot}>
+          <CommandBar />
+        </div>
         <div className={styles.status}>
-          <Chip tone="accent" icon={<BookOpen size={14} />}>
-            {translation}
-          </Chip>
+          <Menu
+            label="Verse translation"
+            align="end"
+            trigger={
+              <ChipButton
+                tone="accent"
+                icon={<BookOpen size={14} />}
+                aria-label={`Verse translation: ${verses.translation}`}
+              >
+                {verses.translation}
+              </ChipButton>
+            }
+            items={translations.map((t) => ({
+              label: `${t.code} — ${t.name}`,
+              onSelect: () => verses.setTranslation(t.code),
+            }))}
+          />
+          <ModeChip mode={verses.mode} />
           <OutputChip status={output} />
           <Button
             variant={output === 'connected' ? 'secondary' : 'primary'}
@@ -205,20 +267,35 @@ function ControlScreen() {
         <section className={styles.panes} aria-label="Preview and live">
           <Pane
             title="Preview"
-            meta={previewSlide ? `Slide ${previewTarget + 1} · ${previewSlide.type}` : undefined}
+            meta={
+              verses.preview
+                ? `Verse · ${labelFor(verses.preview.ref, verses.preview.translation)} · ${verses.preview.translation}`
+                : previewSlide
+                  ? `Slide ${previewTarget + 1} · ${previewSlide.type}`
+                  : undefined
+            }
             actions={
               <Button
                 variant="primary"
                 icon={<MonitorPlay size={16} />}
                 shortcut="Enter"
-                onClick={goLive}
-                disabled={atEnd || !previewSlide}
+                onClick={() => (verses.preview ? void verses.goLivePreview() : goLive())}
+                disabled={!verses.preview && (atEnd || !previewSlide)}
               >
                 Go live
               </Button>
             }
           >
-            {previewSlide && !atEnd ? (
+            {verses.preview ? (
+              <LiveScreen
+                key={`${verses.preview.ref}|${verses.preview.translation}|${verses.preview.mode}`}
+                snapshot={{
+                  ...snapshot,
+                  live: { ...live, screen: 'content', overlay: { ...verses.preview, page: 0 } },
+                }}
+                label="Preview: verse"
+              />
+            ) : previewSlide && !atEnd ? (
               <SlideFrame
                 slide={previewSlide}
                 template={template}
@@ -240,6 +317,9 @@ function ControlScreen() {
                     live.countdownEndsAt ? (
                       <Countdown key="cd" endsAt={live.countdownEndsAt} />
                     ) : null,
+                    live.overlay
+                      ? `${labelFor(live.overlay.ref, live.overlay.translation)} ${live.overlay.translation}${overlayPages > 1 ? ` (${live.overlay.page + 1}/${overlayPages})` : ''}`
+                      : null,
                   ]
                 : []
             }
@@ -275,6 +355,16 @@ function ControlScreen() {
                   active={live.screen === 'logo'}
                   onClick={() => dispatch({ type: 'toggleScreen', screen: 'logo' })}
                 />
+                <OverlayModes mode={verses.mode} onChange={verses.setMode} />
+                {live.overlay && (
+                  <Button
+                    variant="outline"
+                    shortcut="Esc"
+                    onClick={() => dispatch({ type: 'clearOverlay' })}
+                  >
+                    Clear verse
+                  </Button>
+                )}
               </>
             }
           >
@@ -291,29 +381,19 @@ function ControlScreen() {
             items={[
               {
                 value: 'queue',
-                label: (
-                  <>
-                    <ListOrdered size={14} aria-hidden /> Queue
-                  </>
-                ),
-                content: <div id="verse-queue-slot" className={styles.railBody} />,
+                label: 'Queue',
+                badge: verses.queue.length || undefined,
+                content: <QueuePanel translation={verses.translation} />,
               },
               {
                 value: 'history',
-                label: (
-                  <>
-                    <HistoryIcon size={14} aria-hidden /> History
-                  </>
-                ),
-                content: <div id="verse-history-slot" className={styles.railBody} />,
+                label: 'History',
+                badge: verses.history.length || undefined,
+                content: <HistoryPanel />,
               },
               {
                 value: 'notes',
-                label: (
-                  <>
-                    <NotebookText size={14} aria-hidden /> Notes
-                  </>
-                ),
+                label: 'Notes',
                 content: <Notes slide={liveSlide} next={slides[live.slideIndex + 1]} />,
               },
             ]}
@@ -325,9 +405,26 @@ function ControlScreen() {
         slides={slides}
         liveIndex={live.slideIndex}
         previewIndex={previewIndex}
-        onSelect={(i) => select(i)}
+        onSelect={(i) => {
+          verses.clearPreview();
+          select(i);
+        }}
         onGoLive={(i) => dispatch({ type: 'goTo', index: i })}
         translation={translation}
+      />
+      <ShortcutSheet open={sheetOpen} onOpenChange={setSheetOpen} />
+      <CommandPalette
+        open={paletteOpen}
+        onOpenChange={setPaletteOpen}
+        commands={paletteCommands({
+          slides,
+          openOutput: () => void onOpenOutput(),
+          dispatch,
+          setMode: verses.setMode,
+          showSheet: () => setSheetOpen(true),
+          focusBar,
+          library: () => navigate('/'),
+        })}
       />
     </div>
   );
@@ -553,4 +650,154 @@ function SlideStrip({
       )}
     </nav>
   );
+}
+
+const MODES: { mode: OverlayMode; label: string; key: string }[] = [
+  { mode: 'lowerThird', label: 'Lower third', key: '1' },
+  { mode: 'sidePanel', label: 'Side panel', key: '2' },
+  { mode: 'fullScreen', label: 'Full screen', key: '3' },
+];
+
+function OverlayModes({
+  mode,
+  onChange,
+}: {
+  mode: OverlayMode;
+  onChange: (m: OverlayMode) => void;
+}) {
+  return (
+    <div className={styles.modes} role="radiogroup" aria-label="Verse overlay mode">
+      {MODES.map((m) => (
+        <Tooltip key={m.mode} content={m.label} shortcut={m.key}>
+          <button
+            type="button"
+            role="radio"
+            aria-checked={mode === m.mode}
+            aria-label={m.label}
+            className={styles.mode}
+            onClick={() => onChange(m.mode)}
+          >
+            <ModeIcon mode={m.mode} />
+          </button>
+        </Tooltip>
+      ))}
+    </div>
+  );
+}
+
+function ModeIcon({ mode }: { mode: OverlayMode }) {
+  return (
+    <svg width="22" height="14" viewBox="0 0 22 14" aria-hidden>
+      <rect
+        x="0.75"
+        y="0.75"
+        width="20.5"
+        height="12.5"
+        rx="2"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.5"
+      />
+      {mode === 'lowerThird' && (
+        <rect x="2.5" y="8.5" width="17" height="3" rx="0.5" fill="currentColor" />
+      )}
+      {mode === 'sidePanel' && (
+        <rect x="13" y="2.5" width="6.5" height="9" rx="0.5" fill="currentColor" />
+      )}
+      {mode === 'fullScreen' && (
+        <rect x="2.5" y="2.5" width="17" height="9" rx="0.5" fill="currentColor" />
+      )}
+    </svg>
+  );
+}
+
+function ModeChip({ mode }: { mode: OverlayMode }) {
+  const label = MODES.find((m) => m.mode === mode)?.label ?? mode;
+  return (
+    <span className={styles.modeChip} title="Verse overlay mode">
+      <ModeIcon mode={mode} /> {label}
+    </span>
+  );
+}
+
+function paletteCommands(o: {
+  slides: StoredSlide[];
+  openOutput: () => void;
+  dispatch: ReturnType<typeof useControl.getState>['dispatch'];
+  setMode: (m: OverlayMode) => void;
+  showSheet: () => void;
+  focusBar: () => void;
+  library: () => void;
+}): PaletteCommand[] {
+  return [
+    { id: 'verse', group: 'Verses', label: 'Show a verse…', shortcut: '/', run: o.focusBar },
+    {
+      id: 'clear',
+      group: 'Verses',
+      label: 'Clear verse',
+      shortcut: 'Esc',
+      run: () => o.dispatch({ type: 'clearOverlay' }),
+    },
+    ...MODES.map((m) => ({
+      id: m.mode,
+      group: 'Verses',
+      label: `Overlay: ${m.label}`,
+      shortcut: m.key,
+      run: () => o.setMode(m.mode),
+    })),
+    {
+      id: 'next',
+      group: 'Slides',
+      label: 'Next slide',
+      shortcut: '→',
+      run: () => o.dispatch({ type: 'next' }),
+    },
+    {
+      id: 'prev',
+      group: 'Slides',
+      label: 'Previous slide',
+      shortcut: '←',
+      run: () => o.dispatch({ type: 'prev' }),
+    },
+    {
+      id: 'blank',
+      group: 'Screen',
+      label: 'Blank screen',
+      shortcut: 'B',
+      run: () => o.dispatch({ type: 'toggleScreen', screen: 'blank' }),
+    },
+    {
+      id: 'logo',
+      group: 'Screen',
+      label: 'Logo screen',
+      shortcut: 'L',
+      run: () => o.dispatch({ type: 'toggleScreen', screen: 'logo' }),
+    },
+    { id: 'output', group: 'Screen', label: 'Open output on the TV', run: o.openOutput },
+    { id: 'sheet', group: 'App', label: 'Keyboard shortcuts', shortcut: '?', run: o.showSheet },
+    { id: 'library', group: 'App', label: 'Back to Library', run: o.library },
+    ...o.slides.map((s, i) => ({
+      id: `slide-${i}`,
+      group: 'Go to slide',
+      label: `${i + 1}. ${slideTitle(s)}`,
+      keywords: [String(i + 1), s.type],
+      run: () => o.dispatch({ type: 'goTo', index: i }),
+    })),
+  ];
+}
+
+function slideTitle(s: StoredSlide): string {
+  switch (s.type) {
+    case 'verse':
+      return s.ref;
+    case 'quote':
+    case 'statement':
+      return s.text.slice(0, 50);
+    case 'image':
+      return s.caption ?? 'Image';
+    case 'countdown':
+      return `Countdown ${s.minutes} min`;
+    default:
+      return s.heading;
+  }
 }

@@ -1,0 +1,18 @@
+/** Keyboard shortcuts (PRD §7.8), shown in the shortcut sheet. */
+export const SHORTCUTS: { keys: string[]; action: string }[] = [
+  { keys: ['→', 'Space', 'PageDown'], action: 'Next slide or build step' },
+  { keys: ['←', 'PageUp'], action: 'Previous slide' },
+  { keys: ['Enter'], action: 'Send Preview live' },
+  { keys: ['/'], action: 'Focus verse command bar' },
+  { keys: ['Enter'], action: 'Show verse live (in the bar)' },
+  { keys: ['Shift+Enter'], action: 'Preview verse only (in the bar)' },
+  { keys: ['Ctrl+Enter'], action: 'Add verse to the queue (in the bar)' },
+  { keys: ['Esc'], action: 'Clear overlay (or close the bar)' },
+  { keys: ['1', '2', '3'], action: 'Lower third / side panel / full screen' },
+  { keys: ['Alt+→', 'Alt+←'], action: 'Next / previous verse or page' },
+  { keys: ['T'], action: 'Cycle translation on the live verse' },
+  { keys: ['B'], action: 'Blank screen toggle' },
+  { keys: ['L'], action: 'Logo screen toggle' },
+  { keys: ['Ctrl+K'], action: 'App command palette' },
+  { keys: ['?'], action: 'Show this shortcut sheet' },
+];

@@ -45,3 +45,10 @@ Dated choices not covered by the PRD (docs/PRD.md §14).
 - 2026-10-16 — Content already live when an output (re)opens is drawn in its final state, without replaying entrance motion; anything sent afterwards animates normally.
 - 2026-10-16 — The countdown starts when its slide goes live and keeps running if the operator re-enters the same slide.
 - 2026-10-16 — The default logo screen shows the Lampstand mark until a logo image is set in Settings.
+- 2026-10-16 — Command bar: Enter shows a typed reference live; Shift+Enter loads it into Preview; Ctrl/Cmd+Enter adds it to the queue. Word-search results (quoted text, or text that isn't a reference) load into Preview on Enter, as the PRD says, so a search hit never reaches the TV without a second Enter.
+- 2026-10-16 — After a verse goes live the command bar closes, so the next Esc clears the overlay. Esc inside the bar first clears its text, then closes it.
+- 2026-10-16 — The translation chip in the control screen sets the session's verse translation (default: the presentation's). T on a live verse cycles through installed translations in order (KJV, WEB, ASV, YLT, DBY, then imports).
+- 2026-10-16 — Next/previous verse (Alt+→/←) first pages through a long passage, then steps to the single verse after the passage's end, or before its start, crossing chapters and books.
+- 2026-10-16 — Overlay mode keys 1/2/3 also set the mode for the next verse in this session; the default comes from Settings.
+- 2026-10-16 — Verse history keeps this session's list in memory and writes every shown verse to the Dexie history table, capped at 200 entries.
+- 2026-10-16 — Ctrl+K palette commands: verse, overlay modes, next/previous, blank, logo, open output, shortcut sheet, back to library, and "go to slide N".

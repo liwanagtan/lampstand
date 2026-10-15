@@ -1,0 +1,18 @@
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.table td {
+  padding: var(--space-2) 0;
+  border-bottom: 1px solid var(--color-border);
+}
+.table tr:last-child td {
+  border-bottom: 0;
+}
+.keys {
+  width: 45%;
+  white-space: nowrap;
+}
+.keys > * + * {
+  margin-left: var(--space-1);
+}

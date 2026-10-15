@@ -131,8 +131,12 @@
 }
 .paneActions {
   display: flex;
+  flex-wrap: wrap;
   gap: var(--space-2);
   min-height: var(--control-height);
+}
+.paneActions > * {
+  flex: none;
 }
 .endCard {
   display: grid;
@@ -263,4 +267,49 @@
     opacity: 0;
     transform: translateY(4px);
   }
+}
+.modes {
+  display: flex;
+  gap: 2px;
+  padding: 2px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+}
+.mode {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: calc(var(--control-height) - 6px);
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition:
+    background-color var(--dur-quick) var(--ease-quick),
+    color var(--dur-quick) var(--ease-quick);
+}
+.mode:hover {
+  color: var(--color-text);
+}
+.mode[aria-checked='true'] {
+  background: var(--color-surface-raised);
+  color: var(--color-accent);
+}
+.modeChip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  height: 26px;
+  padding: 0 var(--space-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-12);
+  font-weight: var(--weight-medium);
+  color: var(--color-text);
+  white-space: nowrap;
+}
+.modeChip svg {
+  color: var(--color-text-muted);
 }

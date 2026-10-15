@@ -10,3 +10,10 @@ Dated choices not covered by the PRD (docs/PRD.md §14).
 - 2026-10-16 — Accent, live, success and warning are UI colors (≥ 3:1). Body text always uses `text` or `text-muted` (≥ 4.5:1 on all surfaces).
 - 2026-10-16 — "Control screen defaults to Dark": the Present screen resolves the System appearance to Dark; an explicit Light choice is respected.
 - 2026-10-16 — Default app appearance is System.
+- 2026-10-16 — Canonical book codes are the three-letter USFM/Paratext codes the PRD uses (JHN, PSA, 1CO). `src/features/bible/books.ts` maps them to the parser's OSIS names (John, Ps, 1Cor).
+- 2026-10-16 — Translation codes in the command bar ("jn 3 16 web") are peeled off before parsing, because the reference parser only knows a few codes (ASV, KJV). "darby" is accepted as an alias for DBY.
+- 2026-10-16 — Stored presentations keep the human `ref`; the canonical range is computed with `parseRef` when needed (memoised), so exported files stay valid against the strict schema.
+- 2026-10-16 — "≤ 6 verses per slide" is a warning on import, not an error, since the renderer paginates long passages (PRD §5 says passages are never truncated).
+- 2026-10-16 — A reference with several passages ("John 3:16, 18") is rejected for verse slides; one passage per slide.
+- 2026-10-16 — Field limits not given in the PRD: title ≤ 80, speaker/series ≤ 60, notes ≤ 2000, image description ≤ 200, quote author ≤ 60, countdown label ≤ 40, list heading ≤ 60, up to 6 emphasis phrases, up to 40 extraRefs.
+- 2026-10-16 — Import accepts JSON wrapped in a ```json code fence, since that is how the skill outputs it.

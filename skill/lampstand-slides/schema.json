@@ -1,0 +1,1275 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lampstand.app/schema/presentation-v1.json",
+  "title": "Lampstand presentation",
+  "description": "A Lampstand sermon presentation (.lampstand.json). Verse slides store references only, never scripture text.",
+  "type": "object",
+  "properties": {
+    "schemaVersion": {
+      "type": "number",
+      "const": 1
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 80
+    },
+    "speaker": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 60
+    },
+    "date": {
+      "type": "string",
+      "format": "date",
+      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+    },
+    "series": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 60
+    },
+    "theme": {
+      "type": "string",
+      "enum": ["classic", "modern", "warm"]
+    },
+    "translation": {
+      "type": "string",
+      "pattern": "^[A-Za-z][A-Za-z0-9]{1,7}$"
+    },
+    "extraRefs": {
+      "maxItems": 40,
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 60
+      },
+      "description": "Verses the pastor will likely mention that are not on a slide; preloaded into the verse queue."
+    },
+    "slides": {
+      "minItems": 1,
+      "maxItems": 80,
+      "type": "array",
+      "items": {
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "const": "title"
+              },
+              "id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 64
+              },
+              "notes": {
+                "type": "string",
+                "maxLength": 2000,
+                "description": "Speaking prompts for the pastor/operator. Never shown on the TV."
+              },
+              "transition": {
+                "type": "string",
+                "enum": ["fade", "rise", "push", "none"],
+                "description": "Default fade; rise for section changes."
+              },
+              "background": {
+                "oneOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "const": "template"
+                      }
+                    },
+                    "required": ["type"],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "const": "color"
+                      },
+                      "tone": {
+                        "type": "string",
+                        "enum": ["base", "accent", "deep"]
+                      }
+                    },
+                    "required": ["type", "tone"],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "const": "gradient"
+                      },
+                      "tone": {
+                        "type": "string",
+                        "enum": ["calm", "warm", "dawn"]
+                      }
+                    },
+                    "required": ["type", "tone"],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "const": "image"
+                      },
+                      "description": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 200,
+                        "description": "What the image should show, e.g. \"sunrise over hills, soft warm light\". Never a URL."
+                      },
+                      "assetId": {
+                        "type": "string"
+                      },
+                      "motion": {
+                        "type": "string",
+                        "enum": ["still", "drift"]
+                      }
+                    },
+                    "required": ["type", "description"],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "const": "video"
+                      },
+                      "description": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 200
+                      },
+                      "assetId": {
+                        "type": "string"
+                      }
+                    },
+                    "required": ["type", "description"],
+                    "additionalProperties": false
+                  }
+                ]
+              },
+              "heading": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 60
+              },
+              "subtitle": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 90
+              },
+              "speaker": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 60
+              }
+            },
+            "required": ["type", "heading"],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "const": "section"
+              },
+              "id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 64
+              },
+              "notes": {
+                "type": "string",
+                "maxLength": 2000,
+                "description": "Speaking prompts for the pastor/operator. Never shown on the TV."
+              },
+              "transition": {
+                "type": "string",
+                "enum": ["fade", "rise", "push", "none"],
+                "description": "Default fade; rise for section changes."
+              },
+              "background": {
+                "oneOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "const": "template"
+                      }
+                    },
+                    "required": ["type"],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "const": "color"
+                      },
+                      "tone": {
+                        "type": "string",
+                        "enum": ["base", "accent", "deep"]
+                      }
+                    },
+                    "required": ["type", "tone"],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "const": "gradient"
+                      },
+                      "tone": {
+                        "type": "string",
+                        "enum": ["calm", "warm", "dawn"]
+                      }
+                    },
+                    "required": ["type", "tone"],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "const": "image"
+                      },
+                      "description": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 200,
+                        "description": "What the image should show, e.g. \"sunrise over hills, soft warm light\". Never a URL."
+                      },
+                      "assetId": {
+                        "type": "string"
+                      },
+                      "motion": {
+                        "type": "string",
+                        "enum": ["still", "drift"]
+                      }
+                    },
+                    "required": ["type", "description"],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "const": "video"
+                      },
+                      "description": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 200
+                      },
+                      "assetId": {
+                        "type": "string"
+                      }
+                    },
+                    "required": ["type", "description"],
+                    "additionalProperties": false
+                  }
+                ]
+              },
+              "label": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20
+              },
+              "heading": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 50
+              }
+            },
+            "required": ["type", "heading"],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "const": "point"
+              },
+              "id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 64
+              },
+              "notes": {
+                "type": "string",
+                "maxLength": 2000,
+                "description": "Speaking prompts for the pastor/operator. Never shown on the TV."
+              },
+              "transition": {
+                "type": "string",
+                "enum": ["fade", "rise", "push", "none"],
+                "description": "Default fade; rise for section changes."
+              },
+              "background": {
+                "oneOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "const": "template"
+                      }
+                    },
+                    "required": ["type"],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "const": "color"
+                      },
+                      "tone": {
+                        "type": "string",
+                        "enum": ["base", "accent", "deep"]
+                      }
+                    },
+                    "required": ["type", "tone"],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "const": "gradient"
+                      },
+                      "tone": {
+                        "type": "string",
+                        "enum": ["calm", "warm", "dawn"]
+                      }
+                    },
+                    "required": ["type", "tone"],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "const": "image"
+                      },
+                      "description": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 200,
+                        "description": "What the image should show, e.g. \"sunrise over hills, soft warm light\". Never a URL."
+                      },
+                      "assetId": {
+                        "type": "string"
+                      },
+                      "motion": {
+                        "type": "string",
+                        "enum": ["still", "drift"]
+                      }
+                    },
+                    "required": ["type", "description"],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "const": "video"
+                      },
+                      "description": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 200
+                      },
+                      "assetId": {
+                        "type": "string"
+                      }
+                    },
+                    "required": ["type", "description"],
+                    "additionalProperties": false
+                  }
+                ]
+              },
+              "heading": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 60
+              },
+              "body": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 160
+              }
+            },
+            "required": ["type", "heading"],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "const": "list"
+              },
+              "id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 64
+              },
+              "notes": {
+                "type": "string",
+                "maxLength": 2000,
+                "description": "Speaking prompts for the pastor/operator. Never shown on the TV."
+              },
+              "transition": {
+                "type": "string",
+                "enum": ["fade", "rise", "push", "none"],
+                "description": "Default fade; rise for section changes."
+              },
+              "background": {
+                "oneOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "const": "template"
+                      }
+                    },
+                    "required": ["type"],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "const": "color"
+                      },
+                      "tone": {
+                        "type": "string",
+                        "enum": ["base", "accent", "deep"]
+                      }
+                    },
+                    "required": ["type", "tone"],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "const": "gradient"
+                      },
+                      "tone": {
+                        "type": "string",
+                        "enum": ["calm", "warm", "dawn"]
+                      }
+                    },
+                    "required": ["type", "tone"],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "const": "image"
+                      },
+                      "description": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 200,
+                        "description": "What the image should show, e.g. \"sunrise over hills, soft warm light\". Never a URL."
+                      },
+                      "assetId": {
+                        "type": "string"
+                      },
+                      "motion": {
+                        "type": "string",
+                        "enum": ["still", "drift"]
+                      }
+                    },
+                    "required": ["type", "description"],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "const": "video"
+                      },
+                      "description": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 200
+                      },
+                      "assetId": {
+                        "type": "string"
+                      }
+                    },
+                    "required": ["type", "description"],
+                    "additionalProperties": false
+                  }
+                ]
+              },
+              "heading": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 60
+              },
+              "items": {
+                "minItems": 2,
+                "maxItems": 5,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 70
+                }
+              },
+              "build": {
+                "type": "boolean",
+                "description": "true reveals one item per click."
+              }
+            },
+            "required": ["type", "heading", "items"],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "const": "verse"
+              },
+              "id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 64
+              },
+              "notes": {
+                "type": "string",
+                "maxLength": 2000,
+                "description": "Speaking prompts for the pastor/operator. Never shown on the TV."
+              },
+              "transition": {
+                "type": "string",
+                "enum": ["fade", "rise", "push", "none"],
+                "description": "Default fade; rise for section changes."
+              },
+              "background": {
+                "oneOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "const": "template"
+                      }
+                    },
+                    "required": ["type"],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "const": "color"
+                      },
+                      "tone": {
+                        "type": "string",
+                        "enum": ["base", "accent", "deep"]
+                      }
+                    },
+                    "required": ["type", "tone"],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "const": "gradient"
+                      },
+                      "tone": {
+                        "type": "string",
+                        "enum": ["calm", "warm", "dawn"]
+                      }
+                    },
+                    "required": ["type", "tone"],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "const": "image"
+                      },
+                      "description": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 200,
+                        "description": "What the image should show, e.g. \"sunrise over hills, soft warm light\". Never a URL."
+                      },
+                      "assetId": {
+                        "type": "string"
+                      },
+                      "motion": {
+                        "type": "string",
+                        "enum": ["still", "drift"]
+                      }
+                    },
+                    "required": ["type", "description"],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "const": "video"
+                      },
+                      "description": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 200
+                      },
+                      "assetId": {
+                        "type": "string"
+                      }
+                    },
+                    "required": ["type", "description"],
+                    "additionalProperties": false
+                  }
+                ]
+              },
+              "ref": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 60,
+                "description": "Human-readable reference, e.g. \"John 3:16-18\" or \"Ps 23\". One passage only. Never include verse text."
+              },
+              "translation": {
+                "type": "string",
+                "pattern": "^[A-Za-z][A-Za-z0-9]{1,7}$"
+              },
+              "emphasis": {
+                "maxItems": 6,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 60
+                },
+                "description": "Words or short phrases inside the verse to highlight, e.g. [\"so loved\"]."
+              }
+            },
+            "required": ["type", "ref"],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "const": "quote"
+              },
+              "id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 64
+              },
+              "notes": {
+                "type": "string",
+                "maxLength": 2000,
+                "description": "Speaking prompts for the pastor/operator. Never shown on the TV."
+              },
+              "transition": {
+                "type": "string",
+                "enum": ["fade", "rise", "push", "none"],
+                "description": "Default fade; rise for section changes."
+              },
+              "background": {
+                "oneOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "const": "template"
+                      }
+                    },
+                    "required": ["type"],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "const": "color"
+                      },
+                      "tone": {
+                        "type": "string",
+                        "enum": ["base", "accent", "deep"]
+                      }
+                    },
+                    "required": ["type", "tone"],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "const": "gradient"
+                      },
+                      "tone": {
+                        "type": "string",
+                        "enum": ["calm", "warm", "dawn"]
+                      }
+                    },
+                    "required": ["type", "tone"],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "const": "image"
+                      },
+                      "description": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 200,
+                        "description": "What the image should show, e.g. \"sunrise over hills, soft warm light\". Never a URL."
+                      },
+                      "assetId": {
+                        "type": "string"
+                      },
+                      "motion": {
+                        "type": "string",
+                        "enum": ["still", "drift"]
+                      }
+                    },
+                    "required": ["type", "description"],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "const": "video"
+                      },
+                      "description": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 200
+                      },
+                      "assetId": {
+                        "type": "string"
+                      }
+                    },
+                    "required": ["type", "description"],
+                    "additionalProperties": false
+                  }
+                ]
+              },
+              "text": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 220
+              },
+              "author": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 60
+              }
+            },
+            "required": ["type", "text"],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "const": "statement"
+              },
+              "id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 64
+              },
+              "notes": {
+                "type": "string",
+                "maxLength": 2000,
+                "description": "Speaking prompts for the pastor/operator. Never shown on the TV."
+              },
+              "transition": {
+                "type": "string",
+                "enum": ["fade", "rise", "push", "none"],
+                "description": "Default fade; rise for section changes."
+              },
+              "background": {
+                "oneOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "const": "template"
+                      }
+                    },
+                    "required": ["type"],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "const": "color"
+                      },
+                      "tone": {
+                        "type": "string",
+                        "enum": ["base", "accent", "deep"]
+                      }
+                    },
+                    "required": ["type", "tone"],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "const": "gradient"
+                      },
+                      "tone": {
+                        "type": "string",
+                        "enum": ["calm", "warm", "dawn"]
+                      }
+                    },
+                    "required": ["type", "tone"],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "const": "image"
+                      },
+                      "description": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 200,
+                        "description": "What the image should show, e.g. \"sunrise over hills, soft warm light\". Never a URL."
+                      },
+                      "assetId": {
+                        "type": "string"
+                      },
+                      "motion": {
+                        "type": "string",
+                        "enum": ["still", "drift"]
+                      }
+                    },
+                    "required": ["type", "description"],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "const": "video"
+                      },
+                      "description": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 200
+                      },
+                      "assetId": {
+                        "type": "string"
+                      }
+                    },
+                    "required": ["type", "description"],
+                    "additionalProperties": false
+                  }
+                ]
+              },
+              "text": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 90
+              }
+            },
+            "required": ["type", "text"],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "const": "image"
+              },
+              "id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 64
+              },
+              "notes": {
+                "type": "string",
+                "maxLength": 2000,
+                "description": "Speaking prompts for the pastor/operator. Never shown on the TV."
+              },
+              "transition": {
+                "type": "string",
+                "enum": ["fade", "rise", "push", "none"],
+                "description": "Default fade; rise for section changes."
+              },
+              "background": {
+                "oneOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "const": "image"
+                      },
+                      "description": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 200,
+                        "description": "What the image should show, e.g. \"sunrise over hills, soft warm light\". Never a URL."
+                      },
+                      "assetId": {
+                        "type": "string"
+                      },
+                      "motion": {
+                        "type": "string",
+                        "enum": ["still", "drift"]
+                      }
+                    },
+                    "required": ["type", "description"],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "const": "video"
+                      },
+                      "description": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 200
+                      },
+                      "assetId": {
+                        "type": "string"
+                      }
+                    },
+                    "required": ["type", "description"],
+                    "additionalProperties": false
+                  }
+                ]
+              },
+              "caption": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 90
+              }
+            },
+            "required": ["type", "background"],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "const": "countdown"
+              },
+              "id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 64
+              },
+              "notes": {
+                "type": "string",
+                "maxLength": 2000,
+                "description": "Speaking prompts for the pastor/operator. Never shown on the TV."
+              },
+              "transition": {
+                "type": "string",
+                "enum": ["fade", "rise", "push", "none"],
+                "description": "Default fade; rise for section changes."
+              },
+              "background": {
+                "oneOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "const": "template"
+                      }
+                    },
+                    "required": ["type"],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "const": "color"
+                      },
+                      "tone": {
+                        "type": "string",
+                        "enum": ["base", "accent", "deep"]
+                      }
+                    },
+                    "required": ["type", "tone"],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "const": "gradient"
+                      },
+                      "tone": {
+                        "type": "string",
+                        "enum": ["calm", "warm", "dawn"]
+                      }
+                    },
+                    "required": ["type", "tone"],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "const": "image"
+                      },
+                      "description": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 200,
+                        "description": "What the image should show, e.g. \"sunrise over hills, soft warm light\". Never a URL."
+                      },
+                      "assetId": {
+                        "type": "string"
+                      },
+                      "motion": {
+                        "type": "string",
+                        "enum": ["still", "drift"]
+                      }
+                    },
+                    "required": ["type", "description"],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "const": "video"
+                      },
+                      "description": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 200
+                      },
+                      "assetId": {
+                        "type": "string"
+                      }
+                    },
+                    "required": ["type", "description"],
+                    "additionalProperties": false
+                  }
+                ]
+              },
+              "minutes": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 30
+              },
+              "label": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 40
+              }
+            },
+            "required": ["type", "minutes"],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "const": "closing"
+              },
+              "id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 64
+              },
+              "notes": {
+                "type": "string",
+                "maxLength": 2000,
+                "description": "Speaking prompts for the pastor/operator. Never shown on the TV."
+              },
+              "transition": {
+                "type": "string",
+                "enum": ["fade", "rise", "push", "none"],
+                "description": "Default fade; rise for section changes."
+              },
+              "background": {
+                "oneOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "const": "template"
+                      }
+                    },
+                    "required": ["type"],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "const": "color"
+                      },
+                      "tone": {
+                        "type": "string",
+                        "enum": ["base", "accent", "deep"]
+                      }
+                    },
+                    "required": ["type", "tone"],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "const": "gradient"
+                      },
+                      "tone": {
+                        "type": "string",
+                        "enum": ["calm", "warm", "dawn"]
+                      }
+                    },
+                    "required": ["type", "tone"],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "const": "image"
+                      },
+                      "description": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 200,
+                        "description": "What the image should show, e.g. \"sunrise over hills, soft warm light\". Never a URL."
+                      },
+                      "assetId": {
+                        "type": "string"
+                      },
+                      "motion": {
+                        "type": "string",
+                        "enum": ["still", "drift"]
+                      }
+                    },
+                    "required": ["type", "description"],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "const": "video"
+                      },
+                      "description": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 200
+                      },
+                      "assetId": {
+                        "type": "string"
+                      }
+                    },
+                    "required": ["type", "description"],
+                    "additionalProperties": false
+                  }
+                ]
+              },
+              "heading": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 60
+              },
+              "body": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 160
+              }
+            },
+            "required": ["type", "heading"],
+            "additionalProperties": false
+          }
+        ]
+      }
+    }
+  },
+  "required": ["schemaVersion", "title", "slides"],
+  "additionalProperties": false
+}

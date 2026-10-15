@@ -1,0 +1,182 @@
+[
+  {
+    "id": "sunrise-hills",
+    "description": "Sunrise over forested hills",
+    "file": "sunrise-hills.webp",
+    "thumb": "sunrise-hills.thumb.webp",
+    "author": "Ronald Tagra",
+    "license": "CC BY 2.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Metigen_Hills_Sunrise.jpg"
+  },
+  {
+    "id": "sunrise-clouds",
+    "description": "Sunrise above a sea of clouds",
+    "file": "sunrise-clouds.webp",
+    "thumb": "sunrise-clouds.thumb.webp",
+    "author": "Gomboto",
+    "license": "CC BY 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Sunrise_Puncak_Sikunir_Dieng.jpg"
+  },
+  {
+    "id": "park-path",
+    "description": "Path under trees to a valley view",
+    "file": "park-path.webp",
+    "thumb": "park-path.thumb.webp",
+    "author": "John Phelan",
+    "license": "CC BY 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Point_Park_path,_Lookout_Mountain_TN.jpg"
+  },
+  {
+    "id": "forest-light",
+    "description": "Sunbeams through a misty forest",
+    "file": "forest-light.webp",
+    "thumb": "forest-light.thumb.webp",
+    "author": "Steve Redman (MORA)",
+    "license": "Public domain",
+    "source": "https://commons.wikimedia.org/wiki/File:Sunbeam_through_forest,_Nov_2009._(40971ffd2f2046aea4121cc40616f9b3).JPG"
+  },
+  {
+    "id": "forest-sun",
+    "description": "Sun shining through tall trees",
+    "file": "forest-sun.webp",
+    "thumb": "forest-sun.thumb.webp",
+    "author": "Steve Redman (MORA)",
+    "license": "Public domain",
+    "source": "https://commons.wikimedia.org/wiki/File:Sunbeam_through_forest._Nov_2009_(5324b2f663264b1da07a0538acc73ef2).JPG"
+  },
+  {
+    "id": "milky-way",
+    "description": "Milky Way over a dark ridge",
+    "file": "milky-way.webp",
+    "thumb": "milky-way.thumb.webp",
+    "author": "NPS/Jacob W. Frank",
+    "license": "Public domain",
+    "source": "https://commons.wikimedia.org/wiki/File:Milky_Way_and_starry_night_sky_(26972689115).jpg"
+  },
+  {
+    "id": "sand-dune",
+    "description": "Wind-swept sand dune",
+    "file": "sand-dune.webp",
+    "thumb": "sand-dune.thumb.webp",
+    "author": "Meshari Alawfi",
+    "license": "CC BY 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Sand_Dunes_sa.jpg"
+  },
+  {
+    "id": "misty-lake",
+    "description": "Mountain lake in morning mist",
+    "file": "misty-lake.webp",
+    "thumb": "misty-lake.thumb.webp",
+    "author": "Florian Fuchs",
+    "license": "CC BY 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Herbert_Lake_beim_Icefields_Parkway.jpg"
+  },
+  {
+    "id": "mountain-lake",
+    "description": "Still mountain lake with reflections",
+    "file": "mountain-lake.webp",
+    "thumb": "mountain-lake.thumb.webp",
+    "author": "Florian Fuchs",
+    "license": "CC BY 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Lake_Kinney_mit_Mount_Whitehorn.jpg"
+  },
+  {
+    "id": "golden-hills",
+    "description": "Rolling hills in golden light",
+    "file": "golden-hills.webp",
+    "thumb": "golden-hills.thumb.webp",
+    "author": "Caleb Riston",
+    "license": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:PalouseFromSteptoeButteMay2023-1.jpg"
+  },
+  {
+    "id": "green-hills",
+    "description": "Rolling green farm hills",
+    "file": "green-hills.webp",
+    "thumb": "green-hills.thumb.webp",
+    "author": "Caleb Riston",
+    "license": "CC BY 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:PalouseFromSteptoeButteMay2023-2.jpg"
+  },
+  {
+    "id": "peak-clouds",
+    "description": "Snowy peak above the clouds",
+    "file": "peak-clouds.webp",
+    "thumb": "peak-clouds.thumb.webp",
+    "author": "DimiTalen",
+    "license": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:Aiguille_Rousse_in_sea_of_clouds,_2018.jpg"
+  },
+  {
+    "id": "cloudscape",
+    "description": "Towering clouds over the sea",
+    "file": "cloudscape.webp",
+    "thumb": "cloudscape.thumb.webp",
+    "author": "Vyacheslav Argenberg",
+    "license": "CC BY 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Clouds,_cloudscape_over_Lombok_Strait,_West_Nusa_Tenggara,_Indonesia.jpg"
+  },
+  {
+    "id": "sea-sunset",
+    "description": "Sunset over island waters",
+    "file": "sea-sunset.webp",
+    "thumb": "sea-sunset.thumb.webp",
+    "author": "Jakub Hałun",
+    "license": "CC BY 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Sunset_on_the_sea_in_Komodo_National_Park,_Indonesia,_20250826_1753_3751.jpg"
+  },
+  {
+    "id": "autumn-forest",
+    "description": "Autumn forest floor and tree",
+    "file": "autumn-forest.webp",
+    "thumb": "autumn-forest.thumb.webp",
+    "author": "Martin Vorel",
+    "license": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:Autumn_Forest_Wet_Bark.jpg"
+  },
+  {
+    "id": "lone-tree",
+    "description": "Lone tree at sunset",
+    "file": "lone-tree.webp",
+    "thumb": "lone-tree.thumb.webp",
+    "author": "Johannes Plenio",
+    "license": "CC0",
+    "source": "https://commons.wikimedia.org/wiki/File:Bare_tree_during_sunset.jpg"
+  },
+  {
+    "id": "lake-mountains",
+    "description": "Misty lake between mountains",
+    "file": "lake-mountains.webp",
+    "thumb": "lake-mountains.thumb.webp",
+    "author": "Julian Herzog (Website)",
+    "license": "CC BY 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:View_from_Friars%27_Crag_across_Derwentwater_towards_Castle_Crag_2022_01.jpg"
+  },
+  {
+    "id": "river-sunrise",
+    "description": "Sunrise over a misty river",
+    "file": "river-sunrise.webp",
+    "thumb": "river-sunrise.thumb.webp",
+    "author": "Jakub Hałun",
+    "license": "CC BY 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Wis%C5%82a_wczesnym_ranem_w_%C5%81%C4%85czanach_pod_Krakowem,_20241214_0812_2832.jpg"
+  },
+  {
+    "id": "misty-valley",
+    "description": "Misty valley at dawn",
+    "file": "misty-valley.webp",
+    "thumb": "misty-valley.thumb.webp",
+    "author": "Jakub Hałun",
+    "license": "CC BY 4.0",
+    "source": "https://commons.wikimedia.org/wiki/File:Zamglona_dolina_w_Witowie_w_powiecie_proszowickim,_20241020_0805_6309.jpg"
+  },
+  {
+    "id": "waterfall",
+    "description": "Waterfall over mossy rocks",
+    "file": "waterfall.webp",
+    "thumb": "waterfall.thumb.webp",
+    "author": "Thomas Bresson",
+    "license": "CC BY 3.0",
+    "source": "https://commons.wikimedia.org/wiki/File:2014-03-05_15-52-06_grande-cascade-tendon.jpg"
+  }
+]

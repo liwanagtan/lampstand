@@ -66,7 +66,9 @@ function loadEbibleVpl(id: string): string[][][] {
   const txt = join(dir, `${id}_vpl.txt`);
   if (!existsSync(txt)) execFileSync('unzip', ['-o', '-q', zip, `${id}_vpl.txt`, '-d', dir]);
   const byBook = new Map<string, string[][]>();
-  for (const line of readFileSync(txt, 'utf8').replace(/^\uFEFF/, '').split(/\r?\n/)) {
+  for (const line of readFileSync(txt, 'utf8')
+    .replace(/^\uFEFF/, '')
+    .split(/\r?\n/)) {
     if (!line.trim()) continue;
     const m = /^([1-3A-Z]{3}) (\d+):(\d+) (.*)$/.exec(line);
     if (!m) throw new Error(`${id}: unexpected line ${line.slice(0, 60)}`);

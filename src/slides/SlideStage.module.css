@@ -1,0 +1,28 @@
+.frame {
+  position: relative;
+  overflow: hidden;
+  background: #000;
+  contain: layout paint;
+}
+.byWidth {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+}
+.contain {
+  width: 100%;
+  height: 100%;
+}
+.stage {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  overflow: hidden;
+  transform-origin: center;
+  background: var(--t-bg);
+  color: var(--t-text);
+  font-family: var(--t-body-font);
+  font-weight: var(--t-body-weight);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: geometricPrecision;
+  font-kerning: normal;
+}

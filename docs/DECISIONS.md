@@ -23,3 +23,10 @@ Dated choices not covered by the PRD (docs/PRD.md §14).
 - 2026-10-16 — Generated public/bibles/*.json (~21 MB) is committed so the app builds and runs without network. `npm run bibles` regenerates it from scripts/.cache.
 - 2026-10-16 — A bundled translation reloads only when its content hash in public/bibles/index.json changes.
 - 2026-10-16 — Word search runs in a Web Worker (MiniSearch, common English stop words dropped, prefix match on the last word, light fuzziness for long words, exact phrases ranked first) so building the index never blocks the control screen. At most two translations are indexed in memory.
+- 2026-10-16 — TV accent colors lightened to meet the 7:1 text contrast rule (PRD §10), because references and emphasis are accent-colored text: Modern #5B8CFF → #7FA5FF (6.26 → 8.23:1), Warm #D9774B → #E8956B (5.66 → 7.57:1). Classic gold #D9A441 already passes (8.24:1).
+- 2026-10-16 — Warm template: headings in Inter 600; Fraunces 500 italic is its accent font (quotes). Classic quotes also use Fraunces italic; Modern stays all-Inter.
+- 2026-10-16 — Verse text auto-fits per page between 52 px (verse size) and 40 px (minimum body size); pages are packed at 40 px, split at verse boundaries, then sentence breaks, then words. Text is measured with the template's body font on a canvas.
+- 2026-10-16 — Countdown digits use a 240 px display size (not in the PRD scale) so they read from the back of the room.
+- 2026-10-16 — Bundled backgrounds: 20 photos from Wikimedia Commons (CC0, public domain or CC BY — no share-alike), because Unsplash and Pexels need API keys. Credits in public/backgrounds/LICENSES.md. Images are 1920×1080 WebP (~4.9 MB total) with 384×216 thumbnails.
+- 2026-10-16 — Choosing a bundled background copies it into the assets table (id `bg-<name>`), so all image backgrounds are referenced by assetId.
+- 2026-10-16 — Image backgrounds without a chosen file show a labelled dashed placeholder in the editor and previews, and the template background on the TV.

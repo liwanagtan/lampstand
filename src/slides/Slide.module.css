@@ -1,0 +1,211 @@
+/* Shared slide layouts on the 1920×1080 canvas. All sizes come from --s-* and --t-* tokens. */
+
+.content {
+  position: absolute;
+  inset: var(--s-safe-y) var(--s-safe-x);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  z-index: 1;
+}
+.center {
+  align-items: center;
+  text-align: center;
+}
+.start {
+  align-items: flex-start;
+  text-align: left;
+}
+
+.display,
+.heading,
+.subheading {
+  font-family: var(--t-heading-font);
+  font-weight: var(--t-heading-weight);
+  font-style: var(--t-heading-style);
+  letter-spacing: var(--t-heading-tracking);
+  text-wrap: balance;
+  max-width: var(--s-measure-heading);
+}
+.display {
+  font-size: var(--s-display);
+  line-height: var(--s-lh-display);
+}
+.heading {
+  font-size: var(--s-heading);
+  line-height: var(--s-lh-heading);
+}
+.subheading {
+  font-size: var(--s-subheading);
+  line-height: var(--s-lh-heading);
+}
+.body {
+  font-size: var(--s-body);
+  line-height: var(--s-lh-body);
+  color: var(--t-muted);
+  max-width: var(--s-measure-body);
+  text-wrap: pretty;
+}
+.caption {
+  font-size: var(--s-caption);
+  line-height: 1.3;
+  color: var(--t-muted);
+}
+.eyebrow {
+  font-size: var(--s-caption);
+  line-height: 1.2;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--t-accent);
+}
+.rule {
+  width: 96px;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--t-accent);
+}
+
+.stack-sm > * + * {
+  margin-top: 24px;
+}
+.stack > * + * {
+  margin-top: 40px;
+}
+.stack-lg > * + * {
+  margin-top: 56px;
+}
+
+/* List */
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-width: var(--s-measure-body);
+}
+.listItem {
+  display: flex;
+  align-items: baseline;
+  gap: 36px;
+  font-size: var(--s-body);
+  line-height: var(--s-lh-body);
+  color: var(--t-text);
+}
+.listItem + .listItem {
+  margin-top: 28px;
+}
+.marker {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--t-accent);
+  transform: translateY(-6px);
+}
+[data-template='modern'] .marker {
+  border-radius: 3px;
+}
+.hidden {
+  visibility: hidden;
+}
+
+/* Verse */
+.reference {
+  font-size: var(--s-caption);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--t-accent);
+}
+.verseText {
+  font-size: var(--s-verse);
+  line-height: var(--s-lh-body);
+  color: var(--t-text);
+  max-width: var(--s-measure-verse);
+  text-wrap: pretty;
+}
+.verseNum {
+  font-size: 0.5em;
+  font-weight: 600;
+  vertical-align: 0.7em;
+  margin-right: 0.3em;
+  color: var(--t-accent);
+  font-variant-numeric: tabular-nums;
+}
+.missing {
+  color: var(--t-muted);
+  font-style: italic;
+}
+.emphasis {
+  transition: color 600ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.emphasisOn {
+  color: var(--t-accent);
+}
+.pageIndicator {
+  position: absolute;
+  right: var(--s-safe-x);
+  bottom: var(--s-safe-y);
+  z-index: 2;
+  font-size: var(--s-caption);
+  font-variant-numeric: tabular-nums;
+  color: var(--t-muted);
+  opacity: 0.8;
+}
+
+/* Quote */
+.quoteMark {
+  font-family: var(--t-accent-font);
+  font-size: 220px;
+  line-height: 0.6;
+  height: 96px;
+  color: var(--t-accent);
+}
+.quoteText {
+  font-family: var(--t-accent-font);
+  font-weight: var(--t-accent-weight);
+  font-style: var(--t-accent-style);
+  font-size: var(--s-subheading);
+  line-height: 1.25;
+  max-width: var(--s-measure-quote);
+  text-wrap: balance;
+}
+[data-template='modern'] .quoteText {
+  font-family: var(--t-heading-font);
+  letter-spacing: var(--t-heading-tracking);
+}
+
+/* Image caption */
+.captionBand {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  padding: 160px var(--s-safe-x) calc(var(--s-safe-y) + 24px);
+  background: linear-gradient(180deg, transparent 0%, rgb(0 0 0 / 0.65) 100%);
+}
+.captionText {
+  font-family: var(--t-heading-font);
+  font-weight: var(--t-heading-weight);
+  font-style: var(--t-heading-style);
+  letter-spacing: var(--t-heading-tracking);
+  font-size: var(--s-body);
+  line-height: 1.25;
+  max-width: var(--s-measure-body);
+}
+
+/* Countdown */
+.countdown {
+  font-family: var(--t-heading-font);
+  font-weight: var(--t-heading-weight);
+  font-size: var(--s-countdown);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+
+/* Fallback */
+.fallbackMark {
+  color: var(--t-accent);
+  opacity: 0.35;
+}

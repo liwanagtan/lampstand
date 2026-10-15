@@ -8,7 +8,7 @@ import {
   type ReactNode,
 } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { motion } from 'motion/react';
+import { AnimatePresence, motion } from 'motion/react';
 import {
   ArrowLeft,
   BookOpen,
@@ -25,8 +25,11 @@ import {
   Chip,
   ChipButton,
   EmptyState,
+  FeatureBoundary,
   IconButton,
   Menu,
+  ShortcutHint,
+  Skeleton,
   Tabs,
   Tooltip,
   cx,
@@ -114,7 +117,18 @@ export function PresentPage() {
       </div>
     );
   }
-  if (state === 'loading') return <div className={styles.center} aria-busy="true" />;
+  if (state === 'loading') {
+    return (
+      <div className={styles.loading} aria-busy="true" aria-label="Loading presentation">
+        <Skeleton height={48} />
+        <div className={styles.loadingPanes}>
+          <Skeleton height="auto" radius="md" className={styles.loadingPane} />
+          <Skeleton height="auto" radius="md" className={styles.loadingPane} />
+        </div>
+        <Skeleton height={96} />
+      </div>
+    );
+  }
   return <ControlScreen />;
 }
 
@@ -138,6 +152,18 @@ function ControlScreen() {
   const verses = useVerses();
   const translations = useBible((s) => s.translations);
   const overlayPages = useControl((s) => s.overlayPageCount);
+  const [ghost, setGhost] = useState<{ key: number; from: DOMRect; to: DOMRect } | null>(null);
+  const reduced = useReducedMotion();
+
+  /** Sends Preview live; the preview frame flies into the Live pane (PRD §9 Going live). */
+  const sendPreview = () => {
+    const from = document.querySelector('[data-pane="Preview"]')?.getBoundingClientRect();
+    const to = document.querySelector('[data-pane="live"]')?.getBoundingClientRect();
+    if (from && to && !reduced) setGhost({ key: Date.now(), from, to });
+    if (useVerses.getState().preview) void useVerses.getState().goLivePreview();
+    else goLive();
+  };
+
   const focusBar = useCallback(() => {
     setTimeout(focusCommandBar, 50);
   }, []);
@@ -184,10 +210,7 @@ function ControlScreen() {
       ArrowLeft: () => dispatch({ type: 'prev' }),
       PageUp: () => dispatch({ type: 'prev' }),
       ArrowUp: () => dispatch({ type: 'prev' }),
-      Enter: () => {
-        if (useVerses.getState().preview) void useVerses.getState().goLivePreview();
-        else goLive();
-      },
+      Enter: () => sendPreview(),
       '/': focusCommandBar,
       Escape: () => {
         if (useVerses.getState().preview) useVerses.getState().clearPreview();
@@ -226,7 +249,9 @@ function ControlScreen() {
           </p>
         </div>
         <div className={styles.commandSlot}>
-          <CommandBar />
+          <FeatureBoundary name="The verse command bar">
+            <CommandBar />
+          </FeatureBoundary>
         </div>
         <div className={styles.status}>
           <Menu
@@ -280,15 +305,17 @@ function ControlScreen() {
                   : undefined
             }
             actions={
-              <Button
-                variant="primary"
-                icon={<MonitorPlay size={16} />}
-                shortcut="Enter"
-                onClick={() => (verses.preview ? void verses.goLivePreview() : goLive())}
-                disabled={!verses.preview && (atEnd || !previewSlide)}
-              >
-                Go live
-              </Button>
+              <ShortcutHint id="goLive" keys="Enter">
+                <Button
+                  variant="primary"
+                  icon={<MonitorPlay size={16} />}
+                  shortcut="Enter"
+                  onClick={sendPreview}
+                  disabled={!verses.preview && (atEnd || !previewSlide)}
+                >
+                  Go live
+                </Button>
+              </ShortcutHint>
             }
           >
             {verses.preview ? (
@@ -330,22 +357,26 @@ function ControlScreen() {
             }
             actions={
               <>
-                <Tooltip content="Previous" shortcut="←">
-                  <IconButton
-                    label="Previous"
-                    icon={<ChevronLeft size={20} />}
-                    variant="secondary"
-                    onClick={() => dispatch({ type: 'prev' })}
-                  />
-                </Tooltip>
-                <Tooltip content="Next" shortcut="→">
-                  <IconButton
-                    label="Next"
-                    icon={<ChevronRight size={20} />}
-                    variant="secondary"
-                    onClick={() => dispatch({ type: 'next' })}
-                  />
-                </Tooltip>
+                <ShortcutHint id="prev" keys="←">
+                  <Tooltip content="Previous" shortcut="←">
+                    <IconButton
+                      label="Previous"
+                      icon={<ChevronLeft size={20} />}
+                      variant="secondary"
+                      onClick={() => dispatch({ type: 'prev' })}
+                    />
+                  </Tooltip>
+                </ShortcutHint>
+                <ShortcutHint id="next" keys="→">
+                  <Tooltip content="Next" shortcut="→">
+                    <IconButton
+                      label="Next"
+                      icon={<ChevronRight size={20} />}
+                      variant="secondary"
+                      onClick={() => dispatch({ type: 'next' })}
+                    />
+                  </Tooltip>
+                </ShortcutHint>
                 <ScreenToggle
                   label="Blank"
                   shortcut="B"
@@ -378,45 +409,74 @@ function ControlScreen() {
         </section>
 
         <aside className={styles.rail} aria-label="Verses and notes">
-          <Tabs<RailTab>
-            fill
-            label="Side panel"
-            value={rail}
-            onChange={setRail}
-            items={[
-              {
-                value: 'queue',
-                label: 'Queue',
-                badge: verses.queue.length || undefined,
-                content: <QueuePanel translation={verses.translation} />,
-              },
-              {
-                value: 'history',
-                label: 'History',
-                badge: verses.history.length || undefined,
-                content: <HistoryPanel />,
-              },
-              {
-                value: 'notes',
-                label: 'Notes',
-                content: <Notes slide={liveSlide} next={slides[live.slideIndex + 1]} />,
-              },
-            ]}
-          />
+          <FeatureBoundary name="The side panel">
+            <Tabs<RailTab>
+              fill
+              label="Side panel"
+              value={rail}
+              onChange={setRail}
+              items={[
+                {
+                  value: 'queue',
+                  label: 'Queue',
+                  badge: verses.queue.length || undefined,
+                  content: <QueuePanel translation={verses.translation} />,
+                },
+                {
+                  value: 'history',
+                  label: 'History',
+                  badge: verses.history.length || undefined,
+                  content: <HistoryPanel />,
+                },
+                {
+                  value: 'notes',
+                  label: 'Notes',
+                  content: <Notes slide={liveSlide} next={slides[live.slideIndex + 1]} />,
+                },
+              ]}
+            />
+          </FeatureBoundary>
         </aside>
       </main>
 
-      <SlideStrip
-        slides={slides}
-        liveIndex={live.slideIndex}
-        previewIndex={previewIndex}
-        onSelect={(i) => {
-          verses.clearPreview();
-          select(i);
-        }}
-        onGoLive={(i) => dispatch({ type: 'goTo', index: i })}
-        translation={translation}
-      />
+      <FeatureBoundary name="The slide strip">
+        <SlideStrip
+          slides={slides}
+          liveIndex={live.slideIndex}
+          previewIndex={previewIndex}
+          onSelect={(i) => {
+            verses.clearPreview();
+            select(i);
+          }}
+          onGoLive={(i) => dispatch({ type: 'goTo', index: i })}
+          translation={translation}
+        />
+      </FeatureBoundary>
+      <AnimatePresence>
+        {ghost && (
+          <motion.div
+            key={ghost.key}
+            className={styles.ghost}
+            initial={{
+              left: ghost.from.left,
+              top: ghost.from.top,
+              width: ghost.from.width,
+              height: ghost.from.height,
+              opacity: 0.9,
+            }}
+            animate={{
+              left: ghost.to.left,
+              top: ghost.to.top,
+              width: ghost.to.width,
+              height: ghost.to.height,
+              opacity: 0,
+            }}
+            transition={transition('standard')}
+            onAnimationComplete={() => setGhost((g) => (g?.key === ghost.key ? null : g))}
+            aria-hidden
+          />
+        )}
+      </AnimatePresence>
       <ShortcutSheet open={sheetOpen} onOpenChange={setSheetOpen} />
       <CommandPalette
         open={paletteOpen}
@@ -452,7 +512,9 @@ function Pane({
         <h2 className={styles.paneTitle}>{title}</h2>
         {meta && <span className={styles.paneMeta}>{meta}</span>}
       </div>
-      <div className={styles.paneBody}>{children}</div>
+      <div className={styles.paneBody} data-pane={title}>
+        <FeatureBoundary name={title}>{children}</FeatureBoundary>
+      </div>
       <div className={styles.paneActions}>{actions}</div>
     </div>
   );
@@ -487,6 +549,7 @@ function LivePane({
       <motion.div
         key={beat}
         className={cx(styles.paneBody, styles.liveFrame)}
+        data-pane="live"
         initial={reduced ? false : { boxShadow: '0 0 0 0px var(--color-live)' }}
         animate={{
           boxShadow: [
@@ -504,7 +567,21 @@ function LivePane({
   );
 }
 
-function ScreenToggle({
+function ScreenToggle(props: {
+  label: string;
+  shortcut: string;
+  icon: ReactNode;
+  active: boolean;
+  onClick: () => void;
+}) {
+  return (
+    <ShortcutHint id={`screen-${props.label}`} keys={props.shortcut}>
+      <ScreenToggleButton {...props} />
+    </ShortcutHint>
+  );
+}
+
+function ScreenToggleButton({
   label,
   shortcut,
   icon,
@@ -620,22 +697,26 @@ function SlideStrip({
               setHover((h) => (h?.index === i ? null : h));
             }}
           >
-            <button
-              type="button"
-              className={styles.thumbButton}
-              aria-current={i === liveIndex ? 'true' : undefined}
-              aria-label={`Slide ${i + 1}, ${s.type}${i === liveIndex ? ', live' : ''}`}
-              onClick={() => onSelect(i)}
-              onDoubleClick={() => onGoLive(i)}
-            >
+            <div className={styles.thumbWrap}>
               <SlideFrame
                 slide={s}
                 template={template}
                 mode="thumbnail"
                 translation={slideTranslation(s, translation)}
               />
-              <span className={styles.thumbNum}>{i + 1}</span>
-            </button>
+              <span className={styles.thumbNum} aria-hidden>
+                {i + 1}
+              </span>
+              <button
+                type="button"
+                className={styles.thumbButton}
+                aria-current={i === liveIndex ? 'true' : undefined}
+                onClick={() => onSelect(i)}
+                onDoubleClick={() => onGoLive(i)}
+              >
+                <span className="visually-hidden">{`Slide ${i + 1}, ${s.type}${i === liveIndex ? ', live' : ''}`}</span>
+              </button>
+            </div>
           </li>
         ))}
       </ol>

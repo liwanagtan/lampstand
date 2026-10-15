@@ -22,10 +22,12 @@ import {
   Button,
   Dialog,
   EmptyState,
+  FeatureBoundary,
   IconButton,
   Input,
   Menu,
   Select,
+  Skeleton,
   Tooltip,
   cx,
 } from '@/design-system/components';
@@ -90,7 +92,15 @@ export function EditorPage() {
       </EmptyState>
     );
   }
-  if (state === 'loading') return <div aria-busy="true" />;
+  if (state === 'loading') {
+    return (
+      <div className={styles.loading} aria-busy="true" aria-label="Loading editor">
+        <Skeleton height="100%" />
+        <Skeleton height="auto" radius="md" className={styles.loadingCanvas} />
+        <Skeleton height="100%" />
+      </div>
+    );
+  }
   return <Editor id={id} />;
 }
 
@@ -201,7 +211,9 @@ function Editor({ id }: { id: string }) {
         </main>
 
         <aside className={styles.fields} aria-label="Slide fields">
-          <FieldsPanel key={selected.id} slide={selected} />
+          <FeatureBoundary name="The slide fields">
+            <FieldsPanel key={selected.id} slide={selected} />
+          </FeatureBoundary>
         </aside>
       </div>
 
@@ -359,13 +371,7 @@ function SlideListItem({
         <GripVertical size={14} />
       </span>
       <span className={styles.num}>{index + 1}</span>
-      <button
-        type="button"
-        className={styles.thumbButton}
-        aria-current={selected ? 'true' : undefined}
-        aria-label={`Slide ${index + 1}, ${slide.type}${issues.length ? ', has problems' : ''}`}
-        onClick={onSelect}
-      >
+      <div className={styles.thumbWrap}>
         <SlideFrame
           slide={slide}
           template={template}
@@ -373,11 +379,22 @@ function SlideListItem({
           translation={slideTranslation(slide, translation)}
         />
         {issues.length > 0 && (
-          <span className={styles.badge} title={issues.join('\n')}>
+          <span className={styles.badge} title={issues.join('\n')} aria-hidden>
             <TriangleAlert size={12} />
           </span>
         )}
-      </button>
+        <button
+          type="button"
+          className={styles.thumbButton}
+          aria-current={selected ? 'true' : undefined}
+          onClick={onSelect}
+        >
+          <span className="visually-hidden">
+            Slide {index + 1}, {slide.type}
+            {issues.length ? ', has problems' : ''}
+          </span>
+        </button>
+      </div>
     </Reorder.Item>
   );
 }

@@ -178,12 +178,7 @@ function PresentationCard({ record }: { record: LibraryRecord }) {
   return (
     <li className={styles.item}>
       <Card padded={false} className={styles.card}>
-        <button
-          type="button"
-          className={styles.thumbButton}
-          onClick={() => navigate(`/present/${record.id}`)}
-          aria-label={`Present ${record.title}`}
-        >
+        <div className={styles.thumb}>
           {first && (
             <SlideFrame
               slide={first}
@@ -192,11 +187,18 @@ function PresentationCard({ record }: { record: LibraryRecord }) {
               translation={slideTranslation(first, translation)}
             />
           )}
-          <span className={styles.playHint} aria-hidden>
-            <Play size={20} />
-            Present
-          </span>
-        </button>
+          <button
+            type="button"
+            className={styles.thumbButton}
+            onClick={() => navigate(`/present/${record.id}`)}
+          >
+            <span className="visually-hidden">Present {record.title}</span>
+            <span className={styles.playHint} aria-hidden>
+              <Play size={20} />
+              Present
+            </span>
+          </button>
+        </div>
         <div className={styles.meta}>
           <div className={styles.titleRow}>
             <h2 className={styles.title} title={record.title}>

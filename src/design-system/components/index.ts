@@ -14,3 +14,5 @@ export { Skeleton } from './Skeleton';
 export { EmptyState } from './EmptyState';
 export { Kbd } from './Kbd';
 export { cx } from './cx';
+export { FeatureBoundary } from './FeatureBoundary';
+export { ShortcutHint } from './ShortcutHint';

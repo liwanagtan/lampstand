@@ -45,7 +45,8 @@ export function Tabs<V extends string = string>({
         ))}
       </RTabs.List>
       {items.map((t) => (
-        <RTabs.Content key={t.value} value={t.value} className={styles.content}>
+        // Kept mounted so every trigger's aria-controls points at a real panel.
+        <RTabs.Content key={t.value} value={t.value} className={styles.content} forceMount>
           {t.content}
         </RTabs.Content>
       ))}

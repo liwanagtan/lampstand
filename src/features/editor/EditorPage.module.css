@@ -102,26 +102,29 @@
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
-.thumbButton {
+.thumbWrap {
   position: relative;
-  display: block;
-  padding: 0;
-  border: 0;
-  border-radius: var(--radius-sm);
-  background: none;
-  cursor: pointer;
 }
-.thumbButton > :first-child {
+.thumbWrap > :first-child {
   border-radius: var(--radius-sm);
   outline: 2px solid transparent;
   outline-offset: 2px;
   transition: outline-color var(--dur-quick) var(--ease-quick);
 }
-.thumbButton:hover > :first-child {
+.thumbWrap:hover > :first-child {
   outline-color: var(--color-border);
 }
-.itemSelected .thumbButton > :first-child {
+.itemSelected .thumbWrap > :first-child {
   outline-color: var(--color-accent);
+}
+.thumbButton {
+  position: absolute;
+  inset: 0;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: none;
+  cursor: pointer;
 }
 .itemSelected .num {
   color: var(--color-accent);
@@ -191,4 +194,19 @@
 }
 .settingsGrid > :first-child {
   grid-column: 1 / -1;
+}
+.loading {
+  display: grid;
+  grid-template-columns: 220px 1fr 340px;
+  gap: var(--space-4);
+  align-items: center;
+  height: 100%;
+  padding: var(--space-4);
+}
+.loading > :first-child,
+.loading > :last-child {
+  align-self: stretch;
+}
+.loadingCanvas {
+  aspect-ratio: 16 / 9;
 }

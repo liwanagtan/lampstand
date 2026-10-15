@@ -59,3 +59,6 @@
 .content:focus-visible {
   outline-offset: -2px;
 }
+.content[data-state='inactive'] {
+  display: none;
+}

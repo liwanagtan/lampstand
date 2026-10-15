@@ -1,0 +1,28 @@
+.anchor {
+  position: relative;
+  display: inline-flex;
+}
+.hint {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  z-index: 30;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  translate: -50% 0;
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-sm);
+  background: var(--color-text);
+  color: var(--color-bg);
+  font-size: var(--text-12);
+  font-weight: var(--weight-medium);
+  white-space: nowrap;
+  pointer-events: none;
+  box-shadow: var(--elevation-2);
+}
+.hint kbd {
+  background: color-mix(in srgb, var(--color-bg) 18%, transparent);
+  color: var(--color-bg);
+  border-color: transparent;
+}

@@ -48,7 +48,7 @@
 }
 .primary:hover:not(:disabled),
 .primary[data-force='hover'] {
-  background: color-mix(in srgb, var(--color-accent) 88%, var(--color-text));
+  background: color-mix(in srgb, var(--color-accent) 86%, #fff);
 }
 
 .secondary {

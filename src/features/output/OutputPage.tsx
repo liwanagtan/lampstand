@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Maximize } from 'lucide-react';
 import { LiveScreen } from '@/features/present/LiveScreen';
+import { FeatureBoundary } from '@/design-system/components';
 import { openChannel } from '@/features/present/live/channel';
 import type { LiveSnapshot } from '@/features/present/live/types';
 import { useApplyDocumentTheme } from '@/features/settings/theme';
@@ -83,7 +84,9 @@ export function OutputPage() {
   return (
     <div className={styles.root} data-testid="output">
       {snapshot?.presentation ? (
-        <LiveScreen snapshot={snapshot} fit="contain" className={styles.screen} />
+        <FeatureBoundary name="Output" silent>
+          <LiveScreen snapshot={snapshot} fit="contain" className={styles.screen} />
+        </FeatureBoundary>
       ) : (
         <div className={styles.waiting} />
       )}

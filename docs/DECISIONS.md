@@ -60,3 +60,14 @@ Dated choices not covered by the PRD (docs/PRD.md §14).
 - 2026-10-16 — Settings → About credits the Bible sources, background photographers, fonts and icons.
 - 2026-10-16 — The operator's Reduce motion setting travels in the live snapshot, so an open output window follows it at once.
 - 2026-10-16 — Menus label their popup content rather than their trigger, so a button keeps its visible text as its accessible name.
+- 2026-10-16 — Library thumbnails show the first slide that isn't a countdown, so cards are recognisable (most sermons open with a countdown).
+- 2026-10-16 — PWA: vite-plugin-pwa in "prompt" mode precaches the app shell, fonts, icons, Bible data and backgrounds (~27 MB). An update never applies itself; outside the control and output screens a toast offers "Restart".
+- 2026-10-16 — Errors: each feature area (command bar, side panel, slide strip, panes, editor fields, verse overlay, output) has its own error boundary. On the TV a failure renders nothing rather than an error message.
+- 2026-10-16 — Shortcut hints appear beside Next, Previous, Blank, Logo and Go live when clicked with the mouse, for the first five uses of each (counts stored in settings).
+- 2026-10-16 — Going live shows a short accent outline flying from the Preview pane to the Live pane (standard motion token), plus the one-time LIVE border pulse.
+- 2026-10-16 — Accessibility is checked with axe-core in Playwright (WCAG 2.2 AA, light and dark); slide drawings are excluded there because their 7:1 TV contrast is unit-tested.
+- 2026-10-16 — Performance targets (§10) are measured in Playwright: cold start, verse lookup and go-live latency. The soak test (`npm run soak`) defaults to 2 hours and checks memory growth ≤ 10% and < 600 MB.
+- 2026-10-16 — Bundle: the main chunk is ~715 KB (215 KB gzip), mostly the reference parser's English data and UI libraries. Everything is precached and read from disk, and measured cold start is well under the 2 s target, so it stays one chunk; the warning limit is raised to 800 KB.
+- 2026-10-16 — Thumbnail buttons (library cards, editor list, control strip) sit over the slide drawing and carry only a hidden text label, so their accessible name matches their content (WCAG 2.5.3).
+- 2026-10-16 — Tab panels stay mounted (inactive ones hidden), and the command bar keeps an empty hidden listbox while closed, so `aria-controls` always points at a real element.
+- 2026-10-16 — 6-minute soak run on the dev machine: 302 steps of slides, verses and overlay changes; heap ~15–16 MB per window, 8.5% growth, mostly warm-up. The verse history and passage cache are capped at 200 entries, so growth is bounded over 2 hours. Run the full 2 hours on the church laptop with `npm run soak`.

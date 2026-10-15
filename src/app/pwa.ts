@@ -1,0 +1,22 @@
+// Service worker registration (PRD §10 Offline). Updates wait for the operator: an update is
+// never applied in the middle of a service.
+import { registerSW } from 'virtual:pwa-register';
+import { toast } from '@/design-system/components';
+
+export function registerServiceWorker(): void {
+  if (!('serviceWorker' in navigator) || import.meta.env.DEV) return;
+  const update = registerSW({
+    onNeedRefresh() {
+      if (location.pathname.startsWith('/present') || location.pathname.startsWith('/output'))
+        return;
+      toast({
+        title: 'A new version of Lampstand is ready',
+        duration: 60_000,
+        action: { label: 'Restart', onClick: () => void update(true) },
+      });
+    },
+    onOfflineReady() {
+      toast({ title: 'Lampstand is ready to work offline', tone: 'success' });
+    },
+  });
+}

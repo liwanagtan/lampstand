@@ -201,6 +201,8 @@ export function CommandBar() {
           />
           {!value && <Kbd>/</Kbd>}
         </div>
+        {/* Keeps the input's aria-controls pointing at a real listbox while closed. */}
+        {!showList && <Command.List hidden />}
         <AnimatePresence>
           {showList && (
             <motion.div

@@ -204,9 +204,12 @@
   flex: none;
   width: 168px;
 }
-.thumbButton {
+.thumbWrap {
   position: relative;
-  display: block;
+}
+.thumbButton {
+  position: absolute;
+  inset: 0;
   width: 100%;
   padding: 0;
   border: 0;
@@ -214,7 +217,7 @@
   background: none;
   cursor: pointer;
 }
-.thumbButton > :first-child {
+.thumbWrap > :first-child {
   border-radius: var(--radius-sm);
   outline: 2px solid transparent;
   outline-offset: 2px;
@@ -222,13 +225,13 @@
     outline-color var(--dur-quick) var(--ease-quick),
     box-shadow var(--dur-standard) var(--ease-standard);
 }
-.thumbButton:hover > :first-child {
+.thumbWrap:hover > :first-child {
   outline-color: var(--color-border);
 }
-.thumbPreview .thumbButton > :first-child {
+.thumbPreview .thumbWrap > :first-child {
   outline-color: var(--color-text-muted);
 }
-.thumbLive .thumbButton > :first-child {
+.thumbLive .thumbWrap > :first-child {
   outline-color: var(--color-accent);
   box-shadow: 0 0 24px color-mix(in srgb, var(--color-accent) 40%, transparent);
 }
@@ -312,4 +315,28 @@
 }
 .modeChip svg {
   color: var(--color-text-muted);
+}
+.ghost {
+  position: fixed;
+  z-index: 25;
+  border: 2px solid var(--color-accent);
+  border-radius: var(--radius-md);
+  background: color-mix(in srgb, var(--color-accent) 12%, transparent);
+  pointer-events: none;
+}
+.loading {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  gap: var(--space-4);
+  height: 100%;
+  padding: var(--space-4);
+}
+.loadingPanes {
+  display: grid;
+  grid-template-columns: 1fr 1fr 320px;
+  gap: var(--space-4);
+  align-content: center;
+}
+.loadingPane {
+  aspect-ratio: 16 / 9;
 }

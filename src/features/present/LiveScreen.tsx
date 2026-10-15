@@ -7,6 +7,7 @@ import {
 } from 'motion/react';
 import { motion as tokens, motionDetail } from '@/design-system/tokens';
 import { LampMark } from '@/design-system/LampMark';
+import { FeatureBoundary } from '@/design-system/components';
 import { useReducedMotion } from '@/features/settings/theme';
 import { slideTranslation } from '@/features/library/translation';
 import type { Transition } from '@/schema/common';
@@ -150,12 +151,14 @@ export function LiveScreen({ snapshot, fit = 'width', label, className }: LiveSc
             }
             transition={overlayTransition}
           >
-            <VerseOverlay
-              key={`${overlay.ref}|${overlay.translation}`}
-              overlay={overlay}
-              template={template}
-              animate={overlayKey !== initial.overlay}
-            />
+            <FeatureBoundary name="Verse overlay" silent>
+              <VerseOverlay
+                key={`${overlay.ref}|${overlay.translation}`}
+                overlay={overlay}
+                template={template}
+                animate={overlayKey !== initial.overlay}
+              />
+            </FeatureBoundary>
           </motion.div>
         )}
       </AnimatePresence>

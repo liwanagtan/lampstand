@@ -1,7 +1,8 @@
 import { expect, test } from '@playwright/test';
+import { openApp } from './helpers';
 
 test('app shell loads and the theme switch works', async ({ page }) => {
-  await page.goto('/');
+  await openApp(page, '/');
   await expect(page.getByRole('heading', { name: 'Library', exact: true })).toBeVisible();
   await page.getByRole('radio', { name: 'Light' }).click();
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
@@ -16,13 +17,13 @@ test('every route renders', async ({ page }) => {
     ['/settings', 'Settings'],
     ['/import', 'Import'],
   ] as const) {
-    await page.goto(path);
+    await openApp(page, path);
     await expect(page.getByRole('heading', { name: heading })).toBeVisible();
   }
 });
 
 test('component gallery renders both themes', async ({ page }) => {
-  await page.goto('/dev/components');
+  await openApp(page, '/dev/components');
   await expect(page.getByRole('region', { name: 'light theme' })).toBeVisible();
   await expect(page.getByRole('region', { name: 'dark theme' })).toBeVisible();
   await page

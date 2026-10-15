@@ -22,7 +22,8 @@
       "vite/client",
       "vite-plugin-pwa/client",
       "vitest/globals",
-      "@testing-library/jest-dom"
+      "@testing-library/jest-dom",
+      "node"
     ],
     "baseUrl": ".",
     "paths": { "@/*": ["src/*"] }

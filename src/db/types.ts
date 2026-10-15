@@ -37,6 +37,8 @@ export interface TranslationRecord {
   license: string;
   source?: string;
   bundled: boolean;
+  /** Content hash of the bundled file, so updated bundles reload. */
+  hash?: string;
   books: BookInfo[];
   verseCount: number;
   importedAt: number;

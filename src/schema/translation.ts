@@ -1,15 +1,13 @@
 // Translation file format (PRD §5). Used for bundled translations and "Import translation".
 import { z } from 'zod';
-import { BOOK_BY_CODE } from '@/features/bible/books';
+import { BOOK_BY_CODE } from '../features/bible/books';
 
 export const TranslationFileSchema = z.strictObject({
   format: z.literal('lampstand-bible', { error: 'This is not a Lampstand translation file.' }),
   version: z.literal(1, { error: 'Unsupported translation file version.' }),
-  code: z
-    .string()
-    .regex(/^[A-Z][A-Z0-9]{1,7}$/, {
-      error: 'Code must be 2–8 capital letters or digits, e.g. "KJV".',
-    }),
+  code: z.string().regex(/^[A-Z][A-Z0-9]{1,7}$/, {
+    error: 'Code must be 2–8 capital letters or digits, e.g. "KJV".',
+  }),
   name: z.string().trim().min(1).max(80),
   language: z.string().min(2).max(10),
   license: z.string().trim().min(1, { error: 'License is required.' }).max(400),

@@ -1,0 +1,91 @@
+.trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  width: 100%;
+  height: var(--control-height);
+  padding: 0 var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  color: var(--color-text);
+  cursor: pointer;
+  transition: border-color var(--dur-quick) var(--ease-quick);
+}
+.trigger:hover:not(:disabled) {
+  border-color: var(--color-text-muted);
+}
+.trigger:focus-visible {
+  outline: none;
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px var(--color-focus-ring);
+}
+.trigger:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.sm {
+  height: var(--control-height-sm);
+  font-size: var(--text-13);
+}
+.chevron {
+  display: grid;
+  color: var(--color-text-muted);
+}
+
+.content {
+  z-index: 60;
+  min-width: var(--radix-select-trigger-width);
+  max-height: var(--radix-select-content-available-height);
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-raised);
+  box-shadow: var(--elevation-2);
+  transform-origin: var(--radix-select-content-transform-origin);
+  animation: menuIn var(--dur-quick) var(--ease-quick);
+}
+
+.viewport {
+  padding: var(--space-1);
+}
+
+.item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: var(--control-height-sm);
+  padding: var(--space-1) var(--space-8) var(--space-1) var(--space-3);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  user-select: none;
+}
+.item[data-highlighted] {
+  outline: none;
+  background: var(--color-surface);
+}
+.item[data-disabled] {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.description {
+  font-size: var(--text-12);
+  color: var(--color-text-muted);
+}
+.indicator {
+  position: absolute;
+  right: var(--space-2);
+  top: 50%;
+  translate: 0 -50%;
+  display: grid;
+  color: var(--color-accent);
+}
+
+@keyframes menuIn {
+  from {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+}

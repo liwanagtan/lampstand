@@ -8,6 +8,6 @@ See [docs/PRD.md](docs/PRD.md) for the full product spec and [docs/DECISIONS.md]
 
 ```bash
 npm install
-npm run dev        # http://localhost:5173
+npm run dev        # http://localhost:5310
 npm run ci         # lint, type check, unit tests, build, Playwright
 ```

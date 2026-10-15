@@ -20,3 +20,14 @@ test('every route renders', async ({ page }) => {
     await expect(page.getByRole('heading', { name: heading })).toBeVisible();
   }
 });
+
+test('component gallery renders both themes', async ({ page }) => {
+  await page.goto('/dev/components');
+  await expect(page.getByRole('region', { name: 'light theme' })).toBeVisible();
+  await expect(page.getByRole('region', { name: 'dark theme' })).toBeVisible();
+  await page
+    .getByRole('region', { name: 'dark theme' })
+    .getByRole('button', { name: 'Toast', exact: true })
+    .click();
+  await expect(page.getByText('Switched to WEB')).toBeVisible();
+});

@@ -1,0 +1,13 @@
+.skeleton {
+  display: block;
+  background: var(--color-surface-raised);
+  animation: pulse 1400ms ease-in-out infinite;
+}
+@keyframes pulse {
+  50% {
+    opacity: 0.55;
+  }
+}
+[data-reduce-motion='true'] .skeleton {
+  animation: none;
+}

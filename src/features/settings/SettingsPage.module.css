@@ -1,0 +1,140 @@
+.sections {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  max-width: 920px;
+}
+.section {
+  display: grid;
+  grid-template-columns: 240px minmax(0, 1fr);
+  gap: var(--space-8);
+}
+.sectionHead {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.sectionTitle {
+  font-size: var(--text-16);
+  font-weight: var(--weight-semibold);
+}
+.sectionBody {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  min-width: 0;
+}
+.muted {
+  color: var(--color-text-muted);
+  font-size: var(--text-13);
+}
+.small {
+  font-size: var(--text-13);
+  color: var(--color-text-muted);
+}
+.grid3 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: var(--space-4);
+}
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+}
+.usage {
+  margin-left: auto;
+}
+.segmented {
+  display: inline-grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-1);
+  width: 320px;
+  padding: var(--space-1);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-raised);
+}
+.segment {
+  height: var(--control-height-sm);
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-text-muted);
+  font-weight: var(--weight-medium);
+  cursor: pointer;
+  transition:
+    background-color var(--dur-quick) var(--ease-quick),
+    color var(--dur-quick) var(--ease-quick);
+}
+.segment:hover {
+  color: var(--color-text);
+}
+.segment[aria-checked='true'] {
+  background: var(--color-surface);
+  color: var(--color-text);
+  box-shadow: var(--elevation-1);
+}
+.logoRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-6);
+}
+.logoPreview {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 192px;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-radius: var(--radius-md);
+  background: #000;
+}
+.logoPreview img {
+  max-width: 60%;
+  max-height: 60%;
+  object-fit: contain;
+}
+.logoMark {
+  color: #d9a441;
+}
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--text-14);
+}
+.table th {
+  padding: 0 var(--space-2) var(--space-2);
+  border-bottom: 1px solid var(--color-border);
+  font-size: var(--text-12);
+  font-weight: var(--weight-semibold);
+  color: var(--color-text-muted);
+  text-align: left;
+}
+.table td {
+  padding: var(--space-2);
+  border-bottom: 1px solid var(--color-border);
+  vertical-align: middle;
+}
+.table tr:last-child td {
+  border-bottom: 0;
+}
+.right {
+  text-align: right;
+  white-space: nowrap;
+}
+.inlineChip {
+  margin-left: var(--space-1);
+  height: 20px;
+}
+.details summary {
+  font-weight: var(--weight-medium);
+  cursor: pointer;
+}
+.details ul {
+  margin: var(--space-2) 0 0;
+  padding-left: var(--space-6);
+  font-size: var(--text-13);
+  color: var(--color-text-muted);
+  line-height: 1.7;
+}

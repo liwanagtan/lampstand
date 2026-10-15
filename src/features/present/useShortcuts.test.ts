@@ -9,5 +9,6 @@ it('names keys consistently', () => {
   expect(keyName(ev({ key: ' ' }))).toBe('Space');
   expect(keyName(ev({ key: 'k', ctrlKey: true }))).toBe('Mod+k');
   expect(keyName(ev({ key: 'Enter', shiftKey: true }))).toBe('Shift+Enter');
+  expect(keyName(ev({ key: 'Z', shiftKey: true, ctrlKey: true }))).toBe('Mod+Shift+z');
   expect(keyName(ev({ key: '?', shiftKey: true }))).toBe('?');
 });

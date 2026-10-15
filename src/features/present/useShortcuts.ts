@@ -14,7 +14,7 @@ export function keyName(e: KeyboardEvent): string {
   const parts: string[] = [];
   if (e.ctrlKey || e.metaKey) parts.push('Mod');
   if (e.altKey) parts.push('Alt');
-  if (e.shiftKey && key.length > 1) parts.push('Shift');
+  if (e.shiftKey && (key.length > 1 || e.ctrlKey || e.metaKey || e.altKey)) parts.push('Shift');
   parts.push(key === ' ' ? 'Space' : key);
   return parts.join('+');
 }

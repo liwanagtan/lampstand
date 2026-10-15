@@ -94,9 +94,13 @@ export function PresentPage() {
     };
   }, [id, defaultTheme]);
 
+  const reduceMotion = useSettings((s) => s.reduceMotion);
   useEffect(() => {
     useControl.getState().setLogo(logoAssetId);
   }, [logoAssetId]);
+  useEffect(() => {
+    useControl.getState().setReduceMotion(reduceMotion);
+  }, [reduceMotion]);
 
   if (state === 'missing') {
     return (
@@ -127,6 +131,7 @@ function ControlScreen() {
   const rev = useControl((s) => s.rev);
   const changedAt = useControl((s) => s.changedAt);
   const logoAssetId = useControl((s) => s.logoAssetId);
+  const reduceMotion = useControl((s) => s.reduceMotion);
   const [rail, setRail] = useState<RailTab>('queue');
   const [sheetOpen, setSheetOpen] = useState(false);
   const [paletteOpen, setPaletteOpen] = useState(false);
@@ -144,8 +149,8 @@ function ControlScreen() {
   const previewSlide = slides[previewTarget];
   const atEnd = live.slideIndex >= slides.length - 1 && previewIndex === null;
   const snapshot = useMemo(
-    () => ({ rev, live, presentation, translation, logoAssetId, changedAt }),
-    [rev, live, presentation, translation, logoAssetId, changedAt],
+    () => ({ rev, live, presentation, translation, logoAssetId, reduceMotion, changedAt }),
+    [rev, live, presentation, translation, logoAssetId, reduceMotion, changedAt],
   );
 
   const onOpenOutput = async () => {

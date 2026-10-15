@@ -52,3 +52,11 @@ Dated choices not covered by the PRD (docs/PRD.md §14).
 - 2026-10-16 — Overlay mode keys 1/2/3 also set the mode for the next verse in this session; the default comes from Settings.
 - 2026-10-16 — Verse history keeps this session's list in memory and writes every shown verse to the Dexie history table, capped at 200 entries.
 - 2026-10-16 — Ctrl+K palette commands: verse, overlay modes, next/previous, blank, logo, open output, shortcut sheet, back to library, and "go to slide N".
+- 2026-10-16 — Editor: typing in one field within 0.8 s counts as a single undo step; undo/redo keep 50 steps each. Autosave runs 0.4 s after the last edit; "Saved" shows for 1.5 s. Ctrl+Z / Ctrl+Shift+Z (and Ctrl+Y) work even while a field has focus.
+- 2026-10-16 — Edits may leave a slide temporarily invalid (empty heading, text over its limit, unknown reference). It is saved anyway, so nothing is lost; the slide gets a warning badge in the strip and its problems are listed above its fields.
+- 2026-10-16 — Changing slide type is offered only when every piece of content has a place in the new type and fits its limits (point ↔ closing ↔ title, section → title/point/closing, quote ↔ statement). Nothing is ever silently dropped.
+- 2026-10-16 — Reordering: drag by the grip in the slide list, or use Move up/down. A presentation always keeps at least one slide.
+- 2026-10-16 — Backup file = presentations, settings and every stored asset (base64) in one JSON file, built as streamed Blob parts. Restore merges by id, keeps whichever copy was edited last, and never deletes.
+- 2026-10-16 — Settings → About credits the Bible sources, background photographers, fonts and icons.
+- 2026-10-16 — The operator's Reduce motion setting travels in the live snapshot, so an open output window follows it at once.
+- 2026-10-16 — Menus label their popup content rather than their trigger, so a button keeps its visible text as its accessible name.

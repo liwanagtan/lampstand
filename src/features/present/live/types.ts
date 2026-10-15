@@ -35,6 +35,8 @@ export interface LiveSnapshot {
   /** The presentation's translation after defaults. */
   translation: string;
   logoAssetId: string | null;
+  /** The operator's Reduce motion setting, so the TV follows it without a reload. */
+  reduceMotion: boolean;
   /** Monotonic time of the last change, so reopened outputs skip entrance motion. */
   changedAt: number;
 }

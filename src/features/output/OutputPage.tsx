@@ -4,6 +4,7 @@ import { LiveScreen } from '@/features/present/LiveScreen';
 import { openChannel } from '@/features/present/live/channel';
 import type { LiveSnapshot } from '@/features/present/live/types';
 import { useApplyDocumentTheme } from '@/features/settings/theme';
+import { useSettings } from '@/features/settings/settingsStore';
 import { preloadAsset } from '@/slides/useAsset';
 import { db } from '@/db/db';
 import { getPassage } from '@/features/bible/passage';
@@ -59,6 +60,12 @@ export function OutputPage() {
       window.removeEventListener('keydown', onKey);
     };
   }, []);
+
+  // Follow the operator's Reduce motion setting (kept in this window's memory only).
+  const operatorReduce = snapshot?.reduceMotion;
+  useEffect(() => {
+    if (operatorReduce !== undefined) useSettings.setState({ reduceMotion: operatorReduce });
+  }, [operatorReduce]);
 
   // Preload the next slide's background and verses (PRD §7.6).
   useEffect(() => {

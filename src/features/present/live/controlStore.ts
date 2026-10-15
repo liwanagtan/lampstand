@@ -14,6 +14,7 @@ interface ControlState {
   presentation: StoredPresentation | null;
   translation: string;
   logoAssetId: string | null;
+  reduceMotion: boolean;
   rev: number;
   changedAt: number;
   /** Slide chosen into Preview; null follows the live slide (shows the next one). */
@@ -37,6 +38,7 @@ interface ControlState {
   goLive: () => void;
   setPresentation: (p: StoredPresentation) => void;
   setLogo: (id: string | null) => void;
+  setReduceMotion: (v: boolean) => void;
   showOverlay: (overlay: Omit<LiveOverlay, 'page'>) => Promise<void>;
   setOverlayMode: (mode: OverlayMode) => Promise<void>;
   setOverlayTranslation: (code: string) => Promise<void>;
@@ -84,6 +86,7 @@ export const useControl = create<ControlState>((set, get) => {
     presentation: null,
     translation: 'KJV',
     logoAssetId: null,
+    reduceMotion: false,
     rev: 0,
     changedAt: 0,
     previewIndex: null,
@@ -139,6 +142,9 @@ export const useControl = create<ControlState>((set, get) => {
 
     setLogo: (logoAssetId) => set({ logoAssetId, rev: get().rev + 1, changedAt: Date.now() }),
 
+    setReduceMotion: (reduceMotion) =>
+      set({ reduceMotion, rev: get().rev + 1, changedAt: Date.now() }),
+
     showOverlay: async (overlay) => {
       const full = { ...overlay, page: 0 };
       await refreshOverlayPages(full);
@@ -167,6 +173,7 @@ export const useControl = create<ControlState>((set, get) => {
         presentation: s.presentation,
         translation: s.translation,
         logoAssetId: s.logoAssetId,
+        reduceMotion: s.reduceMotion,
         changedAt: s.changedAt,
       };
     },

@@ -22,11 +22,9 @@ export interface MenuProps {
 export function Menu({ trigger, items, align = 'end', label }: MenuProps) {
   return (
     <RMenu.Root>
-      <RMenu.Trigger asChild aria-label={label}>
-        {trigger}
-      </RMenu.Trigger>
+      <RMenu.Trigger asChild>{trigger}</RMenu.Trigger>
       <RMenu.Portal>
-        <RMenu.Content className={styles.content} align={align} sideOffset={6}>
+        <RMenu.Content className={styles.content} align={align} sideOffset={6} aria-label={label}>
           {items.map((item, i) => (
             <div key={i}>
               {item.separatorBefore && <RMenu.Separator className={styles.separator} />}

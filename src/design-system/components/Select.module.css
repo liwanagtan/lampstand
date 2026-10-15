@@ -29,6 +29,11 @@
   height: var(--control-height-sm);
   font-size: var(--text-13);
 }
+.trigger > span:first-child {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
 .chevron {
   display: grid;
   color: var(--color-text-muted);

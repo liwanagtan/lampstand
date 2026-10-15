@@ -1,0 +1,11 @@
+.root {
+  display: grid;
+  place-content: center;
+  gap: var(--space-3);
+  height: 100%;
+  text-align: center;
+  color: var(--color-text);
+}
+.root p {
+  color: var(--color-text-muted);
+}

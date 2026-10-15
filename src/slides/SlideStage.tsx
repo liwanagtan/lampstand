@@ -56,7 +56,8 @@ export function SlideStage({
       role={label ? 'img' : undefined}
       aria-label={label}
     >
-      <div className={styles.stage} style={style} data-template={template.id}>
+      {/* The frame's label describes the slide; its drawing is decorative for assistive tech. */}
+      <div className={styles.stage} style={style} data-template={template.id} aria-hidden>
         {scale > 0 && children}
       </div>
     </div>

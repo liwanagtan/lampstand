@@ -30,3 +30,9 @@ Dated choices not covered by the PRD (docs/PRD.md §14).
 - 2026-10-16 — Bundled backgrounds: 20 photos from Wikimedia Commons (CC0, public domain or CC BY — no share-alike), because Unsplash and Pexels need API keys. Credits in public/backgrounds/LICENSES.md. Images are 1920×1080 WebP (~4.9 MB total) with 384×216 thumbnails.
 - 2026-10-16 — Choosing a bundled background copies it into the assets table (id `bg-<name>`), so all image backgrounds are referenced by assetId.
 - 2026-10-16 — Image backgrounds without a chosen file show a labelled dashed placeholder in the editor and previews, and the template background on the TV.
+- 2026-10-16 — Library: clicking a card's thumbnail presents it; Edit, Duplicate, Export JSON and Delete live in the card's menu. Sort options: sermon date, last presented, recently edited. Search also matches series.
+- 2026-10-16 — Delete removes the record at once and keeps it in memory for the 8-second undo toast; undo puts it back unchanged.
+- 2026-10-16 — Exported JSON keeps background assetIds; on another laptop those backgrounds show as "needs a background" placeholders.
+- 2026-10-16 — Import with errors still previews every slide that parses on its own, so each error can jump to its slide; slides that can't parse show a "can't be shown" card.
+- 2026-10-16 — Import limits: presentation files up to 5 MB, videos up to 400 MB (stored as-is), images resized to ≤ 1920 px wide and saved as WebP (quality 0.82).
+- 2026-10-16 — Slide drawings are aria-hidden; each frame carries its own label, so page headings stay meaningful for screen readers.

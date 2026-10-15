@@ -1,0 +1,93 @@
+.linkReset {
+  text-decoration: none;
+}
+.toolbar {
+  display: flex;
+  gap: var(--space-3);
+  margin-top: calc(var(--space-4) * -1);
+}
+.search {
+  flex: 0 1 420px;
+  min-width: 300px;
+}
+.sort {
+  width: 200px;
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--space-6);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.item {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 280px;
+}
+.card {
+  overflow: hidden;
+  height: 100%;
+}
+.thumbButton {
+  position: relative;
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+.thumbButton:focus-visible {
+  outline-offset: -2px;
+}
+.playHint {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  background: rgb(0 0 0 / 0.45);
+  color: #fff;
+  font-weight: var(--weight-semibold);
+  opacity: 0;
+  transition: opacity var(--dur-quick) var(--ease-quick);
+}
+.thumbButton:hover .playHint,
+.thumbButton:focus-visible .playHint {
+  opacity: 1;
+}
+.thumbSkeleton {
+  aspect-ratio: 16 / 9;
+  border-radius: 0 !important;
+}
+.meta {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-3) var(--space-3) var(--space-4) var(--space-4);
+}
+.titleRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+.title {
+  overflow: hidden;
+  font-size: var(--text-16);
+  font-weight: var(--weight-semibold);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.sub {
+  font-size: var(--text-13);
+  color: var(--color-text-muted);
+}
+.steps {
+  margin: var(--space-2) 0 0;
+  padding-left: var(--space-6);
+  text-align: left;
+  line-height: 1.7;
+}

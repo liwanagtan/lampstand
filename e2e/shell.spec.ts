@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test';
 
 test('app shell loads and the theme switch works', async ({ page }) => {
   await page.goto('/');
-  await expect(page.getByRole('heading', { name: 'Library' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Library', exact: true })).toBeVisible();
   await page.getByRole('radio', { name: 'Light' }).click();
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
   await page.reload();

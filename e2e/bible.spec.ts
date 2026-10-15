@@ -4,7 +4,9 @@ test('first run prepares the five Bibles, then never again', async ({ page }) =>
   test.setTimeout(90_000);
   const t0 = Date.now();
   await page.goto('/');
-  await expect(page.getByRole('heading', { name: 'Library' })).toBeVisible({ timeout: 60_000 });
+  await expect(page.getByRole('heading', { name: 'Library', exact: true })).toBeVisible({
+    timeout: 60_000,
+  });
   const elapsed = Date.now() - t0;
   expect(elapsed).toBeLessThan(30_000);
   const count = await page.evaluate(async () => {
@@ -17,5 +19,7 @@ test('first run prepares the five Bibles, then never again', async ({ page }) =>
   });
   expect(count).toBe(5);
   await page.reload();
-  await expect(page.getByRole('heading', { name: 'Library' })).toBeVisible({ timeout: 3_000 });
+  await expect(page.getByRole('heading', { name: 'Library', exact: true })).toBeVisible({
+    timeout: 3_000,
+  });
 });

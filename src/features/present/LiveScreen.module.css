@@ -1,0 +1,43 @@
+.slideLayer,
+.slide,
+.overlayLayer,
+.screenLayer {
+  position: absolute;
+  inset: 0;
+}
+.slideLayer {
+  transform-origin: 0% 50%;
+  will-change: transform;
+}
+.slide {
+  overflow: hidden;
+}
+.overlayLayer {
+  z-index: 3;
+  pointer-events: none;
+}
+.screenLayer {
+  z-index: 10;
+  display: grid;
+  place-items: center;
+  background: #000;
+}
+.logoImage {
+  max-width: 60%;
+  max-height: 60%;
+  object-fit: contain;
+}
+.defaultLogo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
+  color: var(--t-accent);
+  font-family: var(--font-display);
+  font-size: 96px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+.defaultLogo span {
+  color: var(--t-text);
+}

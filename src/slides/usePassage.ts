@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { db } from '@/db/db';
 import { getPassage, type Passage } from '@/features/bible/passage';
 import { getTranslation, useBible } from '@/features/bible/bibleStore';
-import { parseRefDetailed } from '@/features/bible/ref';
+import { fromOsis, parseRefDetailed, type RefParseResult } from '@/features/bible/ref';
 import { verseCountsFor } from '@/features/bible/versification';
 import type { OverlayMode } from '@/schema/common';
 import { getTemplate } from '@/templates/templates';
@@ -27,10 +27,13 @@ export function usePassage(ref: string | null | undefined, code: string): Passag
     value: { loading: true },
   });
   const key = `${code}|${ref ?? ''}`;
-  const parsed = useMemo(
-    () => (ref && t ? parseRefDetailed(ref, { verseCounts: verseCountsFor(t) }) : null),
-    [ref, t],
-  );
+  const parsed = useMemo((): RefParseResult | null => {
+    if (!ref || !t) return null;
+    const canonical = fromOsis(ref);
+    return canonical
+      ? { ok: true, range: canonical }
+      : parseRefDetailed(ref, { verseCounts: verseCountsFor(t) });
+  }, [ref, t]);
 
   useEffect(() => {
     if (!t || !parsed?.ok) return;

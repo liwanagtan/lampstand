@@ -1,0 +1,53 @@
+/* Canvas coordinates (1920×1080). */
+.lowerThird,
+.sidePanel,
+.full {
+  position: absolute;
+  z-index: 3;
+}
+.full {
+  inset: 0;
+  background: var(--t-bg);
+}
+.lowerThird {
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: var(--s-lower-third);
+  padding: var(--s-panel-py) calc(var(--s-safe-x) + var(--s-panel-px))
+    calc(var(--s-safe-y) * 0.5 + var(--s-panel-py));
+  background: var(--t-panel);
+  backdrop-filter: blur(var(--s-overlay-blur)) saturate(1.1);
+  border-top: 2px solid color-mix(in srgb, var(--t-accent) 55%, transparent);
+}
+.sidePanel {
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: var(--s-side-panel);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: calc(var(--s-safe-y) + var(--s-panel-py)) var(--s-safe-x)
+    calc(var(--s-safe-y) + var(--s-panel-py)) var(--s-panel-px);
+  background: var(--t-panel);
+  backdrop-filter: blur(var(--s-overlay-blur)) saturate(1.1);
+  border-left: 2px solid color-mix(in srgb, var(--t-accent) 55%, transparent);
+}
+.panelBody > * + * {
+  margin-top: 20px;
+}
+.panelBody p:last-child {
+  max-width: none;
+}
+.pageInline {
+  position: absolute;
+  right: var(--s-safe-x);
+  bottom: calc(var(--s-safe-y) * 0.5 + 12px);
+  font-size: var(--s-caption);
+  font-variant-numeric: tabular-nums;
+  color: var(--t-muted);
+}
+.sidePanel .pageInline {
+  bottom: calc(var(--s-safe-y) + 12px);
+}

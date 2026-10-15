@@ -36,3 +36,12 @@ Dated choices not covered by the PRD (docs/PRD.md §14).
 - 2026-10-16 — Import with errors still previews every slide that parses on its own, so each error can jump to its slide; slides that can't parse show a "can't be shown" card.
 - 2026-10-16 — Import limits: presentation files up to 5 MB, videos up to 400 MB (stored as-is), images resized to ≤ 1920 px wide and saved as WebP (quality 0.82).
 - 2026-10-16 — Slide drawings are aria-hidden; each frame carries its own label, so page headings stay meaningful for screen readers.
+- 2026-10-16 — Each live snapshot carries the whole presentation (a few KB), so the output can draw the TV with no other input and keeps the last image if the control window dies. The output reads verse text and images straight from IndexedDB.
+- 2026-10-16 — With Window Management permission the output opens as a fullscreen popup (`popup,fullscreen` window features) on the non-primary screen. Without it, a normal popup shows a "Drag this window to the TV and press F" hint, which disappears in full screen.
+- 2026-10-16 — Output connection: the output says hello on load, sends a heartbeat every 1.5 s and bye on close; the control marks it disconnected after 4 s of silence.
+- 2026-10-16 — Preview follows the slide after the live one until the operator picks a thumbnail; Enter or "Go live" sends the preview. Double-clicking a thumbnail sends it live directly.
+- 2026-10-16 — Next walks through build items, then through the pages of a long verse slide, then to the next slide. Previous steps back the same way, and entering a slide backwards shows it fully built on its last page. ↑/↓ and Home are extra aliases.
+- 2026-10-16 — Live state is mirrored to sessionStorage so a reloaded control window resumes where it was.
+- 2026-10-16 — Content already live when an output (re)opens is drawn in its final state, without replaying entrance motion; anything sent afterwards animates normally.
+- 2026-10-16 — The countdown starts when its slide goes live and keeps running if the operator re-enters the same slide.
+- 2026-10-16 — The default logo screen shows the Lampstand mark until a logo image is set in Settings.

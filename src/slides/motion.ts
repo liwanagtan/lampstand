@@ -10,6 +10,12 @@ const [x1, y1, x2, y2] = motion.reveal.ease;
 /** The reveal token's cubic-bezier as a GSAP ease. */
 const REVEAL_EASE = CustomEase.create('lampstandReveal', `M0,0 C${x1},${y1} ${x2},${y2} 1,1`);
 
+/** Speed beats polish (PRD §9): an interrupted reveal jumps to its final state. */
+function finish(tween: gsap.core.Tween): void {
+  tween.progress(1);
+  tween.kill();
+}
+
 export function isReducedMotion(): boolean {
   return document.documentElement.dataset.reduceMotion === 'true';
 }
@@ -22,7 +28,7 @@ export function revealLines(el: HTMLElement, delayMs = 0): () => void {
       { opacity: 0 },
       { opacity: 1, duration: motion.reduced.duration / 1000 },
     );
-    return () => tween.kill();
+    return () => finish(tween);
   }
   const split = SplitText.create(el, { type: 'lines', linesClass: 'reveal-line' });
   const tween = gsap.fromTo(
@@ -38,7 +44,7 @@ export function revealLines(el: HTMLElement, delayMs = 0): () => void {
     },
   );
   return () => {
-    tween.kill();
+    finish(tween);
     split.revert();
   };
 }
@@ -61,5 +67,5 @@ export function revealBlock(
       delay: reduced ? 0 : delayMs / 1000,
     },
   );
-  return () => tween.kill();
+  return () => finish(tween);
 }

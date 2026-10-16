@@ -341,6 +341,56 @@ function ControlScreen() {
         ? `Slide ${previewTarget + 1} · ${previewSlide.type}`
         : undefined;
 
+  const previewPane = (
+    <div className={cx(styles.pane, styles.previewPane)}>
+      <div className={styles.paneHead}>
+        <h2 className={styles.paneTitle}>Preview</h2>
+        {previewMeta && <span className={styles.paneMeta}>{previewMeta}</span>}
+      </div>
+      <div className={styles.paneBody} data-pane="preview">
+        <FeatureBoundary name="Preview">{previewContent}</FeatureBoundary>
+      </div>
+      <div className={styles.sendRow}>
+        <DockButton
+          label="Previous slide"
+          keys="←"
+          hint="prev"
+          icon={<ChevronLeft size={18} />}
+          onClick={() => dispatch({ type: 'prev' })}
+          iconOnly
+          showKey={false}
+        />
+        <ShortcutHint id="goLive" keys="Enter">
+          <Button
+            variant="primary"
+            icon={<MonitorPlay size={16} />}
+            shortcut="Enter"
+            onClick={sendPreview}
+            className={styles.sendButton}
+            disabled={Boolean(frozen) || (!verses.preview && (atEnd || !previewSlide))}
+          >
+            Send to screen
+          </Button>
+        </ShortcutHint>
+        <DockButton
+          label="Next slide"
+          keys="→"
+          hint="next"
+          icon={<ChevronRight size={18} />}
+          onClick={() => dispatch({ type: 'next' })}
+          iconOnly
+          showKey={false}
+        />
+      </div>
+    </div>
+  );
+
+  const livePane = (
+    <LivePane meta={liveMeta} frozen={Boolean(frozen)} onSwap={swap}>
+      <LiveScreen snapshot={frozen ?? snapshot} label="Live output" />
+    </LivePane>
+  );
+
   return (
     <PosterContext.Provider value={posterInfo}>
       <div className={styles.shell}>
@@ -405,49 +455,25 @@ function ControlScreen() {
 
         <main className={styles.main}>
           <section className={styles.stage} aria-label="Preview and live">
-            <div className={cx(styles.canvases, swapped && styles.swapped)}>
-              <div className={cx(styles.pane, styles.previewPane, !swapped && styles.paneSmall)}>
-                <div className={styles.paneHead}>
-                  <h2 className={styles.paneTitle}>Preview</h2>
-                  {previewMeta && <span className={styles.paneMeta}>{previewMeta}</span>}
-                </div>
-                <div className={styles.paneBody} data-pane="preview">
-                  <FeatureBoundary name="Preview">{previewContent}</FeatureBoundary>
-                </div>
-                <div className={styles.paneActions}>
-                  <ShortcutHint id="goLive" keys="Enter">
-                    <Button
-                      variant="primary"
-                      icon={<MonitorPlay size={16} />}
-                      shortcut="Enter"
-                      onClick={sendPreview}
-                      disabled={Boolean(frozen) || (!verses.preview && (atEnd || !previewSlide))}
-                    >
-                      Go live
-                    </Button>
-                  </ShortcutHint>
-                </div>
+            <div className={styles.canvases}>
+              <div className={styles.narrow}>
+                {swapped ? livePane : previewPane}
+                <Dock
+                  screen={live.screen}
+                  frozen={Boolean(frozen)}
+                  hasOverlay={Boolean(live.overlay)}
+                  mode={verses.mode}
+                  translation={live.overlay?.translation ?? verses.translation}
+                  onScreen={toggleScreen}
+                  onFreeze={toggleFreeze}
+                  onMode={verses.setMode}
+                  onVerseStep={(d) => void verses.step(d)}
+                  onTranslation={() => void verses.cycleTranslation()}
+                  onClear={() => dispatch({ type: 'clearOverlay' })}
+                />
               </div>
-              <LivePane small={swapped} meta={liveMeta} frozen={Boolean(frozen)} onSwap={swap}>
-                <LiveScreen snapshot={frozen ?? snapshot} label="Live output" />
-              </LivePane>
+              <div className={styles.wide}>{swapped ? previewPane : livePane}</div>
             </div>
-
-            <Dock
-              screen={live.screen}
-              frozen={Boolean(frozen)}
-              hasOverlay={Boolean(live.overlay)}
-              mode={verses.mode}
-              translation={live.overlay?.translation ?? verses.translation}
-              onPrev={() => dispatch({ type: 'prev' })}
-              onNext={() => dispatch({ type: 'next' })}
-              onScreen={toggleScreen}
-              onFreeze={toggleFreeze}
-              onMode={verses.setMode}
-              onVerseStep={(d) => void verses.step(d)}
-              onTranslation={() => void verses.cycleTranslation()}
-              onClear={() => dispatch({ type: 'clearOverlay' })}
-            />
           </section>
 
           <aside className={styles.rail} aria-label="Verses and notes">
@@ -561,13 +587,11 @@ function ControlScreen() {
 }
 
 function LivePane({
-  small,
   meta,
   frozen,
   onSwap,
   children,
 }: {
-  small: boolean;
   meta: ReactNode[];
   frozen: boolean;
   onSwap: () => void;
@@ -576,7 +600,7 @@ function LivePane({
   const beat = useControl((s) => s.liveBeat);
   const reduced = useReducedMotion();
   return (
-    <div className={cx(styles.pane, styles.livePane, small && styles.paneSmall)}>
+    <div className={cx(styles.pane, styles.livePane)}>
       <div className={styles.paneHead}>
         <h2 className={cx(styles.paneTitle, styles.liveLabel)}>
           <span className={styles.liveDot} aria-hidden /> LIVE
@@ -630,8 +654,6 @@ type DockProps = {
   hasOverlay: boolean;
   mode: OverlayMode;
   translation: string;
-  onPrev: () => void;
-  onNext: () => void;
   onScreen: (s: 'blank' | 'logo' | 'sermon') => void;
   onFreeze: () => void;
   onMode: (m: OverlayMode) => void;
@@ -640,29 +662,11 @@ type DockProps = {
   onClear: () => void;
 };
 
-/** Every live action in one reachable place, grouped by job (each shows its key). */
+/** Screen and verse actions in a compact column under Preview (each shows its key). */
 function Dock(p: DockProps) {
   return (
     <div className={styles.dock} role="toolbar" aria-label="Presentation controls">
-      <DockGroup label="Slides">
-        <DockButton
-          label="Previous"
-          keys="←"
-          hint="prev"
-          icon={<ChevronLeft size={18} />}
-          onClick={p.onPrev}
-          iconOnly
-        />
-        <DockButton
-          label="Next"
-          keys="→"
-          hint="next"
-          icon={<ChevronRight size={18} />}
-          onClick={p.onNext}
-          iconOnly
-        />
-      </DockGroup>
-      <DockGroup label="Screen">
+      <DockGroup label="Screen" className={styles.gridTwo}>
         <DockButton
           label="Blank"
           keys="B"
@@ -692,52 +696,64 @@ function Dock(p: DockProps) {
           onClick={p.onFreeze}
         />
       </DockGroup>
-      <DockGroup label="Verse">
+      <DockGroup label="Verse" className={styles.verseGroup}>
         <OverlayModes mode={p.mode} onChange={p.onMode} />
-        <DockButton
-          label="Previous verse"
-          keys="Alt+←"
-          icon={<ChevronLeft size={18} />}
-          onClick={() => p.onVerseStep(-1)}
-          disabled={!p.hasOverlay}
-          iconOnly
-        />
-        <DockButton
-          label="Next verse"
-          keys="Alt+→"
-          icon={<ChevronRight size={18} />}
-          onClick={() => p.onVerseStep(1)}
-          disabled={!p.hasOverlay}
-          iconOnly
-        />
-        <DockButton
-          label={p.translation}
-          title="Switch translation"
-          keys="T"
-          icon={<BookOpen size={16} />}
-          onClick={p.onTranslation}
-          disabled={!p.hasOverlay}
-        />
-        <DockButton
-          label="Clear"
-          title="Clear verse"
-          keys="Esc"
-          icon={<X size={16} />}
-          onClick={p.onClear}
-          disabled={!p.hasOverlay}
-        />
+        <div className={styles.verseRow}>
+          <DockButton
+            label="Previous verse"
+            keys="Alt+←"
+            icon={<ChevronLeft size={18} />}
+            onClick={() => p.onVerseStep(-1)}
+            disabled={!p.hasOverlay}
+            iconOnly
+            showKey={false}
+          />
+          <DockButton
+            label="Next verse"
+            keys="Alt+→"
+            icon={<ChevronRight size={18} />}
+            onClick={() => p.onVerseStep(1)}
+            disabled={!p.hasOverlay}
+            iconOnly
+            showKey={false}
+          />
+          <DockButton
+            label={p.translation}
+            title="Switch translation"
+            keys="T"
+            icon={<BookOpen size={16} />}
+            onClick={p.onTranslation}
+            disabled={!p.hasOverlay}
+          />
+          <DockButton
+            label="Clear"
+            title="Clear verse"
+            keys="Esc"
+            icon={<X size={16} />}
+            onClick={p.onClear}
+            disabled={!p.hasOverlay}
+          />
+        </div>
       </DockGroup>
     </div>
   );
 }
 
-function DockGroup({ label, children }: { label: string; children: ReactNode }) {
+function DockGroup({
+  label,
+  className,
+  children,
+}: {
+  label: string;
+  className?: string;
+  children: ReactNode;
+}) {
   return (
     <div className={styles.dockGroup} role="group" aria-label={label}>
       <span className={styles.dockLabel} aria-hidden>
         {label}
       </span>
-      <div className={styles.dockButtons}>{children}</div>
+      <div className={cx(styles.dockButtons, className)}>{children}</div>
     </div>
   );
 }
@@ -752,6 +768,7 @@ function DockButton({
   disabled,
   iconOnly,
   hint,
+  showKey = true,
 }: {
   label: string;
   title?: string;
@@ -762,6 +779,8 @@ function DockButton({
   disabled?: boolean;
   iconOnly?: boolean;
   hint?: string;
+  /** Arrow buttons already say their key with their icon. */
+  showKey?: boolean;
 }) {
   const name = title ?? label;
   const button = (
@@ -779,7 +798,7 @@ function DockButton({
       {icon}
       {(iconOnly || title) && <span className="visually-hidden">{name} </span>}
       {!iconOnly && <span>{label}</span>}
-      <kbd className={styles.dockKey}>{keys}</kbd>
+      {showKey && <kbd className={styles.dockKey}>{keys}</kbd>}
     </button>
   );
   return (

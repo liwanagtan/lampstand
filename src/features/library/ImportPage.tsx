@@ -12,7 +12,7 @@ import {
   Upload,
 } from 'lucide-react';
 import { Page } from '@/app/Page';
-import { Button, Card, Chip, Tabs, Textarea, cx, toast } from '@/design-system/components';
+import { Button, Card, Chip, Tabs, cx, toast } from '@/design-system/components';
 import { revealTransition } from '@/design-system/motion/presets';
 import { useBible } from '@/features/bible/bibleStore';
 import { useSettings } from '@/features/settings/settingsStore';
@@ -72,7 +72,6 @@ export function ImportPage() {
   const defaultTheme = useSettings((s) => s.defaultTheme);
 
   const [source, setSource] = useState<Source | null>(null);
-  const [paste, setPaste] = useState('');
   const [dragging, setDragging] = useState(false);
   const [presentation, setPresentation] = useState<StoredPresentation | null>(null);
   const [templateId, setTemplateId] = useState<TemplateId>(defaultTheme);
@@ -126,7 +125,6 @@ export function ImportPage() {
   const reset = () => {
     setSource(null);
     setPresentation(null);
-    setPaste('');
     if (fileRef.current) fileRef.current.value = '';
   };
 
@@ -183,7 +181,7 @@ export function ImportPage() {
     return (
       <Page
         title="Import"
-        description="Add a presentation made with the Lampstand skill in Claude."
+        description="Upload a presentation file to preview it, then save it to your library."
       >
         <div
           className={cx(styles.drop, dragging && styles.dragging)}
@@ -216,30 +214,6 @@ export function ImportPage() {
             Choose file
           </Button>
         </div>
-        <Card>
-          <div className={styles.pasteHead}>
-            <h2 className={styles.sectionTitle}>Or paste JSON</h2>
-            <p className={styles.muted}>Copy the code block from Claude and paste it here.</p>
-          </div>
-          <Textarea
-            label="Presentation JSON"
-            hideLabel
-            rows={8}
-            value={paste}
-            onChange={(e) => setPaste(e.target.value)}
-            placeholder='{ "schemaVersion": 1, "title": "…", "slides": [ … ] }'
-            className={styles.code}
-          />
-          <div className={styles.pasteActions}>
-            <Button
-              variant="secondary"
-              disabled={!paste.trim()}
-              onClick={() => load({ name: 'Pasted JSON', text: paste })}
-            >
-              Check and preview
-            </Button>
-          </div>
-        </Card>
       </Page>
     );
   }

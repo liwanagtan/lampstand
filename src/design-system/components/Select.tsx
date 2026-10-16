@@ -39,7 +39,7 @@ export function Select<V extends string = string>({
 }: SelectProps<V>) {
   const id = useId();
   return (
-    <div className={cx(fieldStyles.field, className)}>
+    <div className={cx(fieldStyles.field, hideLabel && fieldStyles.noLabel, className)}>
       {label && (
         <label htmlFor={id} className={cx(fieldStyles.label, hideLabel && 'visually-hidden')}>
           {label}

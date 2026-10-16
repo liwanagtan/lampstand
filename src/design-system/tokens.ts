@@ -55,7 +55,7 @@ export const fonts = {
 export const size = {
   controlHeight: 40, // PRD §8: 40 px minimum button height in the control screen
   controlHeightSm: 32,
-  sidebarWidth: 232,
+  topbarHeight: 60,
   iconSm: 16,
   iconMd: 20,
   iconStroke: 1.5,
@@ -113,7 +113,7 @@ function staticVars(): string {
   out.push(
     `--control-height: ${size.controlHeight}px;`,
     `--control-height-sm: ${size.controlHeightSm}px;`,
-    `--sidebar-width: ${size.sidebarWidth}px;`,
+    `--topbar-height: ${size.topbarHeight}px;`,
   );
   for (const name of ['instant', 'quick', 'standard', 'slide'] as const) {
     out.push(

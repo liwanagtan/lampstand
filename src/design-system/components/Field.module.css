@@ -5,6 +5,10 @@
   min-width: 0;
 }
 
+.noLabel {
+  gap: 0;
+}
+
 .labelRow {
   display: flex;
   align-items: baseline;

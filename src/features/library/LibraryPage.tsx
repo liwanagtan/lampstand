@@ -1,17 +1,7 @@
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLiveQuery } from 'dexie-react-hooks';
-import {
-  Copy,
-  Download,
-  LibraryBig,
-  MoreHorizontal,
-  Pencil,
-  Play,
-  Search,
-  Trash2,
-  Upload,
-} from 'lucide-react';
+import { Copy, Download, MoreHorizontal, Pencil, Play, Search, Trash2, Upload } from 'lucide-react';
 import { Page } from '@/app/Page';
 import { db } from '@/db/db';
 import {
@@ -91,17 +81,8 @@ export function LibraryPage() {
           : undefined
       }
       actions={
+        records &&
         !empty && (
-          <Button variant="primary" icon={<Upload size={16} />} onClick={() => navigate('/import')}>
-            Import
-          </Button>
-        )
-      }
-    >
-      {empty ? (
-        <LibraryEmpty />
-      ) : (
-        <>
           <div className={styles.toolbar}>
             <Input
               label="Search"
@@ -121,7 +102,21 @@ export function LibraryPage() {
               options={SORTS}
               className={styles.sort}
             />
+            <Button
+              variant="primary"
+              icon={<Upload size={16} />}
+              onClick={() => navigate('/import')}
+            >
+              Import
+            </Button>
           </div>
+        )
+      }
+    >
+      {empty ? (
+        <LibraryEmpty />
+      ) : (
+        <>
           {!visible ? (
             <div className={styles.grid} aria-busy="true">
               {Array.from({ length: 6 }, (_, i) => (
@@ -262,22 +257,66 @@ function PresentationCard({ record }: { record: LibraryRecord }) {
 function LibraryEmpty() {
   const navigate = useNavigate();
   return (
-    <Card padded={false}>
-      <EmptyState
-        icon={<LibraryBig size={26} />}
-        title="Your library is empty"
-        actions={
-          <Button variant="primary" icon={<Upload size={16} />} onClick={() => navigate('/import')}>
-            Import a presentation
-          </Button>
-        }
-      >
-        <ol className={styles.steps}>
-          <li>In Claude, use the Lampstand skill and paste your sermon notes.</li>
-          <li>Review the outline, then save the result as a .lampstand.json file.</li>
-          <li>Import the file here, preview it, and save it to your library.</li>
-        </ol>
-      </EmptyState>
-    </Card>
+    <section className={styles.empty} aria-labelledby="library-empty-title">
+      <div className={styles.emptyArt} aria-hidden>
+        <span className={styles.emptyGlow} />
+        <EmptyLamp />
+      </div>
+      <h2 id="library-empty-title" className={styles.emptyTitle}>
+        Your library is empty
+      </h2>
+      <p className={styles.emptyText}>
+        Import a presentation file to get started. It’ll be here whenever you’re ready to present.
+      </p>
+      <Button variant="primary" icon={<Upload size={16} />} onClick={() => navigate('/import')}>
+        Import presentation
+      </Button>
+      <p className={styles.emptyHint}>Accepts .lampstand.json files</p>
+    </section>
+  );
+}
+
+/** An oil lamp with a living flame, drawn for the empty library. */
+function EmptyLamp() {
+  return (
+    <svg viewBox="0 0 160 160" width="160" height="160" className={styles.lamp}>
+      <defs>
+        <radialGradient id="lampFlame" cx="50%" cy="70%" r="60%">
+          <stop offset="0%" stopColor="#FFF4D6" />
+          <stop offset="45%" stopColor="#F2C46B" />
+          <stop offset="100%" stopColor="#D9A441" />
+        </radialGradient>
+        <linearGradient id="lampBody" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="var(--color-accent)" />
+          <stop offset="100%" stopColor="color-mix(in srgb, var(--color-accent) 60%, #000)" />
+        </linearGradient>
+      </defs>
+      <g className={styles.flame}>
+        <path
+          d="M80 30c10 12 17 22 17 32a17 17 0 0 1-34 0c0-7 3-13 8-18 .6 5.6 3 9 6.6 10.6-1.6-9.6.6-17 2.4-24.6Z"
+          fill="url(#lampFlame)"
+        />
+      </g>
+      <path d="M78 79h4v10h-4z" fill="color-mix(in srgb, var(--color-text) 55%, transparent)" />
+      <path
+        d="M34 98c0-6 6-9 14-9h64c8 0 14 3 14 9 0 14-18 26-46 26S34 112 34 98Z"
+        fill="url(#lampBody)"
+      />
+      <path
+        d="M126 96c10-2 16 4 14 10-1.6 5-8 7-14 4"
+        fill="none"
+        stroke="var(--color-accent)"
+        strokeWidth="4"
+        strokeLinecap="round"
+      />
+      <path d="M56 124h48l-6 10H62z" fill="color-mix(in srgb, var(--color-accent) 70%, #000)" />
+      <path d="M50 134h60" stroke="var(--color-accent)" strokeWidth="4" strokeLinecap="round" />
+      <path
+        d="M48 98h64"
+        stroke="color-mix(in srgb, #fff 35%, transparent)"
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
+    </svg>
   );
 }

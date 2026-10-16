@@ -45,14 +45,14 @@ test('malformed JSON shows one friendly message', async ({ page }) => {
   await expect(page.getByText(/SyntaxError|Unexpected token|at JSON/)).toHaveCount(0);
 });
 
-test('pasting JSON works too', async ({ page }) => {
-  await openApp(page, '/import');
-  const fs = await import('node:fs');
-  await page
-    .getByLabel('Presentation JSON')
-    .fill(fs.readFileSync('tests/fixtures/sample-sermon.lampstand.json', 'utf8'));
-  await page.getByRole('button', { name: 'Check and preview' }).click();
-  await expect(page.getByText('Ready to save')).toBeVisible();
+test('empty library invites an import, and import is upload-only', async ({ page }) => {
+  await openApp(page, '/');
+  await expect(page.getByRole('heading', { name: 'Your library is empty' })).toBeVisible();
+  await expect(page.getByText(/Claude|skill/i)).toHaveCount(0);
+  await page.getByRole('button', { name: 'Import presentation' }).click();
+  await expect(page).toHaveURL(/\/import$/);
+  await expect(page.getByText('Drop a .lampstand.json file here')).toBeVisible();
+  await expect(page.getByRole('textbox')).toHaveCount(0);
 });
 
 test('library: search, duplicate, delete with undo, export', async ({ page }) => {

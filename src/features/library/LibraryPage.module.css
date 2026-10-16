@@ -3,15 +3,14 @@
 }
 .toolbar {
   display: flex;
+  align-items: center;
   gap: var(--space-3);
-  margin-top: calc(var(--space-4) * -1);
 }
 .search {
-  flex: 0 1 420px;
-  min-width: 300px;
+  width: 300px;
 }
 .sort {
-  width: 200px;
+  width: 180px;
 }
 .grid {
   display: grid;
@@ -89,9 +88,87 @@
   font-size: var(--text-13);
   color: var(--color-text-muted);
 }
-.steps {
-  margin: var(--space-2) 0 0;
-  padding-left: var(--space-6);
-  text-align: left;
-  line-height: 1.7;
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);
+  max-width: 480px;
+  margin: var(--space-8) auto 0;
+  padding: var(--space-12) var(--space-8);
+  text-align: center;
+}
+.emptyArt {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 200px;
+  height: 180px;
+  margin-bottom: var(--space-2);
+}
+.emptyGlow {
+  position: absolute;
+  top: 6px;
+  left: 50%;
+  width: 180px;
+  height: 180px;
+  translate: -50% 0;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 50% 40%,
+    color-mix(in srgb, var(--color-accent) 38%, transparent),
+    transparent 62%
+  );
+  filter: blur(6px);
+  animation: glow 4s ease-in-out infinite;
+}
+.lamp {
+  position: relative;
+}
+.flame {
+  transform-origin: 80px 78px;
+  animation: flicker 3.2s ease-in-out infinite;
+}
+.emptyTitle {
+  font-family: var(--font-display);
+  font-size: var(--text-32);
+  font-weight: var(--weight-semibold);
+  line-height: 1.2;
+}
+.emptyText {
+  max-width: 380px;
+  font-size: var(--text-16);
+  line-height: 1.6;
+  color: var(--color-text-muted);
+}
+.emptyHint {
+  font-size: var(--text-13);
+  color: var(--color-text-muted);
+}
+@keyframes glow {
+  0%,
+  100% {
+    opacity: 0.75;
+    transform: scale(0.96);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.04);
+  }
+}
+@keyframes flicker {
+  0%,
+  100% {
+    transform: scale(1, 1) rotate(0deg);
+  }
+  30% {
+    transform: scale(0.97, 1.04) rotate(-1.5deg);
+  }
+  60% {
+    transform: scale(1.02, 0.97) rotate(1deg);
+  }
+}
+[data-reduce-motion='true'] .emptyGlow,
+[data-reduce-motion='true'] .flame {
+  animation: none;
 }

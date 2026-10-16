@@ -44,7 +44,7 @@ function FieldFrame({
   children,
 }: FieldFrameProps) {
   return (
-    <div className={styles.field}>
+    <div className={cx(styles.field, hideLabel && styles.noLabel)}>
       {(label || maxLength) && (
         <div className={styles.labelRow}>
           {label && (

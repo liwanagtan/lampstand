@@ -113,7 +113,7 @@ function usePresentVerse(osis: string, translation: string) {
       window.removeEventListener('pagehide', end);
       end();
     };
-  }, []);  
+  }, []);
 
   const present = async () => {
     const was = useControl.getState().presenting;

@@ -52,7 +52,7 @@ export function EntryEditor({
   };
 
   // Save what's left when the editor closes.
-  useEffect(() => () => flush(), []);  
+  useEffect(() => () => flush(), []);
 
   const change = (patch: Partial<EntryDraft>) => {
     const next = {
@@ -73,7 +73,7 @@ export function EntryEditor({
     if (verse === undefined || verse === lastVerse.current) return;
     lastVerse.current = verse;
     change({ ref: verse || undefined });
-  });  
+  });
 
   return (
     <div className={styles.editor}>

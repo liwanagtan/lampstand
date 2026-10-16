@@ -14,7 +14,7 @@
   text-align: center;
 }
 .mark {
-  color: var(--color-accent);
+  color: var(--color-text);
   margin-bottom: var(--space-2);
 }
 .title {

@@ -89,7 +89,7 @@ export function FallbackSlide({ template }: { template: Template }) {
         showPlaceholder={false}
       />
       <div className={`${s.content} ${s.center}`}>
-        <LampMark size={160} className={s.fallbackMark} />
+        <LampMark size={160} variant="mono" className={s.fallbackMark} />
       </div>
     </>
   );

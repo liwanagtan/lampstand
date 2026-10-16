@@ -18,7 +18,6 @@
     "schema": "tsx scripts/export-schema.ts",
     "bibles": "tsx scripts/build-bibles.ts",
     "backgrounds": "tsx scripts/build-backgrounds.ts",
-    "icons": "tsx scripts/build-icons.ts",
     "soak": "SOAK_MINUTES=${SOAK_MINUTES:-120} playwright test e2e/soak.spec.ts",
     "scenes": "tsx scripts/vendor-scenes.ts"
   },

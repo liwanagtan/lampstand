@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { BookPlus, Download, ImagePlus, Trash2, Upload } from 'lucide-react';
 import { Page } from '@/app/Page';
 import { Button, Card, Chip, Select, Toggle, cx, toast } from '@/design-system/components';
-import { LampMark } from '@/design-system/LampMark';
+import { LampLockup } from '@/design-system/LampMark';
 import { db } from '@/db/db';
 import { useBible } from '@/features/bible/bibleStore';
 import { invalidateSearch } from '@/features/bible/search';
@@ -164,7 +164,7 @@ function LogoSection() {
           {logoAssetId && asset ? (
             <img src={asset.url} alt="" />
           ) : (
-            <LampMark size={56} className={styles.logoMark} />
+            <LampLockup layout="stacked" size={72} className={styles.logoMark} title="Lampstand" />
           )}
         </div>
         <div className={styles.row}>

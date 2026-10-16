@@ -6,7 +6,7 @@ import {
   type Variants,
 } from 'motion/react';
 import { motion as tokens, motionDetail } from '@/design-system/tokens';
-import { LampMark } from '@/design-system/LampMark';
+import { LampLockup } from '@/design-system/LampMark';
 import { FeatureBoundary } from '@/design-system/components';
 import { useReducedMotion } from '@/features/settings/theme';
 import { slideTranslation } from '@/features/library/translation';
@@ -241,8 +241,7 @@ function LogoScreen({ assetId }: { assetId: string | null }) {
   }
   return (
     <div className={styles.defaultLogo}>
-      <LampMark size={220} />
-      <span>Lampstand</span>
+      <LampLockup layout="stacked" size={360} title="Lampstand" />
     </div>
   );
 }

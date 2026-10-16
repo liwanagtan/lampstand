@@ -428,12 +428,13 @@
         color: var(--ink);
       }
       #mark {
-        width: 72px;
+        width: 70px;
         height: 72px;
-        color: var(--accent);
+        color: var(--ink);
       }
       #flame {
-        transform-origin: 16px 22px;
+        transform-box: fill-box;
+        transform-origin: 50% 100%;
       }
       .hidden {
         display: none !important;
@@ -481,23 +482,14 @@
       </div>
       <div id="footer">
         <span id="speaker"></span>
-        <svg id="mark" viewBox="0 0 32 32" aria-hidden="true">
-          <rect
-            x="1"
-            y="1"
-            width="30"
-            height="30"
-            rx="9"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.6"
-          />
+        <svg id="mark" viewBox="4 4 56 58" aria-hidden="true">
           <path
             id="flame"
-            d="M16 6.5c3.6 4.1 6 7.4 6 11a6 6 0 0 1-12 0c0-2.3 1-4.2 2.6-5.9.2 1.9 1 3.1 2.2 3.6-.5-3.2.2-5.9 1.2-8.7Z"
-            fill="currentColor"
+            d="M32 6 C40 16 43 23 43 29 A11 11 0 0 1 21 29 C21 23 24 16 32 6 Z"
+            fill="#f2b33d"
           />
-          <path d="M11 25.5h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+          <path d="M6 42 L30 48 L30 60 L6 54 Z" fill="currentColor" />
+          <path d="M58 42 L34 48 L34 60 L58 54 Z" fill="currentColor" />
         </svg>
       </div>
     </div>

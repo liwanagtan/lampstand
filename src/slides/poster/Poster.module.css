@@ -243,7 +243,8 @@
   text-transform: uppercase;
 }
 .mark {
-  color: var(--t-accent);
+  /* Book follows the poster's text colour; the flame stays brand gold. */
+  color: inherit;
 }
 /* The animated Scene covers the static poster once it has painted. */
 .scene {

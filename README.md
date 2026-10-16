@@ -8,6 +8,7 @@ Offline, web-based church presentation app: AI-prepared sermon slides on a proje
 - **Verse command bar:** press `/`, type `jn 3 16`, press Enter — the verse appears over the current slide; Esc clears it.
 - **Five public domain translations** built in (KJV, WEB, ASV, YLT, Darby), with word search.
 - **Slides made in Claude** with the skill in `skill/lampstand-slides`, imported as `.lampstand.json`.
+- **Brand:** the logo kit (mark, lockups, wordmark, app icons, colours and usage rules) lives in `brand/`; see `brand/README.txt`. The app draws the logo from `src/design-system/LampMark.tsx`, and the favicon and PWA icons in `public/` come from `brand/app-icon/`.
 - **Fully offline** after the first visit; installable as a Chrome app. No accounts, no network calls at runtime.
 
 Docs: [docs/PRD.md](docs/PRD.md) (spec) · [docs/SETUP.md](docs/SETUP.md) (operator setup) · [docs/DECISIONS.md](docs/DECISIONS.md) (choices made during the build).
@@ -31,7 +32,6 @@ npm run dev          # http://localhost:5310
 | `npm run bibles`                    | Rebuild `public/bibles/*.json` from the sources (downloads into `scripts/.cache`) |
 | `npm run backgrounds`               | Rebuild the bundled background library in `public/backgrounds`                    |
 | `npm run schema`                    | Regenerate `skill/lampstand-slides/schema.json` from the Zod schema               |
-| `npm run icons`                     | Regenerate the app icons                                                          |
 
 ## Project layout
 

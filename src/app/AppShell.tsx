@@ -1,6 +1,6 @@
 import { NavLink, Outlet } from 'react-router-dom';
 import { Monitor, Moon, Sun, type LucideIcon } from 'lucide-react';
-import { LampMark } from '@/design-system/LampMark';
+import { LampLockup, LampMark } from '@/design-system/LampMark';
 import { useApplyDocumentTheme } from '@/features/settings/theme';
 import { useSettings } from '@/features/settings/settingsStore';
 import type { UiMode } from '@/schema/common';
@@ -25,8 +25,8 @@ export function AppShell() {
     <div className={styles.shell}>
       <header className={styles.topbar}>
         <NavLink to="/" className={styles.brand} aria-label="Lampstand home">
+          <LampLockup size={30} className={styles.lockup} title="" />
           <LampMark size={26} className={styles.mark} />
-          <span className={styles.wordmark}>Lampstand</span>
         </NavLink>
         <nav aria-label="Main" className={styles.nav}>
           {NAV.map(({ to, label, end }) => (

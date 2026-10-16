@@ -33,6 +33,7 @@ import { BackgroundPicker } from './BackgroundPicker';
 import { createPresentation } from './presentations';
 import { presentationTranslation, slideTranslation } from './translation';
 import { mediaNeeds } from './importHelpers';
+import { PosterContext, posterInfoFor } from '@/slides/poster/posterInfo';
 import styles from './ImportPage.module.css';
 
 interface Source {
@@ -327,15 +328,19 @@ export function ImportPage() {
           </ul>
         </Card>
       )}
-      <PreviewGrid
-        items={preview}
-        template={template}
-        translation={translation}
-        errorSlides={errorSlides}
-        flash={flash}
-        refs={slideRefs}
-        onPick={presentation ? (i) => setPicking(i) : undefined}
-      />
+      <PosterContext.Provider
+        value={presentation ? posterInfoFor(presentation, translation) : null}
+      >
+        <PreviewGrid
+          items={preview}
+          template={template}
+          translation={translation}
+          errorSlides={errorSlides}
+          flash={flash}
+          refs={slideRefs}
+          onPick={presentation ? (i) => setPicking(i) : undefined}
+        />
+      </PosterContext.Provider>
       <BackgroundPicker
         open={picking !== null}
         onOpenChange={(o) => !o && setPicking(null)}

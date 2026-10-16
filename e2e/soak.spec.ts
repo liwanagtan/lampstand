@@ -59,6 +59,12 @@ test(`soak: ${MINUTES} minutes of slides and verses`, async ({ page }) => {
       await page.waitForTimeout(500);
       await page.keyboard.press('Escape');
     }
+    if (step % 17 === 0) {
+      // The animated Scene poster, live in both windows for a while.
+      await page.keyboard.press('s');
+      await page.waitForTimeout(6000);
+      await page.keyboard.press('s');
+    }
     if (step % 13 === 0) {
       await page.keyboard.press('b');
       await page.waitForTimeout(300);

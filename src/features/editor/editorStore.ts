@@ -1,7 +1,7 @@
 // Editor state (PRD §7.3): edits, 50-step undo/redo, debounced autosave.
 import { create } from 'zustand';
 import type { StoredPresentation, StoredSlide } from '@/schema/presentation';
-import { updatePresentation } from '@/features/library/presentations';
+import { setPosterAnimated, updatePresentation } from '@/features/library/presentations';
 
 export const UNDO_LIMIT = 50;
 const COALESCE_MS = 800;
@@ -13,6 +13,8 @@ interface EditorState {
   id: string | null;
   presentation: StoredPresentation | null;
   selectedId: string | null;
+  /** App-side setting for the poster's animated Scene (not part of the file). */
+  posterAnimated: boolean;
   past: StoredPresentation[];
   future: StoredPresentation[];
   saveStatus: SaveStatus;
@@ -21,7 +23,8 @@ interface EditorState {
   lastKey: string | null;
   lastAt: number;
 
-  open: (id: string, p: StoredPresentation) => void;
+  open: (id: string, p: StoredPresentation, posterAnimated?: boolean) => void;
+  setPosterAnimated: (v: boolean) => void;
   select: (id: string | null) => void;
   /** Applies an edit. Edits with the same `key` within a short burst merge into one undo step. */
   edit: (fn: (p: StoredPresentation) => StoredPresentation, key?: string) => void;
@@ -55,6 +58,7 @@ export const useEditor = create<EditorState>((set, get) => {
     id: null,
     presentation: null,
     selectedId: null,
+    posterAnimated: true,
     past: [],
     future: [],
     saveStatus: 'idle',
@@ -62,8 +66,15 @@ export const useEditor = create<EditorState>((set, get) => {
     lastKey: null,
     lastAt: 0,
 
-    open: (id, p) =>
+    setPosterAnimated: (posterAnimated) => {
+      set({ posterAnimated });
+      const id = get().id;
+      if (id) void setPosterAnimated(id, posterAnimated);
+    },
+
+    open: (id, p, posterAnimated = true) =>
       set({
+        posterAnimated,
         id,
         presentation: p,
         selectedId: p.slides[0]?.id ?? null,

@@ -9,6 +9,7 @@ import { SlideFrame } from '@/slides/SlideView';
 import type { StoredPresentation } from '@/schema/presentation';
 import { addBundledBackground, loadBackgrounds } from '@/features/library/backgrounds';
 import sample from '../../../tests/fixtures/sample-sermon.lampstand.json';
+import { PosterContext, posterInfoFor } from '@/slides/poster/posterInfo';
 import styles from './SlidesPage.module.css';
 
 export function SlidesPage() {
@@ -48,70 +49,72 @@ export function SlidesPage() {
   const slide = presentation.slides[selected]!;
 
   return (
-    <Page
-      title="Slides"
-      description="The sample sermon in every template. Click a slide to preview it live."
-      actions={
-        <Button
-          icon={<Play size={16} />}
-          onClick={() => {
-            setStep(0);
-            setLiveKey((k) => k + 1);
-            setEndsAt(Date.now() + 5 * 60_000);
-          }}
-        >
-          Replay motion
-        </Button>
-      }
-    >
-      <Tabs
-        label="Template"
-        value={templateId}
-        onChange={(v) => setTemplateId(v)}
-        items={TEMPLATE_IDS.map((id) => ({
-          value: id,
-          label: getTemplate(id).name,
-          content: null,
-        }))}
-      />
-      <div className={styles.live}>
-        <SlideFrame
-          key={`${slide.id}-${templateId}-${liveKey}`}
-          slide={slide}
-          template={template}
-          mode="live"
-          translation="KJV"
-          buildStep={slide.type === 'list' && slide.build ? step : undefined}
-          countdownEndsAt={slide.type === 'countdown' ? endsAt : undefined}
-          label="Live preview"
-        />
-        {slide.type === 'list' && slide.build && (
-          <Button onClick={() => setStep((n) => Math.min(n + 1, slide.items.length))}>
-            Next build step
-          </Button>
-        )}
-      </div>
-      <div className={styles.grid}>
-        {presentation.slides.map((s, i) => (
-          <button
-            key={s.id}
-            type="button"
-            className={styles.thumb}
-            aria-pressed={i === selected}
+    <PosterContext.Provider value={posterInfoFor(presentation, 'KJV')}>
+      <Page
+        title="Slides"
+        description="The sample sermon in every template. Click a slide to preview it live."
+        actions={
+          <Button
+            icon={<Play size={16} />}
             onClick={() => {
-              setSelected(i);
               setStep(0);
               setLiveKey((k) => k + 1);
               setEndsAt(Date.now() + 5 * 60_000);
             }}
           >
-            <SlideFrame slide={s} template={template} mode="thumbnail" translation="KJV" />
-            <span className={styles.caption}>
-              {i + 1}. {s.type}
-            </span>
-          </button>
-        ))}
-      </div>
-    </Page>
+            Replay motion
+          </Button>
+        }
+      >
+        <Tabs
+          label="Template"
+          value={templateId}
+          onChange={(v) => setTemplateId(v)}
+          items={TEMPLATE_IDS.map((id) => ({
+            value: id,
+            label: getTemplate(id).name,
+            content: null,
+          }))}
+        />
+        <div className={styles.live}>
+          <SlideFrame
+            key={`${slide.id}-${templateId}-${liveKey}`}
+            slide={slide}
+            template={template}
+            mode="live"
+            translation="KJV"
+            buildStep={slide.type === 'list' && slide.build ? step : undefined}
+            countdownEndsAt={slide.type === 'countdown' ? endsAt : undefined}
+            label="Live preview"
+          />
+          {slide.type === 'list' && slide.build && (
+            <Button onClick={() => setStep((n) => Math.min(n + 1, slide.items.length))}>
+              Next build step
+            </Button>
+          )}
+        </div>
+        <div className={styles.grid}>
+          {presentation.slides.map((s, i) => (
+            <button
+              key={s.id}
+              type="button"
+              className={styles.thumb}
+              aria-pressed={i === selected}
+              onClick={() => {
+                setSelected(i);
+                setStep(0);
+                setLiveKey((k) => k + 1);
+                setEndsAt(Date.now() + 5 * 60_000);
+              }}
+            >
+              <SlideFrame slide={s} template={template} mode="thumbnail" translation="KJV" />
+              <span className={styles.caption}>
+                {i + 1}. {s.type}
+              </span>
+            </button>
+          ))}
+        </div>
+      </Page>
+    </PosterContext.Provider>
   );
 }

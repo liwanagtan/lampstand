@@ -1,0 +1,261 @@
+/* The static sermon poster, matching public/scenes/sermon (canvas coordinates, 1920×1080). */
+.poster {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: var(--t-bg);
+  color: var(--t-text);
+  --glow: rgb(255 186 100 / 0.2);
+}
+.poster[data-template='modern'] {
+  --glow: rgb(80 130 255 / 0.22);
+}
+.poster[data-template='warm'] {
+  --glow: rgb(255 150 90 / 0.2);
+}
+.bg,
+.grade,
+.light,
+.grid,
+.leak,
+.design,
+.scene {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.photo {
+  position: absolute;
+  inset: -2%;
+  width: 104%;
+  height: 104%;
+  object-fit: cover;
+  transform: scale(1.02);
+}
+.poster[data-template='classic'] .photo {
+  filter: saturate(0.72) contrast(1.05);
+}
+.poster[data-template='warm'] .photo {
+  filter: sepia(0.22) saturate(1.08) contrast(1.04);
+}
+.poster[data-template='modern'] .photo {
+  filter: saturate(0.6) contrast(1.08);
+}
+.poster[data-template='classic'] .design {
+  background:
+    radial-gradient(70% 80% at 70% 40%, rgb(46 66 110 / 0.75) 0%, rgb(11 19 36 / 0) 65%),
+    radial-gradient(40% 50% at 82% 18%, rgb(217 164 65 / 0.14) 0%, rgb(217 164 65 / 0) 70%), #0b1324;
+}
+.poster[data-template='modern'] .design {
+  background:
+    radial-gradient(45% 60% at 85% 10%, rgb(91 140 255 / 0.42) 0%, rgb(91 140 255 / 0) 70%),
+    radial-gradient(40% 50% at 70% 110%, rgb(150 110 255 / 0.24) 0%, rgb(150 110 255 / 0) 70%),
+    #0a0a0b;
+}
+.poster[data-template='warm'] .design {
+  background:
+    radial-gradient(70% 70% at 78% 30%, rgb(120 64 36 / 0.65) 0%, rgb(28 23 20 / 0) 70%),
+    radial-gradient(50% 60% at 95% 100%, rgb(232 149 107 / 0.18) 0%, rgb(232 149 107 / 0) 70%),
+    #1c1714;
+}
+.grade {
+  background:
+    linear-gradient(
+      90deg,
+      var(--t-bg) 0%,
+      color-mix(in srgb, var(--t-bg) 88%, transparent) 26%,
+      color-mix(in srgb, var(--t-bg) 40%, transparent) 56%,
+      transparent 78%
+    ),
+    linear-gradient(0deg, color-mix(in srgb, var(--t-bg) 70%, transparent) 0%, transparent 34%),
+    linear-gradient(180deg, color-mix(in srgb, var(--t-bg) 40%, transparent) 0%, transparent 22%);
+}
+.poster[data-photo='true'] .grade::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: color-mix(in srgb, var(--t-bg) 55%, transparent);
+  mix-blend-mode: multiply;
+}
+.light {
+  background: radial-gradient(
+    650px 650px at 1450px 300px,
+    var(--glow) 0%,
+    color-mix(in srgb, var(--glow) 40%, transparent) 34%,
+    transparent 66%
+  );
+  mix-blend-mode: plus-lighter;
+}
+.corner {
+  position: absolute;
+  display: none;
+  width: 64px;
+  height: 64px;
+  border: 0 solid color-mix(in srgb, var(--t-accent) 70%, transparent);
+}
+.poster[data-template='classic'] .corner {
+  display: block;
+}
+.tl {
+  left: 96px;
+  top: 54px;
+  border-left-width: 2px;
+  border-top-width: 2px;
+}
+.tr {
+  right: 96px;
+  top: 54px;
+  border-right-width: 2px;
+  border-top-width: 2px;
+}
+.bl {
+  left: 96px;
+  bottom: 54px;
+  border-left-width: 2px;
+  border-bottom-width: 2px;
+}
+.br {
+  right: 96px;
+  bottom: 54px;
+  border-right-width: 2px;
+  border-bottom-width: 2px;
+}
+.grid {
+  display: none;
+  background: linear-gradient(90deg, rgb(255 255 255 / 0.05) 1px, transparent 1px) 0 0 / 160px 100%;
+  mask-image: linear-gradient(90deg, transparent 0%, #000 30%, #000 70%, transparent 100%);
+}
+.poster[data-template='modern'] .grid {
+  display: block;
+}
+.leak {
+  display: none;
+  background:
+    radial-gradient(40% 55% at 100% 0%, rgb(255 170 110 / 0.28), transparent 70%),
+    radial-gradient(30% 40% at 0% 100%, rgb(255 120 80 / 0.12), transparent 70%);
+  mix-blend-mode: screen;
+}
+.poster[data-template='warm'] .leak {
+  display: block;
+}
+.topline {
+  position: absolute;
+  left: 192px;
+  right: 192px;
+  top: 132px;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-family: var(--font-ui);
+  font-size: 28px;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--t-muted);
+}
+.series {
+  color: var(--t-accent);
+}
+.poster[data-template='warm'] .series {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 500;
+  font-size: 34px;
+  letter-spacing: 0.04em;
+  text-transform: none;
+}
+.content {
+  position: absolute;
+  left: 192px;
+  top: 132px;
+  bottom: 132px;
+  width: 1060px;
+  display: flex;
+  flex-direction: column;
+}
+.main {
+  margin: auto 0;
+  padding-top: 40px;
+}
+.title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 136px;
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+  text-shadow: 0 4px 40px rgb(0 0 0 / 0.35);
+}
+.poster[data-template='modern'] .title {
+  font-family: var(--font-ui);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+}
+.poster[data-template='warm'] .title {
+  font-weight: 500;
+  letter-spacing: -0.015em;
+}
+.long {
+  font-size: 112px;
+}
+.rule {
+  width: 140px;
+  height: 4px;
+  margin: 52px 0 40px;
+  border-radius: 2px;
+  background: var(--t-accent);
+}
+.ref {
+  font-family: var(--font-ui);
+  font-size: 36px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--t-accent);
+}
+.excerpt {
+  margin: 18px 0 0;
+  max-width: 980px;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 42px;
+  line-height: 1.38;
+  color: var(--t-muted);
+}
+.poster[data-template='modern'] .excerpt {
+  font-family: var(--font-ui);
+  font-style: normal;
+}
+.footer {
+  position: absolute;
+  left: 192px;
+  right: 192px;
+  bottom: 132px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.speaker {
+  font-family: var(--font-ui);
+  font-size: 28px;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+.mark {
+  color: var(--t-accent);
+}
+/* The animated Scene covers the static poster once it has painted. */
+.scene {
+  z-index: 5;
+  opacity: 0;
+  transition: opacity 400ms ease-out;
+}
+.scene[data-visible='true'] {
+  opacity: 1;
+}
+.player {
+  display: block;
+  width: 100%;
+  height: 100%;
+}

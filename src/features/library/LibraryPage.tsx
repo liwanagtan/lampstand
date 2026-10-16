@@ -28,6 +28,7 @@ import {
 } from './presentations';
 import { presentationTranslation, slideTranslation } from './translation';
 import { matches } from './libraryHelpers';
+import { PosterContext, posterInfoFor } from '@/slides/poster/posterInfo';
 import styles from './LibraryPage.module.css';
 
 type SortKey = 'date' | 'lastPresented' | 'updated';
@@ -175,12 +176,16 @@ function PresentationCard({ record }: { record: LibraryRecord }) {
       <Card padded={false} className={styles.card}>
         <div className={styles.thumb}>
           {first && (
-            <SlideFrame
-              slide={first}
-              template={template}
-              mode="thumbnail"
-              translation={slideTranslation(first, translation)}
-            />
+            <PosterContext.Provider
+              value={posterInfoFor(p, translation, record.posterAnimated ?? true)}
+            >
+              <SlideFrame
+                slide={first}
+                template={template}
+                mode="thumbnail"
+                translation={slideTranslation(first, translation)}
+              />
+            </PosterContext.Provider>
           )}
           <button
             type="button"

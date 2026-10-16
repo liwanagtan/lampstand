@@ -17,13 +17,13 @@ A one-time checklist for the church laptop, then a short routine for each servic
 ## Each service
 
 1. Before the service, open the presentation from the **Library** and click its thumbnail to present.
-2. Press **Open output**. The output appears on the TV; the laptop keeps the control screen.
-3. Start with the countdown slide. Press **B** to blank the TV or **L** for the logo at any time.
+2. Press **Start Presentation**. The output appears full screen on the TV; the laptop keeps the control screen.
+3. Start with the countdown slide. At any time press **B** to blank the TV, **L** for the logo, **S** for the sermon poster, or **F** to freeze the TV while you prepare the next thing.
 4. Advance with **→ / Space / PageDown** (a presentation clicker works without setup) and go back with **← / PageUp**.
-5. To show a verse the pastor mentions, press **/**, type it (for example `jn 3 16`, `ps 23 1-3 web`), and press **Enter**. Press **Esc** to clear it. **1 / 2 / 3** switch between lower third, side panel and full screen.
+5. To show a verse the pastor mentions, press **/**, type it (for example `jn 3 16`, `ps 23 1-3 web`), and press **Enter**, or click it in the **Queue**. Press **Esc** to clear it. **1 / 2 / 3 / 4** switch between lower third, side panel, full screen and popup.
 6. Press **?** for the full list of shortcuts, or **Ctrl+K** for every command.
 
-If the output window closes, the control screen shows **Output disconnected — Reopen**. Press it and the TV comes back exactly where it was.
+If the output window closes, the control screen shows **Output disconnected — Reopen**. Press it and the TV comes back exactly where it was. When the service is over, press **Exit Presentation**.
 
 ## Making slides with Claude
 

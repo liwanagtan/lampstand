@@ -95,3 +95,7 @@ export function downloadText(text: string, fileName: string, type = 'application
 export function exportPresentation(r: LibraryRecord): void {
   downloadText(toExportJson(r.data), fileNameFor(r.data.title));
 }
+
+export async function setPosterAnimated(id: string, posterAnimated: boolean): Promise<void> {
+  await db.presentations.update(id, { posterAnimated });
+}

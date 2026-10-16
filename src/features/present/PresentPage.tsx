@@ -54,6 +54,7 @@ import type { Screen } from './live/types';
 import { LiveScreen } from './LiveScreen';
 import { useShortcuts } from './useShortcuts';
 import { formatClock } from '@/slides/clock';
+import { PosterContext, posterInfoFor } from '@/slides/poster/posterInfo';
 import { useBible } from '@/features/bible/bibleStore';
 import { CommandBar } from './verses/CommandBar';
 import { focusCommandBar } from './verses/commandBarFocus';
@@ -91,6 +92,7 @@ export function PresentPage() {
         logoAssetId: useSettings.getState().logoAssetId,
         theme: r.data.theme ?? defaultTheme,
         restore: readSavedLive(),
+        posterAnimated: r.posterAnimated ?? true,
       });
       useVerses
         .getState()
@@ -166,6 +168,7 @@ function ControlScreen() {
   const changedAt = useControl((s) => s.changedAt);
   const logoAssetId = useControl((s) => s.logoAssetId);
   const reduceMotion = useControl((s) => s.reduceMotion);
+  const posterAnimated = useControl((s) => s.posterAnimated);
   const [rail, setRail] = useState<RailTab>('notes');
   const [sheetOpen, setSheetOpen] = useState(false);
   const [paletteOpen, setPaletteOpen] = useState(false);
@@ -202,13 +205,26 @@ function ControlScreen() {
 
   const template = getTemplate(live.theme);
   const slides = presentation.slides;
+  const posterInfo = useMemo(
+    () => posterInfoFor(presentation, translation, posterAnimated),
+    [presentation, translation, posterAnimated],
+  );
   const liveSlide = slides[live.slideIndex];
   const previewTarget = previewIndex ?? Math.min(live.slideIndex + 1, slides.length - 1);
   const previewSlide = slides[previewTarget];
   const atEnd = live.slideIndex >= slides.length - 1 && previewIndex === null;
   const snapshot = useMemo(
-    () => ({ rev, live, presentation, translation, logoAssetId, reduceMotion, changedAt }),
-    [rev, live, presentation, translation, logoAssetId, reduceMotion, changedAt],
+    () => ({
+      rev,
+      live,
+      presentation,
+      translation,
+      logoAssetId,
+      reduceMotion,
+      posterAnimated,
+      changedAt,
+    }),
+    [rev, live, presentation, translation, logoAssetId, reduceMotion, posterAnimated, changedAt],
   );
 
   const startPresentation = async () => {
@@ -326,219 +342,221 @@ function ControlScreen() {
         : undefined;
 
   return (
-    <div className={styles.shell}>
-      <header className={styles.top}>
-        <IconButton
-          label="Back to Library"
-          icon={<ArrowLeft size={20} />}
-          onClick={() => navigate('/')}
-        />
-        <div className={styles.titleBlock}>
-          <h1 className={styles.title}>{presentation.title}</h1>
-          <p className={styles.subtitle}>
-            {[presentation.speaker, `${slides.length} slides`].filter(Boolean).join(' · ')}
-          </p>
-        </div>
-        <div className={styles.commandSlot}>
-          <FeatureBoundary name="The verse command bar">
-            <CommandBar />
-          </FeatureBoundary>
-        </div>
-        <div className={styles.status}>
-          <Menu
-            label="Verse translation"
-            align="end"
-            trigger={
-              <ChipButton
-                tone="accent"
-                icon={<BookOpen size={14} />}
-                aria-label={`Verse translation: ${verses.translation}`}
-              >
-                {verses.translation}
-              </ChipButton>
-            }
-            items={translations.map((t) => ({
-              label: `${t.code} — ${t.name}`,
-              onSelect: () => verses.setTranslation(t.code),
-            }))}
+    <PosterContext.Provider value={posterInfo}>
+      <div className={styles.shell}>
+        <header className={styles.top}>
+          <IconButton
+            label="Back to Library"
+            icon={<ArrowLeft size={20} />}
+            onClick={() => navigate('/')}
           />
-          <ModeChip mode={verses.mode} />
-          <OutputStatus
-            status={output}
-            presenting={presenting}
-            onReopen={() => void startPresentation()}
-          />
-          {presenting ? (
-            <Button variant="secondary" icon={<MonitorOff size={16} />} onClick={requestExit}>
-              Exit Presentation
-            </Button>
-          ) : (
-            <Button
-              variant="primary"
-              icon={<Play size={16} />}
-              onClick={() => void startPresentation()}
-            >
-              Start Presentation
-            </Button>
-          )}
-        </div>
-      </header>
-
-      <DisconnectedBanner status={output} onReopen={() => void startPresentation()} />
-
-      <main className={styles.main}>
-        <section className={styles.stage} aria-label="Preview and live">
-          <div className={cx(styles.canvases, swapped && styles.swapped)}>
-            <div className={cx(styles.pane, styles.previewPane, !swapped && styles.paneSmall)}>
-              <div className={styles.paneHead}>
-                <h2 className={styles.paneTitle}>Preview</h2>
-                {previewMeta && <span className={styles.paneMeta}>{previewMeta}</span>}
-              </div>
-              <div className={styles.paneBody} data-pane="preview">
-                <FeatureBoundary name="Preview">{previewContent}</FeatureBoundary>
-              </div>
-              <div className={styles.paneActions}>
-                <ShortcutHint id="goLive" keys="Enter">
-                  <Button
-                    variant="primary"
-                    icon={<MonitorPlay size={16} />}
-                    shortcut="Enter"
-                    onClick={sendPreview}
-                    disabled={Boolean(frozen) || (!verses.preview && (atEnd || !previewSlide))}
-                  >
-                    Go live
-                  </Button>
-                </ShortcutHint>
-              </div>
-            </div>
-            <LivePane small={swapped} meta={liveMeta} frozen={Boolean(frozen)} onSwap={swap}>
-              <LiveScreen snapshot={frozen ?? snapshot} label="Live output" />
-            </LivePane>
+          <div className={styles.titleBlock}>
+            <h1 className={styles.title}>{presentation.title}</h1>
+            <p className={styles.subtitle}>
+              {[presentation.speaker, `${slides.length} slides`].filter(Boolean).join(' · ')}
+            </p>
           </div>
-
-          <Dock
-            screen={live.screen}
-            frozen={Boolean(frozen)}
-            hasOverlay={Boolean(live.overlay)}
-            mode={verses.mode}
-            translation={live.overlay?.translation ?? verses.translation}
-            onPrev={() => dispatch({ type: 'prev' })}
-            onNext={() => dispatch({ type: 'next' })}
-            onScreen={toggleScreen}
-            onFreeze={toggleFreeze}
-            onMode={verses.setMode}
-            onVerseStep={(d) => void verses.step(d)}
-            onTranslation={() => void verses.cycleTranslation()}
-            onClear={() => dispatch({ type: 'clearOverlay' })}
-          />
-        </section>
-
-        <aside className={styles.rail} aria-label="Verses and notes">
-          <FeatureBoundary name="The side panel">
-            <Tabs<RailTab>
-              fill
-              label="Side panel"
-              value={rail}
-              onChange={setRail}
-              items={[
-                {
-                  value: 'notes',
-                  label: 'Notes',
-                  content: (
-                    <Notes
-                      slide={liveSlide}
-                      index={live.slideIndex}
-                      next={slides[live.slideIndex + 1]}
-                    />
-                  ),
-                },
-                {
-                  value: 'queue',
-                  label: 'Queue',
-                  badge: verses.queue.length || undefined,
-                  content: <QueuePanel translation={verses.translation} />,
-                },
-              ]}
+          <div className={styles.commandSlot}>
+            <FeatureBoundary name="The verse command bar">
+              <CommandBar />
+            </FeatureBoundary>
+          </div>
+          <div className={styles.status}>
+            <Menu
+              label="Verse translation"
+              align="end"
+              trigger={
+                <ChipButton
+                  tone="accent"
+                  icon={<BookOpen size={14} />}
+                  aria-label={`Verse translation: ${verses.translation}`}
+                >
+                  {verses.translation}
+                </ChipButton>
+              }
+              items={translations.map((t) => ({
+                label: `${t.code} — ${t.name}`,
+                onSelect: () => verses.setTranslation(t.code),
+              }))}
             />
-          </FeatureBoundary>
-        </aside>
-      </main>
+            <ModeChip mode={verses.mode} />
+            <OutputStatus
+              status={output}
+              presenting={presenting}
+              onReopen={() => void startPresentation()}
+            />
+            {presenting ? (
+              <Button variant="secondary" icon={<MonitorOff size={16} />} onClick={requestExit}>
+                Exit Presentation
+              </Button>
+            ) : (
+              <Button
+                variant="primary"
+                icon={<Play size={16} />}
+                onClick={() => void startPresentation()}
+              >
+                Start Presentation
+              </Button>
+            )}
+          </div>
+        </header>
 
-      <FeatureBoundary name="The slide strip">
-        <SlideStrip
-          slides={slides}
-          liveIndex={live.slideIndex}
-          previewIndex={previewIndex}
-          onSelect={(i) => {
-            verses.clearPreview();
-            select(i);
-          }}
-          onGoLive={(i) => dispatch({ type: 'goTo', index: i })}
-          translation={translation}
-        />
-      </FeatureBoundary>
-      <AnimatePresence>
-        {ghost && (
-          <motion.div
-            key={ghost.key}
-            className={styles.ghost}
-            initial={{
-              left: ghost.from.left,
-              top: ghost.from.top,
-              width: ghost.from.width,
-              height: ghost.from.height,
-              opacity: 0.9,
+        <DisconnectedBanner status={output} onReopen={() => void startPresentation()} />
+
+        <main className={styles.main}>
+          <section className={styles.stage} aria-label="Preview and live">
+            <div className={cx(styles.canvases, swapped && styles.swapped)}>
+              <div className={cx(styles.pane, styles.previewPane, !swapped && styles.paneSmall)}>
+                <div className={styles.paneHead}>
+                  <h2 className={styles.paneTitle}>Preview</h2>
+                  {previewMeta && <span className={styles.paneMeta}>{previewMeta}</span>}
+                </div>
+                <div className={styles.paneBody} data-pane="preview">
+                  <FeatureBoundary name="Preview">{previewContent}</FeatureBoundary>
+                </div>
+                <div className={styles.paneActions}>
+                  <ShortcutHint id="goLive" keys="Enter">
+                    <Button
+                      variant="primary"
+                      icon={<MonitorPlay size={16} />}
+                      shortcut="Enter"
+                      onClick={sendPreview}
+                      disabled={Boolean(frozen) || (!verses.preview && (atEnd || !previewSlide))}
+                    >
+                      Go live
+                    </Button>
+                  </ShortcutHint>
+                </div>
+              </div>
+              <LivePane small={swapped} meta={liveMeta} frozen={Boolean(frozen)} onSwap={swap}>
+                <LiveScreen snapshot={frozen ?? snapshot} label="Live output" />
+              </LivePane>
+            </div>
+
+            <Dock
+              screen={live.screen}
+              frozen={Boolean(frozen)}
+              hasOverlay={Boolean(live.overlay)}
+              mode={verses.mode}
+              translation={live.overlay?.translation ?? verses.translation}
+              onPrev={() => dispatch({ type: 'prev' })}
+              onNext={() => dispatch({ type: 'next' })}
+              onScreen={toggleScreen}
+              onFreeze={toggleFreeze}
+              onMode={verses.setMode}
+              onVerseStep={(d) => void verses.step(d)}
+              onTranslation={() => void verses.cycleTranslation()}
+              onClear={() => dispatch({ type: 'clearOverlay' })}
+            />
+          </section>
+
+          <aside className={styles.rail} aria-label="Verses and notes">
+            <FeatureBoundary name="The side panel">
+              <Tabs<RailTab>
+                fill
+                label="Side panel"
+                value={rail}
+                onChange={setRail}
+                items={[
+                  {
+                    value: 'notes',
+                    label: 'Notes',
+                    content: (
+                      <Notes
+                        slide={liveSlide}
+                        index={live.slideIndex}
+                        next={slides[live.slideIndex + 1]}
+                      />
+                    ),
+                  },
+                  {
+                    value: 'queue',
+                    label: 'Queue',
+                    badge: verses.queue.length || undefined,
+                    content: <QueuePanel translation={verses.translation} />,
+                  },
+                ]}
+              />
+            </FeatureBoundary>
+          </aside>
+        </main>
+
+        <FeatureBoundary name="The slide strip">
+          <SlideStrip
+            slides={slides}
+            liveIndex={live.slideIndex}
+            previewIndex={previewIndex}
+            onSelect={(i) => {
+              verses.clearPreview();
+              select(i);
             }}
-            animate={{
-              left: ghost.to.left,
-              top: ghost.to.top,
-              width: ghost.to.width,
-              height: ghost.to.height,
-              opacity: 0,
-            }}
-            transition={transition('standard')}
-            onAnimationComplete={() => setGhost((g) => (g?.key === ghost.key ? null : g))}
-            aria-hidden
+            onGoLive={(i) => dispatch({ type: 'goTo', index: i })}
+            translation={translation}
           />
-        )}
-      </AnimatePresence>
-      <Dialog
-        open={exitOpen}
-        onOpenChange={setExitOpen}
-        size="sm"
-        title="Exit presentation?"
-        description="The output window closes and the TV goes dark. You can start again at any time."
-        footer={
-          <>
-            <Button variant="ghost" onClick={() => setExitOpen(false)}>
-              Keep presenting
-            </Button>
-            <Button variant="primary" onClick={exitPresentation}>
-              Exit presentation
-            </Button>
-          </>
-        }
-      />
-      <ShortcutSheet open={sheetOpen} onOpenChange={setSheetOpen} />
-      <CommandPalette
-        open={paletteOpen}
-        onOpenChange={setPaletteOpen}
-        commands={paletteCommands({
-          slides,
-          presenting,
-          start: () => void startPresentation(),
-          exit: requestExit,
-          dispatch,
-          toggleScreen,
-          toggleFreeze,
-          swap,
-          setMode: verses.setMode,
-          showSheet: () => setSheetOpen(true),
-          focusBar,
-          library: () => navigate('/'),
-        })}
-      />
-    </div>
+        </FeatureBoundary>
+        <AnimatePresence>
+          {ghost && (
+            <motion.div
+              key={ghost.key}
+              className={styles.ghost}
+              initial={{
+                left: ghost.from.left,
+                top: ghost.from.top,
+                width: ghost.from.width,
+                height: ghost.from.height,
+                opacity: 0.9,
+              }}
+              animate={{
+                left: ghost.to.left,
+                top: ghost.to.top,
+                width: ghost.to.width,
+                height: ghost.to.height,
+                opacity: 0,
+              }}
+              transition={transition('standard')}
+              onAnimationComplete={() => setGhost((g) => (g?.key === ghost.key ? null : g))}
+              aria-hidden
+            />
+          )}
+        </AnimatePresence>
+        <Dialog
+          open={exitOpen}
+          onOpenChange={setExitOpen}
+          size="sm"
+          title="Exit presentation?"
+          description="The output window closes and the TV goes dark. You can start again at any time."
+          footer={
+            <>
+              <Button variant="ghost" onClick={() => setExitOpen(false)}>
+                Keep presenting
+              </Button>
+              <Button variant="primary" onClick={exitPresentation}>
+                Exit presentation
+              </Button>
+            </>
+          }
+        />
+        <ShortcutSheet open={sheetOpen} onOpenChange={setSheetOpen} />
+        <CommandPalette
+          open={paletteOpen}
+          onOpenChange={setPaletteOpen}
+          commands={paletteCommands({
+            slides,
+            presenting,
+            start: () => void startPresentation(),
+            exit: requestExit,
+            dispatch,
+            toggleScreen,
+            toggleFreeze,
+            swap,
+            setMode: verses.setMode,
+            showSheet: () => setSheetOpen(true),
+            focusBar,
+            library: () => navigate('/'),
+          })}
+        />
+      </div>
+    </PosterContext.Provider>
   );
 }
 

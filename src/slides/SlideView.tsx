@@ -54,13 +54,16 @@ export function SlideView({
   const animate = mode === 'live';
   return (
     <SlideErrorBoundary key={slide.id} template={template}>
-      <Backdrop
-        background={slide.background}
-        template={template}
-        animate={animate}
-        showPlaceholder={mode !== 'live'}
-        textOver={slide.type !== 'image' || Boolean(slide.caption)}
-      />
+      {/* The title slide is the poster, which draws its own background. */}
+      {slide.type !== 'title' && (
+        <Backdrop
+          background={slide.background}
+          template={template}
+          animate={animate}
+          showPlaceholder={mode !== 'live'}
+          textOver={slide.type !== 'image' || Boolean(slide.caption)}
+        />
+      )}
       <Renderer
         slide={slide}
         template={template}

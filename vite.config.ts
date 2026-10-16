@@ -47,6 +47,8 @@ export default defineConfig({
         globPatterns: ['**/*.{js,css,html,svg,png,webp,woff2,json}'],
         maximumFileSizeToCacheInBytes: 12 * 1024 * 1024,
         navigateFallback: '/index.html',
+        // Scene compositions load in an iframe as themselves, never as the app shell.
+        navigateFallbackDenylist: [/^\/scenes\//],
         cleanupOutdatedCaches: true,
       },
     }),

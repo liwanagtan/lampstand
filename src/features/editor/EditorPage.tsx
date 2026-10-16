@@ -28,6 +28,7 @@ import {
   Menu,
   Select,
   Skeleton,
+  Toggle,
   Tooltip,
   cx,
 } from '@/design-system/components';
@@ -61,6 +62,7 @@ import {
   reorderSlides,
   slideIssues,
 } from './slideOps';
+import { PosterContext, posterInfoFor } from '@/slides/poster/posterInfo';
 import styles from './EditorPage.module.css';
 
 export function EditorPage() {
@@ -73,7 +75,7 @@ export function EditorPage() {
     void getPresentation(id).then((r) => {
       if (!alive) return;
       if (!r) return setState('missing');
-      useEditor.getState().open(id, r.data);
+      useEditor.getState().open(id, r.data, r.posterAnimated ?? true);
       setState('ready');
     });
     return () => {
@@ -116,6 +118,7 @@ function Editor({ id }: { id: string }) {
   const canRedo = useEditor((s) => s.future.length > 0);
   const defaultTheme = useSettings((s) => s.defaultTheme);
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const posterAnimated = useEditor((s) => s.posterAnimated);
 
   const template = getTemplate(presentation.theme ?? defaultTheme);
   const translation = presentationTranslation(presentation);
@@ -139,90 +142,92 @@ function Editor({ id }: { id: string }) {
   };
 
   return (
-    <div className={styles.shell}>
-      <header className={styles.top}>
-        <IconButton
-          label="Back to Library"
-          icon={<ArrowLeft size={20} />}
-          onClick={() => navigate('/')}
-        />
-        <div className={styles.titleBlock}>
-          <h1 className={styles.title}>{presentation.title}</h1>
-          <SavedIndicator />
-        </div>
-        <div className={styles.actions}>
-          <Tooltip content="Undo" shortcut="Ctrl+Z">
-            <IconButton
-              label="Undo"
-              icon={<Undo2 size={18} />}
-              onClick={undo}
-              disabled={!canUndo}
-            />
-          </Tooltip>
-          <Tooltip content="Redo" shortcut="Ctrl+Shift+Z">
-            <IconButton
-              label="Redo"
-              icon={<Redo2 size={18} />}
-              onClick={redo}
-              disabled={!canRedo}
-            />
-          </Tooltip>
-          <Button icon={<Settings2 size={16} />} onClick={() => setSettingsOpen(true)}>
-            Presentation settings
-          </Button>
-          <Button
-            variant="primary"
-            icon={<Play size={16} />}
-            onClick={async () => {
-              await useEditor.getState().flush();
-              navigate(`/present/${id}`);
-            }}
-          >
-            Present
-          </Button>
-        </div>
-      </header>
-
-      <div className={styles.body}>
-        <SlideList
-          slides={slides}
-          selectedId={selected.id}
-          template={template}
-          translation={translation}
-          onSelect={select}
-          onReorder={(ids) => edit((p) => reorderSlides(p, ids), 'reorder')}
-          onAdd={add}
-        />
-
-        <main className={styles.canvas} aria-label="Slide canvas">
-          <div className={styles.canvasInner}>
-            <SlideFrame
-              key={selected.id}
-              slide={selected}
-              template={template}
-              mode="editor"
-              translation={slideTranslation(selected, translation)}
-              label={`Slide ${index + 1}`}
-              fit="contain"
-              className={styles.frame}
-            />
+    <PosterContext.Provider value={posterInfoFor(presentation, translation, posterAnimated)}>
+      <div className={styles.shell}>
+        <header className={styles.top}>
+          <IconButton
+            label="Back to Library"
+            icon={<ArrowLeft size={20} />}
+            onClick={() => navigate('/')}
+          />
+          <div className={styles.titleBlock}>
+            <h1 className={styles.title}>{presentation.title}</h1>
+            <SavedIndicator />
           </div>
-          <SlideToolbar slide={selected} index={index} total={slides.length} />
-        </main>
+          <div className={styles.actions}>
+            <Tooltip content="Undo" shortcut="Ctrl+Z">
+              <IconButton
+                label="Undo"
+                icon={<Undo2 size={18} />}
+                onClick={undo}
+                disabled={!canUndo}
+              />
+            </Tooltip>
+            <Tooltip content="Redo" shortcut="Ctrl+Shift+Z">
+              <IconButton
+                label="Redo"
+                icon={<Redo2 size={18} />}
+                onClick={redo}
+                disabled={!canRedo}
+              />
+            </Tooltip>
+            <Button icon={<Settings2 size={16} />} onClick={() => setSettingsOpen(true)}>
+              Presentation settings
+            </Button>
+            <Button
+              variant="primary"
+              icon={<Play size={16} />}
+              onClick={async () => {
+                await useEditor.getState().flush();
+                navigate(`/present/${id}`);
+              }}
+            >
+              Present
+            </Button>
+          </div>
+        </header>
 
-        <aside className={styles.fields} aria-label="Slide fields">
-          <FeatureBoundary name="The slide fields">
-            <FieldsPanel key={selected.id} slide={selected} />
-          </FeatureBoundary>
-        </aside>
+        <div className={styles.body}>
+          <SlideList
+            slides={slides}
+            selectedId={selected.id}
+            template={template}
+            translation={translation}
+            onSelect={select}
+            onReorder={(ids) => edit((p) => reorderSlides(p, ids), 'reorder')}
+            onAdd={add}
+          />
+
+          <main className={styles.canvas} aria-label="Slide canvas">
+            <div className={styles.canvasInner}>
+              <SlideFrame
+                key={selected.id}
+                slide={selected}
+                template={template}
+                mode="editor"
+                translation={slideTranslation(selected, translation)}
+                label={`Slide ${index + 1}`}
+                fit="contain"
+                className={styles.frame}
+              />
+            </div>
+            <SlideToolbar slide={selected} index={index} total={slides.length} />
+          </main>
+
+          <aside className={styles.fields} aria-label="Slide fields">
+            <FeatureBoundary name="The slide fields">
+              <FieldsPanel key={selected.id} slide={selected} />
+            </FeatureBoundary>
+          </aside>
+        </div>
+
+        <PresentationSettings
+          open={settingsOpen}
+          onOpenChange={setSettingsOpen}
+          presentation={presentation}
+        />
       </div>
-
-      <PresentationSettings
-        open={settingsOpen}
-        onOpenChange={setSettingsOpen}
-        presentation={presentation}
-      />
-    </div>
+    </PosterContext.Provider>
   );
 }
 
@@ -501,6 +506,8 @@ function PresentationSettings({
 }) {
   const edit = useEditor((s) => s.edit);
   const translations = useBible((s) => s.translations);
+  const posterAnimated = useEditor((s) => s.posterAnimated);
+  const setPosterAnimated = useEditor((s) => s.setPosterAnimated);
   const set = (key: keyof StoredPresentation, raw: string) =>
     edit((p) => {
       const value = raw === DEFAULT ? '' : raw;
@@ -521,6 +528,14 @@ function PresentationSettings({
       }
     >
       <div className={styles.settingsGrid}>
+        <div className={styles.settingsWide}>
+          <Toggle
+            checked={posterAnimated}
+            onChange={setPosterAnimated}
+            label="Animated poster"
+            description="The title slide and the Sermon screen play their animated Scene on the TV. Reduce motion always shows the still poster."
+          />
+        </div>
         <Input
           label="Title"
           value={presentation.title}

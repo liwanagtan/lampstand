@@ -1,0 +1,509 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>Lampstand Scene — Sermon poster</title>
+    <!--
+      Scene: the animated sermon poster (Lampstand UX phase 4).
+      A HyperFrames composition: one paused GSAP timeline registered on window.__timelines.
+      0–2 s is the entrance; 2–38 s is a seamless loop (every layer's period divides 36 s), which the
+      player repeats with range-start=2 / range-end=38. Content arrives as runtime data on the
+      "sermon" channel and is written as plain text. Everything loads from this folder (offline).
+    -->
+    <style>
+      @font-face {
+        font-family: 'Fraunces Scene';
+        src: url('../fonts/fraunces.woff2') format('woff2');
+        font-weight: 100 900;
+        font-style: normal;
+        font-display: block;
+      }
+      @font-face {
+        font-family: 'Fraunces Scene';
+        src: url('../fonts/fraunces-italic.woff2') format('woff2');
+        font-weight: 100 900;
+        font-style: italic;
+        font-display: block;
+      }
+      @font-face {
+        font-family: 'Inter Scene';
+        src: url('../fonts/inter.woff2') format('woff2');
+        font-weight: 100 900;
+        font-display: block;
+      }
+
+      html,
+      body {
+        margin: 0;
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: #000;
+      }
+
+      #stage {
+        --bg: #0b1324;
+        --ink: #f3eee3;
+        --muted: #c9c2b4;
+        --accent: #d9a441;
+        --glow: rgb(255 186 100 / 0.2);
+        --grade: rgb(11 19 36 / 0.55);
+        --title-font: 'Fraunces Scene', Georgia, serif;
+        --title-weight: 600;
+        --title-tracking: -0.02em;
+        --excerpt-font: 'Fraunces Scene', Georgia, serif;
+        position: relative;
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: var(--bg);
+        color: var(--ink);
+        font-family: 'Inter Scene', system-ui, sans-serif;
+        -webkit-font-smoothing: antialiased;
+        text-rendering: geometricPrecision;
+      }
+      #stage[data-template='modern'] {
+        --bg: #0a0a0b;
+        --ink: #ffffff;
+        --muted: #c4c7ce;
+        --accent: #7fa5ff;
+        --glow: rgb(80 130 255 / 0.22);
+        --grade: rgb(10 10 11 / 0.6);
+        --title-font: 'Inter Scene', system-ui, sans-serif;
+        --title-weight: 800;
+        --title-tracking: -0.04em;
+        --excerpt-font: 'Inter Scene', system-ui, sans-serif;
+      }
+      #stage[data-template='warm'] {
+        --bg: #1c1714;
+        --ink: #f6efe4;
+        --muted: #d8ccbb;
+        --accent: #e8956b;
+        --glow: rgb(255 150 90 / 0.2);
+        --grade: rgb(30 18 12 / 0.5);
+        --title-weight: 500;
+        --title-tracking: -0.015em;
+      }
+
+      .layer {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+      }
+
+      /* 1 · Background: photo (graded per template) or a designed backdrop */
+      #bg {
+        transform-origin: 62% 45%;
+        will-change: transform;
+      }
+      #bg-photo {
+        position: absolute;
+        inset: -2%;
+        width: 104%;
+        height: 104%;
+        object-fit: cover;
+        display: none;
+      }
+      #stage.has-photo #bg-photo {
+        display: block;
+      }
+      #stage[data-template='classic'] #bg-photo {
+        filter: saturate(0.72) contrast(1.05);
+      }
+      #stage[data-template='warm'] #bg-photo {
+        filter: sepia(0.22) saturate(1.08) contrast(1.04);
+      }
+      #stage[data-template='modern'] #bg-photo {
+        filter: saturate(0.6) contrast(1.08);
+      }
+      #bg-design {
+        position: absolute;
+        inset: 0;
+      }
+      #stage[data-template='classic'] #bg-design {
+        background:
+          radial-gradient(70% 80% at 70% 40%, rgb(46 66 110 / 0.75) 0%, rgb(11 19 36 / 0) 65%),
+          radial-gradient(40% 50% at 82% 18%, rgb(217 164 65 / 0.14) 0%, rgb(217 164 65 / 0) 70%),
+          #0b1324;
+      }
+      #stage[data-template='modern'] #bg-design {
+        background: #0a0a0b;
+      }
+      #stage[data-template='modern'] #bg-design::before,
+      #stage[data-template='modern'] #bg-design::after {
+        content: '';
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(120px);
+      }
+      #stage[data-template='modern'] #bg-design::before {
+        width: 1100px;
+        height: 900px;
+        right: -180px;
+        top: -260px;
+        background: radial-gradient(circle, rgb(91 140 255 / 0.55), rgb(91 140 255 / 0) 70%);
+      }
+      #stage[data-template='modern'] #bg-design::after {
+        width: 900px;
+        height: 700px;
+        right: 260px;
+        bottom: -360px;
+        background: radial-gradient(circle, rgb(150 110 255 / 0.32), rgb(150 110 255 / 0) 70%);
+      }
+      #stage[data-template='warm'] #bg-design {
+        background:
+          radial-gradient(70% 70% at 78% 30%, rgb(120 64 36 / 0.65) 0%, rgb(28 23 20 / 0) 70%),
+          radial-gradient(
+            50% 60% at 95% 100%,
+            rgb(232 149 107 / 0.18) 0%,
+            rgb(232 149 107 / 0) 70%
+          ),
+          #1c1714;
+      }
+      #stage.has-photo #bg-design {
+        display: none;
+      }
+      /* Photo grade: template tint plus a cinematic left-weighted fade for the text column */
+      #grade {
+        background:
+          linear-gradient(
+            90deg,
+            var(--bg) 0%,
+            color-mix(in srgb, var(--bg) 88%, transparent) 26%,
+            color-mix(in srgb, var(--bg) 40%, transparent) 56%,
+            transparent 78%
+          ),
+          linear-gradient(0deg, color-mix(in srgb, var(--bg) 70%, transparent) 0%, transparent 34%),
+          linear-gradient(
+            180deg,
+            color-mix(in srgb, var(--bg) 40%, transparent) 0%,
+            transparent 22%
+          );
+      }
+      #stage.has-photo #grade::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: var(--grade);
+        mix-blend-mode: multiply;
+      }
+
+      /* 2 · Light travelling across the frame */
+      #light {
+        mix-blend-mode: plus-lighter;
+      }
+      #light-orb {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 1300px;
+        height: 1300px;
+        margin: -650px 0 0 -650px;
+        border-radius: 50%;
+        background: radial-gradient(
+          circle,
+          var(--glow) 0%,
+          color-mix(in srgb, var(--glow) 40%, transparent) 34%,
+          transparent 66%
+        );
+        will-change: transform, opacity;
+      }
+
+      /* 3 · Dust motes */
+      .mote {
+        position: absolute;
+        width: var(--s, 6px);
+        height: var(--s, 6px);
+        border-radius: 50%;
+        background: radial-gradient(circle, rgb(255 244 214 / 0.95) 0%, rgb(255 244 214 / 0) 70%);
+        filter: blur(var(--b, 0.6px));
+        opacity: 0;
+        will-change: transform, opacity;
+      }
+      #stage[data-template='modern'] .mote {
+        background: radial-gradient(circle, rgb(210 225 255 / 0.95) 0%, rgb(210 225 255 / 0) 70%);
+      }
+
+      /* 4 · Grain */
+      #grain {
+        inset: -120px;
+        opacity: 0.075;
+        mix-blend-mode: overlay;
+        background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='260' height='260'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.9 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+        background-size: 260px 260px;
+      }
+      #stage[data-template='modern'] #grain {
+        opacity: 0.045;
+      }
+
+      /* Template accents */
+      .corner {
+        position: absolute;
+        width: 64px;
+        height: 64px;
+        border-color: color-mix(in srgb, var(--accent) 70%, transparent);
+        border-style: solid;
+        border-width: 0;
+        display: none;
+      }
+      #stage[data-template='classic'] .corner {
+        display: block;
+      }
+      .corner.tl {
+        left: 96px;
+        top: 54px;
+        border-left-width: 2px;
+        border-top-width: 2px;
+      }
+      .corner.tr {
+        right: 96px;
+        top: 54px;
+        border-right-width: 2px;
+        border-top-width: 2px;
+      }
+      .corner.bl {
+        left: 96px;
+        bottom: 54px;
+        border-left-width: 2px;
+        border-bottom-width: 2px;
+      }
+      .corner.br {
+        right: 96px;
+        bottom: 54px;
+        border-right-width: 2px;
+        border-bottom-width: 2px;
+      }
+      #grid {
+        display: none;
+        background: linear-gradient(90deg, rgb(255 255 255 / 0.05) 1px, transparent 1px) 0 0 / 160px
+          100%;
+        mask-image: linear-gradient(90deg, transparent 0%, #000 30%, #000 70%, transparent 100%);
+      }
+      #stage[data-template='modern'] #grid {
+        display: block;
+      }
+      #leak {
+        display: none;
+        background:
+          radial-gradient(40% 55% at 100% 0%, rgb(255 170 110 / 0.28), transparent 70%),
+          radial-gradient(30% 40% at 0% 100%, rgb(255 120 80 / 0.12), transparent 70%);
+        mix-blend-mode: screen;
+      }
+      #stage[data-template='warm'] #leak {
+        display: block;
+      }
+
+      /* Content: the left text column, inside the 5% safe area */
+      #content {
+        position: absolute;
+        left: 192px;
+        top: 132px;
+        bottom: 132px;
+        width: 1060px;
+        display: flex;
+        flex-direction: column;
+      }
+      #topline {
+        position: absolute;
+        left: 192px;
+        right: 192px;
+        top: 132px;
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        font-size: 28px;
+        font-weight: 600;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+      #series {
+        color: var(--accent);
+      }
+      #stage[data-template='warm'] #series {
+        font-family: var(--excerpt-font);
+        font-style: italic;
+        font-weight: 500;
+        letter-spacing: 0.04em;
+        text-transform: none;
+        font-size: 34px;
+      }
+      #main {
+        margin-top: auto;
+        margin-bottom: auto;
+        padding-top: 40px;
+      }
+      #title-wrap {
+        position: relative;
+      }
+      #title,
+      #title-sheen {
+        margin: 0;
+        font-family: var(--title-font);
+        font-weight: var(--title-weight);
+        letter-spacing: var(--title-tracking);
+        font-size: 136px;
+        line-height: 1.02;
+        text-wrap: balance;
+      }
+      #title {
+        color: var(--ink);
+        text-shadow: 0 4px 40px rgb(0 0 0 / 0.35);
+      }
+      #title.long,
+      #title-sheen.long {
+        font-size: 112px;
+      }
+      #title-sheen {
+        position: absolute;
+        inset: 0;
+        color: transparent;
+        background: linear-gradient(
+          105deg,
+          transparent 0%,
+          transparent 42%,
+          rgb(255 255 255 / 0.55) 50%,
+          transparent 58%,
+          transparent 100%
+        );
+        background-size: 300% 100%;
+        background-position: 150% 0;
+        -webkit-background-clip: text;
+        background-clip: text;
+        mix-blend-mode: overlay;
+      }
+      #rule {
+        position: relative;
+        width: 140px;
+        height: 4px;
+        margin: 52px 0 40px;
+        border-radius: 2px;
+        background: var(--accent);
+        overflow: hidden;
+        transform-origin: left center;
+      }
+      #rule-shine {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 60px;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgb(255 255 255 / 0.85), transparent);
+      }
+      #ref {
+        font-size: 36px;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        color: var(--accent);
+      }
+      #excerpt {
+        margin: 18px 0 0;
+        max-width: 980px;
+        font-family: var(--excerpt-font);
+        font-style: italic;
+        font-weight: 400;
+        font-size: 42px;
+        line-height: 1.38;
+        color: var(--muted);
+      }
+      #stage[data-template='modern'] #excerpt {
+        font-style: normal;
+        font-weight: 400;
+      }
+      #footer {
+        position: absolute;
+        left: 192px;
+        right: 192px;
+        bottom: 132px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      #speaker {
+        font-size: 28px;
+        font-weight: 600;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: var(--ink);
+      }
+      #mark {
+        width: 72px;
+        height: 72px;
+        color: var(--accent);
+      }
+      #flame {
+        transform-origin: 16px 22px;
+      }
+      .hidden {
+        display: none !important;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="stage"
+      data-composition-id="sermon"
+      data-start="0"
+      data-width="1920"
+      data-height="1080"
+      data-template="classic"
+    >
+      <div id="bg" class="layer">
+        <div id="bg-design"></div>
+        <img id="bg-photo" alt="" />
+      </div>
+      <div id="grade" class="layer"></div>
+      <div id="light" class="layer"><div id="light-orb"></div></div>
+      <div id="leak" class="layer"></div>
+      <div id="grid" class="layer"></div>
+      <div id="motes" class="layer"></div>
+      <div id="grain" class="layer"></div>
+      <span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span
+      ><span class="corner br"></span>
+
+      <div id="topline">
+        <span id="series"></span>
+        <span id="date"></span>
+      </div>
+      <div id="content">
+        <div id="main">
+          <div id="title-wrap">
+            <h1 id="title"></h1>
+            <h1 id="title-sheen" aria-hidden="true"></h1>
+          </div>
+          <div id="rule"><span id="rule-shine"></span></div>
+          <div id="verse">
+            <div id="ref"></div>
+            <p id="excerpt"></p>
+          </div>
+        </div>
+      </div>
+      <div id="footer">
+        <span id="speaker"></span>
+        <svg id="mark" viewBox="0 0 32 32" aria-hidden="true">
+          <rect
+            x="1"
+            y="1"
+            width="30"
+            height="30"
+            rx="9"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.6"
+          />
+          <path
+            id="flame"
+            d="M16 6.5c3.6 4.1 6 7.4 6 11a6 6 0 0 1-12 0c0-2.3 1-4.2 2.6-5.9.2 1.9 1 3.1 2.2 3.6-.5-3.2.2-5.9 1.2-8.7Z"
+            fill="currentColor"
+          />
+          <path d="M11 25.5h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+        </svg>
+      </div>
+    </div>
+
+    <script src="../vendor/gsap.min.js"></script>
+    <script src="./scene.js"></script>
+    <script src="../vendor/hyperframe.runtime.iife.js"></script>
+  </body>
+</html>

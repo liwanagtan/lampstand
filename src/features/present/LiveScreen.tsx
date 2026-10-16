@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import {
   AnimatePresence,
   motion,
@@ -18,6 +18,7 @@ import { useAsset } from '@/slides/useAsset';
 import { OVERLAY } from '@/templates/metrics';
 import type { LiveSnapshot } from './live/types';
 import { VerseOverlay } from './VerseOverlay';
+import { PosterContext, posterInfoFor } from '@/slides/poster/posterInfo';
 import styles from './LiveScreen.module.css';
 
 const sec = (ms: number) => ms / 1000;
@@ -98,90 +99,100 @@ export function LiveScreen({ snapshot, fit = 'width', label, className }: LiveSc
   const fullOverlay = overlay?.mode === 'fullScreen';
   const translation = snapshot.translation;
 
+  const posterInfo = useMemo(
+    () =>
+      presentation
+        ? posterInfoFor(presentation, translation, snapshot.posterAnimated ?? true)
+        : null,
+    [presentation, translation, snapshot.posterAnimated],
+  );
+
   return (
-    <SlideStage template={template} fit={fit} label={label} className={className}>
-      <motion.div
-        className={styles.slideLayer}
-        animate={
-          side
-            ? { scale: 1 - OVERLAY.sidePanelWidth, opacity: 1 }
-            : fullOverlay
-              ? { scale: 1, opacity: 0 }
-              : { scale: 1, opacity: 1 }
-        }
-        transition={overlayTransition}
-      >
-        <AnimatePresence initial={false} custom={direction}>
-          {slide && (
+    <PosterContext.Provider value={posterInfo}>
+      <SlideStage template={template} fit={fit} label={label} className={className}>
+        <motion.div
+          className={styles.slideLayer}
+          animate={
+            side
+              ? { scale: 1 - OVERLAY.sidePanelWidth, opacity: 1 }
+              : fullOverlay
+                ? { scale: 1, opacity: 0 }
+                : { scale: 1, opacity: 1 }
+          }
+          transition={overlayTransition}
+        >
+          <AnimatePresence initial={false} custom={direction}>
+            {slide && (
+              <motion.div
+                key={slide.id}
+                className={styles.slide}
+                variants={slideVariants(slide.transition ?? 'fade', direction, reduced)}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                transition={slideTransition}
+              >
+                <SlideView
+                  slide={slide}
+                  template={template}
+                  mode={slide.id === initial.slide ? 'preview' : 'live'}
+                  translation={slideTranslation(slide, translation)}
+                  buildStep={live.buildStep}
+                  page={live.slidePage}
+                  countdownEndsAt={live.countdownEndsAt}
+                />
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </motion.div>
+
+        <AnimatePresence>
+          {overlay && (
             <motion.div
-              key={slide.id}
-              className={styles.slide}
-              variants={slideVariants(slide.transition ?? 'fade', direction, reduced)}
-              initial="enter"
-              animate="center"
-              exit="exit"
-              transition={slideTransition}
+              key={`${overlay.mode}`}
+              className={styles.overlayLayer}
+              initial={overlayFrom(overlay.mode, reduced)}
+              animate={{ opacity: 1, x: 0, y: 0 }}
+              exit={overlayFrom(overlay.mode, reduced)}
+              transition={overlayTransition}
             >
-              <SlideView
-                slide={slide}
-                template={template}
-                mode={slide.id === initial.slide ? 'preview' : 'live'}
-                translation={slideTranslation(slide, translation)}
-                buildStep={live.buildStep}
-                page={live.slidePage}
-                countdownEndsAt={live.countdownEndsAt}
-              />
+              <FeatureBoundary name="Verse overlay" silent>
+                <VerseOverlay
+                  key={`${overlay.ref}|${overlay.translation}`}
+                  overlay={overlay}
+                  template={template}
+                  animate={overlayKey !== initial.overlay}
+                />
+              </FeatureBoundary>
             </motion.div>
           )}
         </AnimatePresence>
-      </motion.div>
 
-      <AnimatePresence>
-        {overlay && (
-          <motion.div
-            key={`${overlay.mode}`}
-            className={styles.overlayLayer}
-            initial={overlayFrom(overlay.mode, reduced)}
-            animate={{ opacity: 1, x: 0, y: 0 }}
-            exit={overlayFrom(overlay.mode, reduced)}
-            transition={overlayTransition}
-          >
-            <FeatureBoundary name="Verse overlay" silent>
-              <VerseOverlay
-                key={`${overlay.ref}|${overlay.translation}`}
-                overlay={overlay}
-                template={template}
-                animate={overlayKey !== initial.overlay}
-              />
-            </FeatureBoundary>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      <AnimatePresence>
-        {live.screen !== 'content' && (
-          <motion.div
-            key={live.screen}
-            className={styles.screenLayer}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{
-              duration: sec(reduced ? tokens.reduced.duration : tokens.screen.duration),
-            }}
-          >
-            {live.screen === 'logo' && <LogoScreen assetId={snapshot.logoAssetId} />}
-            {live.screen === 'sermon' && presentation && (
-              <SermonScreen
-                presentation={presentation}
-                template={template}
-                translation={translation}
-              />
-            )}
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </SlideStage>
+        <AnimatePresence>
+          {live.screen !== 'content' && (
+            <motion.div
+              key={live.screen}
+              className={styles.screenLayer}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{
+                duration: sec(reduced ? tokens.reduced.duration : tokens.screen.duration),
+              }}
+            >
+              {live.screen === 'logo' && <LogoScreen assetId={snapshot.logoAssetId} />}
+              {live.screen === 'sermon' && presentation && (
+                <SermonScreen
+                  presentation={presentation}
+                  template={template}
+                  translation={translation}
+                />
+              )}
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </SlideStage>
+    </PosterContext.Provider>
   );
 }
 

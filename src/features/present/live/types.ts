@@ -38,6 +38,8 @@ export interface LiveSnapshot {
   logoAssetId: string | null;
   /** The operator's Reduce motion setting, so the TV follows it without a reload. */
   reduceMotion: boolean;
+  /** Whether the poster (title slide, Sermon screen) plays its animated Scene. */
+  posterAnimated: boolean;
   /** Monotonic time of the last change, so reopened outputs skip entrance motion. */
   changedAt: number;
 }

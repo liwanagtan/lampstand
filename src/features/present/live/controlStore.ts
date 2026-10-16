@@ -15,6 +15,7 @@ interface ControlState {
   translation: string;
   logoAssetId: string | null;
   reduceMotion: boolean;
+  posterAnimated: boolean;
   rev: number;
   changedAt: number;
   /** Slide chosen into Preview; null follows the live slide (shows the next one). */
@@ -30,6 +31,7 @@ interface ControlState {
   frozen: LiveSnapshot | null;
 
   load: (args: {
+    posterAnimated?: boolean;
     id: string;
     presentation: StoredPresentation;
     translation: string;
@@ -95,6 +97,7 @@ export const useControl = create<ControlState>((set, get) => {
     translation: 'KJV',
     logoAssetId: null,
     reduceMotion: false,
+    posterAnimated: true,
     rev: 0,
     changedAt: 0,
     previewIndex: null,
@@ -105,8 +108,15 @@ export const useControl = create<ControlState>((set, get) => {
     presenting: false,
     frozen: null,
 
-    load: ({ id, presentation, translation, logoAssetId, theme, restore }) => {
-      set({ presentation, translation, logoAssetId, previewIndex: null, slidePageCounts: {} });
+    load: ({ id, presentation, translation, logoAssetId, theme, restore, posterAnimated }) => {
+      set({
+        presentation,
+        translation,
+        logoAssetId,
+        posterAnimated: posterAnimated ?? true,
+        previewIndex: null,
+        slidePageCounts: {},
+      });
       if (restore && restore.presentationId === id) {
         set({
           live: {
@@ -184,6 +194,7 @@ export const useControl = create<ControlState>((set, get) => {
         translation: s.translation,
         logoAssetId: s.logoAssetId,
         reduceMotion: s.reduceMotion,
+        posterAnimated: s.posterAnimated,
         changedAt: s.changedAt,
       };
     },

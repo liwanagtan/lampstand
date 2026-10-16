@@ -10,6 +10,8 @@ export interface PresentationRecord<P = unknown> {
   createdAt: number;
   updatedAt: number;
   lastPresentedAt?: number;
+  /** Play the animated Scene poster (an app setting, not part of the file). Default on. */
+  posterAnimated?: boolean;
 }
 
 export interface AssetRecord {

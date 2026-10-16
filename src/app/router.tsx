@@ -25,6 +25,24 @@ export const routes: RouteObject[] = [
             }),
           },
           {
+            path: 'today',
+            lazy: async () => ({
+              Component: (await import('@/features/bible-app/TodayPage')).TodayPage,
+            }),
+          },
+          {
+            path: 'plans',
+            lazy: async () => ({
+              Component: (await import('@/features/bible-app/PlansPage')).PlansPage,
+            }),
+          },
+          {
+            path: 'journal',
+            lazy: async () => ({
+              Component: (await import('@/features/bible-app/JournalPage')).JournalPage,
+            }),
+          },
+          {
             path: 'notes',
             lazy: async () => ({
               Component: (await import('@/features/bible-app/NotesPage')).NotesPage,

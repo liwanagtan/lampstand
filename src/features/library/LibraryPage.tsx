@@ -30,6 +30,7 @@ import { presentationTranslation, slideTranslation } from './translation';
 import { matches } from './libraryHelpers';
 import { PosterContext, posterInfoFor } from '@/slides/poster/posterInfo';
 import styles from './LibraryPage.module.css';
+import { VerseOfTheDay } from '@/features/bible-app/VerseOfTheDay';
 
 type SortKey = 'date' | 'lastPresented' | 'updated';
 
@@ -114,6 +115,7 @@ export function LibraryPage() {
         )
       }
     >
+      {records && <VerseOfTheDay compact />}
       {empty ? (
         <LibraryEmpty />
       ) : (

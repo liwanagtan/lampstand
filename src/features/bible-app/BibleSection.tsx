@@ -5,6 +5,9 @@ import styles from './BibleSection.module.css';
 
 const TABS: { to: string; label: string; end?: boolean }[] = [
   { to: '/bible', label: 'Read', end: true },
+  { to: '/bible/today', label: 'Today' },
+  { to: '/bible/plans', label: 'Plans' },
+  { to: '/bible/journal', label: 'Journal' },
   { to: '/bible/notes', label: 'Notes & highlights' },
 ];
 

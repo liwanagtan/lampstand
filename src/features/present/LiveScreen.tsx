@@ -176,10 +176,42 @@ export function LiveScreen({ snapshot, fit = 'width', label, className }: LiveSc
             }}
           >
             {live.screen === 'logo' && <LogoScreen assetId={snapshot.logoAssetId} />}
+            {live.screen === 'sermon' && presentation && (
+              <SermonScreen
+                presentation={presentation}
+                template={template}
+                translation={translation}
+              />
+            )}
           </motion.div>
         )}
       </AnimatePresence>
     </SlideStage>
+  );
+}
+
+/** The sermon poster shown by the Sermon button: the presentation's title slide. */
+function SermonScreen({
+  presentation,
+  template,
+  translation,
+}: {
+  presentation: NonNullable<LiveSnapshot['presentation']>;
+  template: ReturnType<typeof getTemplate>;
+  translation: string;
+}) {
+  const slide =
+    presentation.slides.find((s) => s.type === 'title') ??
+    ({
+      id: 'sermon-poster',
+      type: 'title',
+      heading: presentation.title,
+      speaker: presentation.speaker,
+    } as const);
+  return (
+    <div className={styles.sermon}>
+      <SlideView slide={slide} template={template} mode="live" translation={translation} />
+    </div>
   );
 }
 

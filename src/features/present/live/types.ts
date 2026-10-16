@@ -11,7 +11,8 @@ export interface LiveOverlay {
   emphasis?: string[];
 }
 
-export type Screen = 'content' | 'blank' | 'logo';
+/** What covers the slide on the TV: nothing, black, the logo, or the sermon poster. */
+export type Screen = 'content' | 'blank' | 'logo' | 'sermon';
 
 export interface LiveState {
   presentationId: string | null;

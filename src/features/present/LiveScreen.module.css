@@ -41,3 +41,7 @@
 .defaultLogo span {
   color: var(--t-text);
 }
+.sermon {
+  position: absolute;
+  inset: 0;
+}

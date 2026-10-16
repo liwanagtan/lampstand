@@ -25,7 +25,7 @@ test(`soak: ${MINUTES} minutes of slides and verses`, async ({ page }) => {
   await importSample(page);
   await page.getByRole('button', { name: 'Present A Lamp in the Dark' }).click();
   const popup = page.waitForEvent('popup');
-  await page.getByRole('button', { name: 'Open output' }).click();
+  await page.getByRole('button', { name: 'Start Presentation' }).click();
   const output = await popup;
   await expect(page.getByText('Output connected')).toBeVisible();
   const [cc, oc] = [await cdpFor(page), await cdpFor(output)];

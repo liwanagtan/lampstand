@@ -13,6 +13,9 @@ export const SHORTCUTS: { keys: string[]; action: string }[] = [
   { keys: ['T'], action: 'Cycle translation on the live verse' },
   { keys: ['B'], action: 'Blank screen toggle' },
   { keys: ['L'], action: 'Logo screen toggle' },
+  { keys: ['S'], action: 'Sermon poster toggle' },
+  { keys: ['F'], action: 'Freeze or unfreeze the output' },
+  { keys: ['X'], action: 'Swap the Live and Preview canvas sizes' },
   { keys: ['Ctrl+K'], action: 'App command palette' },
   { keys: ['?'], action: 'Show this shortcut sheet' },
 ];

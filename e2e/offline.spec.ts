@@ -22,7 +22,7 @@ test('no request ever leaves localhost during a full run (PRD §10)', async ({ p
   await page.goto('/');
   await page.getByRole('button', { name: 'Present A Lamp in the Dark' }).click();
   const popup = page.waitForEvent('popup');
-  await page.getByRole('button', { name: 'Open output' }).click();
+  await page.getByRole('button', { name: 'Start Presentation' }).click();
   const output = await popup;
   await page.keyboard.press('ArrowRight');
   await page.keyboard.press('/');
@@ -65,7 +65,7 @@ test('after the first visit the app works with the network unplugged', async ({
 
   // A fresh output window opens offline too.
   const popup = page.waitForEvent('popup');
-  await page.getByRole('button', { name: 'Open output' }).click();
+  await page.getByRole('button', { name: 'Start Presentation' }).click();
   const output = await popup;
   await expect(output.getByTestId('output')).toContainText(
     'The LORD is my shepherd; I shall lack nothing',

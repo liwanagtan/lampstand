@@ -9,7 +9,7 @@ async function present(page: Page): Promise<Page> {
   await page.getByRole('button', { name: 'Present A Lamp in the Dark' }).click();
   await expect(page.getByText('LIVE', { exact: true })).toBeVisible();
   const popup = page.waitForEvent('popup');
-  await page.getByRole('button', { name: 'Open output' }).click();
+  await page.getByRole('button', { name: 'Start Presentation' }).click();
   const output = await popup;
   await expect(page.getByText('Output connected')).toBeVisible();
   // Put a content slide live so we can see it stay visible under the overlay.

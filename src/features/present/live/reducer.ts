@@ -13,7 +13,7 @@ export type LiveAction =
   | { type: 'next' }
   | { type: 'prev' }
   | { type: 'goTo'; index: number }
-  | { type: 'toggleScreen'; screen: 'blank' | 'logo' }
+  | { type: 'toggleScreen'; screen: 'blank' | 'logo' | 'sermon' }
   | { type: 'showOverlay'; overlay: Omit<LiveOverlay, 'page'> & { page?: number } }
   | { type: 'clearOverlay' }
   | { type: 'overlayMode'; mode: OverlayMode }

@@ -11,19 +11,24 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { AnimatePresence, motion } from 'motion/react';
 import {
   ArrowLeft,
+  ArrowLeftRight,
   BookOpen,
   ChevronLeft,
   ChevronRight,
+  Flame,
   MonitorOff,
   MonitorPlay,
-  MonitorUp,
+  Play,
+  Presentation,
+  Snowflake,
   Square,
-  Flame,
+  X,
 } from 'lucide-react';
 import {
   Button,
   Chip,
   ChipButton,
+  Dialog,
   EmptyState,
   FeatureBoundary,
   IconButton,
@@ -44,7 +49,8 @@ import { getTemplate } from '@/templates/templates';
 import { SlideFrame } from '@/slides/SlideView';
 import type { StoredSlide } from '@/schema/presentation';
 import { connectControl, readSavedLive, useControl } from './live/controlStore';
-import { isOutputOpen, openOutput } from './live/outputWindow';
+import { closeOutput, openOutput } from './live/outputWindow';
+import type { Screen } from './live/types';
 import { LiveScreen } from './LiveScreen';
 import { useShortcuts } from './useShortcuts';
 import { formatClock } from '@/slides/clock';
@@ -132,14 +138,28 @@ export function PresentPage() {
   return <ControlScreen />;
 }
 
+const LAYOUT_KEY = 'lampstand.canvasLayout';
+
+function readSwapped(): boolean {
+  try {
+    return localStorage.getItem(LAYOUT_KEY) === 'preview-large';
+  } catch {
+    return false;
+  }
+}
+
 function ControlScreen() {
   const navigate = useNavigate();
   const presentation = useControl((s) => s.presentation)!;
   const live = useControl((s) => s.live);
   const previewIndex = useControl((s) => s.previewIndex);
   const output = useControl((s) => s.output);
+  const presenting = useControl((s) => s.presenting);
+  const frozen = useControl((s) => s.frozen);
   const translation = useControl((s) => s.translation);
   const dispatch = useControl((s) => s.dispatch);
+  const toggleScreen = useControl((s) => s.toggleScreen);
+  const toggleFreeze = useControl((s) => s.toggleFreeze);
   const select = useControl((s) => s.select);
   const goLive = useControl((s) => s.goLive);
   const rev = useControl((s) => s.rev);
@@ -149,15 +169,17 @@ function ControlScreen() {
   const [rail, setRail] = useState<RailTab>('queue');
   const [sheetOpen, setSheetOpen] = useState(false);
   const [paletteOpen, setPaletteOpen] = useState(false);
+  const [exitOpen, setExitOpen] = useState(false);
+  const [swapped, setSwapped] = useState(readSwapped);
   const verses = useVerses();
   const translations = useBible((s) => s.translations);
   const overlayPages = useControl((s) => s.overlayPageCount);
   const [ghost, setGhost] = useState<{ key: number; from: DOMRect; to: DOMRect } | null>(null);
   const reduced = useReducedMotion();
 
-  /** Sends Preview live; the preview frame flies into the Live pane (PRD §9 Going live). */
+  /** Sends Preview live; the preview frame flies into the Live canvas (PRD §9 Going live). */
   const sendPreview = () => {
-    const from = document.querySelector('[data-pane="Preview"]')?.getBoundingClientRect();
+    const from = document.querySelector('[data-pane="preview"]')?.getBoundingClientRect();
     const to = document.querySelector('[data-pane="live"]')?.getBoundingClientRect();
     if (from && to && !reduced) setGhost({ key: Date.now(), from, to });
     if (useVerses.getState().preview) void useVerses.getState().goLivePreview();
@@ -167,6 +189,16 @@ function ControlScreen() {
   const focusBar = useCallback(() => {
     setTimeout(focusCommandBar, 50);
   }, []);
+
+  const swap = () =>
+    setSwapped((v) => {
+      try {
+        localStorage.setItem(LAYOUT_KEY, v ? 'live-large' : 'preview-large');
+      } catch {
+        // A remembered layout is a convenience only.
+      }
+      return !v;
+    });
 
   const template = getTemplate(live.theme);
   const slides = presentation.slides;
@@ -179,26 +211,40 @@ function ControlScreen() {
     [rev, live, presentation, translation, logoAssetId, reduceMotion, changedAt],
   );
 
-  const onOpenOutput = async () => {
+  const startPresentation = async () => {
     const r = await openOutput();
-    if (r.placed) {
-      toast({ title: `Output opened on ${r.screenLabel}`, tone: 'success' });
-    } else if (r.reason === 'blocked') {
+    if (!r.placed && r.reason === 'blocked') {
       toast({
         title: 'Chrome blocked the output window. Allow pop-ups for Lampstand and try again.',
         tone: 'warning',
       });
+      return;
+    }
+    useControl.getState().setPresenting(true);
+    if (r.placed) {
+      toast({ title: `Presentation started on ${r.screenLabel}`, tone: 'success' });
     } else {
       toast({
-        title: 'Output opened',
+        title: 'Presentation started',
         description:
           r.reason === 'no-permission'
-            ? 'Drag it to the TV and press F. Allow “window management” to place it automatically next time.'
+            ? 'Drag the output to the TV and press F. Allow “window management” to place it automatically next time.'
             : r.reason === 'single-screen'
-              ? 'Only one display found. Connect the TV, then drag the window to it and press F.'
-              : 'Drag it to the TV and press F for full screen.',
+              ? 'Only one display found. Connect the TV, then drag the output to it and press F.'
+              : 'Drag the output to the TV and press F for full screen.',
       });
     }
+  };
+
+  const exitPresentation = () => {
+    setExitOpen(false);
+    useControl.getState().setPresenting(false);
+    closeOutput();
+  };
+
+  const requestExit = () => {
+    if (useControl.getState().output === 'connected') setExitOpen(true);
+    else exitPresentation();
   };
 
   useShortcuts(
@@ -224,8 +270,11 @@ function ControlScreen() {
       t: () => void verses.cycleTranslation(),
       '?': () => setSheetOpen(true),
       'Mod+k': () => setPaletteOpen(true),
-      b: () => dispatch({ type: 'toggleScreen', screen: 'blank' }),
-      l: () => dispatch({ type: 'toggleScreen', screen: 'logo' }),
+      b: () => toggleScreen('blank'),
+      l: () => toggleScreen('logo'),
+      s: () => toggleScreen('sermon'),
+      f: () => toggleFreeze(),
+      x: () => swap(),
       Home: () => dispatch({ type: 'goTo', index: 0 }),
     },
     ['Mod+k'],
@@ -233,6 +282,47 @@ function ControlScreen() {
 
   const buildTotal = liveSlide?.type === 'list' && liveSlide.build ? liveSlide.items.length : 0;
   const pageTotal = useControl((s) => (liveSlide ? (s.slidePageCounts[liveSlide.id] ?? 1) : 1));
+
+  const liveMeta = [
+    liveSlide ? `Slide ${live.slideIndex + 1} of ${slides.length}` : null,
+    buildTotal ? `item ${live.buildStep} of ${buildTotal}` : null,
+    pageTotal > 1 ? `page ${live.slidePage + 1} of ${pageTotal}` : null,
+    live.countdownEndsAt ? <Countdown key="cd" endsAt={live.countdownEndsAt} /> : null,
+    live.overlay
+      ? `${labelFor(live.overlay.ref, live.overlay.translation)} ${live.overlay.translation}${overlayPages > 1 ? ` (${live.overlay.page + 1}/${overlayPages})` : ''}`
+      : null,
+  ];
+
+  const previewContent = frozen ? (
+    <LiveScreen snapshot={snapshot} label="Preview: what shows when you unfreeze" />
+  ) : verses.preview ? (
+    <LiveScreen
+      key={`${verses.preview.ref}|${verses.preview.translation}|${verses.preview.mode}`}
+      snapshot={{
+        ...snapshot,
+        live: { ...live, screen: 'content', overlay: { ...verses.preview, page: 0 } },
+      }}
+      label="Preview: verse"
+    />
+  ) : previewSlide && !atEnd ? (
+    <SlideFrame
+      slide={previewSlide}
+      template={template}
+      mode="preview"
+      translation={slideTranslation(previewSlide, translation)}
+      label={`Preview: slide ${previewTarget + 1}`}
+    />
+  ) : (
+    <div className={styles.endCard}>End of presentation</div>
+  );
+
+  const previewMeta = frozen
+    ? 'Shows when you unfreeze'
+    : verses.preview
+      ? `Verse · ${labelFor(verses.preview.ref, verses.preview.translation)} · ${verses.preview.translation}`
+      : previewSlide && !atEnd
+        ? `Slide ${previewTarget + 1} · ${previewSlide.type}`
+        : undefined;
 
   return (
     <div className={styles.shell}>
@@ -272,140 +362,74 @@ function ControlScreen() {
             }))}
           />
           <ModeChip mode={verses.mode} />
-          <OutputChip status={output} />
-          <Button
-            variant={output === 'connected' ? 'secondary' : 'primary'}
-            icon={<MonitorUp size={16} />}
-            onClick={() => void onOpenOutput()}
-          >
-            {output === 'connected' || isOutputOpen() ? 'Show output' : 'Open output'}
-          </Button>
+          <OutputStatus
+            status={output}
+            presenting={presenting}
+            onReopen={() => void startPresentation()}
+          />
+          {presenting ? (
+            <Button variant="secondary" icon={<MonitorOff size={16} />} onClick={requestExit}>
+              Exit Presentation
+            </Button>
+          ) : (
+            <Button
+              variant="primary"
+              icon={<Play size={16} />}
+              onClick={() => void startPresentation()}
+            >
+              Start Presentation
+            </Button>
+          )}
         </div>
       </header>
 
-      {output === 'disconnected' && (
-        <div className={styles.banner} role="alert">
-          <MonitorOff size={18} />
-          <strong>Output disconnected.</strong> The TV isn’t receiving updates.
-          <Button size="sm" variant="primary" onClick={() => void onOpenOutput()}>
-            Reopen
-          </Button>
-        </div>
-      )}
+      <DisconnectedBanner status={output} onReopen={() => void startPresentation()} />
 
       <main className={styles.main}>
-        <section className={styles.panes} aria-label="Preview and live">
-          <Pane
-            title="Preview"
-            meta={
-              verses.preview
-                ? `Verse · ${labelFor(verses.preview.ref, verses.preview.translation)} · ${verses.preview.translation}`
-                : previewSlide
-                  ? `Slide ${previewTarget + 1} · ${previewSlide.type}`
-                  : undefined
-            }
-            actions={
-              <ShortcutHint id="goLive" keys="Enter">
-                <Button
-                  variant="primary"
-                  icon={<MonitorPlay size={16} />}
-                  shortcut="Enter"
-                  onClick={sendPreview}
-                  disabled={!verses.preview && (atEnd || !previewSlide)}
-                >
-                  Go live
-                </Button>
-              </ShortcutHint>
-            }
-          >
-            {verses.preview ? (
-              <LiveScreen
-                key={`${verses.preview.ref}|${verses.preview.translation}|${verses.preview.mode}`}
-                snapshot={{
-                  ...snapshot,
-                  live: { ...live, screen: 'content', overlay: { ...verses.preview, page: 0 } },
-                }}
-                label="Preview: verse"
-              />
-            ) : previewSlide && !atEnd ? (
-              <SlideFrame
-                slide={previewSlide}
-                template={template}
-                mode="preview"
-                translation={slideTranslation(previewSlide, translation)}
-                label={`Preview: slide ${previewTarget + 1}`}
-              />
-            ) : (
-              <div className={styles.endCard}>End of presentation</div>
-            )}
-          </Pane>
-          <LivePane
-            meta={
-              liveSlide
-                ? [
-                    `Slide ${live.slideIndex + 1} of ${slides.length}`,
-                    buildTotal ? `item ${live.buildStep} of ${buildTotal}` : null,
-                    pageTotal > 1 ? `page ${live.slidePage + 1} of ${pageTotal}` : null,
-                    live.countdownEndsAt ? (
-                      <Countdown key="cd" endsAt={live.countdownEndsAt} />
-                    ) : null,
-                    live.overlay
-                      ? `${labelFor(live.overlay.ref, live.overlay.translation)} ${live.overlay.translation}${overlayPages > 1 ? ` (${live.overlay.page + 1}/${overlayPages})` : ''}`
-                      : null,
-                  ]
-                : []
-            }
-            actions={
-              <>
-                <ShortcutHint id="prev" keys="←">
-                  <Tooltip content="Previous" shortcut="←">
-                    <IconButton
-                      label="Previous"
-                      icon={<ChevronLeft size={20} />}
-                      variant="secondary"
-                      onClick={() => dispatch({ type: 'prev' })}
-                    />
-                  </Tooltip>
-                </ShortcutHint>
-                <ShortcutHint id="next" keys="→">
-                  <Tooltip content="Next" shortcut="→">
-                    <IconButton
-                      label="Next"
-                      icon={<ChevronRight size={20} />}
-                      variant="secondary"
-                      onClick={() => dispatch({ type: 'next' })}
-                    />
-                  </Tooltip>
-                </ShortcutHint>
-                <ScreenToggle
-                  label="Blank"
-                  shortcut="B"
-                  icon={<Square size={16} />}
-                  active={live.screen === 'blank'}
-                  onClick={() => dispatch({ type: 'toggleScreen', screen: 'blank' })}
-                />
-                <ScreenToggle
-                  label="Logo"
-                  shortcut="L"
-                  icon={<Flame size={16} />}
-                  active={live.screen === 'logo'}
-                  onClick={() => dispatch({ type: 'toggleScreen', screen: 'logo' })}
-                />
-                <OverlayModes mode={verses.mode} onChange={verses.setMode} />
-                {live.overlay && (
+        <section className={styles.stage} aria-label="Preview and live">
+          <div className={cx(styles.canvases, swapped && styles.swapped)}>
+            <div className={cx(styles.pane, styles.previewPane, !swapped && styles.paneSmall)}>
+              <div className={styles.paneHead}>
+                <h2 className={styles.paneTitle}>Preview</h2>
+                {previewMeta && <span className={styles.paneMeta}>{previewMeta}</span>}
+              </div>
+              <div className={styles.paneBody} data-pane="preview">
+                <FeatureBoundary name="Preview">{previewContent}</FeatureBoundary>
+              </div>
+              <div className={styles.paneActions}>
+                <ShortcutHint id="goLive" keys="Enter">
                   <Button
-                    variant="outline"
-                    shortcut="Esc"
-                    onClick={() => dispatch({ type: 'clearOverlay' })}
+                    variant="primary"
+                    icon={<MonitorPlay size={16} />}
+                    shortcut="Enter"
+                    onClick={sendPreview}
+                    disabled={Boolean(frozen) || (!verses.preview && (atEnd || !previewSlide))}
                   >
-                    Clear verse
+                    Go live
                   </Button>
-                )}
-              </>
-            }
-          >
-            <LiveScreen snapshot={snapshot} label="Live output" />
-          </LivePane>
+                </ShortcutHint>
+              </div>
+            </div>
+            <LivePane small={swapped} meta={liveMeta} frozen={Boolean(frozen)} onSwap={swap}>
+              <LiveScreen snapshot={frozen ?? snapshot} label="Live output" />
+            </LivePane>
+          </div>
+
+          <Dock
+            screen={live.screen}
+            frozen={Boolean(frozen)}
+            hasOverlay={Boolean(live.overlay)}
+            mode={verses.mode}
+            translation={live.overlay?.translation ?? verses.translation}
+            onPrev={() => dispatch({ type: 'prev' })}
+            onNext={() => dispatch({ type: 'next' })}
+            onScreen={toggleScreen}
+            onFreeze={toggleFreeze}
+            onMode={verses.setMode}
+            onVerseStep={(d) => void verses.step(d)}
+            onTranslation={() => void verses.cycleTranslation()}
+            onClear={() => dispatch({ type: 'clearOverlay' })}
+          />
         </section>
 
         <aside className={styles.rail} aria-label="Verses and notes">
@@ -477,14 +501,36 @@ function ControlScreen() {
           />
         )}
       </AnimatePresence>
+      <Dialog
+        open={exitOpen}
+        onOpenChange={setExitOpen}
+        size="sm"
+        title="Exit presentation?"
+        description="The output window closes and the TV goes dark. You can start again at any time."
+        footer={
+          <>
+            <Button variant="ghost" onClick={() => setExitOpen(false)}>
+              Keep presenting
+            </Button>
+            <Button variant="primary" onClick={exitPresentation}>
+              Exit presentation
+            </Button>
+          </>
+        }
+      />
       <ShortcutSheet open={sheetOpen} onOpenChange={setSheetOpen} />
       <CommandPalette
         open={paletteOpen}
         onOpenChange={setPaletteOpen}
         commands={paletteCommands({
           slides,
-          openOutput: () => void onOpenOutput(),
+          presenting,
+          start: () => void startPresentation(),
+          exit: requestExit,
           dispatch,
+          toggleScreen,
+          toggleFreeze,
+          swap,
           setMode: verses.setMode,
           showSheet: () => setSheetOpen(true),
           focusBar,
@@ -495,44 +541,23 @@ function ControlScreen() {
   );
 }
 
-function Pane({
-  title,
-  meta,
-  actions,
-  children,
-}: {
-  title: string;
-  meta?: ReactNode;
-  actions?: ReactNode;
-  children: ReactNode;
-}) {
-  return (
-    <div className={styles.pane}>
-      <div className={styles.paneHead}>
-        <h2 className={styles.paneTitle}>{title}</h2>
-        {meta && <span className={styles.paneMeta}>{meta}</span>}
-      </div>
-      <div className={styles.paneBody} data-pane={title}>
-        <FeatureBoundary name={title}>{children}</FeatureBoundary>
-      </div>
-      <div className={styles.paneActions}>{actions}</div>
-    </div>
-  );
-}
-
 function LivePane({
+  small,
   meta,
-  actions,
+  frozen,
+  onSwap,
   children,
 }: {
+  small: boolean;
   meta: ReactNode[];
-  actions: ReactNode;
+  frozen: boolean;
+  onSwap: () => void;
   children: ReactNode;
 }) {
   const beat = useControl((s) => s.liveBeat);
   const reduced = useReducedMotion();
   return (
-    <div className={styles.pane}>
+    <div className={cx(styles.pane, styles.livePane, small && styles.paneSmall)}>
       <div className={styles.paneHead}>
         <h2 className={cx(styles.paneTitle, styles.liveLabel)}>
           <span className={styles.liveDot} aria-hidden /> LIVE
@@ -545,10 +570,19 @@ function LivePane({
             </span>
           ))}
         </span>
+        <Tooltip content="Swap canvas sizes" shortcut="X">
+          <IconButton
+            label="Swap canvas sizes"
+            icon={<ArrowLeftRight size={16} />}
+            size="sm"
+            className={styles.swapButton}
+            onClick={onSwap}
+          />
+        </Tooltip>
       </div>
       <motion.div
         key={beat}
-        className={cx(styles.paneBody, styles.liveFrame)}
+        className={cx(styles.paneBody, styles.liveFrame, frozen && styles.frozenFrame)}
         data-pane="live"
         initial={reduced ? false : { boxShadow: '0 0 0 0px var(--color-live)' }}
         animate={{
@@ -561,56 +595,253 @@ function LivePane({
         transition={{ ...transition('slide', reduced), duration: reduced ? 0 : 0.6 }}
       >
         {children}
+        {frozen && (
+          <span className={styles.frozenBadge} role="status">
+            <Snowflake size={14} aria-hidden /> FROZEN
+          </span>
+        )}
       </motion.div>
-      <div className={styles.paneActions}>{actions}</div>
     </div>
   );
 }
 
-function ScreenToggle(props: {
-  label: string;
-  shortcut: string;
-  icon: ReactNode;
-  active: boolean;
-  onClick: () => void;
-}) {
+type DockProps = {
+  screen: Screen;
+  frozen: boolean;
+  hasOverlay: boolean;
+  mode: OverlayMode;
+  translation: string;
+  onPrev: () => void;
+  onNext: () => void;
+  onScreen: (s: 'blank' | 'logo' | 'sermon') => void;
+  onFreeze: () => void;
+  onMode: (m: OverlayMode) => void;
+  onVerseStep: (d: 1 | -1) => void;
+  onTranslation: () => void;
+  onClear: () => void;
+};
+
+/** Every live action in one reachable place, grouped by job (each shows its key). */
+function Dock(p: DockProps) {
   return (
-    <ShortcutHint id={`screen-${props.label}`} keys={props.shortcut}>
-      <ScreenToggleButton {...props} />
+    <div className={styles.dock} role="toolbar" aria-label="Presentation controls">
+      <DockGroup label="Slides">
+        <DockButton
+          label="Previous"
+          keys="←"
+          hint="prev"
+          icon={<ChevronLeft size={18} />}
+          onClick={p.onPrev}
+          iconOnly
+        />
+        <DockButton
+          label="Next"
+          keys="→"
+          hint="next"
+          icon={<ChevronRight size={18} />}
+          onClick={p.onNext}
+          iconOnly
+        />
+      </DockGroup>
+      <DockGroup label="Screen">
+        <DockButton
+          label="Blank"
+          keys="B"
+          icon={<Square size={16} />}
+          active={p.screen === 'blank'}
+          onClick={() => p.onScreen('blank')}
+        />
+        <DockButton
+          label="Logo"
+          keys="L"
+          icon={<Flame size={16} />}
+          active={p.screen === 'logo'}
+          onClick={() => p.onScreen('logo')}
+        />
+        <DockButton
+          label="Sermon"
+          keys="S"
+          icon={<Presentation size={16} />}
+          active={p.screen === 'sermon'}
+          onClick={() => p.onScreen('sermon')}
+        />
+        <DockButton
+          label={p.frozen ? 'Unfreeze' : 'Freeze'}
+          keys="F"
+          icon={<Snowflake size={16} />}
+          active={p.frozen}
+          onClick={p.onFreeze}
+        />
+      </DockGroup>
+      <DockGroup label="Verse">
+        <OverlayModes mode={p.mode} onChange={p.onMode} />
+        <DockButton
+          label="Previous verse"
+          keys="Alt+←"
+          icon={<ChevronLeft size={18} />}
+          onClick={() => p.onVerseStep(-1)}
+          disabled={!p.hasOverlay}
+          iconOnly
+        />
+        <DockButton
+          label="Next verse"
+          keys="Alt+→"
+          icon={<ChevronRight size={18} />}
+          onClick={() => p.onVerseStep(1)}
+          disabled={!p.hasOverlay}
+          iconOnly
+        />
+        <DockButton
+          label={p.translation}
+          title="Switch translation"
+          keys="T"
+          icon={<BookOpen size={16} />}
+          onClick={p.onTranslation}
+          disabled={!p.hasOverlay}
+        />
+        <DockButton
+          label="Clear"
+          title="Clear verse"
+          keys="Esc"
+          icon={<X size={16} />}
+          onClick={p.onClear}
+          disabled={!p.hasOverlay}
+        />
+      </DockGroup>
+    </div>
+  );
+}
+
+function DockGroup({ label, children }: { label: string; children: ReactNode }) {
+  return (
+    <div className={styles.dockGroup} role="group" aria-label={label}>
+      <span className={styles.dockLabel} aria-hidden>
+        {label}
+      </span>
+      <div className={styles.dockButtons}>{children}</div>
+    </div>
+  );
+}
+
+function DockButton({
+  label,
+  title,
+  keys,
+  icon,
+  onClick,
+  active,
+  disabled,
+  iconOnly,
+  hint,
+}: {
+  label: string;
+  title?: string;
+  keys: string;
+  icon: ReactNode;
+  onClick: () => void;
+  active?: boolean;
+  disabled?: boolean;
+  iconOnly?: boolean;
+  hint?: string;
+}) {
+  const name = title ?? label;
+  const button = (
+    <button
+      type="button"
+      className={cx(
+        styles.dockButton,
+        active && styles.dockActive,
+        iconOnly && styles.dockIconOnly,
+      )}
+      aria-pressed={active === undefined ? undefined : active}
+      onClick={onClick}
+      disabled={disabled}
+    >
+      {icon}
+      {(iconOnly || title) && <span className="visually-hidden">{name} </span>}
+      {!iconOnly && <span>{label}</span>}
+      <kbd className={styles.dockKey}>{keys}</kbd>
+    </button>
+  );
+  return (
+    <ShortcutHint id={hint ?? `dock-${name}`} keys={keys}>
+      <Tooltip content={name} shortcut={keys}>
+        {button}
+      </Tooltip>
     </ShortcutHint>
   );
 }
 
-function ScreenToggleButton({
-  label,
-  shortcut,
-  icon,
-  active,
-  onClick,
+function OutputStatus({
+  status,
+  presenting,
+  onReopen,
 }: {
-  label: string;
-  shortcut: string;
-  icon: ReactNode;
-  active: boolean;
-  onClick: () => void;
+  status: 'none' | 'connected' | 'disconnected';
+  presenting: boolean;
+  onReopen: () => void;
 }) {
+  if (status === 'connected') return <Chip tone="success">Output connected</Chip>;
+  if (status === 'disconnected' && presenting)
+    return (
+      <ChipButton
+        tone="warning"
+        icon={<MonitorOff size={14} />}
+        onClick={onReopen}
+        className={styles.alertChip}
+      >
+        Output disconnected · Reopen
+      </ChipButton>
+    );
+  return <Chip>Not presenting</Chip>;
+}
+
+const BANNER_MS = 5000;
+
+/** Says the TV lost its output; dismissible, hides itself after 5 s (the status chip stays red). */
+function DisconnectedBanner({ status, onReopen }: { status: string; onReopen: () => void }) {
   return (
-    <Button
-      variant={active ? 'primary' : 'secondary'}
-      icon={icon}
-      shortcut={shortcut}
-      aria-pressed={active}
-      onClick={onClick}
-    >
-      {label}
-    </Button>
+    <AnimatePresence>
+      {status === 'disconnected' && <BannerBody key="banner" onReopen={onReopen} />}
+    </AnimatePresence>
   );
 }
 
-function OutputChip({ status }: { status: 'none' | 'connected' | 'disconnected' }) {
-  if (status === 'connected') return <Chip tone="success">Output connected</Chip>;
-  if (status === 'disconnected') return <Chip tone="warning">Output disconnected</Chip>;
-  return <Chip>Output not open</Chip>;
+function BannerBody({ onReopen }: { onReopen: () => void }) {
+  const [open, setOpen] = useState(true);
+  useEffect(() => {
+    const id = setTimeout(() => setOpen(false), BANNER_MS);
+    return () => clearTimeout(id);
+  }, []);
+  return (
+    <AnimatePresence>
+      {open && (
+        <motion.div
+          className={styles.banner}
+          role="alert"
+          initial={{ height: 0, opacity: 0 }}
+          animate={{ height: 'auto', opacity: 1 }}
+          exit={{ height: 0, opacity: 0 }}
+          transition={transition('standard')}
+        >
+          <div className={styles.bannerInner}>
+            <MonitorOff size={18} />
+            <strong>Output disconnected.</strong> The TV isn’t receiving updates.
+            <Button size="sm" variant="primary" onClick={onReopen}>
+              Reopen
+            </Button>
+            <IconButton
+              label="Dismiss warning"
+              icon={<X size={16} />}
+              size="sm"
+              className={styles.bannerClose}
+              onClick={() => setOpen(false)}
+            />
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
 }
 
 function Countdown({ endsAt }: { endsAt: number }) {
@@ -672,8 +903,22 @@ function SlideStrip({
     });
   }, [liveIndex, reduced]);
 
+  /** Laptops may have no trackpad gestures: page through the strip one screen at a time. */
+  const scrollPage = (dir: 1 | -1) => {
+    const list = listRef.current;
+    if (!list) return;
+    list.scrollBy({ left: dir * list.clientWidth * 0.9, behavior: reduced ? 'auto' : 'smooth' });
+  };
+
   return (
     <nav className={styles.strip} aria-label="Slides">
+      <IconButton
+        label="Scroll slides left"
+        icon={<ChevronLeft size={18} />}
+        variant="ghost"
+        className={styles.stripArrow}
+        onClick={() => scrollPage(-1)}
+      />
       <ol ref={listRef} className={styles.stripList}>
         {slides.map((s, i) => (
           <li
@@ -720,10 +965,17 @@ function SlideStrip({
           </li>
         ))}
       </ol>
+      <IconButton
+        label="Scroll slides right"
+        icon={<ChevronRight size={18} />}
+        variant="ghost"
+        className={styles.stripArrow}
+        onClick={() => scrollPage(1)}
+      />
       {hover && slides[hover.index] && (
         <div
           className={styles.hoverPreview}
-          style={{ left: Math.max(220, hover.left) }}
+          style={{ left: Math.max(180, hover.left) }}
           aria-hidden
         >
           <SlideFrame
@@ -808,14 +1060,22 @@ function ModeChip({ mode }: { mode: OverlayMode }) {
 
 function paletteCommands(o: {
   slides: StoredSlide[];
-  openOutput: () => void;
+  presenting: boolean;
+  start: () => void;
+  exit: () => void;
   dispatch: ReturnType<typeof useControl.getState>['dispatch'];
+  toggleScreen: (s: 'blank' | 'logo' | 'sermon') => void;
+  toggleFreeze: () => void;
+  swap: () => void;
   setMode: (m: OverlayMode) => void;
   showSheet: () => void;
   focusBar: () => void;
   library: () => void;
 }): PaletteCommand[] {
   return [
+    o.presenting
+      ? { id: 'exit', group: 'Presentation', label: 'Exit presentation', run: o.exit }
+      : { id: 'start', group: 'Presentation', label: 'Start presentation', run: o.start },
     { id: 'verse', group: 'Verses', label: 'Show a verse…', shortcut: '/', run: o.focusBar },
     {
       id: 'clear',
@@ -850,16 +1110,30 @@ function paletteCommands(o: {
       group: 'Screen',
       label: 'Blank screen',
       shortcut: 'B',
-      run: () => o.dispatch({ type: 'toggleScreen', screen: 'blank' }),
+      run: () => o.toggleScreen('blank'),
     },
     {
       id: 'logo',
       group: 'Screen',
       label: 'Logo screen',
       shortcut: 'L',
-      run: () => o.dispatch({ type: 'toggleScreen', screen: 'logo' }),
+      run: () => o.toggleScreen('logo'),
     },
-    { id: 'output', group: 'Screen', label: 'Open output on the TV', run: o.openOutput },
+    {
+      id: 'sermon',
+      group: 'Screen',
+      label: 'Sermon poster',
+      shortcut: 'S',
+      run: () => o.toggleScreen('sermon'),
+    },
+    {
+      id: 'freeze',
+      group: 'Screen',
+      label: 'Freeze or unfreeze the output',
+      shortcut: 'F',
+      run: o.toggleFreeze,
+    },
+    { id: 'swap', group: 'App', label: 'Swap canvas sizes', shortcut: 'X', run: o.swap },
     { id: 'sheet', group: 'App', label: 'Keyboard shortcuts', shortcut: '?', run: o.showSheet },
     { id: 'library', group: 'App', label: 'Back to Library', run: o.library },
     ...o.slides.map((s, i) => ({

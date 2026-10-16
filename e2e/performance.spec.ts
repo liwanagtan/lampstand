@@ -59,7 +59,7 @@ test('verse lookup keypress to result < 50 ms', async ({ page }) => {
 test('go live: keypress to TV change < 100 ms', async ({ page }) => {
   await present(page);
   const popup = page.waitForEvent('popup');
-  await page.getByRole('button', { name: 'Open output' }).click();
+  await page.getByRole('button', { name: 'Start Presentation' }).click();
   const output = await popup;
   await expect(page.getByText('Output connected')).toBeVisible();
   await output.evaluate(() => {

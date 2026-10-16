@@ -24,6 +24,10 @@ interface ControlState {
   overlayPageCount: number;
   /** Bumps on each go-live, so the UI can pulse the LIVE border. */
   liveBeat: number;
+  /** The operator started the presentation (the output should be on the TV). */
+  presenting: boolean;
+  /** While set, the TV holds this snapshot and nothing new is sent (Freeze output). */
+  frozen: LiveSnapshot | null;
 
   load: (args: {
     id: string;
@@ -44,6 +48,10 @@ interface ControlState {
   setOverlayTranslation: (code: string) => Promise<void>;
   snapshot: () => LiveSnapshot;
   setOutput: (status: OutputStatus) => void;
+  setPresenting: (presenting: boolean) => void;
+  toggleFreeze: () => void;
+  /** Blank, Logo and Sermon: unfreezes first so the TV shows the change. */
+  toggleScreen: (screen: 'blank' | 'logo' | 'sermon') => void;
 }
 
 const SESSION_KEY = 'lampstand-live';
@@ -94,6 +102,8 @@ export const useControl = create<ControlState>((set, get) => {
     slidePageCounts: {},
     overlayPageCount: 1,
     liveBeat: 0,
+    presenting: false,
+    frozen: null,
 
     load: ({ id, presentation, translation, logoAssetId, theme, restore }) => {
       set({ presentation, translation, logoAssetId, previewIndex: null, slidePageCounts: {} });
@@ -179,6 +189,19 @@ export const useControl = create<ControlState>((set, get) => {
     },
 
     setOutput: (output) => set({ output }),
+
+    setPresenting: (presenting) =>
+      set({ presenting, ...(presenting ? {} : { frozen: null, output: 'none' as const }) }),
+
+    toggleFreeze: () => {
+      if (get().frozen) set({ frozen: null, rev: get().rev + 1, changedAt: Date.now() });
+      else set({ frozen: get().snapshot() });
+    },
+
+    toggleScreen: (screen) => {
+      if (get().frozen) set({ frozen: null });
+      apply({ type: 'toggleScreen', screen }, { rev: get().rev + 1, changedAt: Date.now() });
+    },
   };
 });
 
@@ -201,21 +224,27 @@ export function connectControl(): () => void {
   const channel = openChannel((m: Message) => {
     if (m.type === 'hello') {
       lastAlive = Date.now();
-      useControl.getState().setOutput('connected');
-      channel.post({ type: 'snapshot', snapshot: useControl.getState().snapshot() });
+      const st = useControl.getState();
+      st.setOutput('connected');
+      if (!st.presenting) st.setPresenting(true);
+      channel.post({ type: 'snapshot', snapshot: st.frozen ?? st.snapshot() });
     } else if (m.type === 'alive') {
       lastAlive = Date.now();
-      if (useControl.getState().output !== 'connected')
-        useControl.getState().setOutput('connected');
+      const st = useControl.getState();
+      // An output that is still open (e.g. after a control reload) means we're presenting.
+      if (!st.presenting) st.setPresenting(true);
+      if (st.output !== 'connected') useControl.getState().setOutput('connected');
     } else if (m.type === 'bye') {
       lastAlive = 0;
-      useControl.getState().setOutput('disconnected');
+      // Closing the output on purpose (Exit Presentation) isn't a disconnection.
+      useControl.getState().setOutput(useControl.getState().presenting ? 'disconnected' : 'none');
     }
   });
 
   const unsubscribe = useControl.subscribe((s, prev) => {
     if (s.rev === prev.rev) return;
-    channel.post({ type: 'snapshot', snapshot: s.snapshot() });
+    // Frozen: the TV keeps its image; changes are sent when the operator unfreezes.
+    if (!s.frozen) channel.post({ type: 'snapshot', snapshot: s.snapshot() });
     try {
       sessionStorage.setItem(SESSION_KEY, JSON.stringify(s.live));
     } catch {
@@ -227,8 +256,9 @@ export function connectControl(): () => void {
   channel.post({ type: 'snapshot', snapshot: useControl.getState().snapshot() });
 
   const watchdog = setInterval(() => {
-    const { output, setOutput } = useControl.getState();
-    if (output === 'connected' && Date.now() - lastAlive > 4000) setOutput('disconnected');
+    const { output, setOutput, presenting } = useControl.getState();
+    if (output === 'connected' && Date.now() - lastAlive > 4000)
+      setOutput(presenting ? 'disconnected' : 'none');
   }, 1000);
 
   const onUnload = () => channel.post({ type: 'closing' });

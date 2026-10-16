@@ -107,7 +107,6 @@
 .selected,
 .selected:hover {
   background: color-mix(in srgb, var(--color-accent) 16%, transparent);
-  box-shadow: inset 3px 0 0 var(--color-accent);
 }
 .verseButton {
   display: block;

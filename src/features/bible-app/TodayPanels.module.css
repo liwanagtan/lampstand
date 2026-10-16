@@ -13,7 +13,6 @@
 }
 .marked {
   background: color-mix(in srgb, var(--color-accent) 16%, transparent);
-  box-shadow: inset 3px 0 0 var(--color-accent);
 }
 .num {
   margin-right: 0.3em;

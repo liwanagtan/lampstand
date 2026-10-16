@@ -1,0 +1,90 @@
+{
+  "format": "lampstand-plan",
+  "version": 1,
+  "id": "parables-8-weeks",
+  "name": "Parables of Jesus",
+  "description": "Eight weekly Sunday-school lessons on the stories Jesus told, with a short note and questions for discussion.",
+  "pace": "weekly",
+  "days": [
+    {
+      "title": "The Sower",
+      "readings": ["Mark 4:1-20"],
+      "note": "Jesus often taught with everyday pictures. Here a farmer scatters seed on four kinds of ground. The seed is the same each time; what differs is the soil. Jesus explains the story himself, so let his explanation guide the class.",
+      "questions": [
+        "Which of the four soils do you recognise in your own life right now?",
+        "What things can choke the word before it grows?",
+        "What helps good soil stay good?"
+      ]
+    },
+    {
+      "title": "The Good Samaritan",
+      "readings": ["Luke 10:25-37"],
+      "note": "A lawyer asks, “Who is my neighbour?” Jesus answers with a story where the hero is someone his listeners would not expect. The question turns from “Who deserves my help?” to “Who will I be a neighbour to?”",
+      "questions": [
+        "Why might the priest and the Levite have walked past?",
+        "Who are the people we find it hardest to see as neighbours?",
+        "What is one practical way to show mercy this week?"
+      ]
+    },
+    {
+      "title": "The Lost Sheep and the Lost Coin",
+      "readings": ["Luke 15:1-10"],
+      "note": "Religious leaders grumble that Jesus welcomes sinners. He replies with two short stories about searching until something lost is found, and about the joy that follows.",
+      "questions": [
+        "What do these stories show about how God sees one person?",
+        "Why is there so much joy when the lost is found?",
+        "Who might feel “lost” in our church or community?"
+      ]
+    },
+    {
+      "title": "The Prodigal Son",
+      "readings": ["Luke 15:11-32"],
+      "note": "The third story in Luke 15 has two sons and a father who runs. Notice both sons: one leaves home, the other stays home, and both need the father’s grace.",
+      "questions": [
+        "What surprises you about how the father responds?",
+        "Do you relate more to the younger son or the older son? Why?",
+        "How does this story change how we welcome others back?"
+      ]
+    },
+    {
+      "title": "The Mustard Seed and the Yeast",
+      "readings": ["Matthew 13:31-33"],
+      "note": "Two tiny stories with one big idea: God’s kingdom starts small and quietly, but it grows and spreads until it changes everything around it.",
+      "questions": [
+        "Where have you seen something small grow into something big?",
+        "Why might God choose to work through small beginnings?",
+        "What small act of faith could you take this week?"
+      ]
+    },
+    {
+      "title": "The Unforgiving Servant",
+      "readings": ["Matthew 18:21-35"],
+      "note": "Peter asks how many times he must forgive. Jesus tells of a servant forgiven a debt he could never repay, who then refuses to forgive a small one.",
+      "questions": [
+        "Compare the two debts in the story. What is Jesus showing us?",
+        "Why can forgiving others be so hard?",
+        "How does remembering God’s forgiveness help us forgive?"
+      ]
+    },
+    {
+      "title": "The Talents",
+      "readings": ["Matthew 25:14-30"],
+      "note": "A master entrusts his servants with his money while he is away. The story is about faithfulness with what we have been given, whether much or little.",
+      "questions": [
+        "What has God entrusted to you: gifts, time, people, resources?",
+        "Why did the third servant hide what he was given?",
+        "What would being faithful with a little look like for you?"
+      ]
+    },
+    {
+      "title": "The Wise and Foolish Builders",
+      "readings": ["Matthew 7:24-29"],
+      "note": "Jesus ends the Sermon on the Mount with two houses that look the same until the storm comes. The difference is not hearing his words, but doing them.",
+      "questions": [
+        "What storms test the foundations of our lives?",
+        "What is the difference between hearing and doing Jesus’ words?",
+        "Looking back over these parables, which one do you most want to put into practice?"
+      ]
+    }
+  ]
+}

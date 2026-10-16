@@ -37,6 +37,12 @@ export const routes: RouteObject[] = [
             }),
           },
           {
+            path: 'plans/:planId/:day',
+            lazy: async () => ({
+              Component: (await import('@/features/bible-app/PlanReaderPage')).PlanReaderPage,
+            }),
+          },
+          {
             path: 'journal',
             lazy: async () => ({
               Component: (await import('@/features/bible-app/JournalPage')).JournalPage,

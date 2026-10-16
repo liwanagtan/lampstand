@@ -1,0 +1,82 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lampstand.app/schema/plan-v1.json",
+  "title": "Lampstand reading plan",
+  "description": "A Lampstand reading plan (.lampstand-plan.json): daily Bible readings or weekly lessons. Readings are references only, never scripture text.",
+  "type": "object",
+  "properties": {
+    "format": {
+      "type": "string",
+      "const": "lampstand-plan"
+    },
+    "version": {
+      "type": "number",
+      "const": 1
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]{1,59}$",
+      "description": "Stable id, e.g. \"parables-8-weeks\". Re-importing the same id updates it."
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 80
+    },
+    "description": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 300
+    },
+    "pace": {
+      "type": "string",
+      "enum": ["daily", "weekly"],
+      "description": "\"daily\": one day at a time. \"weekly\": a new lesson each Sunday."
+    },
+    "days": {
+      "minItems": 1,
+      "maxItems": 400,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "description": "Optional, e.g. \"The Prodigal Son\".",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          },
+          "readings": {
+            "minItems": 1,
+            "maxItems": 12,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "description": "A Bible reference, e.g. \"Luke 15:11-32\", \"Psalm 23\", \"Genesis 1-3\"."
+            }
+          },
+          "note": {
+            "description": "A short teaching note shown before the readings. Plain text.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          },
+          "questions": {
+            "description": "Discussion or reflection questions shown after the readings.",
+            "maxItems": 8,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 300
+            }
+          }
+        },
+        "required": ["readings"],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": ["format", "version", "id", "name", "description", "pace", "days"],
+  "additionalProperties": false
+}

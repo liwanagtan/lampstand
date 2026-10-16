@@ -34,7 +34,7 @@ export function BibleSection() {
           </span>
         )}
       </nav>
-      <div className={styles.body}>
+      <div className={styles.body} data-scroll>
         <Outlet />
       </div>
     </div>

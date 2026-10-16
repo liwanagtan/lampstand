@@ -1,3 +1,4 @@
+import type { PlanFile } from '@/schema/plan';
 import type { OverlayMode, TemplateId, UiMode } from '@/schema/common';
 
 /** A presentation as stored in the library. `data` is the validated, parsed file. */
@@ -103,6 +104,13 @@ export interface PlanProgressRecord {
   /** Day numbers (1-based) marked as read. */
   done: number[];
   updatedAt: number;
+}
+
+/** An imported reading plan (Bible app); the file as validated on import. */
+export interface PlanDefRecord {
+  id: string;
+  file: PlanFile;
+  importedAt: number;
 }
 
 /** One devotion journal entry per day (Bible app). */

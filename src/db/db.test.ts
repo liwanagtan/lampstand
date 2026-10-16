@@ -10,6 +10,7 @@ describe('LampstandDB', () => {
         'history',
         'journal',
         'marks',
+        'planDefs',
         'plans',
         'presentations',
         'settings',

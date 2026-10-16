@@ -4,6 +4,7 @@ import type {
   HistoryRecord,
   JournalRecord,
   MarkRecord,
+  PlanDefRecord,
   PlanProgressRecord,
   PresentationRecord,
   SettingRecord,
@@ -23,6 +24,7 @@ export class LampstandDB extends Dexie {
   marks!: EntityTable<MarkRecord, 'id'>;
   plans!: EntityTable<PlanProgressRecord, 'planId'>;
   journal!: EntityTable<JournalRecord, 'date'>;
+  planDefs!: EntityTable<PlanDefRecord, 'id'>;
 
   constructor(name = DB_NAME) {
     super(name);
@@ -41,6 +43,8 @@ export class LampstandDB extends Dexie {
       plans: 'planId',
       journal: 'date, updatedAt',
     });
+    // Imported reading plans (e.g. Sunday-school lesson plans).
+    this.version(3).stores({ planDefs: 'id, importedAt' });
   }
 }
 

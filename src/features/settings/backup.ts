@@ -4,10 +4,12 @@ import type {
   AssetRecord,
   JournalRecord,
   MarkRecord,
+  PlanDefRecord,
   PlanProgressRecord,
   PresentationRecord,
 } from '@/db/types';
 import { validatePresentation } from '@/schema/validate';
+import { parsePlanFile } from '@/schema/plan';
 import type { StoredPresentation } from '@/schema/presentation';
 
 export const BACKUP_FORMAT = 'lampstand-backup';
@@ -26,6 +28,7 @@ interface BackupFile {
   /** Bible app data (added later; absent in older backups). */
   marks?: MarkRecord[];
   plans?: PlanProgressRecord[];
+  planDefs?: PlanDefRecord[];
   journal?: JournalRecord[];
 }
 
@@ -58,6 +61,7 @@ export async function createBackup(): Promise<Blob> {
     settings,
     marks: await db.marks.toArray(),
     plans: await db.plans.toArray(),
+    planDefs: await db.planDefs.toArray(),
     journal: await db.journal.toArray(),
   }).slice(0, -1);
   const parts: BlobPart[] = [head, ',"assets":['];
@@ -118,10 +122,20 @@ export async function restoreBackup(file: File): Promise<RestoreSummary> {
       typeof j.answers === 'object' &&
       typeof j.updatedAt === 'number',
   );
+  const planDefs = (Array.isArray(data.planDefs) ? data.planDefs : []).filter(
+    (d) => typeof d?.id === 'string' && parsePlanFile(d.file).ok,
+  );
   await db.transaction(
     'rw',
-    [db.presentations, db.assets, db.marks, db.plans, db.journal],
+    [db.presentations, db.assets, db.marks, db.plans, db.journal, db.planDefs],
     async () => {
+      for (const d of planDefs) {
+        const cur = await db.planDefs.get(d.id);
+        if (!cur || d.importedAt > cur.importedAt) {
+          await db.planDefs.put(d);
+          summary.study++;
+        }
+      }
       // Study data merges by key, keeping whichever copy changed last.
       for (const m of marks) {
         const cur = await db.marks.get(m.id);

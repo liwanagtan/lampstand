@@ -1,22 +1,15 @@
 import { useNavigate } from 'react-router-dom';
-import { BookOpen, Check, Copy, MonitorPlay, NotebookPen } from 'lucide-react';
+import { Check, Copy, MonitorPlay, NotebookPen } from 'lucide-react';
 import { Button, toast } from '@/design-system/components';
 import { toOsis } from '@/features/bible/ref';
 import { usePassage } from '@/slides/usePassage';
 import { localDate, verseOfTheDay } from './dailyVerses';
 import { VerseOfTheDay } from './VerseOfTheDay';
 import { hasContent, useJournalEntry } from './journal';
-import {
-  PLAN_BY_ID,
-  formatReading,
-  nextUnread,
-  planSchedule,
-  setDayRead,
-  usePlanProgress,
-} from './plans';
+import { usePlanProgress, usePlans } from './plans';
+import { ActivePlan } from './PlansPage';
 import { useReader } from './readerStore';
 import { showOnTv } from './tvActions';
-import { useOpenInReader } from './useOpenInReader';
 import styles from './Daily.module.css';
 
 /** Present and Copy for the verse of the day (Today page only). */
@@ -81,15 +74,20 @@ export function TodayPage() {
 
 function TodayPlans() {
   const navigate = useNavigate();
-  const open = useOpenInReader();
+  const plans = usePlans();
   const progress = usePlanProgress();
-  if (!progress) return <section className={styles.card} aria-label="Reading plans" />;
-  if (progress.length === 0) {
+  if (!progress || !plans) return <section className={styles.card} aria-label="Reading plans" />;
+  const active = progress.flatMap((p) => {
+    const plan = plans.find((x) => x.id === p.planId);
+    return plan ? [{ plan, p }] : [];
+  });
+  if (active.length === 0) {
     return (
       <section className={styles.card} aria-label="Reading plans">
         <h2 className={styles.cardTitle}>Reading plan</h2>
         <p className={styles.muted}>
-          A little every day goes a long way. Pick a plan — from 30 days to a year.
+          A little every day goes a long way. Pick a plan — from a month of Psalms to weekly
+          Sunday-school lessons.
         </p>
         <div className={styles.row}>
           <Button variant="primary" onClick={() => navigate('/bible/plans')}>
@@ -101,66 +99,9 @@ function TodayPlans() {
   }
   return (
     <>
-      {progress.map((p) => {
-        const plan = PLAN_BY_ID.get(p.planId);
-        if (!plan) return null;
-        const next = nextUnread(p, plan);
-        const reading = next ? planSchedule(plan)[next - 1]! : null;
-        const pct = Math.round((p.done.length / plan.days) * 100);
-        return (
-          <section key={p.planId} className={styles.card} aria-label={plan.name}>
-            <div className={styles.cardHead}>
-              <h2 className={styles.cardTitle}>{plan.name}</h2>
-              <span className={styles.cardMeta}>
-                {p.done.length} of {plan.days} days
-              </span>
-            </div>
-            <div
-              className={styles.progress}
-              role="progressbar"
-              aria-label={`${plan.name} progress`}
-              aria-valuenow={pct}
-              aria-valuemin={0}
-              aria-valuemax={100}
-            >
-              <div className={styles.progressBar} style={{ width: `${pct}%` }} />
-            </div>
-            {reading ? (
-              <>
-                <p className={styles.muted}>Day {next}</p>
-                <p className={styles.reading}>{formatReading(reading)}</p>
-                <div className={styles.row}>
-                  <Button
-                    icon={<BookOpen size={16} />}
-                    onClick={() =>
-                      open(
-                        {
-                          start: { ...reading[0]!, verse: 1 },
-                          end: { ...reading[0]!, verse: 1 },
-                        },
-                        false,
-                      )
-                    }
-                  >
-                    Read
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    icon={<Check size={16} />}
-                    onClick={() => void setDayRead(p.planId, next!, true)}
-                  >
-                    Mark day {next} read
-                  </Button>
-                </div>
-              </>
-            ) : (
-              <p className={styles.done}>
-                <Check size={16} aria-hidden /> Plan complete. Well done!
-              </p>
-            )}
-          </section>
-        );
-      })}
+      {active.map(({ plan, p }) => (
+        <ActivePlan key={plan.id} plan={plan} progress={p} compact />
+      ))}
     </>
   );
 }

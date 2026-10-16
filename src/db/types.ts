@@ -77,3 +77,41 @@ export interface HistoryRecord {
   translation: string;
   shownAt: number;
 }
+
+export type HighlightColor = 'yellow' | 'green' | 'blue' | 'pink' | 'purple';
+
+/** Personal study marks (Bible app). Ids: `h:<verse>` highlight, `b:<range>` bookmark, `n:<uuid>` note. */
+export interface MarkRecord {
+  id: string;
+  kind: 'highlight' | 'bookmark' | 'note';
+  /** Canonical verse or range, e.g. JHN.3.16 or JHN.3.16-JHN.3.18. */
+  ref: string;
+  /** Book code of the first verse, for listing by chapter. */
+  book: string;
+  /** First chapter of the range. */
+  chapter: number;
+  color?: HighlightColor;
+  text?: string;
+  createdAt: number;
+  updatedAt: number;
+}
+
+/** Progress on a reading plan (Bible app). */
+export interface PlanProgressRecord {
+  planId: string;
+  startedAt: number;
+  /** Day numbers (1-based) marked as read. */
+  done: number[];
+  updatedAt: number;
+}
+
+/** One devotion journal entry per day (Bible app). */
+export interface JournalRecord {
+  /** Local date, YYYY-MM-DD. */
+  date: string;
+  /** Verse of the day or passage the entry reflects on. */
+  ref?: string;
+  answers: Record<string, string>;
+  createdAt: number;
+  updatedAt: number;
+}

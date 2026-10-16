@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, type ReactNode } from 'react';
+import { useMemo, useState, type ReactNode } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 import {
   ArrowDown,
@@ -14,77 +14,31 @@ import {
   X,
 } from 'lucide-react';
 import { Button, Chip, Dialog, IconButton, Tooltip, cx, toast } from '@/design-system/components';
-import { getTranslation } from '@/features/bible/bibleStore';
-import { adjacentVerse } from '@/features/bible/navigate';
 import { formatRef, fromOsis, toOsis, type RefRange } from '@/features/bible/ref';
-import { verseCountsFor } from '@/features/bible/versification';
 import { LiveScreen } from '@/features/present/LiveScreen';
 import { OverlayModes } from '@/features/present/OverlayModes';
-import { connectControl, readSavedLive, useControl } from '@/features/present/live/controlStore';
+import { useControl } from '@/features/present/live/controlStore';
 import { closeOutput } from '@/features/present/live/outputWindow';
 import { startOutput } from '@/features/present/live/startOutput';
 import { useShortcuts } from '@/features/present/useShortcuts';
-import { useSettings } from '@/features/settings/settingsStore';
 import { usePassage } from '@/slides/usePassage';
 import { BibleReader } from './BiblePage';
 import { useReader } from './readerStore';
+import { showOnTv, stepTv } from './tvActions';
 import { useTv } from './tvStore';
 import styles from './BiblePresenter.module.css';
 
 const EMPHASIS_MAX = 12;
-const counts = (code: string) => verseCountsFor(getTranslation(code));
 const label = (ref: string) => {
   const r = fromOsis(ref);
   return r ? formatRef(r) : ref;
 };
 
-/** Shows a passage on the TV, starting the presentation first if needed. */
-async function showOnTv(ref: string, translation: string): Promise<void> {
-  const control = useControl.getState();
-  if (!control.presenting && !(await startOutput())) return;
-  useTv.getState().setPanel(true);
-  const { live } = useControl.getState();
-  if (live.screen !== 'content') useControl.getState().toggleScreen(live.screen);
-  await useControl.getState().showOverlay({ ref, translation, mode: useTv.getState().mode });
-}
-
-/** Next/previous on the TV: the next page of a long passage, then the next verse. */
-async function stepTv(delta: 1 | -1): Promise<void> {
-  const control = useControl.getState();
-  const o = control.live.overlay;
-  if (!o) return;
-  if (delta > 0 && o.page < control.overlayPageCount - 1)
-    return control.dispatch({ type: 'overlayPage', delta: 1 });
-  if (delta < 0 && o.page > 0) return control.dispatch({ type: 'overlayPage', delta: -1 });
-  const range = fromOsis(o.ref);
-  const next = range && adjacentVerse(range, delta, counts(o.translation));
-  if (!next) return;
-  await showOnTv(toOsis(next), o.translation);
-  // The reader follows the TV, so the operator always sees what is up.
-  const v = next.start.verse;
-  useReader.getState().goTo(next.start.book, next.start.chapter, { start: v, end: v });
-}
-
 /** Bible tab: the reader, plus everything needed to put Scripture on the TV. */
 export function BiblePage() {
-  const defaultTheme = useSettings((s) => s.defaultTheme);
-  const logoAssetId = useSettings((s) => s.logoAssetId);
-  const reduceMotion = useSettings((s) => s.reduceMotion);
   const presenting = useControl((s) => s.presenting);
   const panel = useTv((s) => s.panel);
   const [exitOpen, setExitOpen] = useState(false);
-
-  useEffect(() => connectControl(), []);
-  useEffect(() => {
-    useControl.getState().loadBible({
-      translation: useReader.getState().translation,
-      logoAssetId: useSettings.getState().logoAssetId,
-      theme: defaultTheme,
-      restore: readSavedLive(),
-    });
-  }, [defaultTheme]);
-  useEffect(() => useControl.getState().setLogo(logoAssetId), [logoAssetId]);
-  useEffect(() => useControl.getState().setReduceMotion(reduceMotion), [reduceMotion]);
 
   const exit = () => {
     setExitOpen(false);

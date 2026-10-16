@@ -5,7 +5,17 @@ describe('LampstandDB', () => {
     const db = new LampstandDB('test-open');
     await db.open();
     expect(db.tables.map((t) => t.name).sort()).toEqual(
-      ['assets', 'history', 'presentations', 'settings', 'translations', 'verses'].sort(),
+      [
+        'assets',
+        'history',
+        'journal',
+        'marks',
+        'plans',
+        'presentations',
+        'settings',
+        'translations',
+        'verses',
+      ].sort(),
     );
     db.close();
   });

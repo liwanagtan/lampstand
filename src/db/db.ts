@@ -2,6 +2,9 @@ import Dexie, { type EntityTable } from 'dexie';
 import type {
   AssetRecord,
   HistoryRecord,
+  JournalRecord,
+  MarkRecord,
+  PlanProgressRecord,
   PresentationRecord,
   SettingRecord,
   TranslationRecord,
@@ -17,6 +20,9 @@ export class LampstandDB extends Dexie {
   verses!: Dexie.Table<VerseRecord, [string, string]>;
   settings!: EntityTable<SettingRecord, 'key'>;
   history!: EntityTable<HistoryRecord, 'id'>;
+  marks!: EntityTable<MarkRecord, 'id'>;
+  plans!: EntityTable<PlanProgressRecord, 'planId'>;
+  journal!: EntityTable<JournalRecord, 'date'>;
 
   constructor(name = DB_NAME) {
     super(name);
@@ -28,6 +34,12 @@ export class LampstandDB extends Dexie {
       verses: '[code+osis], code',
       settings: 'key',
       history: '++id, shownAt',
+    });
+    // Bible app: personal marks, reading plan progress and the devotion journal.
+    this.version(2).stores({
+      marks: 'id, kind, [book+chapter], updatedAt',
+      plans: 'planId',
+      journal: 'date, updatedAt',
     });
   }
 }

@@ -340,7 +340,7 @@ function DataSection() {
       const s = await restoreBackup(file);
       toast({
         title: 'Backup restored',
-        description: `${s.added} added, ${s.updated} updated, ${s.skipped} unchanged.`,
+        description: `${s.added} added, ${s.updated} updated, ${s.skipped} unchanged.${s.study ? ` ${s.study} Bible notes, plans and journal entries restored.` : ''}`,
         tone: 'success',
       });
     } catch (err) {

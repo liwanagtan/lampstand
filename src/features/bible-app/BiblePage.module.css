@@ -9,6 +9,7 @@
 }
 .reader {
   position: relative;
+  container-type: inline-size;
   display: grid;
   grid-template-rows: auto minmax(0, 1fr);
   min-width: 0;
@@ -16,7 +17,7 @@
 }
 .toolbar {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   align-items: center;
   gap: var(--space-3);
   padding: var(--space-3) var(--space-4);
@@ -35,12 +36,15 @@
 }
 .view {
   display: flex;
+  flex: 0 1 auto;
   align-items: center;
   gap: var(--space-2);
+  min-width: 0;
   margin-left: auto;
 }
 .select {
-  width: 170px;
+  flex: 0 1 160px;
+  min-width: 110px;
 }
 .size {
   display: flex;
@@ -173,6 +177,7 @@
 }
 .selectionLabel {
   margin-right: var(--space-2);
+  white-space: nowrap;
   font-weight: var(--weight-semibold);
 }
 .side {
@@ -186,5 +191,12 @@
   from {
     opacity: 0;
     transform: translateY(8px);
+  }
+}
+
+/* Narrow reader (e.g. beside the TV panel on a small laptop): the toolbar may wrap. */
+@container (max-width: 860px) {
+  .toolbar {
+    flex-wrap: wrap;
   }
 }

@@ -3,7 +3,7 @@ import { Maximize } from 'lucide-react';
 import { LiveScreen } from '@/features/present/LiveScreen';
 import { FeatureBoundary } from '@/design-system/components';
 import { openChannel } from '@/features/present/live/channel';
-import type { LiveSnapshot } from '@/features/present/live/types';
+import { BIBLE_ID, type LiveSnapshot } from '@/features/present/live/types';
 import { useApplyDocumentTheme } from '@/features/settings/theme';
 import { useSettings } from '@/features/settings/settingsStore';
 import { preloadAsset } from '@/slides/useAsset';
@@ -83,7 +83,7 @@ export function OutputPage() {
 
   return (
     <div className={styles.root} data-testid="output">
-      {snapshot?.presentation ? (
+      {snapshot && (snapshot.presentation || snapshot.live.presentationId === BIBLE_ID) ? (
         <FeatureBoundary name="Output" silent>
           <LiveScreen snapshot={snapshot} fit="contain" className={styles.screen} />
         </FeatureBoundary>

@@ -3,14 +3,15 @@ export interface Run {
   emphasis: boolean;
 }
 
-/** Splits text into runs, marking case-insensitive matches of the emphasis phrases. */
+/** Splits text into runs, marking case-insensitive whole-word matches of the emphasis phrases. */
 export function splitEmphasis(text: string, phrases: readonly string[] | undefined): Run[] {
   const clean = (phrases ?? []).map((p) => p.trim()).filter(Boolean);
   if (clean.length === 0) return [{ text, emphasis: false }];
   const escaped = clean
     .sort((a, b) => b.length - a.length)
     .map((p) => p.replace(/[.*+?^${}()|[\]\\]/g, '\\$&').replace(/['’]/g, "['’]"));
-  const re = new RegExp(`(${escaped.join('|')})`, 'gi');
+  // Whole words only, so highlighting "he" doesn't light up "the".
+  const re = new RegExp(`(?<![\\p{L}\\p{N}])(?:${escaped.join('|')})(?![\\p{L}\\p{N}])`, 'giu');
   const runs: Run[] = [];
   let last = 0;
   for (const m of text.matchAll(re)) {

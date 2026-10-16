@@ -5,7 +5,13 @@ import type { StoredPresentation } from '@/schema/presentation';
 import { openChannel, type Message } from './channel';
 import { countPages } from './pageCounts';
 import { liveReducer, type LiveAction, type LiveContext } from './reducer';
-import { INITIAL_LIVE, type LiveOverlay, type LiveSnapshot, type LiveState } from './types';
+import {
+  BIBLE_ID,
+  INITIAL_LIVE,
+  type LiveOverlay,
+  type LiveSnapshot,
+  type LiveState,
+} from './types';
 
 export type OutputStatus = 'none' | 'connected' | 'disconnected';
 
@@ -34,6 +40,13 @@ interface ControlState {
     posterAnimated?: boolean;
     id: string;
     presentation: StoredPresentation;
+    translation: string;
+    logoAssetId: string | null;
+    theme: LiveState['theme'];
+    restore?: LiveState | null;
+  }) => void;
+  /** The Bible tab drives the TV: no presentation, verses shown as overlays. */
+  loadBible: (args: {
     translation: string;
     logoAssetId: string | null;
     theme: LiveState['theme'];
@@ -144,6 +157,22 @@ export const useControl = create<ControlState>((set, get) => {
         set({ slidePageCounts: counts });
       })();
       void refreshOverlayPages(get().live.overlay);
+    },
+
+    loadBible: ({ translation, logoAssetId, theme, restore }) => {
+      set({
+        presentation: null,
+        translation,
+        logoAssetId,
+        previewIndex: null,
+        slidePageCounts: {},
+      });
+      const live: LiveState =
+        restore && restore.presentationId === BIBLE_ID
+          ? { ...restore, theme }
+          : { ...INITIAL_LIVE, presentationId: BIBLE_ID, slideIndex: -1, theme };
+      set({ live, rev: get().rev + 1, changedAt: Date.now() });
+      void refreshOverlayPages(live.overlay);
     },
 
     dispatch: (action) => apply(action),

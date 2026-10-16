@@ -12,6 +12,11 @@ describe('splitEmphasis', () => {
     );
   });
 
+  it('matches whole words only', () => {
+    const runs = splitEmphasis('He saith to the man, The Lord he is God.', ['he']);
+    expect(runs.filter((r) => r.emphasis).map((r) => r.text)).toEqual(['He', 'he']);
+  });
+
   it('treats special characters literally', () => {
     expect(splitEmphasis('a (b) c', ['(b)']).filter((r) => r.emphasis)).toHaveLength(1);
     expect(splitEmphasis('text', [])).toEqual([{ text: 'text', emphasis: false }]);

@@ -117,4 +117,16 @@ describe('liveReducer', () => {
     expect(liveReducer(s, { type: 'clearOverlay' }, ctx())).toBe(s);
     expect(liveReducer(s, { type: 'prev' }, ctx())).toBe(s);
   });
+
+  it('sets and clears live emphasis on the overlay only', () => {
+    const shown: LiveAction = {
+      type: 'showOverlay',
+      overlay: { ref: 'JHN.3.16', translation: 'KJV', mode: 'fullScreen' },
+    };
+    expect(run([{ type: 'overlayEmphasis', emphasis: ['loved'] }]).overlay).toBeNull();
+    const lit = run([shown, { type: 'overlayEmphasis', emphasis: ['loved', 'world'] }]);
+    expect(lit.overlay?.emphasis).toEqual(['loved', 'world']);
+    const cleared = run([{ type: 'overlayEmphasis', emphasis: [] }], ctx(), lit);
+    expect(cleared.overlay?.emphasis).toBeUndefined();
+  });
 });

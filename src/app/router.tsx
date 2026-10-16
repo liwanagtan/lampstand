@@ -15,7 +15,7 @@ export const routes: RouteObject[] = [
       {
         path: 'bible',
         lazy: async () => ({
-          Component: (await import('@/features/bible-app/BiblePage')).BiblePage,
+          Component: (await import('@/features/bible-app/BiblePresenter')).BiblePage,
         }),
       },
       {

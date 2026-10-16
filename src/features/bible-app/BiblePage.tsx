@@ -69,7 +69,8 @@ export function BibleReader({ toolbar, side, selectionActions }: BiblePageSlots)
     ArrowLeft: () => go(-1),
     '/': () =>
       document.querySelector<HTMLInputElement>('input[aria-label="Search the Bible"]')?.focus(),
-    Escape: () => setSelection(null),
+    // Esc clears the selection first; with nothing selected it falls through (e.g. to the TV).
+    ...(selection ? { Escape: () => setSelection(null) } : {}),
   });
 
   // Keep the selection in view after a jump.
@@ -315,9 +316,4 @@ function Verses({
       })}
     </ol>
   );
-}
-
-/** Bible tab: the reader on its own (presenting controls arrive in the next phase). */
-export function BiblePage() {
-  return <BibleReader />;
 }

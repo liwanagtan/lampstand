@@ -12,6 +12,7 @@ import { useReducedMotion } from '@/features/settings/theme';
 import { slideTranslation } from '@/features/library/translation';
 import type { OverlayMode, Transition } from '@/schema/common';
 import { getTemplate } from '@/templates/templates';
+import { Backdrop } from '@/slides/Backdrop';
 import { SlideStage } from '@/slides/SlideStage';
 import { SlideView } from '@/slides/SlideView';
 import { useAsset } from '@/slides/useAsset';
@@ -110,6 +111,17 @@ export function LiveScreen({ snapshot, fit = 'width', label, className }: LiveSc
   return (
     <PosterContext.Provider value={posterInfo}>
       <SlideStage template={template} fit={fit} label={label} className={className}>
+        {!presentation && (
+          // Bible on the TV: the template's backdrop sits behind the verses.
+          <div className={styles.slide}>
+            <Backdrop
+              background={undefined}
+              template={template}
+              animate={false}
+              showPlaceholder={false}
+            />
+          </div>
+        )}
         <motion.div
           className={styles.slideLayer}
           animate={

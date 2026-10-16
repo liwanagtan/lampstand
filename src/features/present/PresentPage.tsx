@@ -34,7 +34,6 @@ import {
   Tabs,
   Tooltip,
   cx,
-  toast,
 } from '@/design-system/components';
 import { transition } from '@/design-system/motion/presets';
 import { useSettings } from '@/features/settings/settingsStore';
@@ -45,7 +44,8 @@ import { getTemplate } from '@/templates/templates';
 import { SlideFrame } from '@/slides/SlideView';
 import type { StoredSlide } from '@/schema/presentation';
 import { connectControl, readSavedLive, useControl } from './live/controlStore';
-import { closeOutput, openOutput } from './live/outputWindow';
+import { closeOutput } from './live/outputWindow';
+import { startOutput } from './live/startOutput';
 import type { Screen } from './live/types';
 import { LiveScreen } from './LiveScreen';
 import { useShortcuts } from './useShortcuts';
@@ -59,6 +59,8 @@ import { labelFor, useVerses } from './verses/verseStore';
 import { ShortcutSheet } from './ShortcutSheet';
 import { CommandPalette, type PaletteCommand } from './CommandPalette';
 import type { OverlayMode } from '@/schema/common';
+import { ModeIcon, OverlayModes } from './OverlayModes';
+import { MODES } from './overlayModeList';
 import styles from './PresentPage.module.css';
 
 type RailTab = 'notes' | 'queue';
@@ -202,30 +204,7 @@ function ControlScreen() {
     [rev, live, presentation, translation, logoAssetId, reduceMotion, posterAnimated, changedAt],
   );
 
-  const startPresentation = async () => {
-    const r = await openOutput();
-    if (!r.placed && r.reason === 'blocked') {
-      toast({
-        title: 'Chrome blocked the output window. Allow pop-ups for Lampstand and try again.',
-        tone: 'warning',
-      });
-      return;
-    }
-    useControl.getState().setPresenting(true);
-    if (r.placed) {
-      toast({ title: `Presentation started on ${r.screenLabel}`, tone: 'success' });
-    } else {
-      toast({
-        title: 'Presentation started',
-        description:
-          r.reason === 'no-permission'
-            ? 'Drag the output to the TV and press F. Allow “window management” to place it automatically next time.'
-            : r.reason === 'single-screen'
-              ? 'Only one display found. Connect the TV, then drag the output to it and press F.'
-              : 'Drag the output to the TV and press F for full screen.',
-      });
-    }
-  };
+  const startPresentation = startOutput;
 
   const exitPresentation = () => {
     setExitOpen(false);
@@ -1008,67 +987,6 @@ function SlideStrip({
         </div>
       )}
     </nav>
-  );
-}
-
-const MODES: { mode: OverlayMode; label: string; key: string }[] = [
-  { mode: 'lowerThird', label: 'Lower third', key: '1' },
-  { mode: 'sidePanel', label: 'Side panel', key: '2' },
-  { mode: 'fullScreen', label: 'Full screen', key: '3' },
-  { mode: 'popup', label: 'Popup', key: '4' },
-];
-
-function OverlayModes({
-  mode,
-  onChange,
-}: {
-  mode: OverlayMode;
-  onChange: (m: OverlayMode) => void;
-}) {
-  return (
-    <div className={styles.modes} role="radiogroup" aria-label="Verse overlay mode">
-      {MODES.map((m) => (
-        <Tooltip key={m.mode} content={m.label} shortcut={m.key}>
-          <button
-            type="button"
-            role="radio"
-            aria-checked={mode === m.mode}
-            aria-label={m.label}
-            className={styles.mode}
-            onClick={() => onChange(m.mode)}
-          >
-            <ModeIcon mode={m.mode} />
-          </button>
-        </Tooltip>
-      ))}
-    </div>
-  );
-}
-
-function ModeIcon({ mode }: { mode: OverlayMode }) {
-  return (
-    <svg width="22" height="14" viewBox="0 0 22 14" aria-hidden>
-      <rect
-        x="0.75"
-        y="0.75"
-        width="20.5"
-        height="12.5"
-        rx="2"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.5"
-      />
-      {mode === 'lowerThird' && (
-        <rect x="2.5" y="8.5" width="17" height="3" rx="0.5" fill="currentColor" />
-      )}
-      {mode === 'sidePanel' && (
-        <rect x="13" y="2.5" width="6.5" height="9" rx="0.5" fill="currentColor" />
-      )}
-      {mode === 'popup' && <rect x="5" y="3" width="12" height="8" rx="1.5" fill="currentColor" />}
-      {mode === 'fullScreen' && (
-        <rect x="2.5" y="2.5" width="17" height="9" rx="0.5" fill="currentColor" />
-      )}
-    </svg>
   );
 }
 

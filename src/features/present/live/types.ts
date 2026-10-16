@@ -44,6 +44,9 @@ export interface LiveSnapshot {
   changedAt: number;
 }
 
+/** `presentationId` while the Bible tab drives the TV (no presentation, verses only). */
+export const BIBLE_ID = 'bible';
+
 export const INITIAL_LIVE: LiveState = {
   presentationId: null,
   slideIndex: 0,

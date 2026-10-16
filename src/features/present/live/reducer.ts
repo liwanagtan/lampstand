@@ -19,6 +19,7 @@ export type LiveAction =
   | { type: 'overlayMode'; mode: OverlayMode }
   | { type: 'overlayPage'; delta: 1 | -1 }
   | { type: 'overlayTranslation'; translation: string }
+  | { type: 'overlayEmphasis'; emphasis: string[] }
   | { type: 'theme'; theme: LiveState['theme'] };
 
 export interface LiveContext {
@@ -116,6 +117,15 @@ export function liveReducer(state: LiveState, action: LiveAction, ctx: LiveConte
     case 'overlayTranslation':
       if (!state.overlay) return state;
       return { ...state, overlay: { ...state.overlay, translation: action.translation, page: 0 } };
+    case 'overlayEmphasis':
+      if (!state.overlay) return state;
+      return {
+        ...state,
+        overlay: {
+          ...state.overlay,
+          emphasis: action.emphasis.length ? action.emphasis : undefined,
+        },
+      };
     case 'theme':
       return { ...state, theme: action.theme };
   }

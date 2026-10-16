@@ -414,9 +414,6 @@
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
-.verseRow .modes {
-  width: 100%;
-}
 .dockButtons.verseRow {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
@@ -501,38 +498,6 @@
   text-align: center;
   opacity: 0.85;
 }
-.modes {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 2px;
-  padding: 2px;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-sm);
-  background: var(--color-surface-raised);
-}
-.mode {
-  display: grid;
-  place-items: center;
-  width: 100%;
-  height: calc(var(--control-height) - 6px);
-  border: 0;
-  border-radius: 4px;
-  background: transparent;
-  color: var(--color-text-muted);
-  cursor: pointer;
-  transition:
-    background-color var(--dur-quick) var(--ease-quick),
-    color var(--dur-quick) var(--ease-quick);
-}
-.mode:hover {
-  color: var(--color-text);
-}
-.mode[aria-checked='true'] {
-  background: var(--color-surface);
-  color: var(--color-accent);
-  box-shadow: var(--elevation-1);
-}
-
 .notesPanel {
   display: flex;
   flex-direction: column;

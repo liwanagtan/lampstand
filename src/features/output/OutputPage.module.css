@@ -11,7 +11,50 @@
 .waiting {
   position: absolute;
   inset: 0;
+  display: grid;
+  place-items: center;
   background: #000;
+}
+.idle {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  max-width: 520px;
+  padding: 24px;
+  color: #c9ced6;
+  font: 400 16px/1.55 var(--font-ui);
+  text-align: center;
+  cursor: default;
+  animation: idleIn 600ms ease-out;
+}
+.idle h1 {
+  color: #f1f3f5;
+  font: 600 26px/1.2 var(--font-display);
+}
+.idle strong {
+  color: #f1f3f5;
+}
+.idleNote {
+  color: #8d949e;
+  font-size: 14px;
+}
+.idleLink {
+  margin-top: 6px;
+  padding: 8px 16px;
+  border: 1px solid rgb(255 255 255 / 0.25);
+  border-radius: 8px;
+  color: #f1f3f5;
+  font-weight: 500;
+  text-decoration: none;
+}
+.idleLink:hover {
+  background: rgb(255 255 255 / 0.08);
+}
+@keyframes idleIn {
+  from {
+    opacity: 0;
+  }
 }
 .hint {
   position: absolute;

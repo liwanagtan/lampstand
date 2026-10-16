@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Maximize } from 'lucide-react';
+import { LampMark } from '@/design-system/LampMark';
 import { LiveScreen } from '@/features/present/LiveScreen';
 import { FeatureBoundary } from '@/design-system/components';
 import { openChannel } from '@/features/present/live/channel';
@@ -18,11 +19,20 @@ import styles from './OutputPage.module.css';
  * The audience window (PRD §7.6). It only renders the latest snapshot it received and never
  * changes live state. If the control window goes away, the last image stays on the TV.
  */
+const WAIT_MS = 2500;
+
 export function OutputPage() {
   useApplyDocumentTheme(true);
   const [snapshot, setSnapshot] = useState<LiveSnapshot | null>(null);
   const [fullscreen, setFullscreen] = useState(() => Boolean(document.fullscreenElement));
   const placed = new URLSearchParams(window.location.search).has('placed');
+  // Nothing has arrived for a while: explain, instead of leaving the screen black.
+  const [stale, setStale] = useState(false);
+  useEffect(() => {
+    if (snapshot) return;
+    const id = setTimeout(() => setStale(true), WAIT_MS);
+    return () => clearTimeout(id);
+  }, [snapshot]);
 
   useEffect(() => {
     document.title = 'Lampstand — Output';
@@ -88,7 +98,27 @@ export function OutputPage() {
           <LiveScreen snapshot={snapshot} fit="contain" className={styles.screen} />
         </FeatureBoundary>
       ) : (
-        <div className={styles.waiting} />
+        <div className={styles.waiting}>
+          {stale && (
+            <div className={styles.idle} role="status">
+              <LampMark size={56} />
+              <h1>This is the TV screen</h1>
+              <p>
+                Keep Lampstand open in another window and press <strong>Start Presentation</strong>.
+                Whatever you send to the screen appears here.
+              </p>
+              {!window.opener && (
+                <p className={styles.idleNote}>
+                  If this replaced your Lampstand window, your browser couldn’t open a second one.
+                  Use Chrome, and allow pop-ups for Lampstand.
+                </p>
+              )}
+              <a className={styles.idleLink} href={import.meta.env.BASE_URL ?? '/'}>
+                Back to Lampstand
+              </a>
+            </div>
+          )}
+        </div>
       )}
       {!fullscreen && !placed && (
         <div className={styles.hint} role="note">

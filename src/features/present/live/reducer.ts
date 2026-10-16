@@ -1,6 +1,6 @@
 // Pure live-state transitions (PRD §7.4, §7.5). The control store wraps this reducer.
 import type { OverlayMode } from '@/schema/common';
-import type { StoredPresentation, StoredSlide } from '@/schema/presentation';
+import type { Background, StoredPresentation, StoredSlide } from '@/schema/presentation';
 import type { LiveOverlay, LiveState } from './types';
 
 export type LiveAction =
@@ -20,6 +20,7 @@ export type LiveAction =
   | { type: 'overlayPage'; delta: 1 | -1 }
   | { type: 'overlayTranslation'; translation: string }
   | { type: 'overlayEmphasis'; emphasis: string[] }
+  | { type: 'backdrop'; backdrop: Background | null }
   | { type: 'theme'; theme: LiveState['theme'] };
 
 export interface LiveContext {
@@ -126,6 +127,8 @@ export function liveReducer(state: LiveState, action: LiveAction, ctx: LiveConte
           emphasis: action.emphasis.length ? action.emphasis : undefined,
         },
       };
+    case 'backdrop':
+      return { ...state, backdrop: action.backdrop };
     case 'theme':
       return { ...state, theme: action.theme };
   }

@@ -2,6 +2,7 @@ import { Backdrop } from '@/slides/Backdrop';
 import { usePages, usePassage } from '@/slides/usePassage';
 import { VerseBody } from '@/slides/VerseBody';
 import type { Template } from '@/templates/templates';
+import type { Background } from '@/schema/presentation';
 import type { LiveOverlay } from './live/types';
 import s from '@/slides/Slide.module.css';
 import styles from './VerseOverlay.module.css';
@@ -10,10 +11,12 @@ interface VerseOverlayProps {
   overlay: LiveOverlay;
   template: Template;
   animate: boolean;
+  /** Full screen draws this behind the verse (the Bible's backdrop); the template otherwise. */
+  background?: Background;
 }
 
 /** The verse drawn over the slide in one of the three overlay modes (PRD §8 Verse overlays). */
-export function VerseOverlay({ overlay, template, animate }: VerseOverlayProps) {
+export function VerseOverlay({ overlay, template, animate, background }: VerseOverlayProps) {
   const { passage } = usePassage(overlay.ref, overlay.translation);
   const pages = usePages(passage, overlay.mode, template.id);
   if (!passage) return null;
@@ -31,7 +34,7 @@ export function VerseOverlay({ overlay, template, animate }: VerseOverlayProps) 
     return (
       <div className={styles.full}>
         <Backdrop
-          background={undefined}
+          background={background}
           template={template}
           animate={animate}
           showPlaceholder={false}

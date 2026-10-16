@@ -92,13 +92,27 @@
   padding: 0;
   list-style: none;
 }
+.verse {
+  display: grid;
+  grid-template-columns: 2.2em minmax(0, 1fr);
+  border-radius: var(--radius-sm);
+  transition: background-color var(--dur-quick) var(--ease-quick);
+}
 .verse + .verse {
   margin-top: 2px;
 }
+.verse:hover {
+  background: color-mix(in srgb, var(--color-surface-raised) 70%, transparent);
+}
+.selected,
+.selected:hover {
+  background: color-mix(in srgb, var(--color-accent) 16%, transparent);
+  box-shadow: inset 3px 0 0 var(--color-accent);
+}
 .verseButton {
-  display: grid;
-  grid-template-columns: 2.2em minmax(0, 1fr);
+  display: block;
   width: 100%;
+  min-width: 0;
   padding: 0.3em 0.5em 0.3em 0;
   border: 0;
   border-radius: var(--radius-sm);
@@ -108,7 +122,6 @@
   line-height: 1.7;
   text-align: left;
   cursor: pointer;
-  transition: background-color var(--dur-quick) var(--ease-quick);
 }
 .columnsHead > :first-child {
   grid-column: 2;
@@ -117,26 +130,40 @@
   grid-column: 4;
 }
 .parallel .verseButton {
-  grid-template-columns: 2.2em minmax(0, 1fr) 2em minmax(0, 1fr);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 2em minmax(0, 1fr);
 }
 .parallel .secondText {
-  grid-column: 4;
+  grid-column: 3;
 }
-.verseButton:hover {
-  background: color-mix(in srgb, var(--color-surface-raised) 70%, transparent);
-}
-.selected .verseButton,
-.selected .verseButton:hover {
-  background: color-mix(in srgb, var(--color-accent) 16%, transparent);
-  box-shadow: inset 3px 0 0 var(--color-accent);
+.margin {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding-top: 0.55em;
 }
 .num {
-  padding-top: 0.35em;
   font-size: 0.62em;
   font-weight: var(--weight-semibold);
+  line-height: 1.6;
   color: var(--color-accent);
-  text-align: center;
   font-variant-numeric: tabular-nums;
+}
+.noteMark {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--color-accent);
+  cursor: pointer;
+}
+.noteMark:hover {
+  background: color-mix(in srgb, var(--color-accent) 18%, transparent);
 }
 .text {
   font-family: var(--font-display);
@@ -224,43 +251,6 @@
   box-decoration-break: clone;
   -webkit-box-decoration-break: clone;
 }
-.bookmarkMark {
-  display: block;
-  margin: 4px auto 0;
-  color: var(--color-accent);
-}
-.noteCard {
-  display: flex;
-  align-items: flex-start;
-  gap: var(--space-2);
-  width: calc(100% - 2.2em);
-  margin: 0.2em 0 0.5em 2.2em;
-  padding: 0.5em 0.75em;
-  border: 1px solid color-mix(in srgb, var(--color-accent) 35%, var(--color-border));
-  border-radius: var(--radius-sm);
-  background: color-mix(in srgb, var(--color-accent) 7%, var(--color-surface));
-  color: var(--color-text);
-  font: inherit;
-  font-size: 0.7em;
-  line-height: 1.5;
-  text-align: left;
-  cursor: pointer;
-}
-.noteCard:hover {
-  border-color: var(--color-accent);
-}
-.noteIcon {
-  flex: none;
-  margin-top: 0.2em;
-  color: var(--color-accent);
-}
-.noteText {
-  display: -webkit-box;
-  overflow: hidden;
-  white-space: pre-wrap;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-}
 .selectionLabel {
   margin-right: var(--space-2);
   white-space: nowrap;
@@ -285,4 +275,7 @@
   .toolbar {
     flex-wrap: wrap;
   }
+}
+.bookmarkMark {
+  color: var(--color-accent);
 }

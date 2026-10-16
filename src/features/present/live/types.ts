@@ -1,6 +1,6 @@
 // Live state (PRD §4 Live state), owned by the control window and mirrored to the output.
 import type { OverlayMode, TemplateId } from '@/schema/common';
-import type { StoredPresentation } from '@/schema/presentation';
+import type { Background, StoredPresentation } from '@/schema/presentation';
 
 export interface LiveOverlay {
   /** Canonical range, e.g. "JHN.3.16-JHN.3.18". */
@@ -26,6 +26,8 @@ export interface LiveState {
   theme: TemplateId;
   /** When the live countdown slide reaches zero (epoch ms). */
   countdownEndsAt: number | null;
+  /** Bible session only: the picture behind the verses (template backdrop when unset). */
+  backdrop?: Background | null;
 }
 
 /** Everything the output needs to draw the TV without asking anyone. */

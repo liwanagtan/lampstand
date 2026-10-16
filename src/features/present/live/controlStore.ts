@@ -50,6 +50,7 @@ interface ControlState {
     translation: string;
     logoAssetId: string | null;
     theme: LiveState['theme'];
+    backdrop: LiveState['backdrop'];
     restore?: LiveState | null;
   }) => void;
   dispatch: (action: LiveAction) => void;
@@ -159,7 +160,7 @@ export const useControl = create<ControlState>((set, get) => {
       void refreshOverlayPages(get().live.overlay);
     },
 
-    loadBible: ({ translation, logoAssetId, theme, restore }) => {
+    loadBible: ({ translation, logoAssetId, theme, backdrop, restore }) => {
       set({
         presentation: null,
         translation,
@@ -169,8 +170,8 @@ export const useControl = create<ControlState>((set, get) => {
       });
       const live: LiveState =
         restore && restore.presentationId === BIBLE_ID
-          ? { ...restore, theme }
-          : { ...INITIAL_LIVE, presentationId: BIBLE_ID, slideIndex: -1, theme };
+          ? { ...restore, theme, backdrop }
+          : { ...INITIAL_LIVE, presentationId: BIBLE_ID, slideIndex: -1, theme, backdrop };
       set({ live, rev: get().rev + 1, changedAt: Date.now() });
       void refreshOverlayPages(live.overlay);
     },

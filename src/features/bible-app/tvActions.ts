@@ -50,6 +50,7 @@ export function useBibleTvSession(): void {
       translation: useReader.getState().translation,
       logoAssetId: useSettings.getState().logoAssetId,
       theme: defaultTheme,
+      backdrop: useTv.getState().background,
       restore: readSavedLive(),
     });
   }, [defaultTheme]);

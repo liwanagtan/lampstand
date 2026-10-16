@@ -21,6 +21,10 @@ test('highlight, bookmark and note a passage, then find them on the Notes page',
     page.getByRole('button', { name: /Note on Romans 8:28: Even the hard days/ }),
   ).toBeVisible();
 
+  await page.getByRole('button', { name: /Note on Romans 8:28/ }).click();
+  await expect(page.getByRole('dialog').getByRole('textbox')).toHaveValue('Even the hard days.');
+  await page.keyboard.press('Escape');
+
   // Marks survive a reload.
   await page.reload();
   await expect(page.locator('[data-verse="28"] mark')).toBeVisible();

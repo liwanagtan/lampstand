@@ -115,9 +115,9 @@ export function LiveScreen({ snapshot, fit = 'width', label, className }: LiveSc
           // Bible on the TV: the template's backdrop sits behind the verses.
           <div className={styles.slide}>
             <Backdrop
-              background={undefined}
+              background={live.backdrop ?? undefined}
               template={template}
-              animate={false}
+              animate={!reduced}
               showPlaceholder={false}
             />
           </div>
@@ -171,6 +171,7 @@ export function LiveScreen({ snapshot, fit = 'width', label, className }: LiveSc
               <FeatureBoundary name="Verse overlay" silent>
                 <VerseOverlay
                   key={`${overlay.ref}|${overlay.translation}`}
+                  background={presentation ? undefined : (live.backdrop ?? undefined)}
                   overlay={overlay}
                   template={template}
                   animate={overlayKey !== initial.overlay}

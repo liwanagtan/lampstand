@@ -5,6 +5,7 @@ import {
   ArrowUp,
   ChevronLeft,
   ChevronRight,
+  ImageIcon,
   ListPlus,
   MonitorPlay,
   MonitorX,
@@ -22,6 +23,8 @@ import { closeOutput } from '@/features/present/live/outputWindow';
 import { startOutput } from '@/features/present/live/startOutput';
 import { useShortcuts } from '@/features/present/useShortcuts';
 import { usePassage } from '@/slides/usePassage';
+import { useAsset } from '@/slides/useAsset';
+import { BackgroundPicker } from '@/features/library/BackgroundPicker';
 import { BibleReader } from './BiblePage';
 import { useReader } from './readerStore';
 import { showOnTv, stepTv } from './tvActions';
@@ -269,11 +272,53 @@ function TvPanel({ onStart, onExit }: { onStart: () => void; onExit: () => void 
           </div>
           <OverlayModes mode={mode} onChange={(m) => useTv.getState().setMode(m)} />
         </div>
+        <BackgroundControl />
       </section>
 
       {overlay && <Highlighter key={`${overlay.ref}|${overlay.translation}`} />}
 
       <Lesson />
+    </div>
+  );
+}
+
+/** The picture behind the verses on the TV: a bundled photo, an upload, or the theme's own. */
+function BackgroundControl() {
+  const background = useTv((s) => s.background);
+  const asset = useAsset(background?.assetId);
+  const [picking, setPicking] = useState(false);
+  return (
+    <div className={styles.bgRow}>
+      <div className={styles.bgThumb} aria-hidden>
+        {asset && background?.type === 'image' && <img src={asset.url} alt="" />}
+        {asset && background?.type === 'video' && <video src={asset.url} muted />}
+        {!background && <ImageIcon size={16} />}
+      </div>
+      <div className={styles.bgText}>
+        <span className={styles.bgLabel}>Background</span>
+        <span className={styles.bgValue}>
+          {background ? (background.type === 'video' ? 'Video' : 'Photo') : 'Theme'}
+        </span>
+      </div>
+      <Button size="sm" onClick={() => setPicking(true)}>
+        {background ? 'Change…' : 'Choose…'}
+      </Button>
+      {background && (
+        <Tooltip content="Use the theme background">
+          <IconButton
+            label="Remove background"
+            icon={<X size={14} />}
+            size="sm"
+            onClick={() => useTv.getState().setBackground(null)}
+          />
+        </Tooltip>
+      )}
+      <BackgroundPicker
+        open={picking}
+        onOpenChange={setPicking}
+        description="Shown behind the verses on the TV. A darker, simple picture keeps the words easy to read."
+        onPick={(id, kind) => useTv.getState().setBackground(id, kind)}
+      />
     </div>
   );
 }

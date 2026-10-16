@@ -56,3 +56,26 @@ test('Bible on the TV: show, highlight, step, blank and the lesson list', async 
   await page.reload();
   await expect(page.getByRole('region', { name: 'Lesson' }).getByRole('listitem')).toHaveCount(2);
 });
+
+test('a background picture shows behind Bible verses on the TV', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await openApp(page, '/bible');
+  await page.getByLabel('Search the Bible').fill('ps 23 1');
+  await page.keyboard.press('Enter');
+  const popup = page.waitForEvent('popup');
+  await page.getByRole('button', { name: 'Show on TV' }).click();
+  const output = await popup;
+  const tv = output.getByTestId('output');
+  await expect(tv).toContainText('The Lord is my shepherd');
+
+  await page.getByRole('button', { name: 'Choose…' }).click();
+  await page.getByRole('list', { name: 'Background library' }).getByRole('button').first().click();
+  await expect(page.getByRole('button', { name: 'Remove background' })).toBeVisible();
+  await expect(tv.locator('img, video').first()).toBeVisible();
+
+  // It is remembered for next time, and can be removed.
+  await page.reload();
+  await expect(page.getByRole('button', { name: 'Remove background' })).toBeVisible();
+  await page.getByRole('button', { name: 'Remove background' }).click();
+  await expect(page.getByRole('button', { name: 'Choose…' })).toBeVisible();
+});

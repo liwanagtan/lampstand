@@ -399,23 +399,35 @@ function Verses({
             className={cx(styles.verse, selected && styles.selected)}
             data-verse={v.verse}
           >
+            <div className={styles.margin}>
+              <span className={styles.num}>{v.verse}</span>
+              {bookmarked && (
+                <Bookmark
+                  size={12}
+                  fill="currentColor"
+                  className={styles.bookmarkMark}
+                  aria-label="Bookmarked"
+                />
+              )}
+              {notes?.map((n) => (
+                <Tooltip key={n.id} content={notePreview(n.text)}>
+                  <button
+                    type="button"
+                    className={styles.noteMark}
+                    onClick={() => onOpenNote(n)}
+                    aria-label={`Note on ${noteLabel(n)}: ${n.text ?? ''}`}
+                  >
+                    <StickyNote size={13} aria-hidden />
+                  </button>
+                </Tooltip>
+              ))}
+            </div>
             <button
               type="button"
               className={styles.verseButton}
               aria-pressed={Boolean(selected)}
               onClick={(e) => onSelect(v.verse, e.shiftKey)}
             >
-              <span className={styles.num}>
-                {v.verse}
-                {bookmarked && (
-                  <Bookmark
-                    size={12}
-                    fill="currentColor"
-                    className={styles.bookmarkMark}
-                    aria-label="Bookmarked"
-                  />
-                )}
-              </span>
               <span className={cx(styles.text, v.missing && styles.missing)}>
                 {v.missing ? (
                   'Not included in this translation.'
@@ -439,18 +451,6 @@ function Verses({
                 </span>
               )}
             </button>
-            {notes?.map((n) => (
-              <button
-                key={n.id}
-                type="button"
-                className={styles.noteCard}
-                onClick={() => onOpenNote(n)}
-                aria-label={`Note on ${noteLabel(n)}: ${n.text ?? ''}`}
-              >
-                <StickyNote size={14} aria-hidden className={styles.noteIcon} />
-                <span className={styles.noteText}>{n.text}</span>
-              </button>
-            ))}
           </li>
         );
       })}
@@ -471,4 +471,9 @@ function anyHighlighted(marks: ChapterMarks, s: Selection): boolean {
 function noteLabel(n: MarkRecord): string {
   const r = fromOsis(n.ref);
   return r ? formatRef(r) : n.ref;
+}
+
+function notePreview(text: string | undefined): string {
+  const t = (text ?? '').trim();
+  return t.length > 140 ? `${t.slice(0, 140)}…` : t;
 }

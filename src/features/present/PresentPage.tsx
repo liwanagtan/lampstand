@@ -57,14 +57,14 @@ import { formatClock } from '@/slides/clock';
 import { useBible } from '@/features/bible/bibleStore';
 import { CommandBar } from './verses/CommandBar';
 import { focusCommandBar } from './verses/commandBarFocus';
-import { HistoryPanel, QueuePanel } from './verses/VersePanels';
+import { QueuePanel } from './verses/VersePanels';
 import { labelFor, useVerses } from './verses/verseStore';
 import { ShortcutSheet } from './ShortcutSheet';
 import { CommandPalette, type PaletteCommand } from './CommandPalette';
 import type { OverlayMode } from '@/schema/common';
 import styles from './PresentPage.module.css';
 
-type RailTab = 'queue' | 'history' | 'notes';
+type RailTab = 'notes' | 'queue';
 
 export function PresentPage() {
   useApplyDocumentTheme(true);
@@ -166,7 +166,7 @@ function ControlScreen() {
   const changedAt = useControl((s) => s.changedAt);
   const logoAssetId = useControl((s) => s.logoAssetId);
   const reduceMotion = useControl((s) => s.reduceMotion);
-  const [rail, setRail] = useState<RailTab>('queue');
+  const [rail, setRail] = useState<RailTab>('notes');
   const [sheetOpen, setSheetOpen] = useState(false);
   const [paletteOpen, setPaletteOpen] = useState(false);
   const [exitOpen, setExitOpen] = useState(false);
@@ -265,6 +265,7 @@ function ControlScreen() {
       '1': () => verses.setMode('lowerThird'),
       '2': () => verses.setMode('sidePanel'),
       '3': () => verses.setMode('fullScreen'),
+      '4': () => verses.setMode('popup'),
       'Alt+ArrowRight': () => void verses.step(1),
       'Alt+ArrowLeft': () => void verses.step(-1),
       t: () => void verses.cycleTranslation(),
@@ -441,21 +442,21 @@ function ControlScreen() {
               onChange={setRail}
               items={[
                 {
+                  value: 'notes',
+                  label: 'Notes',
+                  content: (
+                    <Notes
+                      slide={liveSlide}
+                      index={live.slideIndex}
+                      next={slides[live.slideIndex + 1]}
+                    />
+                  ),
+                },
+                {
                   value: 'queue',
                   label: 'Queue',
                   badge: verses.queue.length || undefined,
                   content: <QueuePanel translation={verses.translation} />,
-                },
-                {
-                  value: 'history',
-                  label: 'History',
-                  badge: verses.history.length || undefined,
-                  content: <HistoryPanel />,
-                },
-                {
-                  value: 'notes',
-                  label: 'Notes',
-                  content: <Notes slide={liveSlide} next={slides[live.slideIndex + 1]} />,
                 },
               ]}
             />
@@ -853,18 +854,78 @@ function Countdown({ endsAt }: { endsAt: number }) {
   return <span className={styles.countdown}>{formatClock(endsAt - now)}</span>;
 }
 
-function Notes({ slide, next }: { slide: StoredSlide | undefined; next: StoredSlide | undefined }) {
+const NOTES_SIZE_KEY = 'lampstand.notesSize';
+const NOTES_SIZES = [16, 18, 20, 22, 24, 28];
+
+function readNotesSize(): number {
+  try {
+    const v = Number(localStorage.getItem(NOTES_SIZE_KEY));
+    return NOTES_SIZES.includes(v) ? v : 20;
+  } catch {
+    return 20;
+  }
+}
+
+/** Presenter notes: large and readable, with what comes next (PRD §7.4). */
+function Notes({
+  slide,
+  index,
+  next,
+}: {
+  slide: StoredSlide | undefined;
+  index: number;
+  next: StoredSlide | undefined;
+}) {
+  const [size, setSize] = useState(readNotesSize);
+  const change = (dir: 1 | -1) =>
+    setSize((v) => {
+      const i = Math.max(0, Math.min(NOTES_SIZES.length - 1, NOTES_SIZES.indexOf(v) + dir));
+      const n = NOTES_SIZES[i]!;
+      try {
+        localStorage.setItem(NOTES_SIZE_KEY, String(n));
+      } catch {
+        // Remembering the size is a convenience only.
+      }
+      return n;
+    });
   return (
-    <div className={styles.railBody}>
-      {slide?.notes ? (
-        <p className={styles.notes}>{slide.notes}</p>
-      ) : (
-        <p className={styles.muted}>No notes for this slide.</p>
-      )}
-      {next?.notes && (
-        <div className={styles.nextNotes}>
-          <h3>Next slide</h3>
-          <p>{next.notes}</p>
+    <div className={styles.notesPanel}>
+      <div className={styles.notesHead}>
+        <div className={styles.notesContext}>
+          <span className={styles.notesSlide}>
+            Slide {index + 1}
+            {slide ? ` · ${slide.type}` : ''}
+          </span>
+          {slide && <span className={styles.notesHeading}>{slideTitle(slide)}</span>}
+        </div>
+        <div className={styles.notesSize} role="group" aria-label="Notes text size">
+          <IconButton
+            label="A− smaller notes text"
+            icon={<span className={styles.aSmall}>A−</span>}
+            size="sm"
+            disabled={size === NOTES_SIZES[0]}
+            onClick={() => change(-1)}
+          />
+          <IconButton
+            label="A+ larger notes text"
+            icon={<span className={styles.aLarge}>A+</span>}
+            size="sm"
+            disabled={size === NOTES_SIZES[NOTES_SIZES.length - 1]}
+            onClick={() => change(1)}
+          />
+        </div>
+      </div>
+      <div className={styles.notesBody} style={{ fontSize: size }}>
+        {slide?.notes ? (
+          <p className={styles.notesText}>{slide.notes}</p>
+        ) : (
+          <p className={styles.notesEmpty}>No notes for this slide.</p>
+        )}
+      </div>
+      {next && (
+        <div className={styles.upNext}>
+          <span className={styles.upNextLabel}>Up next · {slideTitle(next)}</span>
+          {next.notes && <p className={styles.upNextText}>{next.notes}</p>}
         </div>
       )}
     </div>
@@ -994,6 +1055,7 @@ const MODES: { mode: OverlayMode; label: string; key: string }[] = [
   { mode: 'lowerThird', label: 'Lower third', key: '1' },
   { mode: 'sidePanel', label: 'Side panel', key: '2' },
   { mode: 'fullScreen', label: 'Full screen', key: '3' },
+  { mode: 'popup', label: 'Popup', key: '4' },
 ];
 
 function OverlayModes({
@@ -1042,6 +1104,7 @@ function ModeIcon({ mode }: { mode: OverlayMode }) {
       {mode === 'sidePanel' && (
         <rect x="13" y="2.5" width="6.5" height="9" rx="0.5" fill="currentColor" />
       )}
+      {mode === 'popup' && <rect x="5" y="3" width="12" height="8" rx="1.5" fill="currentColor" />}
       {mode === 'fullScreen' && (
         <rect x="2.5" y="2.5" width="17" height="9" rx="0.5" fill="currentColor" />
       )}

@@ -20,6 +20,8 @@ export interface Template {
     accent: string;
     /** Translucent panel behind overlays and captions. */
     panel: string;
+    /** Frosted glass behind the lower third and popup verse: the slide shows through. */
+    glass: string;
   };
   /** CSS background layers for the template's own background. */
   backdrop: string;
@@ -50,6 +52,7 @@ export const TEMPLATES: Record<TemplateId, Template> = {
       muted: '#C9C2B4',
       accent: '#D9A441',
       panel: 'rgb(8 14 28 / 0.72)',
+      glass: 'rgb(10 18 36 / 0.42)',
     },
     backdrop:
       'radial-gradient(120% 90% at 50% 38%, rgb(46 66 110 / 0.55) 0%, rgb(11 19 36 / 0) 62%), radial-gradient(60% 50% at 50% 0%, rgb(217 164 65 / 0.08) 0%, rgb(217 164 65 / 0) 70%), #0B1324',
@@ -76,6 +79,7 @@ export const TEMPLATES: Record<TemplateId, Template> = {
       muted: '#C4C7CE',
       accent: '#7FA5FF',
       panel: 'rgb(10 10 11 / 0.74)',
+      glass: 'rgb(12 14 20 / 0.42)',
     },
     backdrop:
       'radial-gradient(70% 60% at 85% 15%, rgb(91 140 255 / 0.22) 0%, rgb(91 140 255 / 0) 70%), radial-gradient(60% 60% at 10% 95%, rgb(91 140 255 / 0.10) 0%, rgb(91 140 255 / 0) 70%), #0A0A0B',
@@ -102,6 +106,7 @@ export const TEMPLATES: Record<TemplateId, Template> = {
       muted: '#D8CCBB',
       accent: '#E8956B',
       panel: 'rgb(28 23 20 / 0.74)',
+      glass: 'rgb(30 22 18 / 0.42)',
     },
     backdrop:
       'radial-gradient(90% 70% at 20% 10%, rgb(217 119 75 / 0.18) 0%, rgb(217 119 75 / 0) 65%), radial-gradient(80% 80% at 90% 100%, rgb(120 70 40 / 0.25) 0%, rgb(120 70 40 / 0) 70%), #1C1714',
@@ -131,6 +136,7 @@ export function templateVars(t: Template): Record<string, string> {
     '--t-muted': t.colors.muted,
     '--t-accent': t.colors.accent,
     '--t-panel': t.colors.panel,
+    '--t-glass': t.colors.glass,
     '--t-backdrop': t.backdrop,
     '--t-photo-overlay': t.photoOverlay,
     '--t-heading-font': t.heading.family,

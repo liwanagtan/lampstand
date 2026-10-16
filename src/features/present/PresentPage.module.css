@@ -146,29 +146,6 @@
   border-radius: var(--radius-md);
   background: var(--color-surface);
 }
-.railBody {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-  min-height: 100%;
-}
-.notes {
-  font-size: var(--text-16);
-  line-height: 1.6;
-  white-space: pre-wrap;
-}
-.nextNotes {
-  padding-top: var(--space-3);
-  border-top: 1px solid var(--color-border);
-  color: var(--color-text-muted);
-  white-space: pre-wrap;
-}
-.nextNotes h3 {
-  margin-bottom: var(--space-1);
-  font-size: var(--text-12);
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
 .muted {
   color: var(--color-text-muted);
 }
@@ -509,4 +486,85 @@
   .livePane {
     order: -1;
   }
+}
+
+.notesPanel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  min-height: 100%;
+}
+.notesHead {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid var(--color-border);
+}
+.notesContext {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.notesSlide {
+  font-size: var(--text-12);
+  font-weight: var(--weight-semibold);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+}
+.notesHeading {
+  overflow: hidden;
+  font-weight: var(--weight-semibold);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.notesSize {
+  display: flex;
+  flex: none;
+  gap: 2px;
+}
+.aSmall {
+  font-size: 12px;
+  font-weight: var(--weight-semibold);
+}
+.aLarge {
+  font-size: 16px;
+  font-weight: var(--weight-semibold);
+}
+.notesBody {
+  flex: 1;
+  line-height: 1.6;
+}
+.notesText {
+  white-space: pre-wrap;
+  color: var(--color-text);
+}
+.notesEmpty {
+  font-size: var(--text-14);
+  color: var(--color-text-muted);
+}
+.upNext {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-3);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-raised);
+}
+.upNextLabel {
+  overflow: hidden;
+  font-size: var(--text-12);
+  font-weight: var(--weight-semibold);
+  color: var(--color-text-muted);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.upNextText {
+  font-size: var(--text-14);
+  line-height: 1.5;
+  color: var(--color-text-muted);
+  white-space: pre-wrap;
 }

@@ -53,6 +53,24 @@ export function VerseOverlay({ overlay, template, animate }: VerseOverlayProps) 
     );
   }
 
+  if (overlay.mode === 'popup') {
+    return (
+      <div className={styles.popupScrim}>
+        <div className={styles.popup}>
+          <VerseBody
+            key={`${passage.osis}-${passage.translation}-${index}`}
+            className={styles.panelBody}
+            reference={reference}
+            page={page}
+            emphasis={overlay.emphasis}
+            animate={animate}
+          />
+          {indicator}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className={overlay.mode === 'lowerThird' ? styles.lowerThird : styles.sidePanel}>
       <VerseBody

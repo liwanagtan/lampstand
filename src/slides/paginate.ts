@@ -31,6 +31,12 @@ export function verseBox(mode: OverlayMode | 'slide'): TextBox {
         height: CANVAS.height - SAFE.y * 2 - OVERLAY.panelPaddingY * 2 - refLine - pageLine,
       };
     }
+    case 'popup':
+      return {
+        width: CANVAS.width * OVERLAY.popupWidth - OVERLAY.popupPaddingX * 2,
+        height:
+          CANVAS.height * OVERLAY.popupMaxHeight - OVERLAY.popupPaddingY * 2 - refLine - pageLine,
+      };
     case 'fullScreen':
     case 'slide':
       return {

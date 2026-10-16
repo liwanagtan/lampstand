@@ -10,7 +10,7 @@ import { LampMark } from '@/design-system/LampMark';
 import { FeatureBoundary } from '@/design-system/components';
 import { useReducedMotion } from '@/features/settings/theme';
 import { slideTranslation } from '@/features/library/translation';
-import type { Transition } from '@/schema/common';
+import type { OverlayMode, Transition } from '@/schema/common';
 import { getTemplate } from '@/templates/templates';
 import { SlideStage } from '@/slides/SlideStage';
 import { SlideView } from '@/slides/SlideView';
@@ -22,6 +22,13 @@ import styles from './LiveScreen.module.css';
 
 const sec = (ms: number) => ms / 1000;
 const ease = (e: readonly number[]) => [...e] as [number, number, number, number];
+
+/** Where an overlay enters from and leaves to (PRD §9 Overlays). The popup card scales in CSS. */
+function overlayFrom(mode: OverlayMode, reduced: boolean) {
+  if (reduced || mode === 'fullScreen') return { opacity: 0 };
+  if (mode === 'lowerThird') return { opacity: 0, y: motionDetail.overlayRise };
+  return { opacity: 0, x: '12%' };
+}
 
 function slideVariants(kind: Transition, direction: 1 | -1, reduced: boolean): Variants {
   if (reduced || kind === 'fade')
@@ -134,21 +141,9 @@ export function LiveScreen({ snapshot, fit = 'width', label, className }: LiveSc
           <motion.div
             key={`${overlay.mode}`}
             className={styles.overlayLayer}
-            initial={
-              reduced || overlay.mode === 'fullScreen'
-                ? { opacity: 0 }
-                : overlay.mode === 'lowerThird'
-                  ? { opacity: 0, y: motionDetail.overlayRise }
-                  : { opacity: 0, x: '12%' }
-            }
+            initial={overlayFrom(overlay.mode, reduced)}
             animate={{ opacity: 1, x: 0, y: 0 }}
-            exit={
-              reduced || overlay.mode === 'fullScreen'
-                ? { opacity: 0 }
-                : overlay.mode === 'lowerThird'
-                  ? { opacity: 0, y: motionDetail.overlayRise }
-                  : { opacity: 0, x: '12%' }
-            }
+            exit={overlayFrom(overlay.mode, reduced)}
             transition={overlayTransition}
           >
             <FeatureBoundary name="Verse overlay" silent>

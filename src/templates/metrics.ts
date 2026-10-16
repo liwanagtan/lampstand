@@ -29,6 +29,12 @@ export const OVERLAY = {
   sidePanelWidth: 0.42,
   panelPaddingX: 72,
   panelPaddingY: 44,
+  /** Frosted-glass blur for the lower third and the popup card. */
+  glassBlur: 32,
+  popupWidth: 0.6,
+  popupMaxHeight: 0.72,
+  popupPaddingX: 88,
+  popupPaddingY: 72,
 } as const;
 
 /** Inner content widths that keep lines readable (≈ 12 words for headings). */
@@ -57,5 +63,10 @@ export function canvasVars(): Record<string, string> {
     '--s-panel-px': `${OVERLAY.panelPaddingX}px`,
     '--s-panel-py': `${OVERLAY.panelPaddingY}px`,
     '--s-overlay-blur': `${OVERLAY.lowerThirdBlur}px`,
+    '--s-glass-blur': `${OVERLAY.glassBlur}px`,
+    '--s-popup-width': `${OVERLAY.popupWidth * CANVAS.width}px`,
+    '--s-popup-max-height': `${OVERLAY.popupMaxHeight * CANVAS.height}px`,
+    '--s-popup-px': `${OVERLAY.popupPaddingX}px`,
+    '--s-popup-py': `${OVERLAY.popupPaddingY}px`,
   };
 }

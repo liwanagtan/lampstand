@@ -1,110 +1,99 @@
-import { motion } from 'motion/react';
-import { BookOpen, History as HistoryIcon, ListOrdered } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { ListOrdered, MonitorPlay } from 'lucide-react';
 import { EmptyState, cx } from '@/design-system/components';
-import { relativeTime } from '@/lib/time';
-import { useReducedMotion } from '@/features/settings/theme';
+import { db } from '@/db/db';
+import { getTranslation } from '@/features/bible/bibleStore';
+import { getPassage } from '@/features/bible/passage';
+import { fromOsis } from '@/features/bible/ref';
+import { useControl } from '../live/controlStore';
 import { useVerses, type QueueItem } from './verseStore';
 import styles from './VersePanels.module.css';
 
-function Checkmark({ shown }: { shown: boolean }) {
-  const reduced = useReducedMotion();
-  return (
-    <span className={cx(styles.check, shown && styles.checked)} aria-hidden>
-      {shown && (
-        <svg viewBox="0 0 16 16" width="12" height="12">
-          <motion.path
-            d="M3 8.5l3.2 3L13 4.5"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            initial={{ pathLength: reduced ? 1 : 0 }}
-            animate={{ pathLength: 1 }}
-            transition={{ duration: reduced ? 0 : 0.3, ease: 'easeOut' }}
-          />
-        </svg>
-      )}
-    </span>
-  );
+/** First line of a verse, for the queue list. */
+function useFirstLine(ref: string, code: string): string | null {
+  const [line, setLine] = useState<{ key: string; text: string } | null>(null);
+  const key = `${code}|${ref}`;
+  useEffect(() => {
+    const t = getTranslation(code);
+    const range = fromOsis(ref);
+    if (!t || !range) return;
+    let alive = true;
+    void getPassage(db, t, range).then((p) => {
+      if (alive) setLine({ key, text: p.verses.find((v) => !v.missing)?.text ?? '' });
+    });
+    return () => {
+      alive = false;
+    };
+  }, [key, ref, code]);
+  return line?.key === key ? line.text : null;
 }
 
-const sourceLabel = (q: QueueItem) =>
-  q.source === 'slide'
-    ? `Slide ${(q.slideIndex ?? 0) + 1}`
-    : q.source === 'extra'
-      ? 'Likely mentioned'
-      : 'Added';
+const GROUPS: { source: QueueItem['source']; label: string }[] = [
+  { source: 'slide', label: 'On slides' },
+  { source: 'extra', label: 'Likely mentioned' },
+  { source: 'manual', label: 'Added' },
+];
 
+/** The sermon's verses as one-click buttons (PRD §7.5 Verse queue). */
 export function QueuePanel({ translation }: { translation: string }) {
   const queue = useVerses((s) => s.queue);
-  const shown = useVerses((s) => s.shown);
-  const show = useVerses((s) => s.show);
   if (queue.length === 0) {
     return (
       <EmptyState compact icon={<ListOrdered size={18} />} title="No verses queued">
-        Verse slides and extra references from this sermon appear here. Press Ctrl+Enter in the
-        command bar to add one.
+        Verse slides and likely references appear here. Press Ctrl+Enter in the command bar to add
+        one.
       </EmptyState>
     );
   }
   return (
-    <ul className={styles.list} aria-label="Verse queue">
-      {queue.map((q) => (
-        <li key={q.key}>
-          <button
-            type="button"
-            className={styles.row}
-            onClick={() =>
-              void show({
-                ref: q.ref,
-                translation: q.translation ?? translation,
-                emphasis: q.emphasis,
-              })
-            }
-          >
-            <Checkmark shown={shown.has(q.ref)} />
-            <span className={styles.text}>
-              <span className={styles.label}>{q.label}</span>
-              <span className={styles.meta}>{sourceLabel(q)}</span>
-            </span>
-            <BookOpen size={14} className={styles.go} aria-hidden />
-          </button>
-        </li>
-      ))}
-    </ul>
+    <div className={styles.queue}>
+      {GROUPS.map((g) => {
+        const items = queue.filter((q) => q.source === g.source);
+        if (!items.length) return null;
+        return (
+          <section key={g.source} aria-label={g.label}>
+            <h3 className={styles.groupLabel}>{g.label}</h3>
+            <ul className={styles.list} aria-label={g.label}>
+              {items.map((q) => (
+                <QueueRow key={q.key} item={q} translation={translation} />
+              ))}
+            </ul>
+          </section>
+        );
+      })}
+    </div>
   );
 }
 
-export function HistoryPanel() {
-  const history = useVerses((s) => s.history);
+function QueueRow({ item, translation }: { item: QueueItem; translation: string }) {
+  const code = (item.translation ?? translation).toUpperCase();
+  const line = useFirstLine(item.ref, code);
   const show = useVerses((s) => s.show);
-  if (history.length === 0) {
-    return (
-      <EmptyState compact icon={<HistoryIcon size={18} />} title="Nothing shown yet">
-        Every verse you show this session is listed here, newest first.
-      </EmptyState>
-    );
-  }
+  const shown = useVerses((s) => s.shown.has(item.ref));
+  const live = useControl((s) => s.live.overlay?.ref === item.ref);
   return (
-    <ul className={styles.list} aria-label="Verse history">
-      {history.map((h) => (
-        <li key={h.key}>
-          <button
-            type="button"
-            className={styles.row}
-            onClick={() => void show({ ref: h.ref, translation: h.translation })}
-          >
-            <span className={styles.text}>
-              <span className={styles.label}>
-                {h.label} <span className={styles.code}>{h.translation}</span>
-              </span>
-              <span className={styles.meta}>{relativeTime(h.shownAt)}</span>
-            </span>
-            <BookOpen size={14} className={styles.go} aria-hidden />
-          </button>
-        </li>
-      ))}
-    </ul>
+    <li>
+      <button
+        type="button"
+        className={cx(styles.row, live && styles.live)}
+        aria-current={live ? 'true' : undefined}
+        onClick={() => void show({ ref: item.ref, translation: code, emphasis: item.emphasis })}
+      >
+        <span className={styles.text}>
+          <span className={styles.label}>
+            {item.label}
+            {shown && !live && (
+              <span className={styles.shownDot} title="Shown already" aria-label="shown" />
+            )}
+          </span>
+          <span className={styles.preview}>{line ?? ' '}</span>
+        </span>
+        {live ? (
+          <span className={styles.onScreen}>On screen</span>
+        ) : (
+          <MonitorPlay size={16} className={styles.go} aria-hidden />
+        )}
+      </button>
+    </li>
   );
 }

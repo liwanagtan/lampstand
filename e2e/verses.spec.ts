@@ -63,11 +63,8 @@ test('translation suffix, cycling and next verse', async ({ page }) => {
   await page.keyboard.press('Alt+ArrowLeft');
   await expect(output.getByTestId('output')).toContainText('John 3:16 · ASV');
 
-  // History lists every verse shown, newest first, and can reshow.
-  await page.getByRole('tab', { name: /History/ }).click();
-  const history = page.getByRole('list', { name: 'Verse history' }).getByRole('button');
-  await expect(history.first()).toContainText('John 3:16');
-  await expect(history).toHaveCount(3);
+  // History is no longer a tab; the queue marks what is on screen.
+  await expect(page.getByRole('tab', { name: /History/ })).toHaveCount(0);
 });
 
 test('Shift+Enter previews without touching the TV; Enter then sends it', async ({ page }) => {
@@ -96,22 +93,52 @@ test('invalid references shake with a hint; words search', async ({ page }) => {
   await expect(page.getByText('Verse · Psalm 119:105 · KJV')).toBeVisible();
 });
 
-test('verse queue holds verse slides and extra references; shown items are checked', async ({
+test('verse queue lists verses as one-click buttons and marks the one on screen', async ({
   page,
 }) => {
   const output = await present(page);
   await page.getByRole('tab', { name: /Queue/ }).click();
-  const queue = page.getByRole('list', { name: 'Verse queue' }).getByRole('button');
+  const panel = page.getByRole('tabpanel', { name: /Queue/ });
+  const queue = panel.getByRole('button');
   await expect(queue).toHaveCount(12); // 8 verse slides + 4 extraRefs
+  await expect(panel.getByRole('checkbox')).toHaveCount(0);
+  await expect(panel.getByRole('heading', { name: 'On slides' })).toBeVisible();
+  await expect(panel.getByRole('heading', { name: 'Likely mentioned' })).toBeVisible();
   await expect(queue.last()).toContainText('Matthew 5:14–16');
+  await expect(queue.last()).toContainText('Ye are the light of the world');
   await queue.last().click();
   await expect(output.getByTestId('output')).toContainText('Ye are the light of the world');
+  await expect(queue.last()).toContainText('On screen');
 
   await page.keyboard.press('/');
   await page.keyboard.type('rom 8 28');
   await page.keyboard.press('Control+Enter');
   await expect(queue).toHaveCount(13);
+  await expect(panel.getByRole('heading', { name: 'Added' })).toBeVisible();
   await expect(queue.last()).toContainText('Romans 8:28');
+});
+
+test('popup verse shows a centred card over the slide', async ({ page }) => {
+  const output = await present(page);
+  await page.keyboard.press('/');
+  await page.keyboard.type('jn 3 16');
+  await page.keyboard.press('Enter');
+  await page.keyboard.press('4');
+  await expect(page.getByText('Popup', { exact: true })).toBeVisible();
+  await expect(output.getByTestId('output')).toContainText('For God so loved the world');
+  await expect(output.getByTestId('output')).toContainText('The Word reveals');
+});
+
+test('notes are large, resizable and show what comes next', async ({ page }) => {
+  await present(page);
+  await page.getByRole('button', { name: 'Slide 3, verse' }).dblclick();
+  const notes = page.getByRole('tabpanel', { name: /Notes/ });
+  await expect(notes).toContainText('Read slowly.');
+  await expect(notes).toContainText('Up next');
+  await notes.getByRole('button', { name: 'A+ larger notes text' }).click();
+  await page.reload();
+  await expect(page.getByText('LIVE', { exact: true })).toBeVisible();
+  expect(await page.evaluate(() => localStorage.getItem('lampstand.notesSize'))).toBe('22');
 });
 
 test('shortcut sheet and command palette', async ({ page }) => {

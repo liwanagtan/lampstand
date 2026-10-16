@@ -8,7 +8,7 @@ export const SHORTCUTS: { keys: string[]; action: string }[] = [
   { keys: ['Shift+Enter'], action: 'Preview verse only (in the bar)' },
   { keys: ['Ctrl+Enter'], action: 'Add verse to the queue (in the bar)' },
   { keys: ['Esc'], action: 'Clear overlay (or close the bar)' },
-  { keys: ['1', '2', '3'], action: 'Lower third / side panel / full screen' },
+  { keys: ['1', '2', '3', '4'], action: 'Lower third / side panel / full screen / popup' },
   { keys: ['Alt+→', 'Alt+←'], action: 'Next / previous verse or page' },
   { keys: ['T'], action: 'Cycle translation on the live verse' },
   { keys: ['B'], action: 'Blank screen toggle' },

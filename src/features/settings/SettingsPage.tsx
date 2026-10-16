@@ -19,6 +19,7 @@ const OVERLAY_LABELS: Record<OverlayMode, string> = {
   lowerThird: 'Lower third',
   sidePanel: 'Side panel',
   fullScreen: 'Full screen',
+  popup: 'Popup',
 };
 
 export function SettingsPage() {

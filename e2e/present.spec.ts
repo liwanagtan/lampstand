@@ -95,7 +95,7 @@ test('closing and reopening the output restores exactly the live state', async (
   await expect(output.locator('li:not([class*="hidden"])')).toHaveCount(2);
 });
 
-test('control dock: sermon, freeze, swap, start and exit', async ({ page }) => {
+test('control dock: sermon, freeze, start and exit', async ({ page }) => {
   await page.setViewportSize({ width: 1366, height: 768 });
   await startPresenting(page);
   const output = await openOutput(page);
@@ -121,14 +121,6 @@ test('control dock: sermon, freeze, swap, start and exit', async ({ page }) => {
   await expect(outputText(output)).not.toContainText('Light shows what is really there');
   await page.keyboard.press('f');
   await expect(outputText(output)).toContainText('Light shows what is really there');
-
-  // Swap is remembered.
-  await page.keyboard.press('x');
-  await page.reload();
-  await expect(page.getByText('LIVE', { exact: true })).toBeVisible();
-  expect(await page.evaluate(() => localStorage.getItem('lampstand.canvasLayout'))).toBe(
-    'preview-large',
-  );
 
   // Exit asks first, then closes the output without a disconnected warning.
   await page.getByRole('button', { name: 'Exit Presentation' }).click();

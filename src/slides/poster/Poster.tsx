@@ -47,11 +47,16 @@ export function Poster({ slide, template, live }: PosterProps) {
     [template.id, slide.heading, series, info?.date, speaker, ref, excerpt, photo],
   );
 
-  const animate = live && (info?.animated ?? true);
+  const animate = live && (info?.animated ?? true) && !reduced;
   const long = slide.heading.length > 34;
 
   return (
-    <div className={styles.poster} data-template={template.id} data-photo={Boolean(photo)}>
+    <div
+      className={styles.poster}
+      data-template={template.id}
+      data-photo={Boolean(photo)}
+      data-enter={live && !reduced ? 'true' : undefined}
+    >
       <div className={styles.bg}>
         {photo ? (
           <img className={styles.photo} src={photo} alt="" />
@@ -91,7 +96,7 @@ export function Poster({ slide, template, live }: PosterProps) {
       </div>
       {animate && (
         <FeatureBoundary name="Scene" silent>
-          <ScenePlayer data={data} still={reduced} />
+          <ScenePlayer data={data} still={false} />
         </FeatureBoundary>
       )}
     </div>

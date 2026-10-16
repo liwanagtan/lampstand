@@ -11,17 +11,13 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { AnimatePresence, motion } from 'motion/react';
 import {
   ArrowLeft,
-  ArrowLeftRight,
   BookOpen,
   ChevronLeft,
   ChevronRight,
-  Flame,
   MonitorOff,
   MonitorPlay,
   Play,
-  Presentation,
   Snowflake,
-  Square,
   X,
 } from 'lucide-react';
 import {
@@ -140,16 +136,6 @@ export function PresentPage() {
   return <ControlScreen />;
 }
 
-const LAYOUT_KEY = 'lampstand.canvasLayout';
-
-function readSwapped(): boolean {
-  try {
-    return localStorage.getItem(LAYOUT_KEY) === 'preview-large';
-  } catch {
-    return false;
-  }
-}
-
 function ControlScreen() {
   const navigate = useNavigate();
   const presentation = useControl((s) => s.presentation)!;
@@ -173,7 +159,6 @@ function ControlScreen() {
   const [sheetOpen, setSheetOpen] = useState(false);
   const [paletteOpen, setPaletteOpen] = useState(false);
   const [exitOpen, setExitOpen] = useState(false);
-  const [swapped, setSwapped] = useState(readSwapped);
   const verses = useVerses();
   const translations = useBible((s) => s.translations);
   const overlayPages = useControl((s) => s.overlayPageCount);
@@ -192,16 +177,6 @@ function ControlScreen() {
   const focusBar = useCallback(() => {
     setTimeout(focusCommandBar, 50);
   }, []);
-
-  const swap = () =>
-    setSwapped((v) => {
-      try {
-        localStorage.setItem(LAYOUT_KEY, v ? 'live-large' : 'preview-large');
-      } catch {
-        // A remembered layout is a convenience only.
-      }
-      return !v;
-    });
 
   const template = getTemplate(live.theme);
   const slides = presentation.slides;
@@ -291,7 +266,6 @@ function ControlScreen() {
       l: () => toggleScreen('logo'),
       s: () => toggleScreen('sermon'),
       f: () => toggleFreeze(),
-      x: () => swap(),
       Home: () => dispatch({ type: 'goTo', index: 0 }),
     },
     ['Mod+k'],
@@ -342,7 +316,7 @@ function ControlScreen() {
         : undefined;
 
   const previewPane = (
-    <div className={cx(styles.pane, styles.previewPane)}>
+    <div className={cx(styles.pane, styles.stack, styles.previewStack)}>
       <div className={styles.paneHead}>
         <h2 className={styles.paneTitle}>Preview</h2>
         {previewMeta && <span className={styles.paneMeta}>{previewMeta}</span>}
@@ -386,9 +360,21 @@ function ControlScreen() {
   );
 
   const livePane = (
-    <LivePane meta={liveMeta} frozen={Boolean(frozen)} onSwap={swap}>
-      <LiveScreen snapshot={frozen ?? snapshot} label="Live output" />
-    </LivePane>
+    <div className={cx(styles.stack, styles.liveStack)}>
+      <LivePane meta={liveMeta} frozen={Boolean(frozen)}>
+        <LiveScreen snapshot={frozen ?? snapshot} label="Live output" />
+      </LivePane>
+      <Dock
+        screen={live.screen}
+        frozen={Boolean(frozen)}
+        hasOverlay={Boolean(live.overlay)}
+        mode={verses.mode}
+        onScreen={toggleScreen}
+        onFreeze={toggleFreeze}
+        onMode={verses.setMode}
+        onClear={() => dispatch({ type: 'clearOverlay' })}
+      />
+    </div>
   );
 
   return (
@@ -457,54 +443,40 @@ function ControlScreen() {
           <section className={styles.stage} aria-label="Preview and live">
             <div className={styles.canvases}>
               <div className={styles.narrow}>
-                {swapped ? livePane : previewPane}
-                <Dock
-                  screen={live.screen}
-                  frozen={Boolean(frozen)}
-                  hasOverlay={Boolean(live.overlay)}
-                  mode={verses.mode}
-                  translation={live.overlay?.translation ?? verses.translation}
-                  onScreen={toggleScreen}
-                  onFreeze={toggleFreeze}
-                  onMode={verses.setMode}
-                  onVerseStep={(d) => void verses.step(d)}
-                  onTranslation={() => void verses.cycleTranslation()}
-                  onClear={() => dispatch({ type: 'clearOverlay' })}
-                />
+                {previewPane}
+                <section className={styles.sidePanel} aria-label="Notes and queue">
+                  <FeatureBoundary name="The side panel">
+                    <Tabs<RailTab>
+                      fill
+                      label="Side panel"
+                      value={rail}
+                      onChange={setRail}
+                      items={[
+                        {
+                          value: 'notes',
+                          label: 'Notes',
+                          content: (
+                            <Notes
+                              slide={liveSlide}
+                              index={live.slideIndex}
+                              next={slides[live.slideIndex + 1]}
+                            />
+                          ),
+                        },
+                        {
+                          value: 'queue',
+                          label: 'Queue',
+                          badge: verses.queue.length || undefined,
+                          content: <QueuePanel translation={verses.translation} />,
+                        },
+                      ]}
+                    />
+                  </FeatureBoundary>
+                </section>
               </div>
-              <div className={styles.wide}>{swapped ? previewPane : livePane}</div>
+              <div className={styles.wide}>{livePane}</div>
             </div>
           </section>
-
-          <aside className={styles.rail} aria-label="Verses and notes">
-            <FeatureBoundary name="The side panel">
-              <Tabs<RailTab>
-                fill
-                label="Side panel"
-                value={rail}
-                onChange={setRail}
-                items={[
-                  {
-                    value: 'notes',
-                    label: 'Notes',
-                    content: (
-                      <Notes
-                        slide={liveSlide}
-                        index={live.slideIndex}
-                        next={slides[live.slideIndex + 1]}
-                      />
-                    ),
-                  },
-                  {
-                    value: 'queue',
-                    label: 'Queue',
-                    badge: verses.queue.length || undefined,
-                    content: <QueuePanel translation={verses.translation} />,
-                  },
-                ]}
-              />
-            </FeatureBoundary>
-          </aside>
         </main>
 
         <FeatureBoundary name="The slide strip">
@@ -574,7 +546,6 @@ function ControlScreen() {
             dispatch,
             toggleScreen,
             toggleFreeze,
-            swap,
             setMode: verses.setMode,
             showSheet: () => setSheetOpen(true),
             focusBar,
@@ -589,12 +560,10 @@ function ControlScreen() {
 function LivePane({
   meta,
   frozen,
-  onSwap,
   children,
 }: {
   meta: ReactNode[];
   frozen: boolean;
-  onSwap: () => void;
   children: ReactNode;
 }) {
   const beat = useControl((s) => s.liveBeat);
@@ -613,15 +582,6 @@ function LivePane({
             </span>
           ))}
         </span>
-        <Tooltip content="Swap canvas sizes" shortcut="X">
-          <IconButton
-            label="Swap canvas sizes"
-            icon={<ArrowLeftRight size={16} />}
-            size="sm"
-            className={styles.swapButton}
-            onClick={onSwap}
-          />
-        </Tooltip>
       </div>
       <motion.div
         key={beat}
@@ -653,12 +613,9 @@ type DockProps = {
   frozen: boolean;
   hasOverlay: boolean;
   mode: OverlayMode;
-  translation: string;
   onScreen: (s: 'blank' | 'logo' | 'sermon') => void;
   onFreeze: () => void;
   onMode: (m: OverlayMode) => void;
-  onVerseStep: (d: 1 | -1) => void;
-  onTranslation: () => void;
   onClear: () => void;
 };
 
@@ -670,70 +627,39 @@ function Dock(p: DockProps) {
         <DockButton
           label="Blank"
           keys="B"
-          icon={<Square size={16} />}
           active={p.screen === 'blank'}
           onClick={() => p.onScreen('blank')}
         />
         <DockButton
           label="Logo"
           keys="L"
-          icon={<Flame size={16} />}
           active={p.screen === 'logo'}
           onClick={() => p.onScreen('logo')}
         />
         <DockButton
           label="Sermon"
           keys="S"
-          icon={<Presentation size={16} />}
           active={p.screen === 'sermon'}
           onClick={() => p.onScreen('sermon')}
         />
         <DockButton
           label={p.frozen ? 'Unfreeze' : 'Freeze'}
           keys="F"
-          icon={<Snowflake size={16} />}
           active={p.frozen}
           onClick={p.onFreeze}
         />
       </DockGroup>
-      <DockGroup label="Verse" className={styles.verseGroup}>
+      <DockGroup label="Verse" className={styles.verseRow}>
         <OverlayModes mode={p.mode} onChange={p.onMode} />
-        <div className={styles.verseRow}>
-          <DockButton
-            label="Previous verse"
-            keys="Alt+←"
-            icon={<ChevronLeft size={18} />}
-            onClick={() => p.onVerseStep(-1)}
-            disabled={!p.hasOverlay}
-            iconOnly
-            showKey={false}
-          />
-          <DockButton
-            label="Next verse"
-            keys="Alt+→"
-            icon={<ChevronRight size={18} />}
-            onClick={() => p.onVerseStep(1)}
-            disabled={!p.hasOverlay}
-            iconOnly
-            showKey={false}
-          />
-          <DockButton
-            label={p.translation}
-            title="Switch translation"
-            keys="T"
-            icon={<BookOpen size={16} />}
-            onClick={p.onTranslation}
-            disabled={!p.hasOverlay}
-          />
-          <DockButton
-            label="Clear"
-            title="Clear verse"
-            keys="Esc"
-            icon={<X size={16} />}
-            onClick={p.onClear}
-            disabled={!p.hasOverlay}
-          />
-        </div>
+        <DockButton
+          label="Clear"
+          title="Clear verse"
+          keys="Esc"
+          icon={<X size={16} />}
+          onClick={p.onClear}
+          disabled={!p.hasOverlay}
+          iconOnly
+        />
       </DockGroup>
     </div>
   );
@@ -750,9 +676,6 @@ function DockGroup({
 }) {
   return (
     <div className={styles.dockGroup} role="group" aria-label={label}>
-      <span className={styles.dockLabel} aria-hidden>
-        {label}
-      </span>
       <div className={cx(styles.dockButtons, className)}>{children}</div>
     </div>
   );
@@ -773,7 +696,7 @@ function DockButton({
   label: string;
   title?: string;
   keys: string;
-  icon: ReactNode;
+  icon?: ReactNode;
   onClick: () => void;
   active?: boolean;
   disabled?: boolean;
@@ -1166,7 +1089,6 @@ function paletteCommands(o: {
   dispatch: ReturnType<typeof useControl.getState>['dispatch'];
   toggleScreen: (s: 'blank' | 'logo' | 'sermon') => void;
   toggleFreeze: () => void;
-  swap: () => void;
   setMode: (m: OverlayMode) => void;
   showSheet: () => void;
   focusBar: () => void;
@@ -1233,7 +1155,6 @@ function paletteCommands(o: {
       shortcut: 'F',
       run: o.toggleFreeze,
     },
-    { id: 'swap', group: 'App', label: 'Swap canvas sizes', shortcut: 'X', run: o.swap },
     { id: 'sheet', group: 'App', label: 'Keyboard shortcuts', shortcut: '?', run: o.showSheet },
     { id: 'library', group: 'App', label: 'Back to Library', run: o.library },
     ...o.slides.map((s, i) => ({

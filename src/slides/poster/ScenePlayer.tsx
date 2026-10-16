@@ -5,7 +5,10 @@ import styles from './Poster.module.css';
 /** The Scene's entrance ends here; the player then loops [ENTER, END) seamlessly. */
 const ENTER = 2;
 const END = 38;
-const LOAD_TIMEOUT = 2000;
+/** The Scene loads only after the poster has been live this long, so quick navigation past
+ * the title slide never pays its loading cost; the static poster plays the entrance meanwhile. */
+const MOUNT_DELAY = 1800;
+const LOAD_TIMEOUT = 4000;
 
 export interface SceneData {
   template: string;
@@ -58,12 +61,10 @@ export function ScenePlayer({ data, still }: ScenePlayerProps) {
       const onApplied = () => {
         if (gaveUp) return;
         clearTimeout(fail);
-        if (stillRef.current) {
-          el.seek(ENTER);
-          el.pause();
-        } else {
-          el.play();
-        }
+        // The static poster has already played the entrance: join the loop where it ends.
+        el.seek(ENTER);
+        if (stillRef.current) el.pause();
+        else el.play();
         requestAnimationFrame(() => setVisible(true));
       };
       const onTime = () => {
@@ -90,12 +91,15 @@ export function ScenePlayer({ data, still }: ScenePlayerProps) {
     }
 
     let cleanup: (() => void) | undefined;
-    // The player is loaded on first use, so it stays out of the main bundle.
-    void import('@hyperframes/player').then(() => {
-      if (!cancelled) cleanup = mount();
-    });
+    // The player is loaded on first use (out of the main bundle), once the poster has settled.
+    const timer = setTimeout(() => {
+      void import('@hyperframes/player').then(() => {
+        if (!cancelled) cleanup = mount();
+      });
+    }, MOUNT_DELAY);
     return () => {
       cancelled = true;
+      clearTimeout(timer);
       cleanup?.();
     };
   }, []);

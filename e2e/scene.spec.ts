@@ -50,23 +50,14 @@ test('the Sermon screen plays the animated Scene on the TV, offline-ready', asyn
   expect(external).toEqual([]);
 });
 
-test('Reduce motion shows the still poster frame', async ({ page }) => {
+test('Reduce motion shows the still poster and never loads the Scene', async ({ page }) => {
   await page.setViewportSize({ width: 1366, height: 768 });
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await importSample(page);
   await page.getByRole('button', { name: 'Present A Lamp in the Dark' }).click();
   await expect(page.getByText('LIVE', { exact: true })).toBeVisible();
   await page.keyboard.press('s');
-  const player = page.locator('[data-pane="live"] hyperframes-player');
-  await expect(player).toHaveCount(1, { timeout: 15_000 });
-  await expect
-    .poll(
-      () =>
-        player.evaluate((el) => (el as unknown as { paused: boolean; currentTime: number }).paused),
-      { timeout: 15_000 },
-    )
-    .toBe(true);
-  expect(
-    await player.evaluate((el) => (el as unknown as { currentTime: number }).currentTime),
-  ).toBeCloseTo(2, 0);
+  await expect(page.locator('[data-pane="live"]')).toContainText('A Lamp in the Dark');
+  await page.waitForTimeout(3000);
+  await expect(page.locator('[data-pane="live"] hyperframes-player')).toHaveCount(0);
 });

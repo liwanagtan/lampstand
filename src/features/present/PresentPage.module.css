@@ -78,7 +78,7 @@
 .main {
   grid-area: main;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 320px;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--space-4);
   min-height: 0;
   padding: var(--space-4);
@@ -136,15 +136,6 @@
 .countdown {
   color: var(--color-text);
   font-weight: var(--weight-semibold);
-}
-.rail {
-  display: flex;
-  flex-direction: column;
-  min-height: 0;
-  padding: var(--space-3);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  background: var(--color-surface);
 }
 .muted {
   color: var(--color-text-muted);
@@ -291,25 +282,69 @@
 .stage {
   display: flex;
   flex-direction: column;
-  justify-content: safe center;
-  overflow-y: auto;
+  overflow: hidden;
   gap: var(--space-4);
   min-width: 0;
   min-height: 0;
 }
 .canvases {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
-  align-items: start;
+  /* A size container, so the columns can measure the space they have. */
+  container-type: size;
+  display: flex;
+  align-items: stretch;
   gap: var(--space-4);
+  height: 100%;
+  min-height: 0;
 }
-/* The narrow column holds the small canvas and the controls; the wide one the large canvas. */
-.narrow,
+/* Preview column: takes whatever width Live leaves (never below 320 px). */
+.narrow {
+  container-type: inline-size;
+  display: flex;
+  flex: 1 1 0;
+  flex-direction: column;
+  gap: var(--space-2);
+  min-width: 320px;
+  height: 100%;
+  min-height: 0;
+  overflow-y: auto;
+}
+/* Live column gets priority: as wide as fits, so header + 16:9 canvas + controls fill the
+   available height, while leaving Preview its minimum width. */
 .wide {
+  container-type: inline-size;
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  gap: var(--space-2);
+  width: min(calc(100cqw - 336px), calc((100cqh - 96px) * 16 / 9));
+  min-width: 0;
+}
+/* Notes and Queue fill what is left of the narrow column and scroll inside. */
+.sidePanel {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 0;
+  min-height: 180px;
+  margin-top: var(--space-1);
+  padding: var(--space-2) var(--space-3) var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+}
+.sidePanel > * {
+  flex: 1;
+  min-height: 0;
+}
+/* Preview leaves Notes and Queue about 200 px of height. */
+.stack {
   display: flex;
   flex-direction: column;
   gap: var(--space-2);
+  width: 100%;
   min-width: 0;
+}
+.narrow > .previewStack {
+  max-width: max(300px, calc((100cqh - 304px) * 16 / 9));
 }
 .pane {
   position: relative;
@@ -324,10 +359,6 @@
   gap: var(--space-2);
 }
 .paneActions > * {
-  flex: none;
-}
-.swapButton {
-  margin-left: auto;
   flex: none;
 }
 .livePane .paneHead {
@@ -361,11 +392,12 @@
 
 .dock {
   display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-  margin-top: var(--space-1);
-  padding-top: var(--space-3);
-  border-top: 1px solid var(--color-border);
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-3);
+}
+.dock > * {
+  flex: 1 1 340px;
+  min-width: 0;
 }
 .sendRow {
   display: grid;
@@ -382,20 +414,16 @@
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
-.dockButtons.verseGroup {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-}
-.verseGroup .modes {
+.verseRow .modes {
   width: 100%;
 }
-.verseRow {
+.dockButtons.verseRow {
   display: grid;
-  grid-template-columns: auto auto minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr) auto;
   gap: var(--space-1);
 }
 .dockGroup {
+  container-type: inline-size;
   display: flex;
   flex-direction: column;
   gap: 6px;
@@ -505,36 +533,28 @@
   box-shadow: var(--elevation-1);
 }
 
-@media (max-width: 1279px) {
-  .canvases {
-    grid-template-columns: minmax(0, 1fr);
-  }
-  .wide {
-    order: -1;
-  }
-}
-
 .notesPanel {
   display: flex;
   flex-direction: column;
-  gap: var(--space-4);
+  gap: var(--space-3);
   min-height: 100%;
 }
 .notesHead {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
   gap: var(--space-3);
-  padding-bottom: var(--space-3);
+  padding-bottom: var(--space-2);
   border-bottom: 1px solid var(--color-border);
 }
 .notesContext {
   display: flex;
-  flex-direction: column;
-  gap: 2px;
+  align-items: baseline;
+  gap: var(--space-2);
   min-width: 0;
 }
 .notesSlide {
+  flex: none;
   font-size: var(--text-12);
   font-weight: var(--weight-semibold);
   letter-spacing: 0.06em;
@@ -593,4 +613,23 @@
   line-height: 1.5;
   color: var(--color-text-muted);
   white-space: pre-wrap;
+}
+
+.dockButton > svg {
+  flex: none;
+}
+.dockButton > span:not(.visually-hidden) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Screen buttons share one row once their group has room. */
+@container (min-width: 300px) {
+  .dockButtons.gridTwo {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+.gridTwo .dockButton {
+  justify-content: space-between;
+  padding: 0 6px 0 var(--space-3);
 }

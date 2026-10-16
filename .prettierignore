@@ -9,3 +9,4 @@ scripts/.cache
 tests/fixtures/malformed.lampstand.json
 public/scenes/vendor
 public/scenes/fonts
+test-results-soak

@@ -13,6 +13,12 @@ export const routes: RouteObject[] = [
       { index: true, element: <LibraryPage /> },
       { path: 'settings', element: <SettingsPage /> },
       {
+        path: 'bible',
+        lazy: async () => ({
+          Component: (await import('@/features/bible-app/BiblePage')).BiblePage,
+        }),
+      },
+      {
         path: 'import',
         lazy: async () => ({
           Component: (await import('@/features/library/ImportPage')).ImportPage,

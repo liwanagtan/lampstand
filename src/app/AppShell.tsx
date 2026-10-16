@@ -8,6 +8,7 @@ import styles from './AppShell.module.css';
 
 const NAV: { to: string; label: string; end?: boolean }[] = [
   { to: '/', label: 'Library', end: true },
+  { to: '/bible', label: 'Bible' },
   { to: '/import', label: 'Import' },
   { to: '/settings', label: 'Settings' },
 ];

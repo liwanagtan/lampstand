@@ -1,0 +1,190 @@
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  height: 100%;
+  min-height: 0;
+}
+.withSide {
+  grid-template-columns: minmax(0, 1fr) minmax(360px, 34%);
+}
+.reader {
+  position: relative;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  min-width: 0;
+  min-height: 0;
+}
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-surface);
+}
+.nav {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+.place {
+  min-width: 150px;
+  justify-content: space-between;
+  font-weight: var(--weight-semibold);
+}
+.view {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-left: auto;
+}
+.select {
+  width: 170px;
+}
+.size {
+  display: flex;
+  gap: 2px;
+}
+.aSmall {
+  font-size: 12px;
+  font-weight: var(--weight-semibold);
+}
+.aLarge {
+  font-size: 16px;
+  font-weight: var(--weight-semibold);
+}
+.body {
+  overflow-y: auto;
+  padding: var(--space-8) var(--space-6) 120px;
+}
+.page {
+  max-width: 44em;
+  margin: 0 auto;
+}
+.parallel {
+  max-width: 82em;
+}
+.chapterHead {
+  margin-bottom: 1.2em;
+}
+.chapterTitle {
+  font-family: var(--font-display);
+  font-size: 2em;
+  font-weight: var(--weight-semibold);
+  letter-spacing: -0.01em;
+}
+.columnsHead {
+  display: grid;
+  grid-template-columns: 3.4em minmax(0, 1fr) 3.1em minmax(0, 1fr);
+  margin-top: 0.8em;
+  font-size: 0.65em;
+  font-weight: var(--weight-semibold);
+  letter-spacing: 0.08em;
+  color: var(--color-accent);
+}
+.verses {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.verse + .verse {
+  margin-top: 2px;
+}
+.verseButton {
+  display: grid;
+  grid-template-columns: 2.2em minmax(0, 1fr);
+  width: 100%;
+  padding: 0.3em 0.5em 0.3em 0;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-text);
+  font: inherit;
+  line-height: 1.7;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color var(--dur-quick) var(--ease-quick);
+}
+.columnsHead > :first-child {
+  grid-column: 2;
+}
+.columnsHead > :last-child {
+  grid-column: 4;
+}
+.parallel .verseButton {
+  grid-template-columns: 2.2em minmax(0, 1fr) 2em minmax(0, 1fr);
+}
+.parallel .secondText {
+  grid-column: 4;
+}
+.verseButton:hover {
+  background: color-mix(in srgb, var(--color-surface-raised) 70%, transparent);
+}
+.selected .verseButton,
+.selected .verseButton:hover {
+  background: color-mix(in srgb, var(--color-accent) 16%, transparent);
+  box-shadow: inset 3px 0 0 var(--color-accent);
+}
+.num {
+  padding-top: 0.35em;
+  font-size: 0.62em;
+  font-weight: var(--weight-semibold);
+  color: var(--color-accent);
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+.text {
+  font-family: var(--font-display);
+}
+.secondText {
+  color: color-mix(in srgb, var(--color-text) 82%, var(--color-text-muted));
+}
+.missing {
+  font-style: italic;
+  color: var(--color-text-muted);
+}
+.loading {
+  color: var(--color-text-muted);
+}
+.chapterFoot {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 2em;
+  padding-top: 1em;
+  border-top: 1px solid var(--color-border);
+  font-size: var(--text-14);
+}
+.selectionBar {
+  position: absolute;
+  left: 50%;
+  bottom: var(--space-6);
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  translate: -50% 0;
+  padding: var(--space-2) var(--space-2) var(--space-2) var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface-raised);
+  box-shadow: var(--elevation-2);
+  animation: barIn var(--dur-standard) var(--ease-standard);
+}
+.selectionLabel {
+  margin-right: var(--space-2);
+  font-weight: var(--weight-semibold);
+}
+.side {
+  min-width: 0;
+  min-height: 0;
+  overflow-y: auto;
+  border-left: 1px solid var(--color-border);
+  background: var(--color-surface);
+}
+@keyframes barIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}

@@ -41,7 +41,7 @@ export interface BiblePageSlots {
   /** Extra toolbar actions (e.g. Start Presentation) and a side panel (the TV controls). */
   toolbar?: ReactNode;
   side?: ReactNode;
-  /** Extra actions for the current selection (e.g. Show on TV). */
+  /** Extra actions for the current selection (e.g. Present). */
   selectionActions?: (range: RefRange, translation: string) => ReactNode;
 }
 

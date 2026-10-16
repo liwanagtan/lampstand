@@ -9,9 +9,12 @@ test('Bible on the TV: show, highlight, step, blank and the lesson list', async 
   await page.getByLabel('Search the Bible').fill('jn 3 16');
   await page.keyboard.press('Enter');
 
-  // Show on TV starts the presentation and puts the verse up.
+  // Present starts the presentation and puts the verse up.
   const popup = page.waitForEvent('popup');
-  await page.getByRole('button', { name: 'Show on TV' }).click();
+  await page
+    .getByRole('toolbar', { name: 'Selected verses' })
+    .getByRole('button', { name: /^Present/ })
+    .click();
   const output = await popup;
   const tv = output.getByTestId('output');
   await expect(tv).toContainText('For God so loved the world');
@@ -63,7 +66,10 @@ test('a background picture shows behind Bible verses on the TV', async ({ page }
   await page.getByLabel('Search the Bible').fill('ps 23 1');
   await page.keyboard.press('Enter');
   const popup = page.waitForEvent('popup');
-  await page.getByRole('button', { name: 'Show on TV' }).click();
+  await page
+    .getByRole('toolbar', { name: 'Selected verses' })
+    .getByRole('button', { name: /^Present/ })
+    .click();
   const output = await popup;
   const tv = output.getByTestId('output');
   await expect(tv).toContainText('The Lord is my shepherd');

@@ -90,7 +90,7 @@ export function BiblePage() {
         aria-pressed={panel}
         onClick={() => useTv.getState().setPanel(!panel)}
       >
-        TV
+        Present
       </Button>
     </Tooltip>
   );
@@ -118,7 +118,7 @@ export function BiblePage() {
               shortcut="Enter"
               onClick={() => void showOnTv(toOsis(range), translation)}
             >
-              Show on TV
+              Present
             </Button>
             <Button
               size="sm"

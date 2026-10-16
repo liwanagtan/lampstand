@@ -19,7 +19,7 @@ import { showOnTv } from './tvActions';
 import { useOpenInReader } from './useOpenInReader';
 import styles from './Daily.module.css';
 
-/** Show on TV and Copy for the verse of the day (Today page only). */
+/** Present and Copy for the verse of the day (Today page only). */
 function TvActions() {
   const translation = useReader((s) => s.translation);
   const { ref, range } = verseOfTheDay();
@@ -46,7 +46,7 @@ function TvActions() {
         icon={<MonitorPlay size={16} />}
         onClick={() => void showOnTv(osis, translation)}
       >
-        Show on TV
+        Present
       </Button>
       <Button variant="ghost" icon={<Copy size={16} />} onClick={() => void copy()}>
         Copy

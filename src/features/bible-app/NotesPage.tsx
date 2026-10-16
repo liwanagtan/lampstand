@@ -207,9 +207,9 @@ function MarkRow({ item, onEdit }: { item: Item; onEdit: (note: MarkRecord) => v
         )}
       </div>
       <div className={styles.actions}>
-        <Tooltip content="Show on TV">
+        <Tooltip content="Present">
           <IconButton
-            label={`Show ${label} on TV`}
+            label={`Present ${label}`}
             icon={<MonitorPlay size={16} />}
             size="sm"
             onClick={() => void showOnTv(ref, translation)}

@@ -6,6 +6,39 @@ test('Today, reading plans and the journal', async ({ page }) => {
   await openApp(page, '/bible/today');
   const verse = page.getByRole('region', { name: 'Verse of the day' });
   await expect(verse.locator('blockquote')).toContainText(/\w{3,}/);
+  await expect(page.getByRole('region', { name: 'This week' })).toBeVisible();
+
+  // Read in context opens the chapter in a side panel, without leaving Today.
+  await verse.getByRole('button', { name: 'Read in context' }).click();
+  await expect(page.getByRole('dialog')).toContainText('Around');
+  await page.keyboard.press('Escape');
+  await expect(page).toHaveURL(/\/bible\/today$/);
+
+  // Reflect writes into the journal from a side panel.
+  await verse.getByRole('button', { name: 'Reflect' }).click();
+  await page.getByRole('dialog').getByLabel('Your entry').fill('Be still and know.');
+  await expect(
+    page.getByRole('dialog').getByRole('status').filter({ hasText: 'Saved' }),
+  ).toBeVisible();
+  await page.keyboard.press('Escape');
+  await expect(page.getByRole('region', { name: 'Reflection' })).toContainText(
+    'Be still and know.',
+  );
+
+  // Present turns into Stop Presenting; leaving Today ends a session Today started.
+  const popup = page.waitForEvent('popup');
+  await verse.getByRole('button', { name: 'Present' }).click();
+  const output = await popup;
+  await expect(output.getByTestId('output')).toContainText(/\w{3,}/);
+  await verse.getByRole('button', { name: 'Stop Presenting' }).click();
+  await expect.poll(() => output.isClosed()).toBe(true);
+  const popup2 = page.waitForEvent('popup');
+  await verse.getByRole('button', { name: 'Present' }).click();
+  const output2 = await popup2;
+  await expect(verse.getByRole('button', { name: 'Stop Presenting' })).toBeVisible();
+  await page.getByRole('link', { name: 'Plans' }).click();
+  await expect.poll(() => output2.isClosed()).toBe(true);
+  await page.getByRole('link', { name: 'Today' }).click();
 
   // Start a plan; only the next reading is shown.
   await page.getByRole('button', { name: 'Choose a plan' }).click();
@@ -58,14 +91,21 @@ test('Today, reading plans and the journal', async ({ page }) => {
   });
   await expect(page.getByRole('region', { name: 'Advent test' })).toContainText('Imported');
 
-  // Journal autosaves and is listed back on Today.
+  // Journal: a new entry with a chosen verse, edited in a side panel.
   await page.getByRole('link', { name: 'Journal' }).click();
-  await page.getByLabel('What stands out to you?').fill('Grace upon grace.');
-  await expect(page.getByRole('status').filter({ hasText: 'Saved' })).toBeVisible();
+  await page.getByRole('button', { name: 'New entry' }).click();
+  const sheet = page.getByRole('dialog');
+  await sheet.getByLabel('Verse').fill('psalm 23 1');
+  await sheet.getByLabel('Verse').press('Enter');
+  await expect(sheet).toContainText('The Lord is my shepherd');
+  await sheet.getByLabel('Title').fill('My shepherd');
+  await sheet.getByLabel('Your entry').fill('Grace upon grace.');
+  await expect(sheet.getByRole('status').filter({ hasText: 'Saved' })).toBeVisible();
+  await page.keyboard.press('Escape');
+  const list = page.getByRole('button', { name: /My shepherd/ });
+  await expect(list).toContainText('Psalm 23:1');
   await page.reload();
-  await expect(page.getByLabel('What stands out to you?')).toHaveValue('Grace upon grace.');
-  await page.getByRole('link', { name: 'Today' }).click();
-  await expect(page.getByRole('region', { name: 'Journal' })).toContainText('You wrote today.');
+  await expect(page.getByRole('button', { name: /My shepherd/ })).toBeVisible();
 
   // The Library shows the verse of the day.
   await page.getByRole('link', { name: 'Library' }).click();

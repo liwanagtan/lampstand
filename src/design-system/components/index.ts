@@ -4,6 +4,7 @@ export { Select, type SelectOption, type SelectProps } from './Select';
 export { Toggle } from './Toggle';
 export { Tabs, type TabItem } from './Tabs';
 export { Dialog, DialogClose } from './Dialog';
+export { Sheet, type SheetProps } from './Sheet';
 export { Menu, type MenuItem } from './Menu';
 export { Tooltip, TooltipProvider } from './Tooltip';
 export { Toaster } from './Toaster';

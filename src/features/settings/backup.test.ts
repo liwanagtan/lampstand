@@ -53,18 +53,35 @@ it('backs up Bible marks, plan progress and journal entries', async () => {
     updatedAt: 1,
   });
   await db.plans.put({ planId: 'gospels-40', startedAt: 1, done: [1, 2], updatedAt: 2 });
-  await db.journal.put({
+  await db.entries.put({
+    id: 'e-1',
     date: '2026-10-16',
-    answers: { a: 'Thanks' },
+    kind: 'journal',
+    body: 'Thanks',
     createdAt: 1,
     updatedAt: 3,
   });
   const text = await (await createBackup()).text();
-  await Promise.all([db.marks.clear(), db.plans.clear(), db.journal.clear()]);
+  await Promise.all([db.marks.clear(), db.plans.clear(), db.entries.clear()]);
   const summary = await restoreBackup(new File([text], 'b.json'));
   expect(summary.study).toBe(3);
   expect((await db.plans.get('gospels-40'))?.done).toEqual([1, 2]);
-  expect((await db.journal.get('2026-10-16'))?.answers.a).toBe('Thanks');
+  expect((await db.entries.get('e-1'))?.body).toBe('Thanks');
+});
+
+it('restores journal days from older backups as entries', async () => {
+  await db.entries.clear();
+  const old = {
+    format: 'lampstand-backup',
+    version: 1,
+    exportedAt: '2026-10-16T00:00:00Z',
+    presentations: [],
+    settings: [],
+    assets: [],
+    journal: [{ date: '2026-10-15', answers: { notice: 'Rest' }, createdAt: 1, updatedAt: 2 }],
+  };
+  await restoreBackup(new File([JSON.stringify(old)], 'old.json'));
+  expect((await db.entries.get('j-2026-10-15'))?.answers).toEqual({ notice: 'Rest' });
 });
 
 it('rejects files that are not backups', async () => {

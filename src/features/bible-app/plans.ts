@@ -302,9 +302,20 @@ export async function setDayRead(planId: string, day: number, read: boolean): Pr
     const p = await db.plans.get(planId);
     if (!p) return;
     const done = new Set(p.done);
-    if (read) done.add(day);
-    else done.delete(day);
-    await db.plans.put({ ...p, done: [...done].sort((a, b) => a - b), updatedAt: Date.now() });
+    const doneAt = { ...p.doneAt };
+    if (read) {
+      done.add(day);
+      doneAt[day] = Date.now();
+    } else {
+      done.delete(day);
+      delete doneAt[day];
+    }
+    await db.plans.put({
+      ...p,
+      done: [...done].sort((a, b) => a - b),
+      doneAt,
+      updatedAt: Date.now(),
+    });
   });
 }
 

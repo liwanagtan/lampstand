@@ -1,9 +1,10 @@
-// Devotion journal (Bible app): one entry per local day, answering a few simple prompts.
+// Devotion journal (Bible app): reflections on the verse of the day and free journal entries.
 import { useLiveQuery } from 'dexie-react-hooks';
 import { db } from '@/db/db';
-import type { JournalRecord } from '@/db/types';
+import type { JournalEntryRecord } from '@/db/types';
 
 export const JOURNAL_MAX = 4000;
+export const TITLE_MAX = 100;
 
 export const PROMPTS: { id: string; label: string; placeholder: string }[] = [
   {
@@ -16,54 +17,86 @@ export const PROMPTS: { id: string; label: string; placeholder: string }[] = [
     label: 'What does this show you about God?',
     placeholder: 'His character, His promises, what He has done…',
   },
-  {
-    id: 'respond',
-    label: 'How will you respond today?',
-    placeholder: 'One small, concrete step.',
-  },
-  {
-    id: 'prayer',
-    label: 'A prayer',
-    placeholder: 'Talk to God about it in your own words.',
-  },
-  {
-    id: 'thanks',
-    label: 'Something you’re thankful for',
-    placeholder: 'Big or small.',
-  },
+  { id: 'respond', label: 'How will you respond today?', placeholder: 'One small, concrete step.' },
+  { id: 'prayer', label: 'A prayer', placeholder: 'Talk to God about it in your own words.' },
+  { id: 'thanks', label: 'Something you’re thankful for', placeholder: 'Big or small.' },
 ];
 
-export const hasContent = (e: JournalRecord | undefined) =>
-  Boolean(e && Object.values(e.answers).some((a) => a.trim()));
+export type EntryDraft = Omit<JournalEntryRecord, 'createdAt' | 'updatedAt'>;
 
-/** Saves one day's answers. An entry with nothing written is removed. */
-export async function saveEntry(
-  date: string,
-  answers: Record<string, string>,
-  ref?: string,
-): Promise<void> {
-  const clean = Object.fromEntries(
-    Object.entries(answers).map(([k, v]) => [k, v.slice(0, JOURNAL_MAX)]),
+export const entryHasContent = (
+  e: Pick<JournalEntryRecord, 'title' | 'body' | 'answers'> | null | undefined,
+) =>
+  Boolean(
+    e &&
+    ((e.title ?? '').trim() ||
+      e.body.trim() ||
+      Object.values(e.answers ?? {}).some((a) => a.trim())),
   );
-  const prev = await db.journal.get(date);
-  if (!Object.values(clean).some((v) => v.trim())) {
-    if (prev) await db.journal.delete(date);
-    return;
-  }
-  const now = Date.now();
-  await db.journal.put({
-    date,
-    ref: prev?.ref ?? ref,
-    answers: clean,
-    createdAt: prev?.createdAt ?? now,
-    updatedAt: now,
+
+/** First line of an entry, for lists. */
+export function entryPreview(e: JournalEntryRecord): string {
+  const parts = [e.body, ...PROMPTS.map((p) => e.answers?.[p.id] ?? '')];
+  return parts.map((p) => p.trim()).find(Boolean) ?? '';
+}
+
+export function newEntryId(): string {
+  return `e-${crypto.randomUUID()}`;
+}
+
+/** Saves an entry. An entry with nothing written is removed. */
+export async function saveEntry(draft: EntryDraft): Promise<void> {
+  const clean: EntryDraft = {
+    ...draft,
+    title: draft.title?.slice(0, TITLE_MAX) || undefined,
+    body: draft.body.slice(0, JOURNAL_MAX),
+    answers: draft.answers
+      ? Object.fromEntries(
+          Object.entries(draft.answers).map(([k, v]) => [k, v.slice(0, JOURNAL_MAX)]),
+        )
+      : undefined,
+  };
+  await db.transaction('rw', db.entries, async () => {
+    const prev = await db.entries.get(draft.id);
+    if (!entryHasContent(clean)) {
+      if (prev) await db.entries.delete(draft.id);
+      return;
+    }
+    const now = Date.now();
+    await db.entries.put({ ...clean, createdAt: prev?.createdAt ?? now, updatedAt: now });
   });
 }
 
-export function useJournalEntry(date: string): JournalRecord | null | undefined {
-  return useLiveQuery(async () => (await db.journal.get(date)) ?? null, [date]);
+/** Deletes an entry and returns a function that puts it back (for Undo). */
+export async function deleteEntry(id: string): Promise<() => Promise<void>> {
+  const prev = await db.entries.get(id);
+  await db.entries.delete(id);
+  return async () => {
+    if (prev) await db.entries.put(prev);
+  };
 }
 
-export function useJournalDates(): JournalRecord[] | undefined {
-  return useLiveQuery(() => db.journal.orderBy('date').reverse().toArray(), []);
+/** Every entry, newest day first. */
+export function useEntries(): JournalEntryRecord[] | undefined {
+  return useLiveQuery(async () => {
+    const all = await db.entries.toArray();
+    return all.sort((a, b) => b.date.localeCompare(a.date) || b.createdAt - a.createdAt);
+  }, []);
+}
+
+export function useEntry(id: string | null): JournalEntryRecord | null | undefined {
+  return useLiveQuery(async () => (id ? ((await db.entries.get(id)) ?? null) : null), [id]);
+}
+
+/** Today's reflection on the verse of the day, if one was written. */
+export function useReflection(date: string): JournalEntryRecord | null | undefined {
+  return useLiveQuery(
+    async () =>
+      (await db.entries
+        .where('date')
+        .equals(date)
+        .filter((e) => e.kind === 'reflection')
+        .first()) ?? null,
+    [date],
+  );
 }

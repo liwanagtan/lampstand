@@ -1,0 +1,97 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background: color-mix(in srgb, var(--color-overlay) 60%, transparent);
+  animation: fadeIn var(--dur-standard) var(--ease-standard);
+}
+.content {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 51;
+  display: flex;
+  flex-direction: column;
+  width: min(100vw, 560px);
+  border-left: 1px solid var(--color-border);
+  background: var(--color-surface);
+  box-shadow: var(--elevation-2);
+  animation: sheetIn var(--dur-slide, 320ms) var(--ease-standard);
+}
+.lg {
+  width: min(100vw, 720px);
+}
+[data-theme='dark'] .content {
+  background: var(--color-surface-raised);
+}
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding: var(--space-5, 20px) var(--space-6) var(--space-4);
+  border-bottom: 1px solid var(--color-border);
+}
+.heading {
+  min-width: 0;
+}
+.eyebrow {
+  margin-bottom: 2px;
+  font-size: var(--text-12);
+  font-weight: var(--weight-semibold);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+}
+.title {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: var(--weight-semibold);
+}
+.description {
+  margin-top: 4px;
+  font-size: var(--text-14);
+  color: var(--color-text-muted);
+}
+.actions {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: var(--space-1);
+}
+.body {
+  flex: 1;
+  outline: none;
+  min-height: 0;
+  overflow-y: auto;
+  padding: var(--space-5, 20px) var(--space-6) var(--space-8);
+}
+.footer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-6);
+  border-top: 1px solid var(--color-border);
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes sheetIn {
+  from {
+    transform: translateX(24px);
+    opacity: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .content,
+  .overlay {
+    animation: none;
+  }
+}
+:global([data-reduce-motion='true']) .content,
+:global([data-reduce-motion='true']) .overlay {
+  animation: none;
+}

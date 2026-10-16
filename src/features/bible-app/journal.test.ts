@@ -1,20 +1,36 @@
 import { db } from '@/db/db';
-import { hasContent, saveEntry } from './journal';
+import { deleteEntry, entryHasContent, entryPreview, saveEntry } from './journal';
 
-describe('devotion journal', () => {
-  beforeEach(() => db.journal.clear());
+describe('journal entries', () => {
+  beforeEach(() => db.entries.clear());
 
   it('saves, updates and removes an empty entry', async () => {
-    await saveEntry('2026-10-16', { notice: 'Be still' }, 'PSA.46.10');
-    const first = (await db.journal.get('2026-10-16'))!;
-    expect(first).toMatchObject({ ref: 'PSA.46.10', answers: { notice: 'Be still' } });
-    await saveEntry('2026-10-16', { notice: 'Be still', thanks: 'Rest' }, 'JHN.1.1');
-    const second = (await db.journal.get('2026-10-16'))!;
-    // The verse an entry was written on stays with it.
-    expect(second.ref).toBe('PSA.46.10');
+    const draft = { id: 'e-1', date: '2026-10-16', kind: 'journal' as const, body: 'Be still' };
+    await saveEntry({ ...draft, ref: 'PSA.46.10' });
+    const first = (await db.entries.get('e-1'))!;
+    expect(first).toMatchObject({ ref: 'PSA.46.10', body: 'Be still' });
+    await saveEntry({ ...draft, title: 'Quiet', body: 'Be still and know' });
+    const second = (await db.entries.get('e-1'))!;
     expect(second.createdAt).toBe(first.createdAt);
-    expect(hasContent(second)).toBe(true);
-    await saveEntry('2026-10-16', { notice: '  ', thanks: '' });
-    expect(await db.journal.get('2026-10-16')).toBeUndefined();
+    expect(entryHasContent(second)).toBe(true);
+    await saveEntry({ ...draft, body: '  ', title: '' });
+    expect(await db.entries.get('e-1')).toBeUndefined();
+  });
+
+  it('keeps several entries a day and undoes a delete', async () => {
+    await saveEntry({
+      id: 'a',
+      date: '2026-10-16',
+      kind: 'reflection',
+      body: '',
+      answers: { god: 'Faithful' },
+    });
+    await saveEntry({ id: 'b', date: '2026-10-16', kind: 'journal', body: 'Prayer list' });
+    expect(await db.entries.where('date').equals('2026-10-16').count()).toBe(2);
+    expect(entryPreview((await db.entries.get('a'))!)).toBe('Faithful');
+    const undo = await deleteEntry('b');
+    expect(await db.entries.count()).toBe(1);
+    await undo();
+    expect(await db.entries.count()).toBe(2);
   });
 });

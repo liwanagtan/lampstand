@@ -1,0 +1,273 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  max-width: 980px;
+  margin: 0 auto;
+  padding: var(--space-6) var(--space-6) 96px;
+}
+.greeting {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.date {
+  font-size: var(--text-12);
+  font-weight: var(--weight-semibold);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+}
+.hello {
+  font-family: var(--font-display);
+  font-size: clamp(28px, 4vw, 40px);
+  font-weight: var(--weight-semibold);
+  letter-spacing: -0.01em;
+}
+
+/* Verse of the day */
+.hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  min-height: 340px;
+  border-radius: var(--radius-lg);
+  background: radial-gradient(120% 140% at 100% 0%, #3a2f1c, #14181f 60%);
+  color: #f6f1e7;
+  box-shadow: var(--elevation-2);
+}
+.heroPhoto {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  animation: photoIn 900ms ease-out both;
+}
+.heroPhotoDrift {
+  animation:
+    photoIn 900ms ease-out both,
+    drift 40s ease-in-out infinite alternate;
+}
+.heroScrim {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    linear-gradient(
+      90deg,
+      rgb(10 12 16 / 0.82) 0%,
+      rgb(10 12 16 / 0.55) 55%,
+      rgb(10 12 16 / 0.25) 100%
+    ),
+    linear-gradient(0deg, rgb(10 12 16 / 0.6), transparent 50%);
+}
+.heroBody {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  max-width: 720px;
+  padding: clamp(24px, 4vw, 48px);
+}
+.heroEyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-12);
+  font-weight: var(--weight-semibold);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #f2c94c;
+}
+.heroText {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(22px, 3vw, 32px);
+  line-height: 1.4;
+  text-wrap: pretty;
+  text-shadow: 0 1px 12px rgb(0 0 0 / 0.35);
+}
+.heroRef {
+  font-weight: var(--weight-semibold);
+}
+.heroRef span {
+  margin-left: var(--space-2);
+  font-size: var(--text-12);
+  font-weight: var(--weight-medium);
+  opacity: 0.7;
+}
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: var(--space-2);
+}
+.heroButton,
+.heroIcon {
+  border-color: rgb(255 255 255 / 0.22);
+  background: rgb(255 255 255 / 0.12);
+  color: #fff;
+  backdrop-filter: blur(8px);
+}
+.heroButton:hover:not(:disabled),
+.heroIcon:hover:not(:disabled) {
+  background: rgb(255 255 255 / 0.22);
+}
+.live,
+.live:hover:not(:disabled) {
+  border-color: var(--color-live);
+  background: color-mix(in srgb, var(--color-live) 70%, transparent);
+}
+
+/* This week */
+.week {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding: var(--space-4) var(--space-5, 20px);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+}
+.weekTitle {
+  font-size: var(--text-16);
+  font-weight: var(--weight-semibold);
+}
+.weekSub {
+  font-size: var(--text-14);
+  color: var(--color-text-muted);
+}
+.weekDays {
+  display: flex;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.weekDay {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+.weekDot {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border: 2px solid var(--color-border);
+  border-radius: 50%;
+  color: var(--color-on-accent, #1b1408);
+  transition:
+    background-color var(--dur-standard) var(--ease-standard),
+    border-color var(--dur-standard) var(--ease-standard);
+}
+.weekOn .weekDot {
+  border-color: var(--color-accent);
+  background: var(--color-accent);
+}
+.weekToday .weekDot {
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-accent) 30%, transparent);
+}
+.weekLater .weekDot {
+  border-style: dashed;
+  opacity: 0.6;
+}
+.weekLetter {
+  font-size: var(--text-12);
+  font-weight: var(--weight-medium);
+  color: var(--color-text-muted);
+}
+.weekToday .weekLetter {
+  color: var(--color-accent);
+  font-weight: var(--weight-semibold);
+}
+
+/* Cards */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--space-4);
+}
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-5, 20px);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+}
+.cardTitle {
+  font-size: var(--text-16);
+  font-weight: var(--weight-semibold);
+}
+.muted {
+  font-size: var(--text-14);
+  line-height: 1.5;
+  color: var(--color-text-muted);
+}
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: auto;
+}
+.reflect {
+  background:
+    radial-gradient(
+      100% 120% at 100% 0%,
+      color-mix(in srgb, var(--color-accent) 10%, transparent),
+      transparent 60%
+    ),
+    var(--color-surface);
+}
+.preview {
+  display: -webkit-box;
+  overflow: hidden;
+  font-family: var(--font-display);
+  font-size: 18px;
+  line-height: 1.5;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+.done {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: var(--text-14);
+  font-weight: var(--weight-medium);
+  color: var(--color-success, var(--color-accent));
+}
+
+@keyframes photoIn {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes drift {
+  from {
+    transform: scale(1.04) translate(0, 0);
+  }
+  to {
+    transform: scale(1.1) translate(-2%, -1%);
+  }
+}
+@media (max-width: 640px) {
+  .page {
+    padding: var(--space-4) var(--space-4) 72px;
+  }
+  .hero {
+    min-height: 0;
+  }
+  .weekDays {
+    gap: 6px;
+  }
+  .weekDot {
+    width: 28px;
+    height: 28px;
+  }
+}

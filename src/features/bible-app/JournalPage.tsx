@@ -1,178 +1,321 @@
-import { useEffect, useRef, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
-import { BookOpen } from 'lucide-react';
-import { Button, Textarea } from '@/design-system/components';
-import type { JournalRecord } from '@/db/types';
-import { formatRef, fromOsis, toOsis } from '@/features/bible/ref';
-import { usePassage } from '@/slides/usePassage';
-import { localDate, verseOfTheDay } from './dailyVerses';
+import { useMemo, useState } from 'react';
+import { BookOpen, NotebookPen, Plus, Search, Sparkles, Trash2 } from 'lucide-react';
 import {
-  JOURNAL_MAX,
-  PROMPTS,
-  hasContent,
-  saveEntry,
-  useJournalDates,
-  useJournalEntry,
+  Button,
+  EmptyState,
+  IconButton,
+  Input,
+  Sheet,
+  Tooltip,
+  cx,
+  toast,
+} from '@/design-system/components';
+import type { JournalEntryRecord } from '@/db/types';
+import { formatRef, fromOsis, parseRefDetailed, toOsis } from '@/features/bible/ref';
+import { usePassage } from '@/slides/usePassage';
+import { localDate } from './dailyVerses';
+import { EntryEditor } from './EntryEditor';
+import {
+  deleteEntry,
+  entryHasContent,
+  entryPreview,
+  newEntryId,
+  useEntries,
+  useEntry,
+  type EntryDraft,
 } from './journal';
 import { useReader } from './readerStore';
 import { useOpenInReader } from './useOpenInReader';
-import styles from './Daily.module.css';
+import styles from './Journal.module.css';
 
-const SAVE_DELAY = 600;
-const DATE_RE = /^(\d{4})-(\d{2})-(\d{2})$/;
+type Filter = 'all' | 'reflection' | 'journal';
 
-const parseDate = (s: string): Date | null => {
-  const m = DATE_RE.exec(s);
-  if (!m) return null;
-  const d = new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
-  return localDate(d) === s ? d : null;
+const FILTERS: { value: Filter; label: string }[] = [
+  { value: 'all', label: 'All' },
+  { value: 'reflection', label: 'Reflections' },
+  { value: 'journal', label: 'Journal' },
+];
+
+const parseDate = (s: string) => {
+  const [y, m, d] = s.split('-').map(Number);
+  return new Date(y!, m! - 1, d!);
 };
-
 const dayFormat = new Intl.DateTimeFormat(undefined, {
-  weekday: 'long',
-  month: 'long',
-  day: 'numeric',
-  year: 'numeric',
-});
-const shortFormat = new Intl.DateTimeFormat(undefined, {
+  weekday: 'short',
   month: 'short',
   day: 'numeric',
-  year: 'numeric',
 });
+const monthFormat = new Intl.DateTimeFormat(undefined, { month: 'long', year: 'numeric' });
 
-/** Devotion journal: a few prompts on the day's verse, saved as you type. */
+const refLabel = (ref?: string) => {
+  const r = ref ? fromOsis(ref) : null;
+  return r ? formatRef(r) : null;
+};
+
+/** Every reflection and journal entry, with search; new or open ones edit in a side panel. */
 export function JournalPage() {
-  const [params, setParams] = useSearchParams();
-  const today = localDate();
-  const asked = params.get('date');
-  const date = asked && parseDate(asked) && asked <= today ? asked : today;
-  const entries = useJournalDates();
-  const entry = useJournalEntry(date);
-  const past = (entries ?? []).filter((e) => e.date !== today && hasContent(e));
+  const entries = useEntries();
+  const [filter, setFilter] = useState<Filter>('all');
+  const [query, setQuery] = useState('');
+  const [open, setOpen] = useState<{ id: string; draft?: EntryDraft } | null>(null);
 
-  const pick = (d: string) => setParams(d === today ? {} : { date: d });
+  const q = query.trim().toLowerCase();
+  const shown = useMemo(
+    () =>
+      (entries ?? [])
+        .filter((e) => entryHasContent(e))
+        .filter((e) => filter === 'all' || e.kind === filter)
+        .filter(
+          (e) =>
+            !q ||
+            [e.title, e.body, refLabel(e.ref), ...Object.values(e.answers ?? {})]
+              .filter(Boolean)
+              .some((t) => t!.toLowerCase().includes(q)),
+        ),
+    [entries, filter, q],
+  );
+
+  const groups = useMemo(() => {
+    const out: { month: string; items: JournalEntryRecord[] }[] = [];
+    for (const e of shown) {
+      const month = monthFormat.format(parseDate(e.date));
+      const last = out[out.length - 1];
+      if (last?.month === month) last.items.push(e);
+      else out.push({ month, items: [e] });
+    }
+    return out;
+  }, [shown]);
+
+  const startNew = () =>
+    setOpen({
+      id: newEntryId(),
+      draft: { id: '', date: localDate(), kind: 'journal', body: '' },
+    });
+
+  const any = (entries ?? []).some((e) => entryHasContent(e));
 
   return (
     <div className={styles.page}>
-      <p className={styles.eyebrow}>Journal</p>
-      <h1 className={styles.title}>{dayFormat.format(parseDate(date)!)}</h1>
-      <p className={styles.lede}>Your journal stays on this computer.</p>
-      <div className={styles.journal}>
-        <nav aria-label="Journal entries">
-          <ul className={styles.entries}>
-            <li>
-              <button
-                type="button"
-                className={styles.entry}
-                aria-current={date === today}
-                onClick={() => pick(today)}
-              >
-                <span className={styles.entryDate}>Today</span>
-                <span className={styles.entryRef}>{verseOfTheDay().ref}</span>
-              </button>
-            </li>
-            {past.map((e) => (
-              <li key={e.date}>
-                <button
-                  type="button"
-                  className={styles.entry}
-                  aria-current={date === e.date}
-                  onClick={() => pick(e.date)}
-                >
-                  <span className={styles.entryDate}>{shortFormat.format(parseDate(e.date)!)}</span>
-                  <span className={styles.entryRef}>{refLabel(e)}</span>
-                </button>
-              </li>
-            ))}
-          </ul>
-        </nav>
-        {entry === undefined ? (
-          <div aria-busy="true" />
-        ) : (
-          <EntryForm key={date} date={date} entry={entry} />
-        )}
+      <div className={styles.head}>
+        <div>
+          <p className={styles.eyebrow}>Journal</p>
+          <h1 className={styles.title}>Your journal</h1>
+          <p className={styles.lede}>
+            Reflections and notes from your time in the Word. They stay on this computer.
+          </p>
+        </div>
+        <Button variant="primary" icon={<Plus size={16} />} onClick={startNew}>
+          New entry
+        </Button>
       </div>
+
+      {entries && !any ? (
+        <EmptyState
+          icon={<NotebookPen size={28} />}
+          title="Start your journal"
+          actions={
+            <Button variant="primary" icon={<Plus size={16} />} onClick={startNew}>
+              Write your first entry
+            </Button>
+          }
+        >
+          Write about a verse that speaks to you, a prayer, or what you are learning. Reflections
+          from the Today tab appear here too.
+        </EmptyState>
+      ) : (
+        <>
+          <div className={styles.bar}>
+            <div className={styles.filters} role="radiogroup" aria-label="Show">
+              {FILTERS.map((f) => (
+                <button
+                  key={f.value}
+                  type="button"
+                  role="radio"
+                  aria-checked={filter === f.value}
+                  className={styles.filter}
+                  onClick={() => setFilter(f.value)}
+                >
+                  {f.label}
+                </button>
+              ))}
+            </div>
+            <Input
+              label="Search the journal"
+              hideLabel
+              placeholder="Search your journal"
+              icon={<Search size={16} />}
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              className={styles.search}
+            />
+          </div>
+          {shown.length === 0 && entries ? (
+            <p className={styles.none}>Nothing matches.</p>
+          ) : (
+            groups.map((g) => (
+              <section key={g.month} className={styles.month} aria-label={g.month}>
+                <h2 className={styles.monthTitle}>{g.month}</h2>
+                <ul className={styles.list}>
+                  {g.items.map((e) => (
+                    <li key={e.id}>
+                      <button
+                        type="button"
+                        className={styles.item}
+                        onClick={() => setOpen({ id: e.id })}
+                      >
+                        <span className={styles.itemDate}>
+                          {dayFormat.format(parseDate(e.date))}
+                        </span>
+                        <span className={styles.itemMain}>
+                          <span className={styles.itemTop}>
+                            {e.kind === 'reflection' && (
+                              <span className={styles.kind}>
+                                <Sparkles size={12} aria-hidden /> Reflection
+                              </span>
+                            )}
+                            {refLabel(e.ref) && (
+                              <span className={styles.itemRef}>{refLabel(e.ref)}</span>
+                            )}
+                          </span>
+                          {e.title && <span className={styles.itemTitle}>{e.title}</span>}
+                          <span className={styles.itemPreview}>{entryPreview(e)}</span>
+                        </span>
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            ))
+          )}
+        </>
+      )}
+
+      <EntrySheet target={open} onClose={() => setOpen(null)} />
     </div>
   );
 }
 
-function refLabel(e: JournalRecord): string {
-  const r = e.ref ? fromOsis(e.ref) : null;
-  return r ? formatRef(r) : '';
+function EntrySheet({
+  target,
+  onClose,
+}: {
+  target: { id: string; draft?: EntryDraft } | null;
+  onClose: () => void;
+}) {
+  const saved = useEntry(target && !target.draft ? target.id : null);
+  const entry: JournalEntryRecord | EntryDraft | null | undefined = target?.draft
+    ? { ...target.draft, id: target.id }
+    : saved;
+
+  return (
+    <Sheet
+      open={Boolean(target)}
+      onOpenChange={(o) => !o && onClose()}
+      eyebrow={entry?.kind === 'reflection' ? 'Reflection' : 'Journal'}
+      title={entry ? dayFormat.format(parseDate(entry.date)) : 'Entry'}
+      description="Saved as you type."
+      actions={
+        entry &&
+        !target?.draft && (
+          <Tooltip content="Delete entry">
+            <IconButton
+              label="Delete entry"
+              icon={<Trash2 size={16} />}
+              size="sm"
+              onClick={() =>
+                void deleteEntry(entry.id).then((undo) => {
+                  onClose();
+                  toast({
+                    title: 'Entry deleted',
+                    action: { label: 'Undo', onClick: () => void undo() },
+                  });
+                })
+              }
+            />
+          </Tooltip>
+        )
+      }
+    >
+      {entry && <EntryForm key={entry.id} entry={entry} />}
+    </Sheet>
+  );
 }
 
-function EntryForm({ date, entry }: { date: string; entry: JournalRecord | null }) {
-  const open = useOpenInReader();
+/** The verse chooser plus the editor for one entry. */
+function EntryForm({ entry }: { entry: JournalEntryRecord | EntryDraft }) {
+  const [text, setText] = useState(() => refLabel(entry.ref) ?? '');
+  const [verse, setVerse] = useState(entry.ref ?? '');
+  const [error, setError] = useState<string | null>(null);
+
+  const commit = () => {
+    const t = text.trim();
+    if (!t) {
+      setVerse('');
+      setError(null);
+      return;
+    }
+    const r = parseRefDetailed(t);
+    if (!r.ok) return setError(r.hint);
+    setError(null);
+    setVerse(toOsis(r.range));
+    setText(formatRef(r.range));
+  };
+
+  return (
+    <EntryEditor
+      entry={entry}
+      showTitle
+      verse={verse}
+      autoFocus={!entry.ref}
+      bodyPlaceholder={
+        entry.kind === 'reflection'
+          ? 'What is God saying to you through this verse?'
+          : 'What’s on your heart today?'
+      }
+      header={
+        <div className={styles.verseField}>
+          <Input
+            label="Verse"
+            placeholder="Choose a verse (optional) — e.g. Psalm 23:1"
+            icon={<BookOpen size={16} />}
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            onBlur={commit}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                e.preventDefault();
+                commit();
+              }
+            }}
+            error={error ?? undefined}
+          />
+          {verse && <VersePreview osis={verse} />}
+        </div>
+      }
+    />
+  );
+}
+
+function VersePreview({ osis }: { osis: string }) {
   const translation = useReader((s) => s.translation);
-  const ref = entry?.ref ?? toOsis(verseOfTheDay(parseDate(date)!).range);
-  const range = fromOsis(ref);
-  const { passage } = usePassage(ref, translation);
-  const [answers, setAnswers] = useState<Record<string, string>>(entry?.answers ?? {});
-  const [status, setStatus] = useState<'idle' | 'saving' | 'saved'>('idle');
-  const pending = useRef<Record<string, string> | null>(null);
-  const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
-
-  const flush = () => {
-    clearTimeout(timer.current);
-    const a = pending.current;
-    pending.current = null;
-    if (a) void saveEntry(date, a, ref).then(() => setStatus('saved'));
-  };
-
-  // Save what's left when leaving the page or switching days.
-  useEffect(() => () => flush(), []); // eslint-disable-line react-hooks/exhaustive-deps
-
-  const change = (id: string, value: string) => {
-    const next = { ...answers, [id]: value };
-    setAnswers(next);
-    setStatus('saving');
-    pending.current = next;
-    clearTimeout(timer.current);
-    timer.current = setTimeout(flush, SAVE_DELAY);
-  };
-
+  const open = useOpenInReader();
+  const { passage } = usePassage(osis, translation);
+  const range = fromOsis(osis);
   const text = passage?.verses
     .filter((v) => !v.missing)
     .map((v) => v.text)
     .join(' ');
-
   return (
-    <div className={styles.form}>
-      <div className={styles.context}>
-        <p className={styles.contextText}>{text ?? ' '}</p>
-        <div className={styles.row}>
-          <p className={styles.contextRef}>
-            {passage?.reference ?? (range ? formatRef(range) : '')} · {translation}
-          </p>
-          {range && (
-            <Button
-              size="sm"
-              variant="ghost"
-              className={styles.push}
-              icon={<BookOpen size={14} />}
-              onClick={() => open(range)}
-            >
-              Read in context
-            </Button>
-          )}
-        </div>
-      </div>
-      {PROMPTS.map((p) => (
-        <Textarea
-          key={p.id}
-          label={p.label}
-          placeholder={p.placeholder}
-          rows={3}
-          limit={JOURNAL_MAX}
-          maxLength={JOURNAL_MAX}
-          value={answers[p.id] ?? ''}
-          onChange={(e) => change(p.id, e.target.value)}
-          onBlur={flush}
-        />
-      ))}
-      <p className={styles.saved} role="status" aria-live="polite">
-        {status === 'saving' ? 'Saving…' : status === 'saved' ? 'Saved' : ' '}
-      </p>
-    </div>
+    <blockquote className={cx(styles.quote)}>
+      <span className={styles.quoteText}>{text ?? ' '}</span>
+      <footer>
+        {passage?.reference ?? (range ? formatRef(range) : '')} · {translation}
+        {range && (
+          <Button size="sm" variant="ghost" onClick={() => open(range)} className={styles.push}>
+            Open in reader
+          </Button>
+        )}
+      </footer>
+    </blockquote>
   );
 }

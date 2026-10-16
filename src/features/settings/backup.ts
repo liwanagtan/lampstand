@@ -1,7 +1,8 @@
 // Settings → Data → Backup (PRD §7.7, §10): everything in one file, and back again.
-import { db } from '@/db/db';
+import { db, journalToEntry } from '@/db/db';
 import type {
   AssetRecord,
+  JournalEntryRecord,
   JournalRecord,
   MarkRecord,
   PlanDefRecord,
@@ -29,7 +30,9 @@ interface BackupFile {
   marks?: MarkRecord[];
   plans?: PlanProgressRecord[];
   planDefs?: PlanDefRecord[];
+  /** Older backups: one journal entry per day. */
   journal?: JournalRecord[];
+  entries?: JournalEntryRecord[];
 }
 
 async function blobToBase64(blob: Blob): Promise<string> {
@@ -62,7 +65,7 @@ export async function createBackup(): Promise<Blob> {
     marks: await db.marks.toArray(),
     plans: await db.plans.toArray(),
     planDefs: await db.planDefs.toArray(),
-    journal: await db.journal.toArray(),
+    entries: await db.entries.toArray(),
   }).slice(0, -1);
   const parts: BlobPart[] = [head, ',"assets":['];
   for (const [i, a] of assets.entries()) {
@@ -122,12 +125,22 @@ export async function restoreBackup(file: File): Promise<RestoreSummary> {
       typeof j.answers === 'object' &&
       typeof j.updatedAt === 'number',
   );
+  const entries = [
+    ...(Array.isArray(data.entries) ? data.entries : []).filter(
+      (e) =>
+        typeof e?.id === 'string' &&
+        typeof e.date === 'string' &&
+        typeof e.body === 'string' &&
+        typeof e.updatedAt === 'number',
+    ),
+    ...journal.map(journalToEntry),
+  ];
   const planDefs = (Array.isArray(data.planDefs) ? data.planDefs : []).filter(
     (d) => typeof d?.id === 'string' && parsePlanFile(d.file).ok,
   );
   await db.transaction(
     'rw',
-    [db.presentations, db.assets, db.marks, db.plans, db.journal, db.planDefs],
+    [db.presentations, db.assets, db.marks, db.plans, db.entries, db.planDefs],
     async () => {
       for (const d of planDefs) {
         const cur = await db.planDefs.get(d.id);
@@ -151,10 +164,10 @@ export async function restoreBackup(file: File): Promise<RestoreSummary> {
           summary.study++;
         }
       }
-      for (const j of journal) {
-        const cur = await db.journal.get(j.date);
-        if (!cur || j.updatedAt > cur.updatedAt) {
-          await db.journal.put(j);
+      for (const e of entries) {
+        const cur = await db.entries.get(e.id);
+        if (!cur || e.updatedAt > cur.updatedAt) {
+          await db.entries.put(e);
           summary.study++;
         }
       }

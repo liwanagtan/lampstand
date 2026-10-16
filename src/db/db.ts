@@ -2,6 +2,7 @@ import Dexie, { type EntityTable } from 'dexie';
 import type {
   AssetRecord,
   HistoryRecord,
+  JournalEntryRecord,
   JournalRecord,
   MarkRecord,
   PlanDefRecord,
@@ -25,6 +26,7 @@ export class LampstandDB extends Dexie {
   plans!: EntityTable<PlanProgressRecord, 'planId'>;
   journal!: EntityTable<JournalRecord, 'date'>;
   planDefs!: EntityTable<PlanDefRecord, 'id'>;
+  entries!: EntityTable<JournalEntryRecord, 'id'>;
 
   constructor(name = DB_NAME) {
     super(name);
@@ -45,7 +47,28 @@ export class LampstandDB extends Dexie {
     });
     // Imported reading plans (e.g. Sunday-school lesson plans).
     this.version(3).stores({ planDefs: 'id, importedAt' });
+    // Journal entries: several per day, each with its own verse. Old per-day entries move over.
+    this.version(4)
+      .stores({ entries: 'id, date, kind, updatedAt' })
+      .upgrade(async (tx) => {
+        const old = (await tx.table('journal').toArray()) as JournalRecord[];
+        await tx.table('entries').bulkPut(old.map(journalToEntry));
+      });
   }
+}
+
+/** A version-2 per-day journal row as a version-4 entry. */
+export function journalToEntry(j: JournalRecord): JournalEntryRecord {
+  return {
+    id: `j-${j.date}`,
+    date: j.date,
+    kind: 'reflection',
+    ref: j.ref,
+    body: '',
+    answers: j.answers,
+    createdAt: j.createdAt,
+    updatedAt: j.updatedAt,
+  };
 }
 
 export const db = new LampstandDB();

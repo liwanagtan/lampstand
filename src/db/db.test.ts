@@ -7,6 +7,7 @@ describe('LampstandDB', () => {
     expect(db.tables.map((t) => t.name).sort()).toEqual(
       [
         'assets',
+        'entries',
         'history',
         'journal',
         'marks',
@@ -31,4 +32,26 @@ describe('LampstandDB', () => {
     expect(await db.verses.where('code').equals('WEB').count()).toBe(1);
     db.close();
   });
+});
+
+it('moves version-2 journal days into entries', async () => {
+  const name = 'test-journal-upgrade';
+  const { default: Dexie } = await import('dexie');
+  const v2 = new Dexie(name);
+  v2.version(2).stores({ journal: 'date, updatedAt' });
+  await v2.table('journal').put({
+    date: '2026-10-16',
+    ref: 'PSA.46.10',
+    answers: { notice: 'Be still' },
+    createdAt: 1,
+    updatedAt: 2,
+  });
+  v2.close();
+  const db = new LampstandDB(name);
+  const entries = await db.entries.toArray();
+  expect(entries).toEqual([
+    expect.objectContaining({ date: '2026-10-16', kind: 'reflection', ref: 'PSA.46.10' }),
+  ]);
+  expect(entries[0]!.answers).toEqual({ notice: 'Be still' });
+  db.close();
 });

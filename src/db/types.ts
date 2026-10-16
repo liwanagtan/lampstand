@@ -103,6 +103,8 @@ export interface PlanProgressRecord {
   startedAt: number;
   /** Day numbers (1-based) marked as read. */
   done: number[];
+  /** When each day was finished (epoch ms), for the week view. Missing on older records. */
+  doneAt?: Record<number, number>;
   updatedAt: number;
 }
 
@@ -113,7 +115,23 @@ export interface PlanDefRecord {
   importedAt: number;
 }
 
-/** One devotion journal entry per day (Bible app). */
+/** A journal entry (Bible app): a reflection on the verse of the day, or a free entry. */
+export interface JournalEntryRecord {
+  id: string;
+  /** Local date the entry belongs to, YYYY-MM-DD. */
+  date: string;
+  kind: 'reflection' | 'journal';
+  /** Canonical verse or range the entry is about, e.g. PSA.46.10. */
+  ref?: string;
+  title?: string;
+  body: string;
+  /** Answers to the guided prompts, by prompt id. */
+  answers?: Record<string, string>;
+  createdAt: number;
+  updatedAt: number;
+}
+
+/** Version 2 journal: one entry per day (kept for migration; see JournalEntryRecord). */
 export interface JournalRecord {
   /** Local date, YYYY-MM-DD. */
   date: string;

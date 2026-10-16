@@ -12,9 +12,19 @@ describe.each(['dark', 'light'] as const)('%s tokens meet WCAG AA', (scheme) => 
   });
 
   it.each(surfaces)('UI colors on %s are ≥ 3:1', (s) => {
-    for (const ui of ['accent', 'live', 'success', 'warning'] as const) {
+    // The logo-gold fill always carries accent-contrast text (checked below); gold used on its
+    // own as text, icons or outlines is accent-text.
+    for (const ui of ['accent-text', 'live', 'success', 'warning'] as const) {
       expect(contrastRatio(c[ui], c[s])).toBeGreaterThanOrEqual(3);
     }
+  });
+
+  it.each(surfaces)('gold text on %s is ≥ 4.5:1', (s) => {
+    expect(contrastRatio(c['accent-text'], c[s])).toBeGreaterThanOrEqual(4.5);
+  });
+
+  it('accent is the logo gold', () => {
+    expect(c.accent).toBe('#F2B33D');
   });
 
   it('text on accent and live fills is ≥ 4.5:1', () => {

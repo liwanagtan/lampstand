@@ -74,7 +74,7 @@
 .itemIcon {
   flex: none;
   margin-top: 3px;
-  color: var(--color-accent);
+  color: var(--color-accent-text);
 }
 .itemText {
   display: flex;

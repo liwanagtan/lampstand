@@ -27,6 +27,6 @@
 }
 .mode[aria-checked='true'] {
   background: var(--color-surface);
-  color: var(--color-accent);
+  color: var(--color-accent-text);
   box-shadow: var(--elevation-1);
 }

@@ -85,7 +85,7 @@
   font-size: 0.65em;
   font-weight: var(--weight-semibold);
   letter-spacing: 0.08em;
-  color: var(--color-accent);
+  color: var(--color-accent-text);
 }
 .verses {
   margin: 0;
@@ -147,7 +147,7 @@
   font-size: 0.62em;
   font-weight: var(--weight-semibold);
   line-height: 1.6;
-  color: var(--color-accent);
+  color: var(--color-accent-text);
   font-variant-numeric: tabular-nums;
 }
 .noteMark {
@@ -159,7 +159,7 @@
   border: 0;
   border-radius: 4px;
   background: transparent;
-  color: var(--color-accent);
+  color: var(--color-accent-text);
   cursor: pointer;
 }
 .noteMark:hover {
@@ -277,5 +277,5 @@
   }
 }
 .bookmarkMark {
-  color: var(--color-accent);
+  color: var(--color-accent-text);
 }

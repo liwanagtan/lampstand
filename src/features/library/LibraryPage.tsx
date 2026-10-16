@@ -291,7 +291,7 @@ function EmptyLamp() {
         <radialGradient id="lampFlame" cx="50%" cy="70%" r="60%">
           <stop offset="0%" stopColor="#FFF4D6" />
           <stop offset="45%" stopColor="#F2C46B" />
-          <stop offset="100%" stopColor="#D9A441" />
+          <stop offset="100%" stopColor="#F2B33D" />
         </radialGradient>
         <linearGradient id="lampBody" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%" stopColor="var(--color-accent)" />

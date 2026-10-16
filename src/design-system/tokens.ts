@@ -11,13 +11,15 @@ export const colors = {
     border: '#2A3240',
     text: '#E8EAED',
     'text-muted': '#9AA3AF',
-    accent: '#D9A441',
+    // Logo gold (brand/README.txt) for fills, borders and highlights.
+    accent: '#F2B33D',
     'accent-contrast': '#1A1305',
+    'accent-text': '#F2B33D',
     live: '#E5484D',
     'live-contrast': '#0E1116', // white on this red is 3.91:1; near-black passes AA
     success: '#3DD68C',
     warning: '#F5B74F',
-    'focus-ring': 'rgb(217 164 65 / 0.6)',
+    'focus-ring': 'rgb(242 179 61 / 0.6)',
     overlay: 'rgb(5 7 10 / 0.6)',
     shadow: 'rgb(0 0 0 / 0)',
   },
@@ -28,13 +30,16 @@ export const colors = {
     border: '#DCD8CF',
     text: '#1A1D23',
     'text-muted': '#5C6370',
-    accent: '#A9741F',
-    'accent-contrast': '#1A1305', // white on this gold is 4.03:1; near-black passes AA
+    // Logo gold for fills; it is ~2:1 on light surfaces, so gold text and focus outlines use
+    // the same hue darkened to pass AA (≥ 4.8:1 on every light surface).
+    accent: '#F2B33D',
+    'accent-contrast': '#1A1305',
+    'accent-text': '#8B5E09',
     live: '#D93036',
     'live-contrast': '#FFFFFF',
     success: '#1C9455', // PRD #1F9D5A is 2.98:1 on surface-raised; darkened to pass 3:1
     warning: '#B26B00',
-    'focus-ring': 'rgb(169 116 31 / 0.6)',
+    'focus-ring': 'rgb(139 94 9 / 0.6)',
     overlay: 'rgb(26 29 35 / 0.35)',
     shadow: 'rgb(26 29 35 / 0.12)',
   },

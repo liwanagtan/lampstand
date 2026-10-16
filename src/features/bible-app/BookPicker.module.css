@@ -42,7 +42,7 @@
 }
 .current {
   border-color: var(--color-accent);
-  color: var(--color-accent);
+  color: var(--color-accent-text);
   font-weight: var(--weight-semibold);
 }
 .chapterView {

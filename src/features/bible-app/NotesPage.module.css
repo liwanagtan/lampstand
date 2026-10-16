@@ -100,7 +100,7 @@
 }
 .bookmark,
 .note {
-  color: var(--color-accent);
+  color: var(--color-accent-text);
 }
 .highlight {
   background: color-mix(in srgb, var(--hl) 35%, transparent);
@@ -142,7 +142,7 @@
   cursor: pointer;
 }
 .ref:hover {
-  color: var(--color-accent);
+  color: var(--color-accent-text);
   text-decoration: underline;
 }
 .date {

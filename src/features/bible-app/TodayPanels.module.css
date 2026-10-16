@@ -20,7 +20,7 @@
   font-family: var(--font-sans, inherit);
   font-size: 0.6em;
   font-weight: var(--weight-semibold);
-  color: var(--color-accent);
+  color: var(--color-accent-text);
 }
 .loading {
   color: var(--color-text-muted);

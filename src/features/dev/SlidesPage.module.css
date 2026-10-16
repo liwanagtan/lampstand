@@ -30,7 +30,7 @@
   transition: outline-color var(--dur-quick) var(--ease-quick);
 }
 .thumb[aria-pressed='true'] > :first-child {
-  outline-color: var(--color-accent);
+  outline-color: var(--color-accent-text);
 }
 .caption {
   font-size: var(--text-12);

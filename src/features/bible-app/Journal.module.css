@@ -15,7 +15,7 @@
   font-weight: var(--weight-semibold);
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--color-accent);
+  color: var(--color-accent-text);
 }
 .title {
   margin-top: var(--space-1);
@@ -125,7 +125,7 @@
   padding: 1px 8px;
   border-radius: 999px;
   background: color-mix(in srgb, var(--color-accent) 16%, transparent);
-  color: var(--color-accent);
+  color: var(--color-accent-text);
   font-size: var(--text-12);
   font-weight: var(--weight-semibold);
 }

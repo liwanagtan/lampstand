@@ -50,12 +50,12 @@ export const TEMPLATES: Record<TemplateId, Template> = {
       background: '#0B1324',
       text: '#F3EEE3',
       muted: '#C9C2B4',
-      accent: '#D9A441',
+      accent: '#F2B33D',
       panel: 'rgb(8 14 28 / 0.72)',
       glass: 'rgb(10 18 36 / 0.42)',
     },
     backdrop:
-      'radial-gradient(120% 90% at 50% 38%, rgb(46 66 110 / 0.55) 0%, rgb(11 19 36 / 0) 62%), radial-gradient(60% 50% at 50% 0%, rgb(217 164 65 / 0.08) 0%, rgb(217 164 65 / 0) 70%), #0B1324',
+      'radial-gradient(120% 90% at 50% 38%, rgb(46 66 110 / 0.55) 0%, rgb(11 19 36 / 0) 62%), radial-gradient(60% 50% at 50% 0%, rgb(242 179 61 / 0.08) 0%, rgb(242 179 61 / 0) 70%), #0B1324',
     photoOverlay: 'linear-gradient(180deg, rgb(11 19 36 / 0.45) 0%, rgb(11 19 36 / 0.72) 100%)',
     tones: { base: '#0B1324', accent: '#3A2A0E', deep: '#060B16' },
     gradients: {

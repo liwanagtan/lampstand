@@ -16,7 +16,7 @@
   font-weight: var(--weight-semibold);
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--color-accent);
+  color: var(--color-accent-text);
 }
 .hello {
   font-family: var(--font-display);
@@ -78,7 +78,7 @@
   font-weight: var(--weight-semibold);
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: #f2c94c;
+  color: #f2b33d;
 }
 .heroText {
   margin: 0;
@@ -182,7 +182,7 @@
   color: var(--color-text-muted);
 }
 .weekToday .weekLetter {
-  color: var(--color-accent);
+  color: var(--color-accent-text);
   font-weight: var(--weight-semibold);
 }
 
@@ -240,7 +240,7 @@
   gap: var(--space-1);
   font-size: var(--text-14);
   font-weight: var(--weight-medium);
-  color: var(--color-success, var(--color-accent));
+  color: var(--color-success, var(--color-accent-text));
 }
 
 @keyframes photoIn {

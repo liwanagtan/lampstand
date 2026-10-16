@@ -8,7 +8,7 @@
   font-weight: var(--weight-semibold);
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--color-accent);
+  color: var(--color-accent-text);
 }
 .title {
   margin-top: var(--space-1);
@@ -170,7 +170,7 @@
   gap: var(--space-1);
   font-size: var(--text-14);
   font-weight: var(--weight-medium);
-  color: var(--color-success, var(--color-accent));
+  color: var(--color-success, var(--color-accent-text));
 }
 
 .headRow {

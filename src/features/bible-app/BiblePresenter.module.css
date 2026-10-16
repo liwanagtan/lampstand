@@ -120,7 +120,7 @@
 .toggleActive:hover {
   border-color: var(--color-accent);
   background: color-mix(in srgb, var(--color-accent) 18%, var(--color-surface-raised));
-  color: var(--color-accent);
+  color: var(--color-accent-text);
 }
 .key {
   padding: 0 4px;
@@ -141,7 +141,7 @@
   font-weight: var(--weight-semibold);
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--color-accent);
+  color: var(--color-accent-text);
 }
 .hint {
   overflow: hidden;
@@ -168,7 +168,7 @@
   font-family: var(--font-sans, inherit);
   font-size: 0.65em;
   font-weight: var(--weight-semibold);
-  color: var(--color-accent);
+  color: var(--color-accent-text);
 }
 .word {
   padding: 0 1px;
@@ -185,7 +185,7 @@
 .wordLit,
 .wordLit:hover {
   background: color-mix(in srgb, var(--color-accent) 30%, transparent);
-  color: var(--color-accent);
+  color: var(--color-accent-text);
   font-weight: var(--weight-semibold);
 }
 .empty {

@@ -30,7 +30,7 @@
 }
 .tile:hover img,
 .tile:focus-visible img {
-  outline-color: var(--color-accent);
+  outline-color: var(--color-accent-text);
 }
 .tile:focus-visible {
   outline: none;

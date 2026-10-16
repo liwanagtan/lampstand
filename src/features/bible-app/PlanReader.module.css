@@ -29,7 +29,7 @@
   font-weight: var(--weight-semibold);
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--color-accent);
+  color: var(--color-accent-text);
 }
 .title {
   font-family: var(--font-display);
@@ -98,7 +98,7 @@
   font-family: var(--font-sans, inherit);
   font-size: 0.6em;
   font-weight: var(--weight-semibold);
-  color: var(--color-accent);
+  color: var(--color-accent-text);
 }
 .loading {
   color: var(--color-text-muted);

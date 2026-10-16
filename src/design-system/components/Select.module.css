@@ -85,7 +85,7 @@
   top: 50%;
   translate: 0 -50%;
   display: grid;
-  color: var(--color-accent);
+  color: var(--color-accent-text);
 }
 
 @keyframes menuIn {

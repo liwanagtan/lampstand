@@ -26,7 +26,7 @@
   background: var(--color-surface);
 }
 .neutral {
-  color: var(--color-accent);
+  color: var(--color-accent-text);
   flex: none;
 }
 .success {

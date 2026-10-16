@@ -115,7 +115,7 @@
   outline-color: var(--color-border);
 }
 .itemSelected .thumbWrap > :first-child {
-  outline-color: var(--color-accent);
+  outline-color: var(--color-accent-text);
 }
 .thumbButton {
   position: absolute;
@@ -127,7 +127,7 @@
   cursor: pointer;
 }
 .itemSelected .num {
-  color: var(--color-accent);
+  color: var(--color-accent-text);
   font-weight: var(--weight-semibold);
 }
 .badge {

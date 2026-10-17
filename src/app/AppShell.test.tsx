@@ -57,7 +57,7 @@ describe('AppShell', () => {
     expect(await screen.findByLabelText('Your name')).toBeInTheDocument();
     expect(router.state.location.pathname).toBe('/profile/you');
     router.navigate('/journal');
-    expect(await screen.findByRole('heading', { name: 'Journal', level: 2 })).toBeVisible();
+    expect(await screen.findByRole('heading', { name: 'Your journey starts here' })).toBeVisible();
     expect(router.state.location.pathname).toBe('/profile');
   });
 

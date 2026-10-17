@@ -1,5 +1,7 @@
 # Lampstand — PRD & Build Roadmap
 
+> **Amended 2026-10-17:** see [PRD-ADDENDUM-GROW.md](PRD-ADDENDUM-GROW.md) — Grow (daily reading) becomes the main feature, a new navigation (Today · Bible · Plans · Journal · Screen + Me), and milestones 11–16. Where they differ, the addendum wins.
+
 2026-10-16 · Jonathan Liwanag
 
 ## 1. Overview

@@ -234,7 +234,25 @@ Build in six milestones, continuing the PRD's numbering; each ends with a workin
     - Paper-and-ink Bible, time-of-day Today, dark stage Screen; one motion language.
     - _Done when:_ each workspace is recognisable at a glance in light and dark, contrast passes AA, and Reduce motion is honoured everywhere.
 
-After milestone 16: try it on a phone for a week of daily reading and on a laptop with a TV for one class, then fix what comes up.
+After milestone 16 (and 17–19 below): try it on a phone for a week of daily reading and on a laptop with a TV for one class, then fix what comes up.
+
+### Milestones 17–19 (plans library and multi-verse marks, agreed 2026-10-17)
+
+17. **Plan catalog and format v2**
+    - A category catalog as data (`group › category › subcategory`, three levels at most); groups: For how you feel, Guided reading, Grow in faith, Lessons for groups. Empty categories stay hidden until plans arrive.
+    - Plan format v2 (v1 files still load): `categories` (several allowed), `audience` (personal or group), `level`, `cover` (a bundled background), `pace` adds `monthly`; per day an optional `devotional` and `prayer`.
+    - `skill/lampstand-plans` updated with the catalog and fields; tests check every plan's references and category ids.
+    - _Done when:_ v1 and v2 files both validate and import, unknown category ids are refused with a readable message, and the catalog test passes.
+18. **Discover plans**
+    - Plans = Your plans (next reading only) + Discover: feeling chips, cover rows for guided reading and lessons, Grow in faith categories, search, a pace filter.
+    - Category pages and a plan page before starting (what, how long, first reading preview, Start); Reflect on this day opens a journal entry for that reading.
+    - About five starter plans in our own words (Anxiety, Hope, Life of Jesus, New to faith › First steps, and one more), each day with a note, prayer and questions.
+    - _Done when:_ a person can find a plan by feeling, by group or by search, preview it, start it, and reflect on a day into Journal.
+19. **Select and mark several verses**
+    - Tap to start a selection, tap another verse to extend it (Shift-click still works); the bar shows "John 3:12–18 · 7 verses" with Clear.
+    - Highlights across verses render as one continuous band; a note shows a margin bracket over the verses it covers.
+    - Notes and bookmarks across chapters by typed reference (search or a journal entry); reader selection stays within one chapter.
+    - _Done when:_ a range can be selected, highlighted and noted on a phone with taps only, and a cross-chapter note made by reference appears in the reader on both chapters.
 
 ## Decisions and open questions
 

@@ -7,14 +7,13 @@ describe('feature switches', () => {
       'Today',
       'Bible',
       'Plans',
-      'Journal',
       'Screen',
     ]);
   });
 
   it('hides switched-off destinations without reordering the rest', () => {
     const f = { ...ALL_FEATURES, today: false, plans: false };
-    expect(visibleNav(f).map((n) => n.label)).toEqual(['Bible', 'Journal', 'Screen']);
+    expect(visibleNav(f).map((n) => n.label)).toEqual(['Bible', 'Screen']);
     expect(homePath(f)).toBe('/bible');
   });
 

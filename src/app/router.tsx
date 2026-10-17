@@ -6,7 +6,6 @@ import { PersonalLayout } from './PersonalLayout';
 import { RouteError } from './RouteError';
 import { paths } from './paths';
 import { LibraryPage } from '@/features/library/LibraryPage';
-import { SettingsPage } from '@/features/settings/SettingsPage';
 
 const lazyPage = (load: () => Promise<Record<string, unknown>>, name: string) => async () => ({
   Component: (await load())[name] as React.ComponentType,
@@ -47,10 +46,23 @@ export const routes: RouteObject[] = [
             lazy: lazyPage(() => import('@/features/bible-app/PlanReaderPage'), 'PlanReaderPage'),
           },
           {
-            path: 'journal',
-            lazy: lazyPage(() => import('@/features/bible-app/JournalPage'), 'JournalPage'),
+            path: 'profile',
+            lazy: lazyPage(() => import('@/features/profile/ProfileLayout'), 'ProfileLayout'),
+            children: [
+              {
+                index: true,
+                lazy: lazyPage(() => import('@/features/profile/JourneyPage'), 'JourneyPage'),
+              },
+              {
+                path: 'you',
+                lazy: lazyPage(() => import('@/features/profile/ProfileTab'), 'ProfileTab'),
+              },
+              {
+                path: 'settings',
+                lazy: lazyPage(() => import('@/features/settings/SettingsPage'), 'SettingsPage'),
+              },
+            ],
           },
-          { path: 'journal/notes', element: <Navigate to={paths.journal} replace /> },
         ],
       },
       { path: 'screen', element: <LibraryPage /> },
@@ -62,7 +74,6 @@ export const routes: RouteObject[] = [
         path: 'screen/edit/:id',
         lazy: lazyPage(() => import('@/features/editor/EditorPage'), 'EditorPage'),
       },
-      { path: 'me', element: <SettingsPage /> },
       {
         path: 'dev/slides',
         lazy: lazyPage(() => import('@/features/dev/SlidesPage'), 'SlidesPage'),
@@ -78,10 +89,13 @@ export const routes: RouteObject[] = [
         path: 'bible/plans/:planId/:day',
         element: <Moved to={(p) => paths.planDay(p.planId!, Number(p.day))} />,
       },
-      { path: 'bible/journal', element: <Navigate to={paths.journal} replace /> },
-      { path: 'bible/notes', element: <Navigate to={paths.journal} replace /> },
+      { path: 'bible/journal', element: <Navigate to={paths.profile} replace /> },
+      { path: 'bible/notes', element: <Navigate to={paths.profile} replace /> },
+      { path: 'journal', element: <Navigate to={paths.profile} replace /> },
+      { path: 'journal/notes', element: <Navigate to={paths.profile} replace /> },
+      { path: 'me', element: <Navigate to={paths.profileYou} replace /> },
       { path: 'import', element: <Navigate to={paths.screenImport} replace /> },
-      { path: 'settings', element: <Navigate to={paths.me} replace /> },
+      { path: 'settings', element: <Navigate to={paths.settings} replace /> },
       { path: 'edit/:id', element: <Moved to={(p) => paths.edit(p.id!)} /> },
     ],
   },

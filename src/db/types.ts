@@ -55,6 +55,9 @@ export interface VerseRecord {
   text: string;
 }
 
+/** The avatar's colour in the top bar and on Profile. */
+export type AvatarColor = 'amber' | 'sage' | 'sky' | 'rose' | 'violet' | 'slate';
+
 export interface Settings {
   defaultTranslation: string;
   defaultTheme: TemplateId;
@@ -67,7 +70,7 @@ export interface Settings {
   /** Which destinations show (Me › What I use Lampstand for). */
   features: Features;
   /** The local profile (becomes the account in v2). */
-  profile: { name: string };
+  profile: { name: string; color?: AvatarColor };
   /** Feature tips: on/off, when one last showed, and each tip's state. */
   tips: TipsState;
 }

@@ -58,7 +58,7 @@ export function VerseOfTheDay({
         <Button icon={<BookOpen size={16} />} onClick={() => open(range)}>
           Read in context
         </Button>
-        <Button icon={<NotebookPen size={16} />} onClick={() => navigate(paths.journal)}>
+        <Button icon={<NotebookPen size={16} />} onClick={() => navigate(paths.profile)}>
           Reflect
         </Button>
         {extra}

@@ -10,22 +10,23 @@ import {
 } from '@/app/features';
 import { useBible } from '@/features/bible/bibleStore';
 import { READER_SIZES, useReader } from '@/features/bible-app/readerStore';
+import { Avatar } from '@/features/profile/Avatar';
+import { AVATAR_COLORS } from '@/features/profile/avatarColors';
+import { useJourneyStats } from '@/features/profile/useJourneyStats';
 import { Section } from './Section';
 import { useSettings } from './settingsStore';
 import styles from './SettingsPage.module.css';
 
-/** Me › You: the name Today greets you by. Becomes the signed-in account in v2. */
+/** Profile › You: your name and colour. Becomes the signed-in account in v2. */
 export function YouSection() {
   const profile = useSettings((s) => s.profile);
   const set = useSettings((s) => s.set);
   const [name, setName] = useState(profile.name);
-  const initial = profile.name.trim().charAt(0).toUpperCase();
+  const stats = useJourneyStats();
   return (
-    <Section title="You" description="Today greets you by name.">
+    <Section title="You" description="Today and Profile greet you by name.">
       <div className={styles.you}>
-        <span className={styles.avatar} aria-hidden>
-          {initial || '·'}
-        </span>
+        <Avatar size={48} />
         <Input
           label="Your name"
           value={name}
@@ -37,11 +38,33 @@ export function YouSection() {
           className={styles.grow}
         />
       </div>
+      <div className={styles.colors} role="radiogroup" aria-label="Avatar colour">
+        {AVATAR_COLORS.map(({ color, label }) => (
+          <button
+            key={color}
+            type="button"
+            role="radio"
+            aria-checked={(profile.color ?? 'amber') === color}
+            aria-label={label}
+            title={label}
+            className={styles.colorSwatch}
+            data-avatar-color={color}
+            onClick={() => void set('profile', { ...profile, color })}
+          />
+        ))}
+      </div>
+      {stats?.since && (
+        <p className={styles.since}>
+          Reading with Lampstand since {sinceFormat.format(stats.since)}
+        </p>
+      )}
     </Section>
   );
 }
 
-/** Me › What I use Lampstand for: the onboarding choices, each with Customize. */
+const sinceFormat = new Intl.DateTimeFormat(undefined, { month: 'long', year: 'numeric' });
+
+/** Profile › What I use Lampstand for: the onboarding choices, each with Customize. */
 export function UsesSection() {
   return (
     <Section
@@ -101,7 +124,7 @@ function UseCaseSwitch({ useCase: u }: { useCase: UseCase }) {
   );
 }
 
-/** Me › Reading: how the Bible reads, everywhere it appears. */
+/** Settings › Reading: how the Bible reads, everywhere it appears. */
 export function ReadingSection() {
   const translation = useReader((s) => s.translation);
   const parallel = useReader((s) => s.parallel);
@@ -137,7 +160,7 @@ export function ReadingSection() {
   );
 }
 
-/** Me › Tips: the occasional suggestion about something Lampstand can do. */
+/** Settings › Tips: the occasional suggestion about something Lampstand can do. */
 export function TipsSection() {
   const tips = useSettings((s) => s.tips);
   const set = useSettings((s) => s.set);

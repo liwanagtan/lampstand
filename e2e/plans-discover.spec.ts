@@ -31,7 +31,7 @@ test('find a plan by feeling, by group and by search; preview, start and reflect
   await sheet.getByLabel('Your entry').fill('Naming my worries helped.');
   await expect(sheet.getByRole('status').filter({ hasText: 'Saved' })).toBeVisible();
   await page.keyboard.press('Escape');
-  await page.getByRole('link', { name: 'Journal' }).click();
+  await page.getByRole('link', { name: /Profile: your journey/ }).click();
   await expect(page.getByRole('button', { name: /When anxiety rises · Day 1/ })).toContainText(
     'Philippians 4:4',
   );

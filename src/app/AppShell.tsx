@@ -1,18 +1,19 @@
 import { Navigate, NavLink, Outlet, useLocation } from 'react-router-dom';
-import { UserRound } from 'lucide-react';
 import { LampLockup, LampMark } from '@/design-system/LampMark';
 import { cx } from '@/design-system/components';
 import { useControl } from '@/features/present/live/controlStore';
 import { useApplyDocumentTheme } from '@/features/settings/theme';
 import { useSettings } from '@/features/settings/settingsStore';
 import { TipHost } from '@/features/tips/TipHost';
+import { Avatar } from '@/features/profile/Avatar';
+import { noteVisit } from '@/features/profile/journey';
 import { visibleNav } from './features';
 import { isOnboarded } from './onboarding';
 import { paths } from './paths';
 import styles from './AppShell.module.css';
 
 /**
- * Today · Bible · Plans · Journal · Screen, plus Me. A top bar on laptops; on phones the
+ * Today · Bible · Plans · Screen, plus Profile. A top bar on laptops; on phones the
  * destinations move to a bottom tab bar within thumb reach (docs/PRD-ADDENDUM-GROW.md).
  */
 export function AppShell() {
@@ -23,7 +24,7 @@ export function AppShell() {
   const welcome = !isOnboarded();
   const { pathname } = useLocation();
   const atmosphere = atmosphereFor(pathname);
-  const initial = useSettings((s) => s.profile.name.trim().charAt(0).toUpperCase());
+  noteVisit();
 
   if (welcome) return <Navigate to="/welcome" replace />;
   return (
@@ -52,18 +53,12 @@ export function AppShell() {
           </span>
         )}
         <NavLink
-          to={paths.me}
+          to={paths.profile}
           className={({ isActive }) => cx(styles.me, isActive && styles.meActive)}
-          aria-label="Me: profile and settings"
-          title="Me"
+          aria-label="Profile: your journey and settings"
+          title="Profile"
         >
-          {initial ? (
-            <span className={styles.initial} aria-hidden>
-              {initial}
-            </span>
-          ) : (
-            <UserRound size={18} strokeWidth={1.75} aria-hidden />
-          )}
+          <Avatar size={34} />
         </NavLink>
       </header>
       <main
@@ -98,7 +93,7 @@ function atmosphereFor(pathname: string): string {
   if (pathname === '/') return 'today';
   if (pathname.startsWith('/bible')) return 'bible';
   if (pathname.startsWith('/plans')) return 'plans';
-  if (pathname.startsWith('/journal')) return 'journal';
+  if (pathname.startsWith('/profile')) return 'journal';
   if (pathname.startsWith('/screen')) return 'stage';
   return 'me';
 }

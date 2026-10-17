@@ -18,7 +18,7 @@ test('no request ever leaves localhost during a full run (PRD §10)', async ({ p
   await page.setViewportSize({ width: 1366, height: 768 });
   await importSample(page);
   await page.goto('/settings');
-  await expect(page.getByRole('heading', { name: 'Me', level: 1 })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Appearance' })).toBeVisible();
   await page.goto('/screen');
   await page.getByRole('button', { name: 'Present A Lamp in the Dark' }).click();
   const popup = page.waitForEvent('popup');

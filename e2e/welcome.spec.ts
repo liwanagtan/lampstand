@@ -27,7 +27,7 @@ test('presenting only: just the Bible and Screen, opening on Screen', async ({ p
   await page.getByRole('button', { name: 'Start' }).click();
   await expect(page).toHaveURL(/\/screen$/);
   expect(await navLabels(page)).toEqual(['Bible', 'Screen']);
-  await expect(page.getByRole('link', { name: /Me: profile and settings/ })).toHaveText('G');
+  await expect(page.getByRole('link', { name: /Profile: your journey/ })).toHaveText('G');
 });
 
 test('growing daily with a plan: opens on Today, greets by name, plan started', async ({
@@ -44,18 +44,26 @@ test('growing daily with a plan: opens on Today, greets by name, plan started', 
   await page.getByRole('button', { name: 'Start' }).click();
   await expect(page).toHaveURL(/\/$/);
   await expect(page.getByRole('heading', { level: 1 })).toContainText(', Grace');
-  expect(await navLabels(page)).toEqual(['Today', 'Bible', 'Plans', 'Journal']);
+  expect(await navLabels(page)).toEqual(['Today', 'Bible', 'Plans']);
   await expect(page.getByRole('region', { name: 'The Gospels in 40 days' })).toBeVisible();
 
-  // Me mirrors the same choices; switching one on adds its tab, Customize trims a part.
-  await page.getByRole('link', { name: /Me: profile and settings/ }).click();
+  // Profile greets by name and mirrors the same choices; switching one on adds its tab,
+  // Customize trims a part.
+  await page.getByRole('link', { name: /Profile: your journey/ }).click();
+  await expect(page).toHaveURL(/\/profile$/);
+  await expect(page.getByRole('heading', { level: 1 })).toContainText('Grace Santos');
+  const sections = page.getByRole('navigation', { name: 'Profile sections' });
+  await sections.getByRole('link', { name: 'Settings' }).click();
   await expect(page.getByRole('heading', { name: 'Presenting' })).toHaveCount(0);
+  await sections.getByRole('link', { name: 'Profile' }).click();
   await page.getByRole('switch', { name: 'Teach and present' }).click();
+  expect(await navLabels(page)).toEqual(['Today', 'Bible', 'Plans', 'Screen']);
+  await sections.getByRole('link', { name: 'Settings' }).click();
   await expect(page.getByRole('heading', { name: 'Presenting' })).toBeVisible();
-  expect(await navLabels(page)).toEqual(['Today', 'Bible', 'Plans', 'Journal', 'Screen']);
+  await sections.getByRole('link', { name: 'Profile' }).click();
   await page.getByRole('button', { name: 'Customize' }).click();
   await page.getByRole('switch', { name: 'Plans' }).click();
-  expect(await navLabels(page)).toEqual(['Today', 'Bible', 'Journal', 'Screen']);
+  expect(await navLabels(page)).toEqual(['Today', 'Bible', 'Screen']);
   await expect(page.getByRole('switch', { name: 'Grow daily (customised)' })).toBeChecked();
 });
 
@@ -63,7 +71,7 @@ test('skipping shows everything', async ({ page }) => {
   await startWelcome(page);
   await page.getByRole('button', { name: 'Skip, show me everything' }).click();
   await expect(page).toHaveURL(/\/$/);
-  expect(await navLabels(page)).toEqual(['Today', 'Bible', 'Plans', 'Journal', 'Screen']);
+  expect(await navLabels(page)).toEqual(['Today', 'Bible', 'Plans', 'Screen']);
   await page.reload();
   await expect(page).toHaveURL(/\/$/);
 });

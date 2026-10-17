@@ -212,3 +212,25 @@
   padding-left: var(--space-4);
   border-left: 2px solid var(--color-border);
 }
+.colors {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+.colorSwatch {
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 2px solid transparent;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--avatar) 70%, var(--color-surface));
+  cursor: pointer;
+}
+.colorSwatch[aria-checked='true'] {
+  border-color: var(--color-text);
+  box-shadow: inset 0 0 0 2px var(--color-surface);
+}
+.since {
+  font-size: var(--text-14);
+  color: var(--color-text-muted);
+}

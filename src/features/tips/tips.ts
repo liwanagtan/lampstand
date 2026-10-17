@@ -59,10 +59,10 @@ export const TIPS: readonly Tip[] = [
   {
     id: 'journal-notes',
     on: 'note-saved',
-    title: 'Your notes collect in Journal',
+    title: 'Your notes collect in Journey',
     body: 'Every note, highlight and reflection, in one place you can search.',
     when: () => true,
-    action: (c) => turnOnOrShow(c, 'journal', 'Journal', '/journal'),
+    action: (c) => turnOnOrShow(c, 'journal', 'Journey', '/profile'),
   },
   {
     id: 'screen',

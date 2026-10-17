@@ -29,8 +29,8 @@ test('highlight, bookmark and note a passage, then find them on the Notes page',
   await page.reload();
   await expect(page.locator('[data-verse="28"] mark')).toBeVisible();
 
-  // Everything marked shows in the one Journal timeline.
-  await page.getByRole('link', { name: 'Journal' }).click();
+  // Everything marked shows in the one timeline in Profile › Journey.
+  await page.getByRole('link', { name: /Profile: your journey/ }).click();
   const list = page.getByRole('list', { name: / entries$/ });
   await expect(list.getByRole('listitem')).toHaveCount(3);
   await expect(page.getByRole('radio', { name: /Highlights/ })).toContainText('1');

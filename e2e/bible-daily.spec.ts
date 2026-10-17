@@ -93,8 +93,8 @@ test('Today, reading plans and the journal', async ({ page }) => {
     page.getByRole('group', { name: 'More plans' }).getByRole('link', { name: 'Advent test' }),
   ).toBeVisible();
 
-  // Journal: a new entry with a chosen verse, edited in a side panel.
-  await page.getByRole('link', { name: 'Journal' }).click();
+  // Journey's journal: a new entry with a chosen verse, edited in a side panel.
+  await page.getByRole('link', { name: /Profile: your journey/ }).click();
   await page.getByRole('button', { name: 'New entry' }).click();
   const sheet = page.getByRole('dialog');
   await sheet.getByLabel('Verse').fill('psalm 23 1');

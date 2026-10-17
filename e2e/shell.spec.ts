@@ -2,8 +2,8 @@ import { expect, test } from '@playwright/test';
 import { openApp } from './helpers';
 
 test('app shell loads and the theme switch works', async ({ page }) => {
-  await openApp(page, '/me');
-  await expect(page.getByRole('heading', { name: 'Me', level: 1 })).toBeVisible();
+  await openApp(page, '/profile/settings');
+  await expect(page.getByRole('heading', { name: 'Appearance' })).toBeVisible();
   await page.getByRole('radio', { name: 'Light' }).click();
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
   await page.reload();
@@ -14,7 +14,7 @@ test('app shell loads and the theme switch works', async ({ page }) => {
 
 test('every route renders', async ({ page }) => {
   for (const [path, heading] of [
-    ['/settings', 'Me'],
+    ['/settings', 'Appearance'],
     ['/import', 'Import'],
   ] as const) {
     await openApp(page, path);
@@ -37,9 +37,11 @@ test('old links land on their new homes', async ({ page }) => {
   for (const [from, to, heading] of [
     ['/bible/today', /\/$/, null],
     ['/bible/plans', /\/plans$/, 'Find a plan for where you are'],
-    ['/bible/journal', /\/journal$/, 'Your journal'],
+    ['/bible/journal', /\/profile$/, 'Journal'],
+    ['/journal', /\/profile$/, 'Journal'],
+    ['/me', /\/profile\/you$/, 'You'],
     ['/import', /\/screen\/import$/, 'Import'],
-    ['/settings', /\/me$/, 'Me'],
+    ['/settings', /\/profile\/settings$/, 'Appearance'],
   ] as const) {
     await openApp(page, from);
     await expect(page).toHaveURL(to);
@@ -49,7 +51,15 @@ test('old links land on their new homes', async ({ page }) => {
 
 test('phones get a bottom tab bar and no sideways scroll', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
-  for (const path of ['/', '/bible', '/plans', '/journal', '/screen', '/me']) {
+  for (const path of [
+    '/',
+    '/bible',
+    '/plans',
+    '/profile',
+    '/profile/you',
+    '/profile/settings',
+    '/screen',
+  ]) {
     await openApp(page, path);
     await page.waitForTimeout(300);
     expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(
@@ -57,7 +67,7 @@ test('phones get a bottom tab bar and no sideways scroll', async ({ page }) => {
     );
   }
   const tabs = page.getByRole('navigation', { name: 'Main' }).getByRole('link');
-  await expect(tabs).toHaveText(['Today', 'Bible', 'Plans', 'Journal', 'Screen']);
+  await expect(tabs).toHaveText(['Today', 'Bible', 'Plans', 'Screen']);
   await tabs.filter({ hasText: 'Plans' }).click();
   await expect(page).toHaveURL(/\/plans$/);
 });
@@ -69,7 +79,7 @@ test('each workspace has its own atmosphere, and reduced motion stills page entr
     ['/', 'today'],
     ['/bible', 'bible'],
     ['/plans', 'plans'],
-    ['/journal', 'journal'],
+    ['/profile', 'journal'],
     ['/screen', 'stage'],
   ] as const) {
     await openApp(page, path);

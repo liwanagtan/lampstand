@@ -79,10 +79,10 @@ function searchText(item: TimelineItem): string {
 }
 
 /**
- * Journal: one timeline of everything you have written or marked — reflections, journal
- * entries, notes, highlights and bookmarks — with filters and search.
+ * Journey's timeline: everything you have written or marked — reflections, journal entries,
+ * notes, highlights and bookmarks — with filters and search.
  */
-export function JournalPage() {
+export function JourneyTimeline() {
   const entries = useEntries();
   const allMarks = useAllMarks();
   const marksOn = useSettings((s) => s.features.marks);
@@ -127,13 +127,12 @@ export function JournalPage() {
   const loaded = entries !== undefined && allMarks !== undefined;
 
   return (
-    <div className={styles.page} data-enter>
+    <section className={styles.timeline} aria-label="Journal">
       <div className={styles.head}>
         <div>
-          <p className={styles.eyebrow}>Journal</p>
-          <h1 className={styles.title}>Your journal</h1>
+          <h2 className={styles.title}>Journal</h2>
           <p className={styles.lede}>
-            What you have written and marked in the Word, in one place. It stays on this device.
+            What you have written and marked in the Word. It stays on this device.
           </p>
         </div>
         <Button variant="primary" icon={<Plus size={16} />} onClick={startNew}>
@@ -213,7 +212,7 @@ export function JournalPage() {
 
       <EntrySheet target={open} onClose={() => setOpen(null)} />
       <NoteDialog target={note} onClose={() => setNote(null)} />
-    </div>
+    </section>
   );
 }
 

@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { BookPlus, Download, ImagePlus, Trash2, Upload } from 'lucide-react';
-import { Page } from '@/app/Page';
 import { Button, Chip, Select, Toggle, cx, toast } from '@/design-system/components';
 import { LampLockup } from '@/design-system/LampMark';
 import { db } from '@/db/db';
@@ -13,7 +12,7 @@ import { OVERLAY_MODES, TEMPLATE_IDS, type OverlayMode, type UiMode } from '@/sc
 import { getTemplate } from '@/templates/templates';
 import { backupFileName, createBackup, restoreBackup } from './backup';
 import { useSettings } from './settingsStore';
-import { ReadingSection, TipsSection, UsesSection, YouSection } from './MeSections';
+import { ReadingSection, TipsSection } from './MeSections';
 import { Section } from './Section';
 import styles from './SettingsPage.module.css';
 
@@ -24,26 +23,20 @@ const OVERLAY_LABELS: Record<OverlayMode, string> = {
   popup: 'Popup',
 };
 
+/** Profile › Settings: how Lampstand reads, looks and presents, and your data. */
 export function SettingsPage() {
   const screen = useSettings((s) => s.features.screen);
   return (
-    <Page
-      title="Me"
-      description="Your profile, what you use Lampstand for, and your preferences. Everything stays on this device."
-    >
-      <div className={styles.sections}>
-        <YouSection />
-        <UsesSection />
-        <ReadingSection />
-        <AppearanceSection />
-        {screen && <PresentingSection />}
-        {screen && <LogoSection />}
-        <TipsSection />
-        <TranslationsSection />
-        <DataSection />
-        <AboutSection />
-      </div>
-    </Page>
+    <div className={styles.sections}>
+      <ReadingSection />
+      <AppearanceSection />
+      {screen && <PresentingSection />}
+      {screen && <LogoSection />}
+      <TipsSection />
+      <TranslationsSection />
+      <DataSection />
+      <AboutSection />
+    </div>
   );
 }
 

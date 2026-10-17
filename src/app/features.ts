@@ -1,6 +1,6 @@
-// Feature switches (docs/PRD-ADDENDUM-GROW.md, Onboarding and Me). The Bible reader is always on.
+// Feature switches (docs/PRD-ADDENDUM-GROW.md, Onboarding and Profile). The Bible reader is always on.
 import type { LucideIcon } from 'lucide-react';
-import { BookOpen, CalendarCheck, MonitorPlay, NotebookPen, Sunrise } from 'lucide-react';
+import { BookOpen, CalendarCheck, MonitorPlay, Sunrise } from 'lucide-react';
 import { paths } from './paths';
 
 export type FeatureKey = 'today' | 'plans' | 'journal' | 'marks' | 'screen';
@@ -28,7 +28,6 @@ export const NAV: readonly NavItem[] = [
   { to: paths.today, label: 'Today', icon: Sunrise, feature: 'today', end: true },
   { to: paths.bible, label: 'Bible', icon: BookOpen },
   { to: paths.plans, label: 'Plans', icon: CalendarCheck, feature: 'plans' },
-  { to: paths.journal, label: 'Journal', icon: NotebookPen, feature: 'journal' },
   { to: paths.screen, label: 'Screen', icon: MonitorPlay, feature: 'screen' },
 ];
 
@@ -47,7 +46,7 @@ export function homePath(features: Features): string {
   return paths.bible;
 }
 
-// ---- Use cases (onboarding and Me › What I use Lampstand for) ----
+// ---- Use cases (onboarding and Profile › What I use Lampstand for) ----
 
 export type UseCaseId = 'grow' | 'study' | 'teach';
 
@@ -66,7 +65,7 @@ export const USE_CASES: readonly UseCase[] = [
     title: 'Grow daily',
     description:
       'A verse to start each day, reading plans that fit your pace, and a private journal for what God is teaching you.',
-    turnsOn: 'Turns on Today, Plans and Journal.',
+    turnsOn: 'Turns on Today, Plans and the journal in Journey.',
     parts: ['today', 'plans', 'journal'],
   },
   {
@@ -90,7 +89,7 @@ export const USE_CASES: readonly UseCase[] = [
 export const PART_LABELS: Record<FeatureKey, string> = {
   today: 'Today',
   plans: 'Plans',
-  journal: 'Journal',
+  journal: 'Journal and reflections',
   marks: 'Highlights, bookmarks and notes',
   screen: 'Screen',
 };

@@ -12,6 +12,7 @@
   container-type: inline-size;
   display: grid;
   grid-template-rows: auto minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr);
   min-width: 0;
   min-height: 0;
 }
@@ -277,4 +278,42 @@
 }
 .bookmarkMark {
   color: var(--color-accent-text);
+}
+
+/* Phones (phone first for the personal side): place and search on their own rows, view
+   controls share the width, and the selection bar spans the screen and scrolls if it must. */
+@container (max-width: 600px) {
+  .toolbar {
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-3);
+  }
+  .nav {
+    flex: 1 1 100%;
+  }
+  .place {
+    flex: 1;
+    min-width: 0;
+  }
+  .view {
+    flex: 1 1 100%;
+    margin-left: 0;
+  }
+  .select {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+  .body {
+    padding: var(--space-5, 20px) var(--space-4) 140px;
+  }
+  .chapterTitle {
+    font-size: 1.6em;
+  }
+  .selectionBar {
+    left: var(--space-2);
+    right: var(--space-2);
+    bottom: var(--space-3);
+    translate: none;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
 }

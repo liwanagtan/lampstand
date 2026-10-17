@@ -11,6 +11,8 @@ import { useReader } from './readerStore';
 import { chapterCount, useChapter } from './useChapter';
 import { useOpenInReader } from './useOpenInReader';
 import styles from './TodayPanels.module.css';
+import { MarkedVerseText } from './MarkedVerse';
+import { useVisibleMarks } from './marks';
 
 /** The chapter around a verse, in a side panel, with the verse marked. Remount (key) to reset. */
 export function ContextPanel({
@@ -27,6 +29,7 @@ export function ContextPanel({
   const [place, setPlace] = useState({ book: range.start.book, chapter: range.start.chapter });
   const body = useRef<HTMLDivElement>(null);
   const passage = useChapter(open ? translation : null, place.book, place.chapter);
+  const marks = useVisibleMarks(place.book, place.chapter);
   const home = place.book === range.start.book && place.chapter === range.start.chapter;
 
   useLayoutEffect(() => {
@@ -104,7 +107,7 @@ export function ContextPanel({
                 className={cx(styles.verse, inRange(v.verse) && styles.marked)}
               >
                 <sup className={styles.num}>{v.verse}</sup>
-                {v.text}
+                <MarkedVerseText verse={v} marks={marks} />
               </p>
             ))
         ) : (

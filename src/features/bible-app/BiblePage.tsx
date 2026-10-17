@@ -33,14 +33,14 @@ import {
   type ChapterMarks,
 } from './marks';
 import { NoteDialog } from './NoteDialog';
+import { useSettings } from '@/features/settings/settingsStore';
 import { READER_SIZES, selectionRange, useReader, type Selection } from './readerStore';
 import { chapterCount, useChapter } from './useChapter';
 import styles from './BiblePage.module.css';
 
 export interface BiblePageSlots {
-  /** Extra toolbar actions (e.g. Start Presentation) and a side panel (the TV controls). */
+  /** Extra toolbar actions (e.g. the Bookmarks menu). */
   toolbar?: ReactNode;
-  side?: ReactNode;
   /** Extra actions for the current selection (e.g. Present). */
   selectionActions?: (range: RefRange, translation: string) => ReactNode;
 }
@@ -61,7 +61,7 @@ function stepChapter(
 }
 
 /** The Bible reader: navigate, search, read in one or two translations, select verses. */
-export function BibleReader({ toolbar, side, selectionActions }: BiblePageSlots) {
+export function BibleReader({ toolbar, selectionActions }: BiblePageSlots) {
   const {
     book,
     chapter,
@@ -79,7 +79,10 @@ export function BibleReader({ toolbar, side, selectionActions }: BiblePageSlots)
   const translations = useBible((s) => s.translations);
   const [picking, setPicking] = useState(false);
   const [noteFor, setNoteFor] = useState<{ range: RefRange; note: MarkRecord | null } | null>(null);
-  const marks = useChapterMarks(book, chapter);
+  const marksOn = useSettings((st) => st.features.marks);
+  const chapterMarks = useChapterMarks(book, chapter);
+  // With Read and study switched off, marks stay stored but aren't drawn or offered.
+  const marks = marksOn ? chapterMarks : NO_MARKS;
   const primary = useChapter(translation, book, chapter);
   const second = useChapter(parallel, book, chapter);
   const body = useRef<HTMLDivElement>(null);
@@ -138,7 +141,7 @@ export function BibleReader({ toolbar, side, selectionActions }: BiblePageSlots)
   };
 
   return (
-    <div className={cx(styles.layout, side && styles.withSide)}>
+    <div className={styles.layout}>
       <div className={styles.reader}>
         <div className={styles.toolbar}>
           <div className={styles.nav}>
@@ -281,58 +284,62 @@ export function BibleReader({ toolbar, side, selectionActions }: BiblePageSlots)
         {range && selection && (
           <div className={styles.selectionBar} role="toolbar" aria-label="Selected verses">
             <span className={styles.selectionLabel}>{formatRef(range)}</span>
-            <div className={styles.swatches} role="group" aria-label="Highlight">
-              {HIGHLIGHT_COLORS.map(({ color, label }) => {
-                const on = allHighlighted(marks, selection, color);
-                return (
-                  <Tooltip key={color} content={`Highlight ${label.toLowerCase()}`}>
-                    <button
-                      type="button"
-                      className={styles.swatch}
-                      data-color={color}
-                      aria-label={`Highlight ${label.toLowerCase()}`}
-                      aria-pressed={on}
-                      onClick={() => void setHighlight(range, on ? null : color)}
-                    />
-                  </Tooltip>
-                );
-              })}
-              {anyHighlighted(marks, selection) && (
-                <Tooltip content="Remove highlight">
+            {marksOn && (
+              <>
+                <div className={styles.swatches} role="group" aria-label="Highlight">
+                  {HIGHLIGHT_COLORS.map(({ color, label }) => {
+                    const on = allHighlighted(marks, selection, color);
+                    return (
+                      <Tooltip key={color} content={`Highlight ${label.toLowerCase()}`}>
+                        <button
+                          type="button"
+                          className={styles.swatch}
+                          data-color={color}
+                          aria-label={`Highlight ${label.toLowerCase()}`}
+                          aria-pressed={on}
+                          onClick={() => void setHighlight(range, on ? null : color)}
+                        />
+                      </Tooltip>
+                    );
+                  })}
+                  {anyHighlighted(marks, selection) && (
+                    <Tooltip content="Remove highlight">
+                      <IconButton
+                        label="Remove highlight"
+                        icon={<Eraser size={15} />}
+                        size="sm"
+                        onClick={() => void setHighlight(range, null)}
+                      />
+                    </Tooltip>
+                  )}
+                </div>
+                <span className={styles.barDivider} aria-hidden />
+                <Tooltip content={bookmarked ? 'Remove bookmark' : 'Bookmark'}>
                   <IconButton
-                    label="Remove highlight"
-                    icon={<Eraser size={15} />}
+                    label={bookmarked ? 'Remove bookmark' : 'Bookmark'}
+                    icon={<Bookmark size={15} fill={bookmarked ? 'currentColor' : 'none'} />}
                     size="sm"
-                    onClick={() => void setHighlight(range, null)}
+                    aria-pressed={bookmarked}
+                    onClick={() =>
+                      void toggleBookmark(range).then((on) =>
+                        toast({
+                          title: on ? `Bookmarked ${formatRef(range)}` : 'Bookmark removed',
+                          tone: on ? 'success' : 'neutral',
+                        }),
+                      )
+                    }
                   />
                 </Tooltip>
-              )}
-            </div>
-            <span className={styles.barDivider} aria-hidden />
-            <Tooltip content={bookmarked ? 'Remove bookmark' : 'Bookmark'}>
-              <IconButton
-                label={bookmarked ? 'Remove bookmark' : 'Bookmark'}
-                icon={<Bookmark size={15} fill={bookmarked ? 'currentColor' : 'none'} />}
-                size="sm"
-                aria-pressed={bookmarked}
-                onClick={() =>
-                  void toggleBookmark(range).then((on) =>
-                    toast({
-                      title: on ? `Bookmarked ${formatRef(range)}` : 'Bookmark removed',
-                      tone: on ? 'success' : 'neutral',
-                    }),
-                  )
-                }
-              />
-            </Tooltip>
-            <Tooltip content={existingNote ? 'Edit note' : 'Add a note'}>
-              <IconButton
-                label={existingNote ? 'Edit note' : 'Add a note'}
-                icon={<NotebookPen size={15} />}
-                size="sm"
-                onClick={() => setNoteFor({ range, note: existingNote ?? null })}
-              />
-            </Tooltip>
+                <Tooltip content={existingNote ? 'Edit note' : 'Add a note'}>
+                  <IconButton
+                    label={existingNote ? 'Edit note' : 'Add a note'}
+                    icon={<NotebookPen size={15} />}
+                    size="sm"
+                    onClick={() => setNoteFor({ range, note: existingNote ?? null })}
+                  />
+                </Tooltip>
+              </>
+            )}
             <Tooltip content="Copy">
               <IconButton
                 label="Copy"
@@ -352,7 +359,6 @@ export function BibleReader({ toolbar, side, selectionActions }: BiblePageSlots)
           </div>
         )}
       </div>
-      {side && <aside className={styles.side}>{side}</aside>}
 
       <NoteDialog target={noteFor} onClose={() => setNoteFor(null)} />
       <BookPicker
@@ -457,6 +463,8 @@ function Verses({
     </ol>
   );
 }
+
+const NO_MARKS: ChapterMarks = { highlights: new Map(), bookmarks: new Map(), notes: new Map() };
 
 function allHighlighted(marks: ChapterMarks, s: Selection, color: string): boolean {
   for (let v = s.start; v <= s.end; v++) if (marks.highlights.get(v) !== color) return false;

@@ -108,3 +108,16 @@
     transform: scale(0.98);
   }
 }
+
+/* Inside a narrow reader (phones), search takes its own full-width row. */
+@container (max-width: 600px) {
+  .root {
+    flex: 1 1 100%;
+    min-width: 0;
+    max-width: none;
+  }
+  .box,
+  .box input {
+    min-width: 0;
+  }
+}

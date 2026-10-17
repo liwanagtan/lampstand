@@ -3,6 +3,7 @@ import { useLiveQuery } from 'dexie-react-hooks';
 import { db } from '@/db/db';
 import type { HighlightColor, MarkRecord } from '@/db/types';
 import { fromOsis, toOsis, type RefRange } from '@/features/bible/ref';
+import { useSettings } from '@/features/settings/settingsStore';
 
 export const HIGHLIGHT_COLORS: { color: HighlightColor; label: string }[] = [
   { color: 'yellow', label: 'Yellow' },
@@ -132,4 +133,11 @@ export function useChapterMarks(book: string, chapter: number): ChapterMarks {
 /** Every mark, newest first, for the Notes page. */
 export function useAllMarks(): MarkRecord[] | undefined {
   return useLiveQuery(() => db.marks.orderBy('updatedAt').reverse().toArray(), []);
+}
+
+/** A chapter's marks, or none when Read and study is switched off (they stay stored). */
+export function useVisibleMarks(book: string, chapter: number): ChapterMarks {
+  const on = useSettings((s) => s.features.marks);
+  const marks = useChapterMarks(book, chapter);
+  return on ? marks : EMPTY;
 }

@@ -23,6 +23,8 @@ import { READER_SIZES, useReader } from './readerStore';
 import { useChapter } from './useChapter';
 import styles from './PlanReader.module.css';
 import { paths } from '@/app/paths';
+import { MarkedVerseText } from './MarkedVerse';
+import { useVisibleMarks } from './marks';
 
 const dateFormat = new Intl.DateTimeFormat(undefined, {
   weekday: 'long',
@@ -165,6 +167,7 @@ function ChapterBlock({
   const translation = useReader((s) => s.translation);
   const size = useReader((s) => s.size);
   const passage = useChapter(translation, book, chapter);
+  const marks = useVisibleMarks(book, chapter);
   const b = BOOK_BY_CODE.get(book)!;
   const whole = from === 1 && passage && to >= passage.verses.length;
   const heading = whole
@@ -180,7 +183,7 @@ function ChapterBlock({
             .map((v) => (
               <span key={v.osis} className={styles.verse}>
                 <sup className={styles.num}>{v.verse}</sup>
-                {v.text}{' '}
+                <MarkedVerseText verse={v} marks={marks} />{' '}
               </span>
             ))}
         </p>

@@ -1,0 +1,28 @@
+[data-color='yellow'] {
+  --hl: #f2c94c;
+}
+[data-color='green'] {
+  --hl: #6fcf97;
+}
+[data-color='blue'] {
+  --hl: #6fa8ff;
+}
+[data-color='pink'] {
+  --hl: #f28bb5;
+}
+[data-color='purple'] {
+  --hl: #b794f6;
+}
+.hl {
+  padding: 0.04em 0.12em;
+  border-radius: 0.2em;
+  background: color-mix(in srgb, var(--hl) 28%, transparent);
+  color: inherit;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+.icon {
+  margin: 0 0.15em;
+  vertical-align: 0.05em;
+  color: var(--color-accent-text);
+}

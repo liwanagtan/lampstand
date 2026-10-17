@@ -130,6 +130,16 @@
   font-size: 16px;
   font-weight: var(--weight-semibold);
 }
+.search {
+  /* Sits close to the avatar: the bar's gap is for groups, not neighbours. */
+  margin-right: calc(var(--space-6) * -1);
+  border-color: transparent;
+  background: transparent;
+  color: var(--color-text-muted);
+}
+.search:hover {
+  color: var(--color-text);
+}
 .tabbar {
   display: none;
 }
@@ -192,7 +202,8 @@
     height: 52px;
   }
   .lockup,
-  .nav {
+  .nav,
+  .me {
     display: none;
   }
   .mark {
@@ -227,5 +238,8 @@
   }
   .tabActive svg {
     color: var(--color-accent-text);
+  }
+  .tabActive .tabAvatar {
+    box-shadow: 0 0 0 2px var(--color-accent);
   }
 }

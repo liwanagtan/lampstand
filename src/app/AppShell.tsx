@@ -1,4 +1,5 @@
 import { Navigate, NavLink, Outlet, useLocation } from 'react-router-dom';
+import { Search } from 'lucide-react';
 import { LampLockup, LampMark } from '@/design-system/LampMark';
 import { cx } from '@/design-system/components';
 import { useControl } from '@/features/present/live/controlStore';
@@ -7,20 +8,22 @@ import { useSettings } from '@/features/settings/settingsStore';
 import { TipHost } from '@/features/tips/TipHost';
 import { Avatar } from '@/features/profile/Avatar';
 import { noteVisit } from '@/features/profile/journey';
-import { visibleNav } from './features';
+import { phoneTabs, visibleNav } from './features';
 import { isOnboarded } from './onboarding';
 import { paths } from './paths';
 import styles from './AppShell.module.css';
 
 /**
- * Today · Bible · Plans · Screen, plus Profile. A top bar on laptops; on phones the
- * destinations move to a bottom tab bar within thumb reach (docs/PRD-ADDENDUM-GROW.md).
+ * Laptops: Today · Bible · Plans · Screen, then Search and Profile in the top bar. Phones: a
+ * bottom tab bar within thumb reach — Today · Bible · Plans · Search · Profile
+ * (docs/PRD-ADDENDUM-GROW.md).
  */
 export function AppShell() {
   useApplyDocumentTheme();
   const features = useSettings((s) => s.features);
   const presenting = useControl((s) => s.presenting);
   const nav = visibleNav(features);
+  const tabs = phoneTabs(features);
   const welcome = !isOnboarded();
   const { pathname } = useLocation();
   const atmosphere = atmosphereFor(pathname);
@@ -53,6 +56,14 @@ export function AppShell() {
           </span>
         )}
         <NavLink
+          to={paths.search}
+          className={({ isActive }) => cx(styles.me, styles.search, isActive && styles.meActive)}
+          aria-label="Search"
+          title="Search verses, plans and your journey"
+        >
+          <Search size={17} strokeWidth={1.75} aria-hidden />
+        </NavLink>
+        <NavLink
           to={paths.profile}
           className={({ isActive }) => cx(styles.me, isActive && styles.meActive)}
           aria-label="Profile: your journey and settings"
@@ -72,14 +83,18 @@ export function AppShell() {
       </main>
       <TipHost />
       <nav aria-label="Main" className={styles.tabbar}>
-        {nav.map(({ to, label, icon: Icon, end }) => (
+        {tabs.map(({ to, label, icon: Icon, end }) => (
           <NavLink
             key={to}
             to={to}
             end={end}
             className={({ isActive }) => cx(styles.tab, isActive && styles.tabActive)}
           >
-            <Icon size={22} strokeWidth={1.75} aria-hidden />
+            {to === paths.profile ? (
+              <Avatar size={24} className={styles.tabAvatar} />
+            ) : (
+              <Icon size={22} strokeWidth={1.75} aria-hidden />
+            )}
             <span>{label}</span>
           </NavLink>
         ))}

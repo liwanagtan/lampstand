@@ -32,3 +32,41 @@ describe('journal timeline', () => {
     expect(hl.kind === 'highlight' && hl.mark.ids).toHaveLength(2);
   });
 });
+
+describe('searching the timeline', () => {
+  it('matches every word across titles, writing, references and notes', async () => {
+    const { buildTimeline, searchTimeline } = await import('./journalTimeline');
+    const items = buildTimeline(
+      [
+        {
+          id: 'e1',
+          date: '2026-10-17',
+          kind: 'journal',
+          ref: 'PSA.23.1',
+          title: 'My shepherd',
+          body: 'Grace upon grace.',
+          createdAt: 1,
+          updatedAt: 1,
+        },
+      ],
+      [
+        {
+          id: 'n1',
+          kind: 'note',
+          ref: 'ROM.8.28',
+          book: 'ROM',
+          chapter: 8,
+          text: 'Even the hard days.',
+          createdAt: 2,
+          updatedAt: 2,
+        },
+      ],
+    );
+    expect(searchTimeline(items, 'grace shepherd')).toHaveLength(1);
+    expect(searchTimeline(items, 'psalm 23')).toHaveLength(1);
+    expect(searchTimeline(items, 'hard days')).toHaveLength(1);
+    expect(searchTimeline(items, 'romans')).toHaveLength(1);
+    expect(searchTimeline(items, 'nothing here')).toHaveLength(0);
+    expect(searchTimeline(items, '  ')).toHaveLength(0);
+  });
+});

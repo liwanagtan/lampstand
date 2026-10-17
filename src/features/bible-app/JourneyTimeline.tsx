@@ -26,7 +26,13 @@ import { usePassage } from '@/slides/usePassage';
 import { localDate } from './dailyVerses';
 import { entryPreview, newEntryId, useEntries, type EntryDraft } from './journal';
 import { EntrySheet } from './JournalEntrySheet';
-import { buildTimeline, isEntryItem, type Kind, type TimelineItem } from './journalTimeline';
+import {
+  buildTimeline,
+  isEntryItem,
+  timelineText,
+  type Kind,
+  type TimelineItem,
+} from './journalTimeline';
 import type { MarkItem } from './markGroups';
 import { deleteMarks, useAllMarks } from './marks';
 import { NoteDialog } from './NoteDialog';
@@ -68,16 +74,6 @@ const refLabel = (ref?: string) => {
   return r ? formatRef(r) : null;
 };
 
-function searchText(item: TimelineItem): string {
-  if (isEntryItem(item)) {
-    const e = item.entry;
-    return [e.title, e.body, refLabel(e.ref), ...Object.values(e.answers ?? {})]
-      .filter(Boolean)
-      .join(' ');
-  }
-  return [formatRef(item.mark.range), item.mark.note?.text].filter(Boolean).join(' ');
-}
-
 /**
  * Journey's timeline: everything you have written or marked — reflections, journal entries,
  * notes, highlights and bookmarks — with filters and search.
@@ -111,7 +107,7 @@ export function JourneyTimeline() {
   const q = query.trim().toLowerCase();
   const shown = timeline
     .filter((i) => filter === 'all' || i.kind === filter)
-    .filter((i) => !q || searchText(i).toLowerCase().includes(q));
+    .filter((i) => !q || timelineText(i).toLowerCase().includes(q));
 
   const groups: { month: string; items: TimelineItem[] }[] = [];
   for (const i of shown) {

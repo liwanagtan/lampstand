@@ -46,6 +46,10 @@ export const routes: RouteObject[] = [
             lazy: lazyPage(() => import('@/features/bible-app/PlanReaderPage'), 'PlanReaderPage'),
           },
           {
+            path: 'search',
+            lazy: lazyPage(() => import('@/features/search/SearchPage'), 'SearchPage'),
+          },
+          {
             path: 'profile',
             lazy: lazyPage(() => import('@/features/profile/ProfileLayout'), 'ProfileLayout'),
             children: [

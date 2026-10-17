@@ -1,6 +1,6 @@
 // Feature switches (docs/PRD-ADDENDUM-GROW.md, Onboarding and Profile). The Bible reader is always on.
 import type { LucideIcon } from 'lucide-react';
-import { BookOpen, CalendarCheck, MonitorPlay, Sunrise } from 'lucide-react';
+import { BookOpen, CalendarCheck, MonitorPlay, Search, Sunrise, UserRound } from 'lucide-react';
 import { paths } from './paths';
 
 export type FeatureKey = 'today' | 'plans' | 'journal' | 'marks' | 'screen';
@@ -33,6 +33,20 @@ export const NAV: readonly NavItem[] = [
 
 export function visibleNav(features: Features): NavItem[] {
   return NAV.filter((n) => !n.feature || features[n.feature]);
+}
+
+const SEARCH: NavItem = { to: paths.search, label: 'Search', icon: Search };
+const PROFILE: NavItem = { to: paths.profile, label: 'Profile', icon: UserRound };
+
+/**
+ * The phone tab bar: the reading places, Search and Profile. Screen waits in Profile, since
+ * presenting happens from a laptop — except for someone who only presents, who keeps it.
+ */
+export function phoneTabs(features: Features): NavItem[] {
+  const screen = NAV.find((n) => n.to === paths.screen)!;
+  const reading = visibleNav(features).filter((n) => n !== screen);
+  const presentingOnly = homePath(features) === paths.screen;
+  return [...reading, presentingOnly ? screen : SEARCH, PROFILE];
 }
 
 /**

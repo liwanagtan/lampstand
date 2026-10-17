@@ -53,3 +53,22 @@ describe('use cases', () => {
     expect(useCaseState({ ...grow, plans: false }, USE_CASES[0]!)).toBe('some');
   });
 });
+
+describe('phone tab bar', () => {
+  it('is Today, Bible, Plans, Search and Profile; Screen waits in Profile', async () => {
+    const { phoneTabs } = await import('./features');
+    expect(phoneTabs(ALL_FEATURES).map((n) => n.label)).toEqual([
+      'Today',
+      'Bible',
+      'Plans',
+      'Search',
+      'Profile',
+    ]);
+  });
+
+  it('keeps Screen for someone who only presents', async () => {
+    const { phoneTabs } = await import('./features');
+    const f = { today: false, plans: false, journal: false, marks: false, screen: true };
+    expect(phoneTabs(f).map((n) => n.label)).toEqual(['Bible', 'Screen', 'Profile']);
+  });
+});

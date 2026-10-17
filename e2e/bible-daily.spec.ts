@@ -42,13 +42,12 @@ test('Today, reading plans and the journal', async ({ page }) => {
 
   // Start a plan; only the next reading is shown.
   await page.getByRole('button', { name: 'Choose a plan' }).click();
-  const gospels = page.getByRole('region', { name: 'The Gospels in 40 days' });
-  await gospels.getByRole('button', { name: 'Start plan' }).click();
-  await expect(gospels).toContainText('Matthew 1–4');
-  await expect(gospels.getByRole('checkbox')).toHaveCount(0);
+  // Discover: open the plan page, preview, then start.
+  await page.getByRole('link', { name: 'The Gospels in 40 days' }).click();
+  await expect(page.getByRole('region', { name: 'First reading' })).toContainText('Matthew 1–4');
+  await page.getByRole('button', { name: 'Start plan' }).click();
 
-  // Read the day, then finish it after the last verse.
-  await gospels.getByRole('button', { name: 'Read day 1' }).click();
+  // Starting opens day 1; read it, then finish after the last verse.
   await expect(page.getByRole('heading', { name: 'Matthew 1–4' })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Matthew 4' })).toBeVisible();
   await page.getByRole('button', { name: 'Finish day 1' }).click();
@@ -56,14 +55,13 @@ test('Today, reading plans and the journal', async ({ page }) => {
   await page.getByRole('button', { name: 'Read day 2 now' }).click();
   await expect(page.getByRole('heading', { name: 'Matthew 5–7' })).toBeVisible();
   await page.getByRole('link', { name: 'Plans' }).click();
+  const gospels = page.getByRole('region', { name: 'The Gospels in 40 days' });
   await expect(gospels).toContainText('1 of 40');
   await expect(gospels.getByRole('button', { name: 'Read day 2' })).toBeVisible();
 
   // A weekly lesson plan shows this week's lesson, with its note and questions.
-  const parables = page.getByRole('region', { name: 'Parables of Jesus' });
-  await parables.getByRole('button', { name: 'Start plan' }).click();
-  await expect(parables).toContainText("This week's lesson");
-  await parables.getByRole('button', { name: 'Read lesson 1' }).click();
+  await page.getByRole('link', { name: 'Parables of Jesus' }).first().click();
+  await page.getByRole('button', { name: 'Start plan' }).click();
   await expect(page.getByRole('heading', { name: 'The Sower' })).toBeVisible();
   await expect(page.getByRole('region', { name: 'Questions' })).toContainText('four soils');
   await page.getByRole('button', { name: 'Finish lesson 1' }).click();
@@ -71,9 +69,11 @@ test('Today, reading plans and the journal', async ({ page }) => {
     'The next lesson opens',
   );
   await page.getByRole('link', { name: 'Plans' }).click();
-  await expect(parables).toContainText('Lesson 2 opens');
+  await expect(page.getByRole('region', { name: 'Parables of Jesus' })).toContainText(
+    'Lesson 2 opens',
+  );
 
-  // Import a plan file.
+  // Import a plan file (a version 1 file still works).
   await page.getByLabel('Choose a plan file').setInputFiles({
     name: 'advent.lampstand-plan.json',
     mimeType: 'application/json',
@@ -89,7 +89,9 @@ test('Today, reading plans and the journal', async ({ page }) => {
       }),
     ),
   });
-  await expect(page.getByRole('region', { name: 'Advent test' })).toContainText('Imported');
+  await expect(
+    page.getByRole('group', { name: 'More plans' }).getByRole('link', { name: 'Advent test' }),
+  ).toBeVisible();
 
   // Journal: a new entry with a chosen verse, edited in a side panel.
   await page.getByRole('link', { name: 'Journal' }).click();

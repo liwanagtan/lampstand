@@ -1,0 +1,90 @@
+{
+  "format": "lampstand-plan",
+  "version": 2,
+  "id": "when-anxiety-rises",
+  "name": "When anxiety rises",
+  "description": "Seven days with passages for anxious hearts: honest about the worry, steady about the God who carries it.",
+  "pace": "daily",
+  "categories": ["anxiety", "peace", "worry"],
+  "audience": "personal",
+  "cover": "misty-lake",
+  "days": [
+    {
+      "title": "Bring it to God",
+      "readings": ["Philippians 4:4-9"],
+      "note": "Paul wrote these words from a prison cell, not a quiet retreat. He doesn't tell us to pretend; he tells us where to take what we feel.",
+      "devotional": "Anxiety often grows in silence. We turn the same worries over and over, alone. Today's reading invites a different movement: name what you are carrying and hand it, piece by piece, to God.\n\nNotice the order in the passage. Prayer comes with thanksgiving, and peace follows. Not because the problem has vanished, but because you are no longer holding it by yourself.",
+      "prayer": "Father, here is what I am carrying today. I name it before You and place it in Your hands. Thank You that You hear me. Guard my heart and mind with Your peace.",
+      "questions": [
+        "What worries could you name to God right now, one by one?",
+        "What is one thing you can thank Him for, even today?"
+      ]
+    },
+    {
+      "title": "Your Father knows",
+      "readings": ["Matthew 6:25-34"],
+      "note": "Jesus speaks to people who worried about food and clothes, the basics of survival. He points them to birds and flowers to show how closely God cares.",
+      "devotional": "Jesus does not scold the worried. He reasons with them gently: look at what your Father already does for the smallest parts of His world. You are worth far more to Him.\n\nHis answer to worry is not a technique but a focus. Seek first His kingdom, and trust Him with today. Tomorrow will have its own grace when it comes.",
+      "prayer": "Lord Jesus, You know what I need before I ask. Help me trust You with today, and leave tomorrow in Your hands.",
+      "questions": [
+        "Which of your worries are about tomorrow rather than today?",
+        "What would seeking His kingdom first look like in your day?"
+      ]
+    },
+    {
+      "title": "Our refuge",
+      "readings": ["Psalm 46"],
+      "note": "This psalm imagines the worst — mountains falling into the sea — and still speaks of a quiet confidence in God.",
+      "devotional": "The writer of this psalm does not live in a calm world. Nations roar and the earth shakes. Yet in the middle of the noise, there is a river that makes glad the city of God.\n\nWhen everything feels unstable, the psalm calls us to stop striving for a moment and remember who God is. Stillness here is not doing nothing; it is resting our weight on Him.",
+      "prayer": "God, You are my refuge and my strength. When everything around me shakes, help me be still and remember that You are God.",
+      "questions": [
+        "What feels like shaking ground in your life right now?",
+        "Where could you make room for a few minutes of stillness today?"
+      ]
+    },
+    {
+      "title": "Handing it over",
+      "readings": ["1 Peter 5:6-11"],
+      "note": "Peter wrote to believers under real pressure. He links humility with handing over our anxieties, because God cares for us.",
+      "devotional": "Casting our anxiety on God is an act of humility. It admits we cannot carry everything, and trusts that He can. That is not weakness; it is wisdom.\n\nPeter is honest that suffering may last a little while. But he ends with a promise: God Himself will restore, strengthen and establish you.",
+      "prayer": "Lord, I bow before You and give You my anxieties. Thank You that You care for me. Restore and strengthen me.",
+      "questions": [
+        "What makes it hard for you to hand your worries over?",
+        "Which word in the closing promise do you most need today?"
+      ]
+    },
+    {
+      "title": "Held by God",
+      "readings": ["Isaiah 41:8-13"],
+      "note": "God speaks to His people in exile, far from home and afraid. He reminds them they are chosen, not cast off.",
+      "devotional": "Fear says you are alone and unwanted. God says the opposite: He has chosen you, He is with you, and He holds you up.\n\nPicture the image in verse 13 — God taking hold of your right hand. You do not have to grip Him tightly enough; He is the one holding on.",
+      "prayer": "Lord, thank You that You have chosen me and not cast me off. Take hold of my hand today and help me.",
+      "questions": [
+        "Which of God's promises in this passage speaks to your fear?",
+        "How might it change your day to know He is holding you?"
+      ]
+    },
+    {
+      "title": "Fully known",
+      "readings": ["Psalm 139:1-18"],
+      "note": "David marvels that God knows him completely — his thoughts, his path, even his beginning.",
+      "devotional": "Some anxiety comes from feeling unseen, or from fearing that if we were truly seen we would be rejected. This psalm answers both. God knows you completely, and His thoughts toward you are more than the sand.\n\nThere is nowhere you can go that is beyond Him, not even the darkest night.",
+      "prayer": "Lord, You know me fully and You stay near. Thank You that even the darkness is not dark to You. Lead me in Your way.",
+      "questions": [
+        "How does it feel to be fully known by God?",
+        "Where in your life do you need to remember that He is already there?"
+      ]
+    },
+    {
+      "title": "Peace from Jesus",
+      "readings": ["John 14:25-31"],
+      "note": "On the night before the cross, Jesus speaks peace to frightened friends.",
+      "devotional": "Jesus gives a peace the world cannot give, because it does not depend on circumstances. He offered it on the darkest night of His life, to friends who were about to fail Him.\n\nAs this week ends, the invitation stays open: bring Him your troubled heart. The Helper He promised is with you still.",
+      "prayer": "Jesus, thank You for the peace You give, unlike anything the world offers. Calm my troubled heart, and keep me close to You.",
+      "questions": [
+        "What has God shown you about your anxiety this week?",
+        "Which passage from these seven days will you return to?"
+      ]
+    }
+  ]
+}

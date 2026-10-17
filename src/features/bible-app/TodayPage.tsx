@@ -23,7 +23,7 @@ import { usePassage } from '@/slides/usePassage';
 import { localDate, localDayNumber, verseOfTheDay } from './dailyVerses';
 import { entryHasContent, entryPreview, useReflection } from './journal';
 import { usePlanProgress, usePlans } from './plans';
-import { ActivePlan } from './PlansPage';
+import { ActivePlan } from './ActivePlan';
 import { useReader } from './readerStore';
 import { ContextPanel, ReflectPanel } from './TodayPanels';
 import { showOnTv } from './tvActions';

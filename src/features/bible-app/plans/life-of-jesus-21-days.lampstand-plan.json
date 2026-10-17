@@ -1,0 +1,139 @@
+{
+  "format": "lampstand-plan",
+  "version": 2,
+  "id": "life-of-jesus-21-days",
+  "name": "The life of Jesus in 21 days",
+  "description": "Walk with Jesus from His birth to His resurrection through key moments in the four Gospels, one short reading a day.",
+  "pace": "daily",
+  "categories": ["life-of-jesus", "four-gospels"],
+  "audience": "personal",
+  "cover": "park-path",
+  "days": [
+    {
+      "title": "The promise to Mary",
+      "readings": ["Luke 1:26-38"],
+      "note": "An angel brings astonishing news to a young woman in a small town. Watch how Mary responds.",
+      "questions": ["What does Mary's answer in verse 38 teach you about trust?"]
+    },
+    {
+      "title": "Born in Bethlehem",
+      "readings": ["Luke 2:1-20"],
+      "note": "The Saviour arrives quietly, and the first to hear are shepherds working the night shift.",
+      "questions": ["Why do you think God announced Jesus' birth to shepherds first?"]
+    },
+    {
+      "title": "The boy in the temple",
+      "readings": ["Luke 2:41-52"],
+      "note": "The only story of Jesus as a boy shows Him already aware of who His Father is.",
+      "questions": ["What does verse 52 suggest about how Jesus grew?"]
+    },
+    {
+      "title": "Baptism and testing",
+      "readings": ["Matthew 3:13-4:11"],
+      "note": "Before His ministry begins, Jesus hears His Father's delight and then faces temptation in the wilderness.",
+      "questions": ["How does Jesus answer each temptation, and what can you learn from it?"]
+    },
+    {
+      "title": "The first followers",
+      "readings": ["John 1:35-51"],
+      "note": "The first followers meet Jesus, and each one brings someone else along.",
+      "questions": ["Who first told you about Jesus? Who could you invite to meet Him?"]
+    },
+    {
+      "title": "Water into wine",
+      "readings": ["John 2:1-11"],
+      "note": "Jesus' first sign happens at a wedding, saving a family from embarrassment.",
+      "questions": ["What does this miracle show you about what Jesus cares about?"]
+    },
+    {
+      "title": "Jesus' mission",
+      "readings": ["Luke 4:14-30"],
+      "note": "In His hometown synagogue, Jesus reads from Isaiah and says it is fulfilled today.",
+      "questions": ["Why did the crowd's mood change so quickly?"]
+    },
+    {
+      "title": "The blessed",
+      "readings": ["Matthew 5:1-16"],
+      "note": "Jesus begins His great sermon by calling unexpected people blessed.",
+      "questions": ["Which of these blessings surprises you most, and why?"]
+    },
+    {
+      "title": "Forgiven and healed",
+      "readings": ["Mark 2:1-12"],
+      "note": "Friends dig through a roof to bring a paralysed man to Jesus.",
+      "questions": ["Why do you think Jesus spoke of forgiveness before healing?"]
+    },
+    {
+      "title": "Extravagant love",
+      "readings": ["Luke 7:36-50"],
+      "note": "At a dinner party, a woman with a reputation shows extravagant love for Jesus.",
+      "questions": ["How does the parable in verses 41-43 explain her love?"]
+    },
+    {
+      "title": "Calming the storm",
+      "readings": ["Mark 4:35-41"],
+      "note": "A storm terrifies experienced fishermen, while Jesus sleeps.",
+      "questions": ["What storm are you facing? What is Jesus' question to you in verse 40?"]
+    },
+    {
+      "title": "Bread for thousands",
+      "readings": ["Mark 6:30-44"],
+      "note": "Jesus sees a crowd like sheep without a shepherd and feeds them from a little.",
+      "questions": ["What 'little' could you offer Jesus to use?"]
+    },
+    {
+      "title": "Who is Jesus?",
+      "readings": ["Matthew 16:13-28"],
+      "note": "Peter names Jesus as the Christ, then struggles with what that will mean.",
+      "questions": ["How would you answer Jesus' question in verse 15?"]
+    },
+    {
+      "title": "On the mountain",
+      "readings": ["Luke 9:28-36"],
+      "note": "Three disciples glimpse Jesus' glory and hear the Father speak.",
+      "questions": ["What would it mean for you to listen to Jesus this week?"]
+    },
+    {
+      "title": "Lazarus",
+      "readings": ["John 11:17-44"],
+      "note": "Jesus weeps with grieving friends before calling Lazarus out of the tomb.",
+      "questions": ["What does it mean to you that Jesus wept?"]
+    },
+    {
+      "title": "Zacchaeus",
+      "readings": ["Luke 19:1-10"],
+      "note": "A disliked tax collector climbs a tree to see Jesus, and Jesus invites Himself to dinner.",
+      "questions": ["How did meeting Jesus change Zacchaeus?"]
+    },
+    {
+      "title": "The King arrives",
+      "readings": ["Matthew 21:1-17"],
+      "note": "Jesus rides into Jerusalem on a donkey and clears the temple.",
+      "questions": ["What kind of king does Jesus show Himself to be here?"]
+    },
+    {
+      "title": "Washing feet",
+      "readings": ["John 13:1-17"],
+      "note": "On His last night, Jesus takes the role of a servant.",
+      "questions": ["Whose 'feet' could you serve this week?"]
+    },
+    {
+      "title": "In the garden",
+      "readings": ["Luke 22:39-62"],
+      "note": "Jesus prays in anguish, is arrested, and Peter denies knowing Him.",
+      "questions": ["What do you notice about how Jesus prays in verse 42?"]
+    },
+    {
+      "title": "The cross",
+      "readings": ["John 19:16-30"],
+      "note": "Jesus is crucified, caring for His mother even from the cross.",
+      "questions": ["What do Jesus' last words in verse 30 mean to you?"]
+    },
+    {
+      "title": "On the Emmaus road",
+      "readings": ["Luke 24:13-35"],
+      "note": "The risen Jesus walks with two grieving friends, and they recognise Him at the table.",
+      "questions": ["Where have you sensed Jesus walking with you during these 21 days?"]
+    }
+  ]
+}

@@ -5,6 +5,8 @@ export const paths = {
   bible: '/bible',
   plans: '/plans',
   planDay: (planId: string, day: number) => `/plans/${planId}/${day}`,
+  planPage: (planId: string) => `/plans/p/${planId}`,
+  planCategory: (categoryId: string) => `/plans/c/${categoryId}`,
   journal: '/journal',
   screen: '/screen',
   screenImport: '/screen/import',

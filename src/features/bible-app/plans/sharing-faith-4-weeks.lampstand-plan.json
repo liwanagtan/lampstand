@@ -1,0 +1,57 @@
+{
+  "format": "lampstand-plan",
+  "version": 2,
+  "id": "sharing-your-faith-4-weeks",
+  "name": "Sharing your faith",
+  "description": "Four weekly small-group lessons on how the first followers shared the good news — naturally, personally and with courage.",
+  "pace": "weekly",
+  "categories": ["sharing-faith", "small-groups"],
+  "audience": "group",
+  "cover": "green-hills",
+  "days": [
+    {
+      "title": "Starting where people are",
+      "readings": ["Acts 8:26-40"],
+      "note": "Philip follows the Spirit's lead to a stranger on a desert road. He listens first, then starts from the very passage the man is reading.",
+      "questions": [
+        "What did Philip do before he started explaining anything?",
+        "How can we start from where people already are?",
+        "Who might God be leading you towards this month?"
+      ],
+      "prayer": "Holy Spirit, open our eyes to the people You are already preparing, and give us courage to start a conversation."
+    },
+    {
+      "title": "A conversation at a well",
+      "readings": ["John 4:1-30"],
+      "note": "Jesus crosses cultural and personal barriers to talk with a Samaritan woman. The conversation turns her into a messenger to her whole town.",
+      "questions": [
+        "What barriers did Jesus cross in this conversation?",
+        "How did Jesus handle the woman's questions and side-steps?",
+        "What simple story could you tell, like she did in verse 29?"
+      ],
+      "prayer": "Jesus, help us see people the way You see them, and to cross the barriers that keep us apart."
+    },
+    {
+      "title": "Speaking into a culture",
+      "readings": ["Acts 17:16-34"],
+      "note": "In Athens, Paul is troubled by what he sees but speaks with respect, starting from what his listeners already know.",
+      "questions": [
+        "How did Paul connect with people who knew nothing of the Scriptures?",
+        "What 'altars to an unknown god' do you notice in our culture?",
+        "How did people respond, and what does that teach us?"
+      ],
+      "prayer": "Lord, give us wisdom to speak about You with both truth and respect."
+    },
+    {
+      "title": "Ready with a reason",
+      "readings": ["1 Peter 3:13-18"],
+      "note": "Peter encourages believers facing hostility to be ready to explain their hope — gently and respectfully.",
+      "questions": [
+        "What is the hope that is in you? Try putting it in two or three sentences.",
+        "Why do gentleness and respect matter as much as the words?",
+        "Looking back over four weeks, what will you do differently?"
+      ],
+      "prayer": "Lord, help us honour Christ as Lord in our hearts, and make us ready to share the hope we have with gentleness."
+    }
+  ]
+}

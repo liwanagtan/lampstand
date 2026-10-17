@@ -218,3 +218,9 @@
   text-transform: uppercase;
   color: var(--color-accent-text);
 }
+
+.reflectRow {
+  display: flex;
+  justify-content: center;
+  margin-top: var(--space-8);
+}

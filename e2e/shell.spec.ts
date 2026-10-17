@@ -36,7 +36,7 @@ test('component gallery renders both themes', async ({ page }) => {
 test('old links land on their new homes', async ({ page }) => {
   for (const [from, to, heading] of [
     ['/bible/today', /\/$/, null],
-    ['/bible/plans', /\/plans$/, 'Read through the Bible'],
+    ['/bible/plans', /\/plans$/, 'Find a plan for where you are'],
     ['/bible/journal', /\/journal$/, 'Your journal'],
     ['/import', /\/screen\/import$/, 'Import'],
     ['/settings', /\/me$/, 'Me'],

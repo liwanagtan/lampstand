@@ -1,0 +1,68 @@
+{
+  "format": "lampstand-plan",
+  "version": 2,
+  "id": "hope-for-hard-days",
+  "name": "Hope for hard days",
+  "description": "Five days for seasons of loss and weariness, with passages that hold on to hope without hiding the pain.",
+  "pace": "daily",
+  "categories": ["hope", "loss", "healing"],
+  "audience": "personal",
+  "cover": "sunrise-clouds",
+  "days": [
+    {
+      "title": "Hope that holds",
+      "readings": ["Romans 5:1-5"],
+      "note": "Paul traces a path from suffering to hope, and roots it in the love God has poured into our hearts.",
+      "devotional": "It can feel strange to read about rejoicing in suffering. Paul is not saying pain is good. He is saying that in Christ, even pain is not wasted: it can shape endurance, character and a hope that holds.\n\nThat hope rests on something already given — God's love, poured into us by the Holy Spirit.",
+      "prayer": "Father, I don't understand all that I am going through. Pour Your love into my heart again, and grow a hope in me that does not let go.",
+      "questions": [
+        "Where have you seen endurance grow in you through a hard time?",
+        "What does it mean to you that God's love has been poured into your heart?"
+      ]
+    },
+    {
+      "title": "Mercy each morning",
+      "readings": ["Lamentations 3:19-33"],
+      "note": "Lamentations was written after Jerusalem fell. In the middle of grief, the writer chooses to remember God's faithfulness.",
+      "devotional": "The writer does not skip the bitterness. He names it. Then he deliberately calls something else to mind, and hope begins to rise.\n\nSometimes hope is a choice to remember: His mercy has not run out, and it will meet you again tomorrow morning.",
+      "prayer": "Lord, I remember the hard things. But I also remember Your steadfast love. Thank You that Your mercy is fresh each morning and Your faithfulness never fails.",
+      "questions": [
+        "What do you need to bring to mind about God today?",
+        "How have you seen His faithfulness in past seasons?"
+      ]
+    },
+    {
+      "title": "God at work",
+      "readings": ["Romans 8:18-28"],
+      "note": "Paul compares present suffering with future glory, and speaks of the Spirit who prays for us when we have no words.",
+      "devotional": "There are days when we cannot even pray. Paul says the Spirit helps us in our weakness, praying with groans too deep for words.\n\nGod's promise is not that everything is good, but that He works in all things for the good of those who love Him. He is at work even here.",
+      "prayer": "Holy Spirit, pray for me where I have no words. Father, work in this for good, and help me trust You with what I cannot see.",
+      "questions": [
+        "When have you been too weary to pray? How does verse 26 speak to that?",
+        "What would it look like to trust God's work in your current situation?"
+      ]
+    },
+    {
+      "title": "Treasure in clay jars",
+      "readings": ["2 Corinthians 4:7-18"],
+      "note": "Paul describes himself as a clay jar — fragile, ordinary — carrying a great treasure.",
+      "devotional": "Paul is honest about pressure, confusion and blows. Yet he was never finally crushed or destroyed. The difference is the treasure inside the jar.\n\nWe do not lose heart, he says, because the unseen things are eternal. Our outer strength may fade; our inner life can be renewed day by day.",
+      "prayer": "Lord, I feel fragile. Thank You that Your power shows up in weak jars of clay. Renew me inwardly today.",
+      "questions": [
+        "Which of Paul's contrasts in verses 8-9 describes you right now?",
+        "What unseen things can you fix your eyes on?"
+      ]
+    },
+    {
+      "title": "All things new",
+      "readings": ["Revelation 21:1-7"],
+      "note": "The Bible ends not with escape from the world but with God making all things new and living among His people.",
+      "devotional": "This is where hope is headed: God living with His people, wiping away their tears, with death, grief and pain gone for good.\n\nWhatever you are grieving, it does not have the last word. He is making all things new.",
+      "prayer": "God, thank You that one day You will wipe away every tear. Until then, hold me in hope. We wait for You, Lord Jesus.",
+      "questions": [
+        "What tears would you bring to God, knowing He will wipe them away?",
+        "How does this promise change the way you face today?"
+      ]
+    }
+  ]
+}

@@ -32,6 +32,17 @@ export const routes: RouteObject[] = [
             lazy: lazyPage(() => import('@/features/bible-app/PlansPage'), 'PlansPage'),
           },
           {
+            path: 'plans/c/:categoryId',
+            lazy: lazyPage(
+              () => import('@/features/bible-app/PlanBrowsePages'),
+              'PlanCategoryPage',
+            ),
+          },
+          {
+            path: 'plans/p/:planId',
+            lazy: lazyPage(() => import('@/features/bible-app/PlanBrowsePages'), 'PlanPage'),
+          },
+          {
             path: 'plans/:planId/:day',
             lazy: lazyPage(() => import('@/features/bible-app/PlanReaderPage'), 'PlanReaderPage'),
           },

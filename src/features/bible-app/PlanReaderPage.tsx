@@ -1,11 +1,21 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { motion } from 'motion/react';
-import { ArrowLeft, ArrowRight, Check, Clock, MessageCircleQuestion } from 'lucide-react';
+import {
+  ArrowLeft,
+  ArrowRight,
+  Check,
+  Clock,
+  MessageCircleQuestion,
+  NotebookPen,
+} from 'lucide-react';
 import { Button, EmptyState, IconButton, Select, Tooltip } from '@/design-system/components';
 import { useBible } from '@/features/bible/bibleStore';
 import { BOOK_BY_CODE } from '@/features/bible/books';
-import { formatRef } from '@/features/bible/ref';
+import { formatRef, toOsis } from '@/features/bible/ref';
+import { localDate } from './dailyVerses';
+import { newEntryId, type EntryDraft } from './journal';
+import { EntrySheet } from './JournalEntrySheet';
 import { useReducedMotion } from '@/features/settings/theme';
 import {
   chapterChunks,
@@ -41,6 +51,7 @@ export function PlanReaderPage() {
   const n = Number(dayParam);
   const navigate = useNavigate();
   const top = useRef<HTMLDivElement>(null);
+  const [reflect, setReflect] = useState<{ id: string; draft?: EntryDraft } | null>(null);
 
   useEffect(() => {
     top.current?.closest('[data-scroll]')?.scrollTo({ top: 0 });
@@ -122,6 +133,29 @@ export function PlanReaderPage() {
           <p>{day.prayer}</p>
         </section>
       )}
+
+      <div className={styles.reflectRow}>
+        <Button
+          variant="secondary"
+          icon={<NotebookPen size={16} />}
+          onClick={() =>
+            setReflect({
+              id: newEntryId(),
+              draft: {
+                id: '',
+                date: localDate(),
+                kind: 'reflection',
+                ref: toOsis(day.readings[0]!),
+                title: `${plan.name} · ${unit} ${n}`,
+                body: '',
+              },
+            })
+          }
+        >
+          Reflect on this {unit.toLowerCase()}
+        </Button>
+      </div>
+      <EntrySheet target={reflect} onClose={() => setReflect(null)} />
 
       <FinishBlock plan={plan} day={n} done={done} unit={unit} />
     </div>

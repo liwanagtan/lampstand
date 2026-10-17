@@ -12,7 +12,11 @@ import {
 } from '@/features/bible/ref';
 import { parsePlanFile, type Plan, type PlanDay } from '@/schema/plan';
 import { localDayNumber } from './dailyVerses';
-import parables from './plans/parables.lampstand-plan.json';
+// Every bundled plan file in ./plans is a built-in plan.
+const BUNDLED = import.meta.glob<unknown>('./plans/*.lampstand-plan.json', {
+  eager: true,
+  import: 'default',
+});
 
 export type { Plan, PlanDay };
 
@@ -151,9 +155,14 @@ export function builtinPlans(): Plan[] {
     cover: g.cover,
     days: splitChapters(bookCodes(g), g.days).map((d) => ({ readings: chaptersToReadings(d) })),
   }));
-  const sample = parsePlanFile(parables, 'builtin');
-  if (!sample.ok) throw new Error(`Bundled plan is invalid: ${sample.errors.join('; ')}`);
-  builtins = [...generated, sample.plan];
+  const bundled = Object.entries(BUNDLED)
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(([file, data]) => {
+      const r = parsePlanFile(data, 'builtin');
+      if (!r.ok) throw new Error(`Bundled plan ${file} is invalid: ${r.errors.join('; ')}`);
+      return r.plan;
+    });
+  builtins = [...generated, ...bundled];
   return builtins;
 }
 

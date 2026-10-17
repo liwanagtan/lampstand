@@ -1,0 +1,91 @@
+{
+  "format": "lampstand-plan",
+  "version": 2,
+  "id": "first-steps-in-faith",
+  "name": "First steps in faith",
+  "description": "A gentle first week for anyone new to following Jesus: grace, prayer, the Bible, church and what comes next.",
+  "pace": "daily",
+  "categories": ["first-steps", "learning-to-pray", "reading-the-bible"],
+  "audience": "personal",
+  "level": "New to faith",
+  "cover": "sunrise-hills",
+  "days": [
+    {
+      "title": "A new beginning",
+      "readings": ["John 3:1-21"],
+      "note": "A respected teacher comes to Jesus at night with questions. Jesus tells him about being born again.",
+      "devotional": "Following Jesus is not mainly about trying harder. It is about a new beginning that God gives. Jesus calls it being born again — a fresh start from above.\n\nVerse 16 sits at the heart of it: God's great love for the world. Your faith starts with His love, not your effort.",
+      "prayer": "God, thank You for loving the world, and for loving me. Thank You for a new beginning in Jesus. Help me grow in it.",
+      "questions": [
+        "What questions do you bring to Jesus, like Nicodemus did?",
+        "What does it mean to you that faith starts with God's love?"
+      ]
+    },
+    {
+      "title": "Saved by grace",
+      "readings": ["Ephesians 2:1-10"],
+      "note": "Paul explains what God has done for us in Christ — and why none of it is earned.",
+      "devotional": "Grace means a gift you could never earn. Paul says we were dead, and God made us alive. That is not a reward; it is rescue.\n\nAnd the story continues: we are His workmanship, created for good works He has prepared. Good works do not save us; they flow from being saved.",
+      "prayer": "Father, thank You that I am saved by grace, not by anything I have done. Shape me into the person You made me to be.",
+      "questions": [
+        "Why is it good news that salvation can't be earned?",
+        "What 'good works' might God have prepared for you?"
+      ]
+    },
+    {
+      "title": "Free from condemnation",
+      "readings": ["Romans 8:1-17"],
+      "note": "This chapter begins with one of the most freeing sentences in the Bible.",
+      "devotional": "Many new believers still feel the weight of past failures. Paul's first words here speak straight to that: in Christ, there is no condemnation left for you.\n\nGod's Spirit now lives in you, and He reminds you that you are God's child. You can call Him 'Abba', Father.",
+      "prayer": "Abba, Father, thank You that there is no condemnation for me in Christ. Thank You for making me Your child.",
+      "questions": [
+        "What guilt or shame do you need to leave behind?",
+        "How does it feel to call God 'Father'?"
+      ]
+    },
+    {
+      "title": "Learning to pray",
+      "readings": ["Matthew 6:5-15"],
+      "note": "Jesus teaches His followers how to pray, and gives them words to start with.",
+      "devotional": "Prayer is simply talking with God. Jesus says you don't need many words or a show; your Father sees in secret.\n\nThe Lord's Prayer is a good place to start: praise, His kingdom, daily needs, forgiveness, and protection. Try praying through it slowly today, in your own words.",
+      "prayer": "Father, teach me to pray. Help me talk with You honestly, every day.",
+      "questions": [
+        "Which line of the Lord's Prayer means most to you right now?",
+        "When in your day could you set aside a few quiet minutes to pray?"
+      ]
+    },
+    {
+      "title": "God's word for you",
+      "readings": ["Psalm 119:97-112"],
+      "note": "The longest psalm is a love song about God's word.",
+      "devotional": "The writer loves God's word because it brings wisdom, direction and joy. It gives enough light for the next step.\n\nYou don't have to understand everything at once. A little each day, read slowly and prayerfully, will light your path.",
+      "prayer": "Lord, let Your word light my next step and my path. Give me a love for reading it, and help me live it out.",
+      "questions": [
+        "What makes reading the Bible hard for you, and what could help?",
+        "What would a simple daily rhythm of reading look like for you?"
+      ]
+    },
+    {
+      "title": "Together",
+      "readings": ["Acts 2:37-47"],
+      "note": "The first Christians did not follow Jesus alone. See what their life together looked like.",
+      "devotional": "Faith grows best in community. The first believers devoted themselves to teaching, fellowship, sharing meals and prayer.\n\nIf you are not yet part of a church family, this is a good week to take a step towards one. You were never meant to walk alone.",
+      "prayer": "Lord, thank You for Your church. Lead me to people I can grow with, and help me love them well.",
+      "questions": [
+        "Which part of the early church's life together appeals to you most?",
+        "What step could you take towards a church community?"
+      ]
+    },
+    {
+      "title": "Sent out",
+      "readings": ["Matthew 28:16-20"],
+      "note": "The risen Jesus sends His followers out, with a promise to be with them always.",
+      "devotional": "Jesus' last words in Matthew give every follower a purpose: help others follow Him too. That can start small — sharing what this week has meant to you.\n\nAnd He ends with a promise to hold onto: He will be with you always.",
+      "prayer": "Jesus, thank You for being with me always. Help me share Your love with someone this week.",
+      "questions": [
+        "Who could you tell about your first week of following Jesus?",
+        "What will you keep doing after this plan ends?"
+      ]
+    }
+  ]
+}

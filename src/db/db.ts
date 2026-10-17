@@ -12,6 +12,7 @@ import type {
   TranslationRecord,
   VerseRecord,
 } from './types';
+import { markChapters } from './markChapters';
 
 export const DB_NAME = 'lampstand';
 
@@ -54,6 +55,25 @@ export class LampstandDB extends Dexie {
         const old = (await tx.table('journal').toArray()) as JournalRecord[];
         await tx.table('entries').bulkPut(old.map(journalToEntry));
       });
+    // Marks list every chapter they touch, so ranges across chapters show in each one.
+    this.version(5)
+      .stores({ marks: 'id, kind, [book+chapter], updatedAt, *chapters' })
+      .upgrade(async (tx) => {
+        await tx
+          .table('marks')
+          .toCollection()
+          .modify((m: MarkRecord) => {
+            m.chapters = markChapters(m.ref);
+          });
+      });
+    // Every write (reader, backups) keeps the chapter list in step with the ref.
+    this.marks.hook('creating', (_key, m) => {
+      m.chapters = markChapters(m.ref);
+    });
+    this.marks.hook('updating', (mods, _key, m) => {
+      const ref = (mods as Partial<MarkRecord>).ref ?? m.ref;
+      return { chapters: markChapters(ref) };
+    });
   }
 }
 

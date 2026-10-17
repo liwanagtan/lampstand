@@ -3,20 +3,15 @@ import { openApp } from './helpers';
 
 test.describe.configure({ timeout: 120_000 });
 
-test('the reader has no TV controls; Show on screen hands the passage to the console', async ({
-  page,
-}) => {
+test('the reader keeps to reading: no TV controls, even on a selection', async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await openApp(page, '/bible');
   await expect(page.getByRole('button', { name: /Start Presentation|Present/ })).toHaveCount(0);
   await page.getByLabel('Search the Bible').fill('jn 3 16');
   await page.keyboard.press('Enter');
-  await page
-    .getByRole('toolbar', { name: 'Selected verses' })
-    .getByRole('button', { name: 'Show on screen' })
-    .click();
-  await expect(page).toHaveURL(/\/screen\/bible$/);
-  await expect(page.getByText('John 3:16 · KJV').first()).toBeVisible();
+  const bar = page.getByRole('toolbar', { name: 'Selected verses' });
+  await expect(bar).toContainText('John 3:16');
+  await expect(bar.getByRole('button', { name: 'Show on screen' })).toHaveCount(0);
 });
 
 test('a background picture shows behind Bible verses on the TV', async ({ page }) => {

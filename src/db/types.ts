@@ -105,6 +105,8 @@ export interface MarkRecord {
   book: string;
   /** First chapter of the range. */
   chapter: number;
+  /** Every chapter the range touches ("JHN.3"); kept up to date by the database. */
+  chapters?: string[];
   color?: HighlightColor;
   text?: string;
   createdAt: number;

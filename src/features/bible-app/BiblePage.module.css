@@ -99,6 +99,7 @@
   list-style: none;
 }
 .verse {
+  position: relative;
   display: grid;
   grid-template-columns: 2.2em minmax(0, 1fr);
   border-radius: var(--radius-sm);
@@ -118,7 +119,7 @@
   display: block;
   width: 100%;
   min-width: 0;
-  padding: 0.3em 0.5em 0.3em 0;
+  padding: 0.3em 0.5em 0.3em 0.4em;
   border: 0;
   border-radius: var(--radius-sm);
   background: transparent;
@@ -248,6 +249,51 @@
 [data-color='purple'] {
   --hl: #b794f6;
 }
+/* Highlights: one band behind the verse; neighbours in the same colour join up. */
+.verse[data-band] .verseButton {
+  background: color-mix(in srgb, var(--hl) 26%, transparent);
+}
+.verse[data-join-prev] {
+  margin-top: 0;
+}
+.verse[data-join-prev] .verseButton {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+.verse[data-join-next] .verseButton {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.hlText {
+  background: none;
+  color: inherit;
+}
+
+/* A note over several verses: a thin bracket in the margin beside the verses it covers. */
+.verse[data-bracket]::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  bottom: 0;
+  left: calc(2.2em - 0.45em);
+  width: 0.3em;
+  border-left: 2px solid color-mix(in srgb, var(--color-accent) 70%, transparent);
+  pointer-events: none;
+}
+.verse[data-bracket~='top']::before {
+  top: 0.55em;
+  border-top: 2px solid color-mix(in srgb, var(--color-accent) 70%, transparent);
+  border-top-left-radius: 3px;
+}
+.verse[data-bracket~='bottom']::before {
+  bottom: 0.55em;
+  border-bottom: 2px solid color-mix(in srgb, var(--color-accent) 70%, transparent);
+  border-bottom-left-radius: 3px;
+}
+.selectionCount {
+  font-weight: var(--weight-regular, 400);
+  color: var(--color-text-muted);
+}
 .hl {
   padding: 0.04em 0.12em;
   border-radius: 0.2em;
@@ -308,7 +354,7 @@
     min-width: 0;
   }
   .body {
-    padding: var(--space-5, 20px) var(--space-4) 140px;
+    padding: var(--space-5, 20px) var(--space-4) 180px;
   }
   .chapterTitle {
     font-size: 1.6em;
@@ -317,8 +363,12 @@
     left: var(--space-2);
     right: var(--space-2);
     bottom: var(--space-3);
+    flex-wrap: wrap;
+    row-gap: var(--space-1);
     translate: none;
-    overflow-x: auto;
-    scrollbar-width: none;
+  }
+  .selectionLabel {
+    flex: 1 1 100%;
+    padding-top: var(--space-1);
   }
 }

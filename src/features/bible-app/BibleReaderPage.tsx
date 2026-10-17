@@ -1,7 +1,5 @@
-import { useNavigate } from 'react-router-dom';
-import { Bookmark, MonitorPlay } from 'lucide-react';
-import { Button, IconButton, Menu } from '@/design-system/components';
-import { paths } from '@/app/paths';
+import { Bookmark } from 'lucide-react';
+import { IconButton, Menu } from '@/design-system/components';
 import { formatRef, fromOsis } from '@/features/bible/ref';
 import { useSettings } from '@/features/settings/settingsStore';
 import { BibleReader } from './BiblePage';
@@ -10,31 +8,12 @@ import { useAllMarks } from './marks';
 import { useOpenInReader } from './useOpenInReader';
 
 /**
- * Bible: a focused reader. No TV controls here — a selection offers one Show on screen action
- * that hands the passage to the Bible console in Screen (docs/PRD-ADDENDUM-GROW.md).
+ * Bible: a focused reader. Nothing about the TV here — showing scripture on a screen lives in
+ * Screen's Bible console (docs/PRD-ADDENDUM-GROW.md).
  */
 export function BibleReaderPage() {
-  const navigate = useNavigate();
   const features = useSettings((s) => s.features);
-  return (
-    <BibleReader
-      toolbar={features.marks ? <BookmarksMenu /> : undefined}
-      selectionActions={
-        features.screen
-          ? () => (
-              <Button
-                size="sm"
-                variant="primary"
-                icon={<MonitorPlay size={14} />}
-                onClick={() => navigate(paths.screenBible)}
-              >
-                Show on screen
-              </Button>
-            )
-          : undefined
-      }
-    />
-  );
+  return <BibleReader toolbar={features.marks ? <BookmarksMenu /> : undefined} />;
 }
 
 /** Jump back to a bookmarked place. */

@@ -18,6 +18,39 @@ export interface Selection {
   /** First and last selected verse numbers in the current chapter. */
   start: number;
   end: number;
+  /** A typed reference that runs on past this chapter (e.g. John 3:36–4:2); marks use all of it. */
+  span?: RefRange;
+}
+
+/**
+ * Tapping verses: tap one to select it, tap another to stretch the selection to it, tap the
+ * lone selected verse again to clear. Once a range is chosen, a tap starts over. Shift-click
+ * always stretches from where the selection began.
+ */
+export function nextSelection(
+  cur: Selection | null,
+  verse: number,
+  extend: boolean,
+): Selection | null {
+  if (cur && extend) {
+    return { start: Math.min(cur.start, verse), end: Math.max(cur.start, verse) };
+  }
+  if (cur && !cur.span && cur.start === cur.end) {
+    if (cur.start === verse) return null;
+    return { start: Math.min(cur.start, verse), end: Math.max(cur.start, verse) };
+  }
+  return { start: verse, end: verse };
+}
+
+/** The console's click: one verse at a time (it is what goes on screen); Shift stretches. */
+export function pickSelection(
+  cur: Selection | null,
+  verse: number,
+  extend: boolean,
+): Selection | null {
+  if (cur && extend) return nextSelection(cur, verse, true);
+  if (cur && cur.start === verse && cur.end === verse) return null;
+  return { start: verse, end: verse };
 }
 
 interface ReaderState extends ReaderPrefs {
@@ -85,20 +118,11 @@ export const useReader = create<ReaderState>((set, get) => ({
     set({ size });
     save(get());
   },
-  select: (verse, extend) => {
-    const cur = get().selection;
-    if (extend && cur) {
-      const anchor = cur.start;
-      set({ selection: { start: Math.min(anchor, verse), end: Math.max(anchor, verse) } });
-    } else if (cur && cur.start === verse && cur.end === verse) {
-      set({ selection: null });
-    } else {
-      set({ selection: { start: verse, end: verse } });
-    }
-  },
+  select: (verse, extend) => set({ selection: nextSelection(get().selection, verse, extend) }),
   setSelection: (selection) => set({ selection }),
 }));
 
 export function selectionRange(book: string, chapter: number, s: Selection): RefRange {
+  if (s.span) return s.span;
   return { start: { book, chapter, verse: s.start }, end: { book, chapter, verse: s.end } };
 }

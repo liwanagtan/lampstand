@@ -18,6 +18,7 @@ import {
   formatRef,
   fromOsis,
   toOsis,
+  verseCountInRange,
   type RefRange,
 } from '@/features/bible/ref';
 import type { Passage } from '@/features/bible/passage';
@@ -133,6 +134,7 @@ export function BibleReader({ toolbar, selectionActions }: BiblePageSlots) {
   const options = translations.map((t) => ({ value: t.code, label: `${t.code} — ${t.name}` }));
   const range = selection ? selectionRange(book, chapter, selection) : null;
   const rangeId = range ? toOsis(range) : null;
+  const verseTotal = range ? verseCountInRange(range) : 0;
   const bookmarked = Boolean(
     selection && marks.bookmarks.get(selection.start)?.some((m) => m.ref === rangeId),
   );
@@ -185,15 +187,18 @@ export function BibleReader({ toolbar, selectionActions }: BiblePageSlots) {
             onGo={(r, code) => {
               if (code) setTranslation(code);
               const sameChapter = r.end.book === r.start.book && r.end.chapter === r.start.chapter;
-              const last = defaultVerseCounts(r.start.book)?.[r.start.chapter - 1];
+              const last = defaultVerseCounts(r.start.book)?.[r.start.chapter - 1] ?? r.end.verse;
               // A whole chapter ("ps 23") opens it without selecting every verse.
               const whole = sameChapter && r.start.verse === 1 && r.end.verse === last;
+              // A range past this chapter selects the rest of it; marks cover the whole range.
               goTo(
                 r.start.book,
                 r.start.chapter,
                 whole
                   ? null
-                  : { start: r.start.verse, end: sameChapter ? r.end.verse : r.start.verse },
+                  : sameChapter
+                    ? { start: r.start.verse, end: r.end.verse }
+                    : { start: r.start.verse, end: last, span: r },
               );
             }}
           />
@@ -297,7 +302,12 @@ export function BibleReader({ toolbar, selectionActions }: BiblePageSlots) {
 
         {range && selection && (
           <div className={styles.selectionBar} role="toolbar" aria-label="Selected verses">
-            <span className={styles.selectionLabel}>{formatRef(range)}</span>
+            <span className={styles.selectionLabel}>
+              {formatRef(range)}
+              {verseTotal > 1 && (
+                <span className={styles.selectionCount}> · {verseTotal} verses</span>
+              )}
+            </span>
             {marksOn && (
               <>
                 <div className={styles.swatches} role="group" aria-label="Highlight">
@@ -408,6 +418,11 @@ function Verses({
     () => new Map(second?.verses.map((v) => [v.verse, v]) ?? []),
     [second],
   );
+  const noted = useMemo(() => {
+    const set = new Set<number>();
+    for (const sp of marks.noteSpans) for (let v = sp.start; v <= sp.end; v++) set.add(v);
+    return set;
+  }, [marks.noteSpans]);
   return (
     <ol className={styles.verses}>
       {primary.verses.map((v) => {
@@ -416,11 +431,24 @@ function Verses({
         const color = marks.highlights.get(v.verse);
         const bookmarked = marks.bookmarks.has(v.verse);
         const notes = marks.notes.get(v.verse);
+        // Neighbouring verses in one colour join into a single band.
+        const joinPrev = Boolean(color) && marks.highlights.get(v.verse - 1) === color;
+        const joinNext = Boolean(color) && marks.highlights.get(v.verse + 1) === color;
+        const bracket = noted.has(v.verse)
+          ? [noted.has(v.verse - 1) ? '' : 'top', noted.has(v.verse + 1) ? '' : 'bottom']
+              .filter(Boolean)
+              .join(' ') || 'mid'
+          : undefined;
         return (
           <li
             key={v.osis}
             className={cx(styles.verse, selected && styles.selected)}
             data-verse={v.verse}
+            data-color={color}
+            data-band={color ? 'on' : undefined}
+            data-join-prev={joinPrev || undefined}
+            data-join-next={joinNext || undefined}
+            data-bracket={bracket}
           >
             <div className={styles.margin}>
               <span className={styles.num}>{v.verse}</span>
@@ -455,7 +483,7 @@ function Verses({
                 {v.missing ? (
                   'Not included in this translation.'
                 ) : color ? (
-                  <mark className={styles.hl} data-color={color}>
+                  <mark className={styles.hlText} data-color={color}>
                     {v.text}
                   </mark>
                 ) : (
@@ -481,7 +509,12 @@ function Verses({
   );
 }
 
-const NO_MARKS: ChapterMarks = { highlights: new Map(), bookmarks: new Map(), notes: new Map() };
+const NO_MARKS: ChapterMarks = {
+  highlights: new Map(),
+  bookmarks: new Map(),
+  notes: new Map(),
+  noteSpans: [],
+};
 
 function allHighlighted(marks: ChapterMarks, s: Selection, color: string): boolean {
   for (let v = s.start; v <= s.end; v++) if (marks.highlights.get(v) !== color) return false;

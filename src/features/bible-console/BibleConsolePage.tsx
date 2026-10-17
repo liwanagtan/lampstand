@@ -32,7 +32,7 @@ import { BOOKS, BOOK_BY_CODE, BOOK_INDEX } from '@/features/bible/books';
 import { formatRef, fromOsis, toOsis, type RefRange } from '@/features/bible/ref';
 import { BibleSearch } from '@/features/bible-app/BibleSearch';
 import { BookPicker } from '@/features/bible-app/BookPicker';
-import { selectionRange, useReader } from '@/features/bible-app/readerStore';
+import { pickSelection, selectionRange, useReader } from '@/features/bible-app/readerStore';
 import { showOnTv, stepTv, useBibleTvSession } from '@/features/bible-app/tvActions';
 import { useTv } from '@/features/bible-app/tvStore';
 import { chapterCount, useChapter } from '@/features/bible-app/useChapter';
@@ -343,7 +343,7 @@ export function BibleConsolePage() {
 
 /** The current chapter, compact: click a verse to preview it, Shift-click to extend. */
 function ChapterPicker() {
-  const { book, chapter, translation, selection, select, goTo } = useReader();
+  const { book, chapter, translation, selection, setSelection, goTo } = useReader();
   const overlayRef = useControl((s) => s.live.overlay?.ref);
   const passage = useChapter(translation, book, chapter);
   const [picking, setPicking] = useState(false);
@@ -416,7 +416,7 @@ function ChapterPicker() {
                     isLive(v.verse) && styles.live,
                   )}
                   aria-pressed={Boolean(selected)}
-                  onClick={(e) => select(v.verse, e.shiftKey)}
+                  onClick={(e) => setSelection(pickSelection(selection, v.verse, e.shiftKey))}
                 >
                   <span className={styles.num}>{v.verse}</span>
                   <span className={styles.text}>{v.text}</span>

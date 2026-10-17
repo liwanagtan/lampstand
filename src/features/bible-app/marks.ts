@@ -2,7 +2,13 @@
 import { useLiveQuery } from 'dexie-react-hooks';
 import { db } from '@/db/db';
 import type { HighlightColor, MarkRecord } from '@/db/types';
-import { fromOsis, toOsis, type RefRange } from '@/features/bible/ref';
+import {
+  defaultVerseCounts,
+  fromOsis,
+  toOsis,
+  versesInRange,
+  type RefRange,
+} from '@/features/bible/ref';
 import { useSettings } from '@/features/settings/settingsStore';
 
 export const HIGHLIGHT_COLORS: { color: HighlightColor; label: string }[] = [
@@ -14,12 +20,7 @@ export const HIGHLIGHT_COLORS: { color: HighlightColor; label: string }[] = [
 ];
 export const NOTE_MAX = 5000;
 
-const verseIds = (range: RefRange) => {
-  const out: string[] = [];
-  for (let v = range.start.verse; v <= range.end.verse; v++)
-    out.push(`${range.start.book}.${range.start.chapter}.${v}`);
-  return out;
-};
+const verseIds = (range: RefRange) => versesInRange(range);
 
 const base = (kind: MarkRecord['kind'], id: string, ref: string, range: RefRange) => {
   const now = Date.now();
@@ -34,7 +35,7 @@ const base = (kind: MarkRecord['kind'], id: string, ref: string, range: RefRange
   };
 };
 
-/** Highlights every verse of a (single-chapter) range in a colour, or clears it with null. */
+/** Highlights every verse of a range (across chapters too) in a colour, or clears it with null. */
 export async function setHighlight(range: RefRange, color: HighlightColor | null): Promise<void> {
   const ids = verseIds(range);
   if (!color) {
@@ -102,9 +103,22 @@ export interface ChapterMarks {
   bookmarks: Map<number, MarkRecord[]>;
   /** Verse number → notes whose range ends there (shown after that verse). */
   notes: Map<number, MarkRecord[]>;
+  /** The verses each multi-verse note covers in this chapter, for its margin bracket. */
+  noteSpans: NoteSpan[];
 }
 
-const EMPTY: ChapterMarks = { highlights: new Map(), bookmarks: new Map(), notes: new Map() };
+export interface NoteSpan {
+  id: string;
+  start: number;
+  end: number;
+}
+
+const EMPTY: ChapterMarks = {
+  highlights: new Map(),
+  bookmarks: new Map(),
+  notes: new Map(),
+  noteSpans: [],
+};
 
 function push<K, V>(m: Map<K, V[]>, k: K, v: V) {
   const list = m.get(k);
@@ -112,20 +126,46 @@ function push<K, V>(m: Map<K, V[]>, k: K, v: V) {
   else m.set(k, [v]);
 }
 
-/** Live marks for one chapter. */
+/** The part of a range inside one chapter, as verse numbers (a range may run past it). */
+export function versesInChapter(
+  r: RefRange,
+  book: string,
+  chapter: number,
+): { start: number; end: number } {
+  const startsHere = r.start.book === book && r.start.chapter === chapter;
+  const endsHere = r.end.book === book && r.end.chapter === chapter;
+  const last = defaultVerseCounts(book)?.[chapter - 1] ?? r.end.verse;
+  return { start: startsHere ? r.start.verse : 1, end: endsHere ? r.end.verse : last };
+}
+
+/** Sorts one chapter's marks by the verse they are drawn on. */
+export function chapterMarksFrom(rows: MarkRecord[], book: string, chapter: number): ChapterMarks {
+  const out: ChapterMarks = {
+    highlights: new Map(),
+    bookmarks: new Map(),
+    notes: new Map(),
+    noteSpans: [],
+  };
+  for (const m of rows) {
+    const r = fromOsis(m.ref);
+    if (!r) continue;
+    const { start, end } = versesInChapter(r, book, chapter);
+    if (m.kind === 'highlight' && m.color) out.highlights.set(start, m.color);
+    else if (m.kind === 'bookmark') push(out.bookmarks, start, m);
+    else if (m.kind === 'note') {
+      push(out.notes, end, m);
+      if (end > start) out.noteSpans.push({ id: m.id, start, end });
+    }
+  }
+  return out;
+}
+
+/** Live marks for one chapter, including ranges that start or end in another chapter. */
 export function useChapterMarks(book: string, chapter: number): ChapterMarks {
   return (
     useLiveQuery(async () => {
-      const rows = await db.marks.where('[book+chapter]').equals([book, chapter]).toArray();
-      const out: ChapterMarks = { highlights: new Map(), bookmarks: new Map(), notes: new Map() };
-      for (const m of rows) {
-        const r = fromOsis(m.ref);
-        if (!r) continue;
-        if (m.kind === 'highlight' && m.color) out.highlights.set(r.start.verse, m.color);
-        else if (m.kind === 'bookmark') push(out.bookmarks, r.start.verse, m);
-        else if (m.kind === 'note') push(out.notes, r.end.verse, m);
-      }
-      return out;
+      const rows = await db.marks.where('chapters').equals(`${book}.${chapter}`).toArray();
+      return chapterMarksFrom(rows, book, chapter);
     }, [book, chapter]) ?? EMPTY
   );
 }

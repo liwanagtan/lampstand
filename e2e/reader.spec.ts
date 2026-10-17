@@ -41,6 +41,7 @@ test.describe('Bible reader', () => {
     await expect(page.getByRole('heading', { name: 'Romans 8' })).toBeVisible();
     await page.keyboard.press('ArrowRight');
     await expect(page.getByRole('heading', { name: 'Romans 9' })).toBeVisible();
+    await page.getByRole('button', { name: 'Reading settings' }).click();
     await page.getByLabel('Parallel translation').click();
     await page.getByRole('option', { name: /WEB/ }).click();
     await expect(page.locator('[data-verse="1"]')).toContainText('I tell the truth in Christ');

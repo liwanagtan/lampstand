@@ -47,11 +47,12 @@ test('marks added in the reader appear in the plan reader', async ({ page }) => 
   await page.getByRole('button', { name: 'Highlight green' }).click();
   await page.getByRole('button', { name: 'Bookmark', exact: true }).click();
 
-  // The Bookmarks menu jumps back.
+  // Bookmarks live in the book picker and jump back.
   await page.getByLabel('Search the Bible').fill('jn 1');
   await page.keyboard.press('Enter');
-  await page.getByRole('button', { name: 'Bookmarks' }).click();
-  await page.getByRole('menuitem', { name: 'Matthew 1:1' }).click();
+  await page.getByRole('button', { name: /^John 1/ }).click();
+  await page.getByRole('dialog').getByRole('tab', { name: 'Bookmarks' }).click();
+  await page.getByRole('dialog').getByRole('button', { name: 'Matthew 1:1' }).click();
   await expect(page.getByRole('heading', { name: 'Matthew 1' })).toBeVisible();
 
   await page.goto('/plans/gospels-40/1');

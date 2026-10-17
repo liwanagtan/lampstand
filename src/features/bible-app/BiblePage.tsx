@@ -1,5 +1,13 @@
 import { usePhoneTitle } from '@/app/topBar';
-import { useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from 'react';
+import {
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+  type ComponentProps,
+  type ReactNode,
+} from 'react';
 import {
   Bookmark,
   ChevronDown,
@@ -11,9 +19,8 @@ import {
   StickyNote,
   X,
 } from 'lucide-react';
-import { Button, IconButton, Select, Tooltip, cx, toast } from '@/design-system/components';
+import { Button, IconButton, Tooltip, cx, toast } from '@/design-system/components';
 import { BOOKS, BOOK_BY_CODE, BOOK_INDEX } from '@/features/bible/books';
-import { useBible } from '@/features/bible/bibleStore';
 import {
   defaultVerseCounts,
   formatRef,
@@ -35,9 +42,10 @@ import {
   type ChapterMarks,
 } from './marks';
 import { NoteDialog } from './NoteDialog';
+import { ReadingSettings } from './ReadingSettings';
 import { noteTipEvent } from '@/features/tips/tipStore';
 import { useSettings } from '@/features/settings/settingsStore';
-import { READER_SIZES, selectionRange, useReader, type Selection } from './readerStore';
+import { selectionRange, useReader, type Selection } from './readerStore';
 import { chapterCount, useChapter } from './useChapter';
 import styles from './BiblePage.module.css';
 
@@ -74,13 +82,11 @@ export function BibleReader({ toolbar, selectionActions }: BiblePageSlots) {
     selection,
     goTo,
     setTranslation,
-    setParallel,
-    setSize,
     select,
     setSelection,
   } = useReader();
-  const translations = useBible((s) => s.translations);
   const [picking, setPicking] = useState(false);
+  const [reading, setReading] = useState(false);
   const [noteFor, setNoteFor] = useState<{ range: RefRange; note: MarkRecord | null } | null>(null);
   const marksOn = useSettings((st) => st.features.marks);
   const chapterMarks = useChapterMarks(book, chapter);
@@ -100,7 +106,18 @@ export function BibleReader({ toolbar, selectionActions }: BiblePageSlots) {
   };
   const bookName = BOOK_BY_CODE.get(book)?.name ?? book;
   const single = chapterCount(translation, book) === 1;
-  usePhoneTitle(single ? bookName : `${bookName} ${chapter}`);
+  const place = single ? bookName : `${bookName} ${chapter}`;
+  const readingButton = (
+    <Tooltip content="Translation and text size">
+      <IconButton
+        label="Reading settings"
+        icon={<span className={styles.aa}>Aa</span>}
+        onClick={() => setReading(true)}
+      />
+    </Tooltip>
+  );
+  // Phones: the place in the top bar with Aa beside it; getting around lives in the pill.
+  usePhoneTitle(place, { actions: readingButton });
 
   const go = (dir: 1 | -1) => {
     const n = stepChapter(book, chapter, dir, translation);
@@ -133,7 +150,6 @@ export function BibleReader({ toolbar, selectionActions }: BiblePageSlots) {
     else void noteTipEvent('chapter-read');
   }, [book, chapter]);
 
-  const options = translations.map((t) => ({ value: t.code, label: `${t.code} — ${t.name}` }));
   const range = selection ? selectionRange(book, chapter, selection) : null;
   const rangeId = range ? toOsis(range) : null;
   const verseTotal = range ? verseCountInRange(range) : 0;
@@ -143,6 +159,24 @@ export function BibleReader({ toolbar, selectionActions }: BiblePageSlots) {
   const existingNote = selection
     ? marks.notes.get(selection.end)?.find((m) => m.ref === rangeId)
     : undefined;
+
+  const onSearchGo = (r: RefRange, code?: string) => {
+    if (code) setTranslation(code);
+    const sameChapter = r.end.book === r.start.book && r.end.chapter === r.start.chapter;
+    const last = defaultVerseCounts(r.start.book)?.[r.start.chapter - 1] ?? r.end.verse;
+    // A whole chapter ("ps 23") opens it without selecting every verse.
+    const whole = sameChapter && r.start.verse === 1 && r.end.verse === last;
+    // A range past this chapter selects the rest of it; marks cover the whole range.
+    goTo(
+      r.start.book,
+      r.start.chapter,
+      whole
+        ? null
+        : sameChapter
+          ? { start: r.start.verse, end: r.end.verse }
+          : { start: r.start.verse, end: last, span: r },
+    );
+  };
 
   const copy = async () => {
     if (!range || !primary) return;
@@ -166,97 +200,26 @@ export function BibleReader({ toolbar, selectionActions }: BiblePageSlots) {
             <IconButton
               label="Previous chapter"
               icon={<ChevronLeft size={18} />}
-              variant="secondary"
               onClick={() => go(-1)}
             />
             <Button
-              variant="secondary"
+              variant="ghost"
               iconEnd={<ChevronDown size={16} />}
               onClick={() => setPicking(true)}
               className={styles.place}
             >
-              {single ? bookName : `${bookName} ${chapter}`}
+              {place}
             </Button>
             <IconButton
               label="Next chapter"
               icon={<ChevronRight size={18} />}
-              variant="secondary"
               onClick={() => go(1)}
             />
           </div>
-          <BibleSearch
-            translation={translation}
-            onGo={(r, code) => {
-              if (code) setTranslation(code);
-              const sameChapter = r.end.book === r.start.book && r.end.chapter === r.start.chapter;
-              const last = defaultVerseCounts(r.start.book)?.[r.start.chapter - 1] ?? r.end.verse;
-              // A whole chapter ("ps 23") opens it without selecting every verse.
-              const whole = sameChapter && r.start.verse === 1 && r.end.verse === last;
-              // A range past this chapter selects the rest of it; marks cover the whole range.
-              goTo(
-                r.start.book,
-                r.start.chapter,
-                whole
-                  ? null
-                  : sameChapter
-                    ? { start: r.start.verse, end: r.end.verse }
-                    : { start: r.start.verse, end: last, span: r },
-              );
-            }}
-          />
           <div className={styles.view}>
-            <Select
-              label="Translation"
-              hideLabel
-              aria-label="Translation"
-              size="sm"
-              value={translation}
-              onChange={setTranslation}
-              options={options}
-              className={styles.select}
-            />
-            <Select
-              label="Parallel"
-              hideLabel
-              aria-label="Parallel translation"
-              size="sm"
-              value={parallel ?? 'none'}
-              onChange={(v) => setParallel(v === 'none' ? null : v)}
-              options={[
-                { value: 'none', label: 'No parallel' },
-                ...options.filter((o) => o.value !== translation),
-              ]}
-              className={styles.select}
-            />
-            <div className={styles.size} role="group" aria-label="Text size">
-              <Tooltip content="Smaller text">
-                <IconButton
-                  label="A− smaller text"
-                  icon={<span className={styles.aSmall}>A−</span>}
-                  size="sm"
-                  disabled={size === READER_SIZES[0]}
-                  onClick={() =>
-                    setSize(READER_SIZES[Math.max(0, READER_SIZES.indexOf(size) - 1)]!)
-                  }
-                />
-              </Tooltip>
-              <Tooltip content="Larger text">
-                <IconButton
-                  label="A+ larger text"
-                  icon={<span className={styles.aLarge}>A+</span>}
-                  size="sm"
-                  disabled={size === READER_SIZES[READER_SIZES.length - 1]}
-                  onClick={() =>
-                    setSize(
-                      READER_SIZES[
-                        Math.min(READER_SIZES.length - 1, READER_SIZES.indexOf(size) + 1)
-                      ]!,
-                    )
-                  }
-                />
-              </Tooltip>
-            </div>
+            <BibleSearch translation={translation} onGo={onSearchGo} />
             {toolbar}
+            {readingButton}
           </div>
         </div>
 
@@ -302,6 +265,28 @@ export function BibleReader({ toolbar, selectionActions }: BiblePageSlots) {
           </article>
         </div>
 
+        {/* Phones: getting around, in thumb reach. The selection bar takes its place. */}
+        {!selection && (
+          <nav className={styles.pill} data-quiet={quiet || undefined} aria-label="Chapter">
+            <IconButton
+              label="Previous chapter"
+              icon={<ChevronLeft size={20} />}
+              className={styles.pillArrow}
+              onClick={() => go(-1)}
+            />
+            <button type="button" className={styles.pillPlace} onClick={() => setPicking(true)}>
+              {place}
+              <ChevronDown size={16} aria-hidden />
+            </button>
+            <IconButton
+              label="Next chapter"
+              icon={<ChevronRight size={20} />}
+              className={styles.pillArrow}
+              onClick={() => go(1)}
+            />
+          </nav>
+        )}
+
         {range && selection && (
           <div className={styles.selectionBar} role="toolbar" aria-label="Selected verses">
             <span className={styles.selectionLabel}>
@@ -342,47 +327,52 @@ export function BibleReader({ toolbar, selectionActions }: BiblePageSlots) {
                     </Tooltip>
                   )}
                 </div>
-                <span className={styles.barDivider} aria-hidden />
-                <Tooltip content={bookmarked ? 'Remove bookmark' : 'Bookmark'}>
-                  <IconButton
-                    label={bookmarked ? 'Remove bookmark' : 'Bookmark'}
-                    icon={<Bookmark size={15} fill={bookmarked ? 'currentColor' : 'none'} />}
-                    size="sm"
-                    aria-pressed={bookmarked}
-                    onClick={() =>
-                      void toggleBookmark(range).then((on) =>
-                        toast({
-                          title: on ? `Bookmarked ${formatRef(range)}` : 'Bookmark removed',
-                          tone: on ? 'success' : 'neutral',
-                        }),
-                      )
-                    }
-                  />
-                </Tooltip>
-                <Tooltip content={existingNote ? 'Edit note' : 'Add a note'}>
-                  <IconButton
-                    label={existingNote ? 'Edit note' : 'Add a note'}
-                    icon={<NotebookPen size={15} />}
-                    size="sm"
-                    onClick={() => setNoteFor({ range, note: existingNote ?? null })}
-                  />
-                </Tooltip>
               </>
             )}
-            <Tooltip content="Copy">
-              <IconButton
-                label="Copy"
-                icon={<Copy size={15} />}
-                size="sm"
-                onClick={() => void copy()}
-              />
-            </Tooltip>
-            {selectionActions && <span className={styles.barDivider} aria-hidden />}
-            {selectionActions?.(range, translation)}
+            <div className={styles.barActions}>
+              {marksOn && (
+                <>
+                  <Tooltip content={bookmarked ? 'Remove bookmark' : 'Bookmark'}>
+                    <BarButton
+                      label={bookmarked ? 'Remove bookmark' : 'Bookmark'}
+                      text={bookmarked ? 'Saved' : 'Bookmark'}
+                      icon={<Bookmark size={18} fill={bookmarked ? 'currentColor' : 'none'} />}
+                      aria-pressed={bookmarked}
+                      onClick={() =>
+                        void toggleBookmark(range).then((on) =>
+                          toast({
+                            title: on ? `Bookmarked ${formatRef(range)}` : 'Bookmark removed',
+                            tone: on ? 'success' : 'neutral',
+                          }),
+                        )
+                      }
+                    />
+                  </Tooltip>
+                  <Tooltip content={existingNote ? 'Edit note' : 'Add a note'}>
+                    <BarButton
+                      label={existingNote ? 'Edit note' : 'Add a note'}
+                      text="Note"
+                      icon={<NotebookPen size={18} />}
+                      onClick={() => setNoteFor({ range, note: existingNote ?? null })}
+                    />
+                  </Tooltip>
+                </>
+              )}
+              <Tooltip content="Copy">
+                <BarButton
+                  label="Copy"
+                  text="Copy"
+                  icon={<Copy size={18} />}
+                  onClick={() => void copy()}
+                />
+              </Tooltip>
+              {selectionActions?.(range, translation)}
+            </div>
             <IconButton
               label="Clear selection"
-              icon={<X size={16} />}
+              icon={<X size={18} />}
               size="sm"
+              className={styles.clear}
               onClick={() => setSelection(null)}
             />
           </div>
@@ -396,8 +386,27 @@ export function BibleReader({ toolbar, selectionActions }: BiblePageSlots) {
         translation={translation}
         current={{ book, chapter }}
         onPick={(b, c) => goTo(b, c)}
+        onPickBookmark={marksOn ? (r) => onSearchGo(r) : undefined}
       />
+      <ReadingSettings open={reading} onOpenChange={setReading} />
     </div>
+  );
+}
+
+/** A selection action: an icon on laptops; on phones a thumb-sized button with its name. */
+function BarButton({
+  label,
+  text,
+  icon,
+  ...rest
+}: { label: string; text: string; icon: ReactNode } & ComponentProps<'button'>) {
+  return (
+    <button type="button" className={styles.barButton} aria-label={label} {...rest}>
+      {icon}
+      <span className={styles.barText} aria-hidden>
+        {text}
+      </span>
+    </button>
   );
 }
 

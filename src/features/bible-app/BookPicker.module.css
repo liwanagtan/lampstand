@@ -64,3 +64,48 @@
   font-weight: var(--weight-medium);
   background: var(--color-surface-raised);
 }
+.empty {
+  padding: var(--space-4) 0;
+  color: var(--color-text-muted);
+}
+.marks {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.mark {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+  min-height: 48px;
+  padding: 0 var(--space-3);
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-text);
+  font: inherit;
+  font-weight: var(--weight-medium);
+  text-align: left;
+  cursor: pointer;
+}
+.mark svg {
+  color: var(--color-accent-text);
+}
+.mark:hover {
+  background: var(--color-surface-raised);
+}
+@media (pointer: coarse) {
+  .book {
+    min-height: 44px;
+    font-size: var(--text-14);
+  }
+}
+@media (max-width: 640px) {
+  .testaments {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

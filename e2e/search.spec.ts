@@ -9,9 +9,9 @@ test.describe('on a phone', () => {
   }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     // A note of your own to find.
-    await openApp(page, '/bible');
-    await page.getByLabel('Search the Bible').fill('rom 8 28');
-    await page.keyboard.press('Enter');
+    await openApp(page, '/search');
+    await page.getByRole('searchbox', { name: 'Search' }).fill('rom 8 28');
+    await page.getByRole('region', { name: 'Passage' }).getByRole('button').tap();
     await page.getByRole('button', { name: 'Add a note' }).tap();
     await page.getByRole('dialog').getByRole('textbox').fill('Even the hard days.');
     await page.getByRole('button', { name: 'Save note' }).tap();

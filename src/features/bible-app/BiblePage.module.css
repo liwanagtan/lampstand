@@ -21,7 +21,7 @@
   flex-wrap: nowrap;
   align-items: center;
   gap: var(--space-3);
-  padding: var(--space-3) var(--space-4);
+  padding: var(--space-2) var(--space-4);
   border-bottom: 1px solid color-mix(in srgb, var(--color-border) 70%, transparent);
   background: var(--color-paper);
   transition: opacity var(--dur-standard) var(--ease-standard);
@@ -35,9 +35,14 @@
   align-items: center;
   gap: var(--space-1);
 }
+.aa {
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: var(--weight-semibold);
+  letter-spacing: -0.02em;
+}
 .place {
-  min-width: 150px;
-  justify-content: space-between;
+  gap: var(--space-1);
   font-weight: var(--weight-semibold);
 }
 .view {
@@ -47,22 +52,6 @@
   gap: var(--space-2);
   min-width: 0;
   margin-left: auto;
-}
-.select {
-  flex: 0 1 160px;
-  min-width: 110px;
-}
-.size {
-  display: flex;
-  gap: 2px;
-}
-.aSmall {
-  font-size: 12px;
-  font-weight: var(--weight-semibold);
-}
-.aLarge {
-  font-size: 16px;
-  font-weight: var(--weight-semibold);
 }
 .body {
   overflow-y: auto;
@@ -331,44 +320,139 @@
   color: var(--color-accent-text);
 }
 
-/* Phones (phone first for the personal side): place and search on their own rows, view
-   controls share the width, and the selection bar spans the screen and scrolls if it must. */
-@container (max-width: 600px) {
+/* Selection actions: icons on laptops. */
+.barActions {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+.barButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-text);
+  font: inherit;
+  cursor: pointer;
+}
+.barButton:hover {
+  background: color-mix(in srgb, var(--color-text) 8%, transparent);
+}
+.barButton[aria-pressed='true'] {
+  color: var(--color-accent-text);
+}
+.barText {
+  display: none;
+}
+.pill {
+  display: none;
+}
+
+/* Phones: no toolbar — the place and Aa are in the top bar, getting around is a pill in
+   thumb reach, and the selection bar is built for thumbs. */
+@media (max-width: 640px) {
   .toolbar {
-    gap: var(--space-2);
-    padding: var(--space-2) var(--space-3);
-  }
-  .nav {
-    flex: 1 1 100%;
-  }
-  .place {
-    flex: 1;
-    min-width: 0;
-  }
-  .view {
-    flex: 1 1 100%;
-    margin-left: 0;
-  }
-  .select {
-    flex: 1 1 0;
-    min-width: 0;
+    display: none;
   }
   .body {
-    padding: var(--space-5, 20px) var(--space-4) 180px;
+    padding: var(--space-4) var(--space-4) 180px;
   }
   .chapterTitle {
     font-size: 1.6em;
   }
-  .selectionBar {
-    left: var(--space-2);
-    right: var(--space-2);
+  .pill {
+    position: absolute;
     bottom: var(--space-3);
+    left: 50%;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    padding: 4px;
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+    background: var(--color-surface-raised);
+    box-shadow: var(--elevation-2);
+    translate: -50% 0;
+    transition:
+      opacity var(--dur-standard) var(--ease-standard),
+      transform var(--dur-standard) var(--ease-standard);
+  }
+  .pill[data-quiet] {
+    opacity: 0;
+    transform: translateY(12px);
+    pointer-events: none;
+  }
+  .pillArrow {
+    border-radius: 999px;
+  }
+  .pillPlace {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    height: 44px;
+    padding: 0 var(--space-4);
+    border: 0;
+    border-radius: 999px;
+    background: transparent;
+    color: var(--color-text);
+    font: inherit;
+    font-weight: var(--weight-semibold);
+    white-space: nowrap;
+  }
+  .selectionBar {
+    right: var(--space-2);
+    bottom: var(--space-2);
+    left: var(--space-2);
     flex-wrap: wrap;
-    row-gap: var(--space-1);
+    gap: var(--space-2);
+    padding: var(--space-3);
     translate: none;
   }
   .selectionLabel {
+    flex: 1 1 0;
+    min-width: 0;
+    margin: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .clear {
+    order: 1;
+  }
+  .swatches {
+    order: 2;
     flex: 1 1 100%;
-    padding-top: var(--space-1);
+    justify-content: space-between;
+  }
+  .swatch {
+    width: 36px;
+    height: 36px;
+  }
+  .barDivider {
+    display: none;
+  }
+  .barActions {
+    order: 3;
+    flex: 1 1 100%;
+    justify-content: space-around;
+    padding-top: var(--space-2);
+    border-top: 1px solid var(--color-border);
+  }
+  .barButton {
+    flex-direction: column;
+    width: auto;
+    min-width: 72px;
+    height: 52px;
+  }
+  .barText {
+    display: block;
+    font-size: 12px;
+    font-weight: var(--weight-medium);
   }
 }

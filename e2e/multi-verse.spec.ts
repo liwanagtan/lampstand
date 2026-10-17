@@ -6,9 +6,15 @@ test.describe('on a phone', () => {
 
   test('tap two verses to select a range, highlight it and note it', async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
+    // Getting there with thumbs: the pill opens the picker as a bottom sheet.
     await openApp(page, '/bible');
-    await page.getByLabel('Search the Bible').fill('jn 3');
-    await page.keyboard.press('Enter');
+    await page
+      .getByRole('navigation', { name: 'Chapter', exact: true })
+      .getByRole('button', { name: /^John/ })
+      .tap();
+    const picker = page.getByRole('dialog');
+    await picker.getByRole('button', { name: 'John', exact: true }).tap();
+    await picker.getByRole('button', { name: '3', exact: true }).tap();
     await expect(page.getByRole('heading', { name: 'John 3' })).toBeVisible();
 
     await page.locator('[data-verse="12"] button').last().tap();

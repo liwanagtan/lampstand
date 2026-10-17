@@ -55,18 +55,27 @@ export function TodayPage() {
   const [panel, setPanel] = useState<'context' | 'reflect' | null>(null);
   const reduced = useReducedMotion();
   const name = useSettings((s) => s.profile.name.trim().split(/\s+/)[0] ?? '');
-  usePhoneTitle(`${greeting(now)}${name ? `, ${name}` : ''}`);
+  // Phones: your greeting leads the top bar, with the date quietly beneath it.
+  usePhoneTitle(
+    <span className={styles.barTitle}>
+      <span className={styles.barGreeting}>
+        {greeting(now)}
+        {name ? `, ${name}` : ''}
+      </span>
+      <span className={styles.barDate}>{longDate.format(now)}</span>
+    </span>,
+  );
 
   return (
     <div className={styles.page}>
       <motion.header
-        className={styles.greeting}
+        className={cx(styles.greeting, 'phone-hidden')}
         initial={reduced ? false : { opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
       >
         <p className={styles.date}>{longDate.format(now)}</p>
-        <h1 className={cx(styles.hello, 'phone-hidden')}>
+        <h1 className={styles.hello}>
           {greeting(now)}
           {name ? `, ${name}` : ''}
         </h1>

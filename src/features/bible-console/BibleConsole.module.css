@@ -1,0 +1,140 @@
+.muted {
+  padding: var(--space-3) 0;
+  font-size: var(--text-14);
+  line-height: 1.5;
+  color: var(--color-text-muted);
+}
+.bgPanel {
+  padding: var(--space-3) 0;
+}
+
+/* Chapter picker */
+.chapter {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+}
+.chapterNav {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-2) 0;
+}
+.verses {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.verse {
+  display: grid;
+  grid-template-columns: 2em minmax(0, 1fr);
+  width: 100%;
+  padding: 4px 6px 4px 0;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-text);
+  font: inherit;
+  font-family: var(--font-display);
+  font-size: 15px;
+  line-height: 1.5;
+  text-align: left;
+  cursor: pointer;
+}
+.verse:hover {
+  background: var(--color-surface-raised);
+}
+.selected,
+.selected:hover {
+  background: color-mix(in srgb, var(--color-accent) 18%, transparent);
+}
+.live .num {
+  color: var(--color-live);
+}
+.live {
+  box-shadow: inset 2px 0 0 var(--color-live);
+}
+.num {
+  padding-top: 3px;
+  font-family: var(--font-sans, inherit);
+  font-size: 11px;
+  font-weight: var(--weight-semibold);
+  color: var(--color-accent-text);
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+.text {
+  min-width: 0;
+}
+
+/* Passage queue (in place of the slide strip) */
+.queue {
+  min-height: 72px;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-4);
+}
+.addButton {
+  flex: none;
+}
+.queueEmpty {
+  font-size: var(--text-14);
+  color: var(--color-text-muted);
+}
+.queueList {
+  display: flex;
+  gap: var(--space-2);
+  min-width: 0;
+  margin: 0;
+  padding: 4px 0;
+  overflow-x: auto;
+  list-style: none;
+}
+.queueItem {
+  position: relative;
+  flex: none;
+}
+.passage {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  height: 44px;
+  padding: 0 34px 0 var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-raised);
+  color: var(--color-text);
+  font: inherit;
+  font-size: var(--text-14);
+  white-space: nowrap;
+  cursor: pointer;
+}
+.passage:hover {
+  border-color: var(--color-accent);
+}
+.passageLive,
+.passageLive:hover {
+  border-color: var(--color-live);
+  box-shadow: 0 0 0 1px var(--color-live);
+}
+.passageNum {
+  font-size: var(--text-12);
+  color: var(--color-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+.passageRef {
+  font-weight: var(--weight-semibold);
+}
+.passageCode {
+  font-size: var(--text-12);
+  color: var(--color-text-muted);
+}
+.remove {
+  position: absolute;
+  top: 50%;
+  right: 4px;
+  translate: 0 -50%;
+}

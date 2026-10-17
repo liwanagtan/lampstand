@@ -78,6 +78,11 @@ export const routes: RouteObject[] = [
     ],
   },
   {
+    path: '/screen/bible',
+    errorElement: <RouteError />,
+    lazy: lazyPage(() => import('@/features/bible-console/BibleConsolePage'), 'BibleConsolePage'),
+  },
+  {
     path: '/screen/:id',
     errorElement: <RouteError />,
     lazy: lazyPage(() => import('@/features/present/PresentPage'), 'PresentPage'),

@@ -120,7 +120,7 @@ export function LibraryPage() {
             ? navigate(paths.screenImport)
             : document.getElementById('presentations')?.scrollIntoView({ behavior: 'smooth' })
         }
-        onBible={() => navigate(paths.bible)}
+        onBible={() => navigate(paths.screenBible)}
       />
       {records && !empty && (
         <h2 id="presentations" className={styles.sectionTitle}>

@@ -6,7 +6,6 @@ export const paths = {
   plans: '/plans',
   planDay: (planId: string, day: number) => `/plans/${planId}/${day}`,
   journal: '/journal',
-  notes: '/journal/notes',
   screen: '/screen',
   screenImport: '/screen/import',
   screenBible: '/screen/bible',

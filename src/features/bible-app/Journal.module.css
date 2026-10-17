@@ -125,6 +125,7 @@
 }
 .kind {
   display: inline-flex;
+  flex: none;
   align-items: center;
   gap: 4px;
   padding: 1px 8px;
@@ -194,5 +195,105 @@
   }
   .search {
     width: 100%;
+  }
+}
+
+.count {
+  margin-left: 4px;
+  font-size: var(--text-12);
+  color: var(--color-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+.filters {
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.filter {
+  white-space: nowrap;
+}
+.kind-journal,
+.kind-bookmark,
+.kind-note {
+  background: var(--color-surface-raised);
+  color: var(--color-text-muted);
+}
+.kind-highlight {
+  background: color-mix(in srgb, var(--hl, var(--color-accent)) 30%, transparent);
+  color: var(--color-text);
+}
+[data-color='yellow'] {
+  --hl: #f2c94c;
+}
+[data-color='green'] {
+  --hl: #6fcf97;
+}
+[data-color='blue'] {
+  --hl: #6fa8ff;
+}
+[data-color='pink'] {
+  --hl: #f28bb5;
+}
+[data-color='purple'] {
+  --hl: #b794f6;
+}
+.markItem {
+  grid-template-columns: 88px minmax(0, 1fr) auto;
+  cursor: default;
+}
+.markItem:hover {
+  border-color: var(--color-border);
+}
+.itemRefLink {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--color-text);
+  font: inherit;
+  font-size: var(--text-14);
+  font-weight: var(--weight-semibold);
+  cursor: pointer;
+}
+.itemRefLink:hover {
+  color: var(--color-accent-text);
+  text-decoration: underline;
+}
+.noteText {
+  padding: var(--space-2) var(--space-3);
+  border: 0;
+  border-left: 3px solid var(--color-accent);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  background: color-mix(in srgb, var(--color-accent) 7%, var(--color-surface));
+  color: var(--color-text);
+  font: inherit;
+  font-size: var(--text-14);
+  line-height: 1.55;
+  text-align: left;
+  white-space: pre-wrap;
+  cursor: text;
+}
+.verseText {
+  font-family: var(--font-display);
+  font-size: var(--text-16);
+  color: var(--color-text-muted);
+}
+.hl {
+  padding: 0.04em 0.12em;
+  border-radius: 0.2em;
+  background: color-mix(in srgb, var(--hl) 28%, transparent);
+  color: var(--color-text);
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+.rowActions {
+  display: flex;
+  align-items: flex-start;
+  gap: 2px;
+}
+@media (max-width: 640px) {
+  .markItem {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+  .markItem .itemDate {
+    grid-column: 1 / -1;
   }
 }

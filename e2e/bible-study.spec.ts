@@ -29,13 +29,25 @@ test('highlight, bookmark and note a passage, then find them on the Notes page',
   await page.reload();
   await expect(page.locator('[data-verse="28"] mark')).toBeVisible();
 
+  // Everything marked shows in the one Journal timeline.
   await page.getByRole('link', { name: 'Journal' }).click();
-  await page.getByRole('button', { name: 'Notes & highlights' }).click();
-  const list = page.getByRole('list', { name: 'Marked passages' });
+  const list = page.getByRole('list', { name: / entries$/ });
   await expect(list.getByRole('listitem')).toHaveCount(3);
+  await expect(page.getByRole('radio', { name: /Highlights/ })).toContainText('1');
   await page.getByRole('radio', { name: /Notes/ }).click();
   await expect(list.getByRole('listitem')).toHaveCount(1);
   await expect(list).toContainText('Even the hard days.');
+
+  // A journal entry joins the same timeline.
+  await page.getByRole('radio', { name: /All/ }).click();
+  await page.getByRole('button', { name: 'New entry' }).click();
+  await page.getByRole('dialog').getByLabel('Your entry').fill('Grateful today.');
+  await expect(
+    page.getByRole('dialog').getByRole('status').filter({ hasText: 'Saved' }),
+  ).toBeVisible();
+  await page.keyboard.press('Escape');
+  await expect(list.getByRole('listitem')).toHaveCount(4);
+  await page.getByRole('radio', { name: /Notes/ }).click();
 
   // Delete with undo.
   await list.getByRole('button', { name: /Delete note on Romans 8:28/ }).click();

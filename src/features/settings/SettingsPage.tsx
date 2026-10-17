@@ -1,7 +1,7 @@
-import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { BookPlus, Download, ImagePlus, Trash2, Upload } from 'lucide-react';
 import { Page } from '@/app/Page';
-import { Button, Card, Chip, Select, Toggle, cx, toast } from '@/design-system/components';
+import { Button, Chip, Select, Toggle, cx, toast } from '@/design-system/components';
 import { LampLockup } from '@/design-system/LampMark';
 import { db } from '@/db/db';
 import { useBible } from '@/features/bible/bibleStore';
@@ -13,6 +13,8 @@ import { OVERLAY_MODES, TEMPLATE_IDS, type OverlayMode, type UiMode } from '@/sc
 import { getTemplate } from '@/templates/templates';
 import { backupFileName, createBackup, restoreBackup } from './backup';
 import { useSettings } from './settingsStore';
+import { ReadingSection, TipsSection, UsesSection, YouSection } from './MeSections';
+import { Section } from './Section';
 import styles from './SettingsPage.module.css';
 
 const OVERLAY_LABELS: Record<OverlayMode, string> = {
@@ -23,15 +25,20 @@ const OVERLAY_LABELS: Record<OverlayMode, string> = {
 };
 
 export function SettingsPage() {
+  const screen = useSettings((s) => s.features.screen);
   return (
     <Page
       title="Me"
-      description="Your preferences: reading, the app’s look, presenting defaults, Bibles and your data."
+      description="Your profile, what you use Lampstand for, and your preferences. Everything stays on this device."
     >
       <div className={styles.sections}>
-        <PresentingSection />
+        <YouSection />
+        <UsesSection />
+        <ReadingSection />
         <AppearanceSection />
-        <LogoSection />
+        {screen && <PresentingSection />}
+        {screen && <LogoSection />}
+        <TipsSection />
         <TranslationsSection />
         <DataSection />
         <AboutSection />
@@ -40,31 +47,14 @@ export function SettingsPage() {
   );
 }
 
-function Section({
-  title,
-  description,
-  children,
-}: {
-  title: string;
-  description?: ReactNode;
-  children: ReactNode;
-}) {
-  return (
-    <Card className={styles.section}>
-      <div className={styles.sectionHead}>
-        <h2 className={styles.sectionTitle}>{title}</h2>
-        {description && <p className={styles.muted}>{description}</p>}
-      </div>
-      <div className={styles.sectionBody}>{children}</div>
-    </Card>
-  );
-}
-
 function PresentingSection() {
   const s = useSettings();
   const translations = useBible((b) => b.translations);
   return (
-    <Section title="Presenting" description="Used when a presentation doesn’t choose its own.">
+    <Section
+      title="Presenting"
+      description="Defaults for Screen, used when a presentation doesn’t choose its own."
+    >
       <div className={styles.grid3}>
         <Select
           label="Default translation"

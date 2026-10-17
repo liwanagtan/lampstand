@@ -11,4 +11,6 @@ export const DEFAULT_SETTINGS: Settings = {
   bundledBiblesVersion: 0,
   shortcutHints: {},
   features: ALL_FEATURES,
+  profile: { name: '' },
+  tips: { enabled: true, lastShownAt: null, seen: {} },
 };

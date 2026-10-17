@@ -1,11 +1,13 @@
-import { NavLink, Outlet } from 'react-router-dom';
+import { Navigate, NavLink, Outlet } from 'react-router-dom';
 import { UserRound } from 'lucide-react';
 import { LampLockup, LampMark } from '@/design-system/LampMark';
 import { cx } from '@/design-system/components';
 import { useControl } from '@/features/present/live/controlStore';
 import { useApplyDocumentTheme } from '@/features/settings/theme';
 import { useSettings } from '@/features/settings/settingsStore';
+import { TipHost } from '@/features/tips/TipHost';
 import { visibleNav } from './features';
+import { isOnboarded } from './onboarding';
 import { paths } from './paths';
 import styles from './AppShell.module.css';
 
@@ -18,7 +20,10 @@ export function AppShell() {
   const features = useSettings((s) => s.features);
   const presenting = useControl((s) => s.presenting);
   const nav = visibleNav(features);
+  const welcome = !isOnboarded();
+  const initial = useSettings((s) => s.profile.name.trim().charAt(0).toUpperCase());
 
+  if (welcome) return <Navigate to="/welcome" replace />;
   return (
     <div className={styles.shell}>
       <header className={styles.topbar}>
@@ -50,12 +55,19 @@ export function AppShell() {
           aria-label="Me: profile and settings"
           title="Me"
         >
-          <UserRound size={18} strokeWidth={1.75} aria-hidden />
+          {initial ? (
+            <span className={styles.initial} aria-hidden>
+              {initial}
+            </span>
+          ) : (
+            <UserRound size={18} strokeWidth={1.75} aria-hidden />
+          )}
         </NavLink>
       </header>
       <main className={styles.main} id="main" data-scroll>
         <Outlet />
       </main>
+      <TipHost />
       <nav aria-label="Main" className={styles.tabbar}>
         {nav.map(({ to, label, icon: Icon, end }) => (
           <NavLink

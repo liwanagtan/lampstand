@@ -33,6 +33,7 @@ import {
   type ChapterMarks,
 } from './marks';
 import { NoteDialog } from './NoteDialog';
+import { noteTipEvent } from '@/features/tips/tipStore';
 import { useSettings } from '@/features/settings/settingsStore';
 import { READER_SIZES, selectionRange, useReader, type Selection } from './readerStore';
 import { chapterCount, useChapter } from './useChapter';
@@ -112,8 +113,12 @@ export function BibleReader({ toolbar, selectionActions }: BiblePageSlots) {
   }, [primary?.osis, selection?.start]);
 
   // A new chapter starts at the top unless a verse was chosen.
+  const firstChapter = useRef(true);
   useEffect(() => {
     if (!useReader.getState().selection) body.current?.scrollTo({ top: 0 });
+    // Moving on to another chapter is a natural moment for a reading tip.
+    if (firstChapter.current) firstChapter.current = false;
+    else void noteTipEvent('chapter-read');
   }, [book, chapter]);
 
   const options = translations.map((t) => ({ value: t.code, label: `${t.code} — ${t.name}` }));
@@ -297,7 +302,10 @@ export function BibleReader({ toolbar, selectionActions }: BiblePageSlots) {
                           data-color={color}
                           aria-label={`Highlight ${label.toLowerCase()}`}
                           aria-pressed={on}
-                          onClick={() => void setHighlight(range, on ? null : color)}
+                          onClick={() => {
+                            void setHighlight(range, on ? null : color);
+                            if (!on) void noteTipEvent('highlighted');
+                          }}
                         />
                       </Tooltip>
                     );

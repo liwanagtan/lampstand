@@ -13,6 +13,7 @@ function renderAt(path: string) {
 }
 
 describe('AppShell', () => {
+  beforeEach(() => localStorage.setItem('lampstand.onboarded', '1'));
   afterEach(() => useSettings.setState({ features: ALL_FEATURES }));
 
   it('shows the five destinations and Me', async () => {
@@ -37,6 +38,15 @@ describe('AppShell', () => {
         .getAllByRole('link')
         .map((l) => l.textContent),
     ).toEqual(['Today', 'Bible', 'Journal']);
+  });
+
+  it('sends a first run to the welcome flow', async () => {
+    localStorage.removeItem('lampstand.onboarded');
+    const router = renderAt('/');
+    expect(
+      await screen.findByRole('heading', { name: 'Welcome to Lampstand' }),
+    ).toBeInTheDocument();
+    expect(router.state.location.pathname).toBe('/welcome');
   });
 
   it('sends old links to their new homes', async () => {

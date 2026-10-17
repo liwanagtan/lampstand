@@ -9,6 +9,16 @@ export default defineConfig({
   use: {
     baseURL: 'http://localhost:4173',
     trace: 'retain-on-failure',
+    // Past the first-run welcome; e2e/welcome.spec.ts starts without this.
+    storageState: {
+      cookies: [],
+      origins: [
+        {
+          origin: 'http://localhost:4173',
+          localStorage: [{ name: 'lampstand.onboarded', value: '1' }],
+        },
+      ],
+    },
     viewport: { width: 1440, height: 900 },
   },
   projects: [

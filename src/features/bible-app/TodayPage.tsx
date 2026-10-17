@@ -18,6 +18,7 @@ import { backgroundUrl, loadBackgrounds } from '@/features/library/backgrounds';
 import { useControl } from '@/features/present/live/controlStore';
 import { closeOutput } from '@/features/present/live/outputWindow';
 import { useReducedMotion } from '@/features/settings/theme';
+import { useSettings } from '@/features/settings/settingsStore';
 import { usePassage } from '@/slides/usePassage';
 import { localDate, localDayNumber, verseOfTheDay } from './dailyVerses';
 import { entryHasContent, entryPreview, useReflection } from './journal';
@@ -52,6 +53,7 @@ export function TodayPage() {
   const { range } = verseOfTheDay(now);
   const [panel, setPanel] = useState<'context' | 'reflect' | null>(null);
   const reduced = useReducedMotion();
+  const name = useSettings((s) => s.profile.name.trim().split(/\s+/)[0] ?? '');
 
   return (
     <div className={styles.page}>
@@ -62,7 +64,10 @@ export function TodayPage() {
         transition={{ duration: 0.4 }}
       >
         <p className={styles.date}>{longDate.format(now)}</p>
-        <h1 className={styles.hello}>{greeting(now)}</h1>
+        <h1 className={styles.hello}>
+          {greeting(now)}
+          {name ? `, ${name}` : ''}
+        </h1>
       </motion.header>
 
       <VerseHero

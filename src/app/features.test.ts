@@ -35,3 +35,22 @@ describe('presenting paths', () => {
     expect(isPresentingPath('/screen/edit/abc')).toBe(false);
   });
 });
+
+describe('use cases', () => {
+  it('turns on exactly the ticked use cases', async () => {
+    const { featuresFor, USE_CASES, useCaseState } = await import('./features');
+    expect(featuresFor(['teach'])).toEqual({
+      today: false,
+      plans: false,
+      journal: false,
+      marks: false,
+      screen: true,
+    });
+    const grow = featuresFor(['grow']);
+    expect(homePath(grow)).toBe('/');
+    expect(homePath(featuresFor(['teach']))).toBe('/screen');
+    expect(homePath(featuresFor(['study', 'teach']))).toBe('/bible');
+    expect(visibleNav(featuresFor(['teach'])).map((n) => n.label)).toEqual(['Bible', 'Screen']);
+    expect(useCaseState({ ...grow, plans: false }, USE_CASES[0]!)).toBe('some');
+  });
+});

@@ -3,6 +3,7 @@ import { Button, Dialog, Textarea, toast } from '@/design-system/components';
 import type { MarkRecord } from '@/db/types';
 import { formatRef, type RefRange } from '@/features/bible/ref';
 import { NOTE_MAX, saveNote } from './marks';
+import { noteTipEvent } from '@/features/tips/tipStore';
 import styles from './NoteDialog.module.css';
 
 interface NoteDialogProps {
@@ -35,6 +36,7 @@ function NoteForm({
   const [text, setText] = useState(target.note?.text ?? '');
   const save = async () => {
     const id = await saveNote(target.note?.id ?? null, target.range, text);
+    if (id) void noteTipEvent('note-saved');
     toast({
       title: id ? 'Note saved' : target.note ? 'Note deleted' : 'Nothing to save',
       tone: id ? 'success' : 'neutral',

@@ -66,6 +66,17 @@ export interface Settings {
   shortcutHints: Record<string, number>;
   /** Which destinations show (Me › What I use Lampstand for). */
   features: Features;
+  /** The local profile (becomes the account in v2). */
+  profile: { name: string };
+  /** Feature tips: on/off, when one last showed, and each tip's state. */
+  tips: TipsState;
+}
+
+export interface TipsState {
+  enabled: boolean;
+  lastShownAt: number | null;
+  /** Per tip: when it was last shown and whether it was dismissed for good. */
+  seen: Record<string, { at: number; never?: boolean }>;
 }
 
 export type SettingKey = keyof Settings;

@@ -271,22 +271,3 @@
     height: 28px;
   }
 }
-
-/* The phone top bar: greeting first, the date beneath. */
-.barTitle {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  line-height: 1.25;
-}
-.barGreeting {
-  max-width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.barDate {
-  font-size: var(--text-12);
-  font-weight: var(--weight-medium);
-  color: var(--color-text-muted);
-}

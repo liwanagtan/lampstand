@@ -1,0 +1,17 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  line-height: 1.25;
+}
+.title {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.line {
+  font-size: var(--text-12);
+  font-weight: var(--weight-medium);
+  color: var(--color-text-muted);
+}

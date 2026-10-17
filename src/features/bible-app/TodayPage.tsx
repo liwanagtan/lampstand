@@ -1,3 +1,4 @@
+import { BarTitle } from '@/app/BarTitle';
 import { usePhoneTitle } from '@/app/topBar';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -57,13 +58,7 @@ export function TodayPage() {
   const name = useSettings((s) => s.profile.name.trim().split(/\s+/)[0] ?? '');
   // Phones: your greeting leads the top bar, with the date quietly beneath it.
   usePhoneTitle(
-    <span className={styles.barTitle}>
-      <span className={styles.barGreeting}>
-        {greeting(now)}
-        {name ? `, ${name}` : ''}
-      </span>
-      <span className={styles.barDate}>{longDate.format(now)}</span>
-    </span>,
+    <BarTitle title={`${greeting(now)}${name ? `, ${name}` : ''}`} line={longDate.format(now)} />,
   );
 
   return (

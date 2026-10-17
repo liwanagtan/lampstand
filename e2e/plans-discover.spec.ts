@@ -50,8 +50,31 @@ test('find a plan by feeling, by group and by search; preview, start and reflect
   await page.getByLabel('Search plans').fill('gospels');
   await expect(page.getByRole('link', { name: 'The life of Jesus in 21 days' })).toBeVisible();
   await page.getByLabel('Search plans').fill('');
-  await page.getByRole('radio', { name: 'Weekly lessons' }).click();
+  // Filters are chips that work like select fields.
+  await page.getByRole('button', { name: 'Length' }).click();
+  await page.getByRole('menuitem', { name: 'Weekly lessons' }).click();
   const discover = page.getByRole('region', { name: 'Discover' });
   await expect(discover.getByRole('link', { name: 'Sharing your faith' })).toBeVisible();
   await expect(discover.getByRole('link', { name: 'When anxiety rises' })).toHaveCount(0);
+  await expect(page.getByRole('button', { name: 'Length: Weekly lessons' })).toBeVisible();
+  await page.getByRole('button', { name: 'Clear length' }).click();
+  await page.getByRole('button', { name: 'For' }).click();
+  await page.getByRole('menuitem', { name: 'Groups' }).click();
+  await expect(discover.getByRole('link', { name: 'Parables of Jesus' })).toBeVisible();
+  await expect(discover.getByRole('link', { name: 'When anxiety rises' })).toHaveCount(0);
+});
+
+test.describe('on a phone', () => {
+  test.use({ hasTouch: true });
+
+  test('Plans greets you, and filters open as a bottom sheet', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await openApp(page, '/plans');
+    await expect(page.getByRole('banner')).toContainText('A plan for you');
+    await page.getByRole('button', { name: 'Length' }).tap();
+    const sheet = page.getByRole('dialog', { name: 'Length' });
+    await sheet.getByRole('radio', { name: 'Monthly lessons' }).tap();
+    await expect(sheet).toBeHidden();
+    await expect(page.getByRole('button', { name: 'Length: Monthly lessons' })).toBeVisible();
+  });
 });

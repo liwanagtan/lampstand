@@ -3,6 +3,7 @@ import { CATALOG_TREE, categoryById, descendantIds, type CatalogNode } from '@/s
 import type { Plan } from '@/schema/plan';
 
 export type PaceFilter = 'all' | 'daily' | 'weekly' | 'monthly';
+export type AudienceFilter = 'all' | 'personal' | 'group';
 
 /** Plans in a category or any of its subcategories (or a whole group). */
 export function plansIn(plans: readonly Plan[], categoryId: string): Plan[] {
@@ -25,11 +26,17 @@ export function uncategorised(plans: readonly Plan[]): Plan[] {
   return plans.filter((p) => !p.categories.some((c) => categoryById(c)));
 }
 
-/** Search over names, descriptions, levels and category names, with a pace filter. */
-export function searchPlans(plans: readonly Plan[], query: string, pace: PaceFilter): Plan[] {
+/** Search over names, descriptions, levels and category names, with pace and audience filters. */
+export function searchPlans(
+  plans: readonly Plan[],
+  query: string,
+  pace: PaceFilter,
+  audience: AudienceFilter = 'all',
+): Plan[] {
   const q = query.trim().toLowerCase();
   return plans.filter((p) => {
     if (pace !== 'all' && p.pace !== pace) return false;
+    if (audience !== 'all' && p.audience !== audience) return false;
     if (!q) return true;
     const words = [
       p.name,

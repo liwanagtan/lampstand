@@ -43,43 +43,65 @@
   gap: var(--space-4);
 }
 .searchBar {
+  position: sticky;
+  top: 0;
+  z-index: 4;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: var(--space-3);
-  margin-bottom: var(--space-6);
+  margin: 0 calc(var(--space-6) * -1) var(--space-6);
+  padding: var(--space-3) var(--space-6);
+  background: color-mix(in srgb, var(--color-bg) 92%, transparent);
+  backdrop-filter: blur(8px);
 }
-.search {
-  flex: 1 1 280px;
-  max-width: 420px;
-}
-.paces {
+.searchBox {
   display: flex;
-  gap: 2px;
-  padding: 2px;
-  overflow-x: auto;
-  scrollbar-width: none;
+  flex: 1 1 320px;
+  align-items: center;
+  gap: var(--space-2);
+  max-width: 520px;
+  height: 48px;
+  padding: 0 var(--space-2) 0 var(--space-4);
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-sm);
-  background: var(--color-surface-raised);
-}
-.pace {
-  height: 30px;
-  padding: 0 var(--space-3);
-  border: 0;
-  border-radius: 4px;
-  background: transparent;
+  border-radius: 999px;
+  background: var(--color-surface);
   color: var(--color-text-muted);
+  cursor: text;
+}
+.searchBox:focus-within {
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-accent) 22%, transparent);
+}
+.searchBox input {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: var(--color-text);
   font: inherit;
-  font-size: var(--text-14);
-  font-weight: var(--weight-medium);
-  white-space: nowrap;
+  font-size: var(--text-16);
+}
+.searchBox input::-webkit-search-cancel-button {
+  display: none;
+}
+.searchClear {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--color-surface-raised);
+  color: var(--color-text);
   cursor: pointer;
 }
-.pace[aria-checked='true'] {
-  background: var(--color-surface);
-  color: var(--color-text);
-  box-shadow: var(--elevation-1);
+.filters {
+  display: flex;
+  gap: var(--space-2);
 }
 .none {
   color: var(--color-text-muted);
@@ -388,7 +410,16 @@
     flex-direction: column;
     align-items: flex-start;
   }
-  .search {
+  /* The heading lives in the top bar on phones, so the first section starts at the top. */
+  .headRow + .section {
+    margin-top: 0;
+  }
+  .searchBar {
+    margin: 0 calc(var(--space-4) * -1) var(--space-5, 20px);
+    padding: var(--space-2) var(--space-4);
+  }
+  .searchBox {
+    flex-basis: 100%;
     max-width: none;
   }
 }

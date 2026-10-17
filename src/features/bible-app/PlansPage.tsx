@@ -1,9 +1,10 @@
 import { usePhoneTitle } from '@/app/topBar';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Search } from 'lucide-react';
-import { Input } from '@/design-system/components';
+import { ArrowRight, Search, X } from 'lucide-react';
+import { BarTitle } from '@/app/BarTitle';
 import { paths } from '@/app/paths';
+import { useSettings } from '@/features/settings/settingsStore';
 import type { CatalogNode } from '@/schema/planCatalog';
 import { ActivePlan } from './ActivePlan';
 import {
@@ -12,39 +13,51 @@ import {
   uncategorised,
   visibleChildren,
   visibleGroups,
+  type AudienceFilter,
   type PaceFilter,
 } from './discover';
+import { FilterChip } from './FilterChip';
+import { plansGreeting } from './greetings';
 import { CategoryChip, CategoryTile, PlanCard } from './PlanCards';
 import { usePlanProgress, usePlans, type Plan } from './plans';
 import styles from './Discover.module.css';
 
 const PACES: { value: PaceFilter; label: string }[] = [
-  { value: 'all', label: 'All' },
+  { value: 'all', label: 'Any length' },
   { value: 'daily', label: 'Daily' },
   { value: 'weekly', label: 'Weekly lessons' },
   { value: 'monthly', label: 'Monthly lessons' },
+];
+const AUDIENCES: { value: AudienceFilter; label: string }[] = [
+  { value: 'all', label: 'Anyone' },
+  { value: 'personal', label: 'Just me' },
+  { value: 'group', label: 'Groups' },
 ];
 
 /** Plans: the ones you're reading, then Discover — by feeling, by group, or by search. */
 export function PlansPage() {
   const plans = usePlans();
   const progress = usePlanProgress();
-  usePhoneTitle('Plans');
+  const name = useSettings((s) => s.profile.name);
   const [query, setQuery] = useState('');
   const [pace, setPace] = useState<PaceFilter>('all');
+  const [audience, setAudience] = useState<AudienceFilter>('all');
   const byId = new Map((progress ?? []).map((p) => [p.planId, p]));
   const all = plans ?? [];
   const active = all.filter((p) => byId.has(p.id));
   const isActive = (p: Plan) => byId.has(p.id);
-  const searching = query.trim() !== '' || pace !== 'all';
-  const results = searching ? searchPlans(all, query, pace) : [];
+  const searching = query.trim() !== '' || pace !== 'all' || audience !== 'all';
+  const results = searching ? searchPlans(all, query, pace, audience) : [];
+  const hello = plansGreeting(name, active.length);
+  usePhoneTitle(<BarTitle title={hello.title} line={hello.line} />);
 
   return (
     <div className={styles.page} data-enter>
       <div className={styles.headRow}>
         <div className="phone-hidden">
           <p className={styles.eyebrow}>Plans</p>
-          <h1 className={styles.title}>Find a plan for where you are</h1>
+          <h1 className={styles.title}>{hello.title}</h1>
+          <p className={styles.lede}>{hello.line}</p>
         </div>
       </div>
 
@@ -62,28 +75,41 @@ export function PlansPage() {
       <section className={styles.section} aria-label="Discover">
         <h2 className={styles.sectionTitle}>Discover</h2>
         <div className={styles.searchBar}>
-          <Input
-            label="Search plans"
-            hideLabel
-            placeholder="Search plans — anxiety, Gospels, prayer…"
-            icon={<Search size={16} />}
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            className={styles.search}
-          />
-          <div className={styles.paces} role="radiogroup" aria-label="Pace">
-            {PACES.map((p) => (
+          <label className={styles.searchBox}>
+            <Search size={18} aria-hidden />
+            <input
+              type="search"
+              aria-label="Search plans"
+              placeholder="Search plans — anxiety, Gospels, prayer…"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+            />
+            {query && (
               <button
-                key={p.value}
                 type="button"
-                role="radio"
-                aria-checked={pace === p.value}
-                className={styles.pace}
-                onClick={() => setPace(p.value)}
+                className={styles.searchClear}
+                aria-label="Clear search"
+                onClick={() => setQuery('')}
               >
-                {p.label}
+                <X size={16} aria-hidden />
               </button>
-            ))}
+            )}
+          </label>
+          <div className={styles.filters} role="group" aria-label="Filters">
+            <FilterChip
+              label="Length"
+              value={pace}
+              empty="all"
+              options={PACES}
+              onChange={setPace}
+            />
+            <FilterChip
+              label="For"
+              value={audience}
+              empty="all"
+              options={AUDIENCES}
+              onChange={setAudience}
+            />
           </div>
         </div>
 

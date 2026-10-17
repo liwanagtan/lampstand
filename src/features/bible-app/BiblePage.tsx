@@ -43,6 +43,7 @@ import {
 } from './marks';
 import { NoteDialog } from './NoteDialog';
 import { ReadingSettings } from './ReadingSettings';
+import { readingGreeting } from './greetings';
 import { noteTipEvent } from '@/features/tips/tipStore';
 import { useSettings } from '@/features/settings/settingsStore';
 import { selectionRange, useReader, type Selection } from './readerStore';
@@ -116,8 +117,9 @@ export function BibleReader({ toolbar, selectionActions }: BiblePageSlots) {
       />
     </Tooltip>
   );
-  // Phones: the place in the top bar with Aa beside it; getting around lives in the pill.
-  usePhoneTitle(place, { actions: readingButton });
+  // Phones: the place is already on the page and the pill, so the bar is personal.
+  const name = useSettings((st) => st.profile.name);
+  usePhoneTitle(readingGreeting(name, new Date()), { actions: readingButton });
 
   const go = (dir: 1 | -1) => {
     const n = stepChapter(book, chapter, dir, translation);

@@ -1,10 +1,14 @@
-// Reading plan files (.lampstand-plan.json): daily Bible plans and weekly lesson plans.
+// Reading plan files (.lampstand-plan.json): daily Bible plans and weekly or monthly lessons.
+// Version 2 adds categories (from the plan catalog), audience, level, a cover, monthly pace, and a
+// devotional and prayer per day. Version 1 files still load.
 // Plans store references only, never scripture text, so they work with any translation.
 import { z } from 'zod';
 import { parseRefDetailed, type RefRange } from '../features/bible/ref';
+import { PLAN_CATEGORY_IDS } from './planCatalog';
 
 export const PLAN_FORMAT = 'lampstand-plan';
-export const PLAN_VERSION = 1;
+/** The version written by the skill and the app; version 1 files are still accepted. */
+export const PLAN_VERSION = 2;
 
 export const PLAN_LIMITS = {
   name: 80,
@@ -13,6 +17,10 @@ export const PLAN_LIMITS = {
   note: 2000,
   question: 300,
   questions: 8,
+  devotional: 3000,
+  prayer: 1000,
+  categories: 6,
+  level: 40,
   readings: 12,
   days: 400,
 } as const;
@@ -50,11 +58,30 @@ export const PlanDaySchema = z.strictObject({
     .max(PLAN_LIMITS.questions)
     .optional()
     .meta({ description: 'Discussion or reflection questions shown after the readings.' }),
+  devotional: text(PLAN_LIMITS.devotional, 'Devotional').optional().meta({
+    description:
+      'Version 2. A short devotional (plain text, your own words) read after the readings.',
+  }),
+  prayer: text(PLAN_LIMITS.prayer, 'Prayer')
+    .optional()
+    .meta({ description: 'Version 2. A short prayer to close the day, in your own words.' }),
 });
+
+const CategoryId = z
+  .string()
+  .refine((v) => PLAN_CATEGORY_IDS.includes(v), {
+    error: (iss) => `Unknown category “${String(iss.input)}”. Use an id from the plan catalog.`,
+  })
+  .meta({
+    description: 'A category or subcategory id from catalog.json.',
+    enum: [...PLAN_CATEGORY_IDS],
+  });
 
 export const PlanFileSchema = z.strictObject({
   format: z.literal(PLAN_FORMAT),
-  version: z.literal(PLAN_VERSION),
+  version: z.union([z.literal(1), z.literal(2)], {
+    error: 'The plan version must be 1 or 2.',
+  }),
   id: z
     .string()
     .regex(/^[a-z0-9][a-z0-9-]{1,59}$/, {
@@ -65,9 +92,27 @@ export const PlanFileSchema = z.strictObject({
     }),
   name: text(PLAN_LIMITS.name, 'Plan name'),
   description: text(PLAN_LIMITS.description, 'Description'),
-  pace: z
-    .enum(['daily', 'weekly'])
-    .meta({ description: '"daily": one day at a time. "weekly": a new lesson each Sunday.' }),
+  pace: z.enum(['daily', 'weekly', 'monthly']).meta({
+    description:
+      '"daily": one day at a time. "weekly": a new lesson each Sunday. "monthly": a new lesson each month.',
+  }),
+  categories: z
+    .array(CategoryId)
+    .max(PLAN_LIMITS.categories)
+    .optional()
+    .meta({ description: 'Version 2. Where the plan appears in Discover; several are allowed.' }),
+  audience: z
+    .enum(['personal', 'group'])
+    .optional()
+    .meta({ description: 'Version 2. "personal" reading, or lessons for a "group" or class.' }),
+  level: text(PLAN_LIMITS.level, 'Level')
+    .optional()
+    .meta({ description: 'Version 2. Optional, e.g. "New to faith".' }),
+  cover: z
+    .string()
+    .regex(/^[a-z0-9-]{1,60}$/)
+    .optional()
+    .meta({ description: 'Version 2. A bundled background id used as the plan’s cover.' }),
   days: z.array(PlanDaySchema).min(1).max(PLAN_LIMITS.days),
 });
 
@@ -78,8 +123,12 @@ export interface Plan {
   id: string;
   name: string;
   description: string;
-  pace: 'daily' | 'weekly';
+  pace: 'daily' | 'weekly' | 'monthly';
   source: 'builtin' | 'imported';
+  categories: string[];
+  audience: 'personal' | 'group';
+  level?: string;
+  cover?: string;
   days: PlanDay[];
 }
 
@@ -88,6 +137,8 @@ export interface PlanDay {
   readings: RefRange[];
   note?: string;
   questions?: string[];
+  devotional?: string;
+  prayer?: string;
 }
 
 export type PlanParseResult = { ok: true; plan: Plan } | { ok: false; errors: string[] };
@@ -99,10 +150,16 @@ export function planFromFile(file: PlanFile, source: Plan['source']): Plan {
     description: file.description,
     pace: file.pace,
     source,
+    categories: file.categories ?? [],
+    audience: file.audience ?? (file.pace === 'daily' ? 'personal' : 'group'),
+    level: file.level,
+    cover: file.cover,
     days: file.days.map((d) => ({
       title: d.title,
       note: d.note,
       questions: d.questions,
+      devotional: d.devotional,
+      prayer: d.prayer,
       readings: d.readings.map((r) => {
         const p = parseRefDetailed(r);
         if (!p.ok) throw new Error(r);

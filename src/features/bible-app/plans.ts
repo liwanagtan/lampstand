@@ -24,6 +24,8 @@ interface Generated {
   from: string;
   to: string;
   books?: string[];
+  categories: string[];
+  cover: string;
 }
 
 const GENERATED: Generated[] = [
@@ -34,6 +36,8 @@ const GENERATED: Generated[] = [
     days: 365,
     from: 'GEN',
     to: 'REV',
+    categories: ['through-the-bible'],
+    cover: 'sunrise-hills',
   },
   {
     id: 'nt-90',
@@ -42,6 +46,8 @@ const GENERATED: Generated[] = [
     days: 90,
     from: 'MAT',
     to: 'REV',
+    categories: ['through-the-bible', 'life-of-jesus'],
+    cover: 'misty-valley',
   },
   {
     id: 'gospels-40',
@@ -50,6 +56,8 @@ const GENERATED: Generated[] = [
     days: 40,
     from: 'MAT',
     to: 'JHN',
+    categories: ['four-gospels', 'life-of-jesus'],
+    cover: 'park-path',
   },
   {
     id: 'psalms-proverbs-30',
@@ -59,6 +67,8 @@ const GENERATED: Generated[] = [
     from: 'PSA',
     to: 'PRO',
     books: ['PSA', 'PRO'],
+    categories: ['psalms-of-david', 'wisdom'],
+    cover: 'river-sunrise',
   },
 ];
 
@@ -136,6 +146,9 @@ export function builtinPlans(): Plan[] {
     description: g.description,
     pace: 'daily',
     source: 'builtin',
+    categories: g.categories,
+    audience: 'personal',
+    cover: g.cover,
     days: splitChapters(bookCodes(g), g.days).map((d) => ({ readings: chaptersToReadings(d) })),
   }));
   const sample = parsePlanFile(parables, 'builtin');
@@ -263,6 +276,7 @@ export function currentDay(plan: Plan, progress: PlanProgressRecord, now = new D
     for (let d = 1; d <= total; d++) if (!done.has(d)) return { kind: 'read', day: d };
     return { kind: 'finished' };
   }
+  if (plan.pace === 'monthly') return monthlyDay(plan, progress, now, done);
   const startWeek = sundayOnOrBefore(localDayNumber(new Date(progress.startedAt)));
   const week = Math.floor((localDayNumber(now) - startWeek) / 7);
   const lesson = Math.min(total, week + 1);
@@ -277,6 +291,28 @@ export function currentDay(plan: Plan, progress: PlanProgressRecord, now = new D
     day: lesson,
     next: lesson + 1,
     unlocks: new Date(unlocks.getUTCFullYear(), unlocks.getUTCMonth(), unlocks.getUTCDate()),
+  };
+}
+
+/** Monthly lessons: a new one each calendar month, counted from the month the plan started. */
+function monthlyDay(
+  plan: Plan,
+  progress: PlanProgressRecord,
+  now: Date,
+  done: Set<number>,
+): DayStatus {
+  const total = plan.days.length;
+  const start = new Date(progress.startedAt);
+  const months = (now.getFullYear() - start.getFullYear()) * 12 + now.getMonth() - start.getMonth();
+  const lesson = Math.min(total, Math.max(1, months + 1));
+  if (!done.has(lesson)) return { kind: 'read', day: lesson };
+  for (let d = 1; d < lesson; d++) if (!done.has(d)) return { kind: 'read', day: d };
+  if (lesson >= total) return { kind: 'finished' };
+  return {
+    kind: 'waiting',
+    day: lesson,
+    next: lesson + 1,
+    unlocks: new Date(now.getFullYear(), now.getMonth() + 1, 1),
   };
 }
 
@@ -325,4 +361,14 @@ export function usePlanProgress(): PlanProgressRecord[] | undefined {
 
 export function usePlanProgressFor(planId: string): PlanProgressRecord | null | undefined {
   return useLiveQuery(async () => (await db.plans.get(planId)) ?? null, [planId]);
+}
+
+/** Weekly and monthly plans are lessons; daily plans are days. */
+export const isLessons = (plan: Plan) => plan.pace !== 'daily';
+
+/** "This week's lesson", "This month's lesson" or "Up next". */
+export function currentLabel(plan: Plan): string {
+  if (plan.pace === 'weekly') return "This week's lesson";
+  if (plan.pace === 'monthly') return "This month's lesson";
+  return 'Up next';
 }

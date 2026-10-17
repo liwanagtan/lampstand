@@ -5,6 +5,8 @@ import { Button, Chip, Dialog, toast } from '@/design-system/components';
 import type { PlanProgressRecord } from '@/db/types';
 import {
   currentDay,
+  currentLabel,
+  isLessons,
   formatDay,
   importPlan,
   readingMinutes,
@@ -111,9 +113,9 @@ export function PlansPage() {
 function PlanBadges({ plan }: { plan: Plan }) {
   return (
     <span className={styles.badges}>
-      {plan.pace === 'weekly' && (
+      {isLessons(plan) && (
         <Chip icon={<GraduationCap size={12} />} tone="accent">
-          Weekly lessons
+          {plan.pace === 'monthly' ? 'Monthly lessons' : 'Weekly lessons'}
         </Chip>
       )}
       {plan.source === 'imported' && <Chip>Imported</Chip>}
@@ -123,7 +125,7 @@ function PlanBadges({ plan }: { plan: Plan }) {
 
 function AvailablePlan({ plan }: { plan: Plan }) {
   const [removing, setRemoving] = useState(false);
-  const unit = plan.pace === 'weekly' ? 'lessons' : 'days';
+  const unit = isLessons(plan) ? 'lessons' : 'days';
   return (
     <section className={styles.card} aria-label={plan.name}>
       <div className={styles.cardHead}>
@@ -180,7 +182,7 @@ export function ActivePlan({
   const status = currentDay(plan, progress);
   const total = plan.days.length;
   const pct = Math.round((progress.done.length / total) * 100);
-  const unit = plan.pace === 'weekly' ? 'Lesson' : 'Day';
+  const unit = isLessons(plan) ? 'Lesson' : 'Day';
   const day = status.kind === 'read' ? plan.days[status.day - 1]! : null;
 
   return (
@@ -204,7 +206,7 @@ export function ActivePlan({
       {status.kind === 'read' && day && (
         <>
           <p className={styles.muted}>
-            {plan.pace === 'weekly' ? "This week's lesson" : 'Up next'} · {unit} {status.day}
+            {currentLabel(plan)} · {unit} {status.day}
           </p>
           <p className={styles.reading}>{day.title ?? formatDay(day)}</p>
           <p className={styles.readingMeta}>

@@ -187,3 +187,34 @@
   gap: var(--space-2);
   margin-top: var(--space-2);
 }
+
+.devotional {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin-top: var(--space-8);
+  padding-top: var(--space-6);
+  border-top: 1px solid var(--color-border);
+  font-size: var(--text-16);
+  line-height: 1.7;
+}
+.prayer {
+  margin-top: var(--space-6);
+  padding: var(--space-5, 20px);
+  border-radius: var(--radius-md);
+  background: color-mix(in srgb, var(--color-accent) 8%, var(--color-surface));
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-style: italic;
+  line-height: 1.6;
+}
+.prayer h2 {
+  margin-bottom: var(--space-2);
+  font-family: var(--font-sans, inherit);
+  font-size: var(--text-12);
+  font-style: normal;
+  font-weight: var(--weight-semibold);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-accent-text);
+}

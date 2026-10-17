@@ -11,6 +11,7 @@ import {
   chapterChunks,
   currentDay,
   formatDay,
+  isLessons,
   readableNext,
   readingMinutes,
   setDayRead,
@@ -61,7 +62,7 @@ export function PlanReaderPage() {
     );
   }
 
-  const unit = plan.pace === 'weekly' ? 'Lesson' : 'Day';
+  const unit = isLessons(plan) ? 'Lesson' : 'Day';
   const done = Boolean(progress?.done.includes(n));
 
   return (
@@ -93,17 +94,32 @@ export function PlanReaderPage() {
         </section>
       ))}
 
+      {day.devotional && (
+        <section className={styles.devotional} aria-label="Devotional">
+          {day.devotional.split(/\n{2,}/).map((para, k) => (
+            <p key={k}>{para}</p>
+          ))}
+        </section>
+      )}
+
       {day.questions && day.questions.length > 0 && (
         <section className={styles.questions} aria-label="Questions">
           <h2>
             <MessageCircleQuestion size={18} aria-hidden />
-            {plan.pace === 'weekly' ? 'Talk about it' : 'Think about it'}
+            {plan.audience === 'group' ? 'Talk about it' : 'Think about it'}
           </h2>
           <ol>
             {day.questions.map((q) => (
               <li key={q}>{q}</li>
             ))}
           </ol>
+        </section>
+      )}
+
+      {day.prayer && (
+        <section className={styles.prayer} aria-label="Prayer">
+          <h2>Pray</h2>
+          <p>{day.prayer}</p>
         </section>
       )}
 

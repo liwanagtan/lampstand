@@ -1,10 +1,13 @@
 {
   "format": "lampstand-plan",
-  "version": 1,
+  "version": 2,
   "id": "parables-8-weeks",
   "name": "Parables of Jesus",
   "description": "Eight weekly Sunday-school lessons on the stories Jesus told, with a short note and questions for discussion.",
   "pace": "weekly",
+  "categories": ["parables", "sunday-school"],
+  "audience": "group",
+  "cover": "golden-hills",
   "days": [
     {
       "title": "The Sower",

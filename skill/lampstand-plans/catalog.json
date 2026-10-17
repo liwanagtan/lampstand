@@ -1,0 +1,102 @@
+{
+  "version": 1,
+  "groups": [
+    {
+      "id": "feel",
+      "name": "For how you feel",
+      "description": "Find comfort and direction in Scripture for what you're carrying today.",
+      "categories": [
+        { "id": "anxiety", "name": "Anxiety" },
+        { "id": "worry", "name": "Worry" },
+        { "id": "fear", "name": "Fear" },
+        { "id": "stress", "name": "Stress" },
+        { "id": "anger", "name": "Anger" },
+        { "id": "loss", "name": "Loss and grief" },
+        { "id": "loneliness", "name": "Loneliness" },
+        { "id": "healing", "name": "Healing" },
+        { "id": "letting-go", "name": "Letting go" },
+        { "id": "forgiveness", "name": "Forgiveness" },
+        { "id": "hope", "name": "Hope" },
+        { "id": "peace", "name": "Peace" },
+        { "id": "joy", "name": "Joy" },
+        { "id": "love", "name": "Love" },
+        { "id": "gratitude", "name": "Gratitude" },
+        { "id": "money", "name": "Money" },
+        { "id": "temptation", "name": "Temptation" },
+        { "id": "pride", "name": "Pride" },
+        { "id": "doubt", "name": "Doubt" }
+      ]
+    },
+    {
+      "id": "guided",
+      "name": "Guided reading",
+      "description": "Read a part of the Bible with a clear path through it.",
+      "categories": [
+        { "id": "through-the-bible", "name": "Through the Bible" },
+        { "id": "four-gospels", "name": "The four Gospels" },
+        { "id": "life-of-jesus", "name": "Life of Jesus" },
+        { "id": "parables", "name": "Parables of Jesus" },
+        { "id": "miracles", "name": "The miracles" },
+        { "id": "psalms-of-david", "name": "The Psalms of David" },
+        { "id": "wisdom", "name": "Wisdom" }
+      ]
+    },
+    {
+      "id": "grow",
+      "name": "Grow in faith",
+      "description": "Steps for every season, from your first days of faith to serving others.",
+      "categories": [
+        {
+          "id": "new-to-faith",
+          "name": "New to faith",
+          "children": [
+            { "id": "first-steps", "name": "First steps" },
+            { "id": "who-is-jesus", "name": "Who is Jesus" },
+            { "id": "learning-to-pray", "name": "Learning to pray" },
+            { "id": "reading-the-bible", "name": "Reading the Bible" },
+            { "id": "belonging", "name": "Belonging to a church" }
+          ]
+        },
+        {
+          "id": "discipleship",
+          "name": "Following Jesus",
+          "children": [
+            { "id": "spiritual-habits", "name": "Spiritual habits" },
+            { "id": "character", "name": "Character" },
+            { "id": "sharing-faith", "name": "Sharing your faith" }
+          ]
+        },
+        {
+          "id": "ministry",
+          "name": "Ministry",
+          "children": [
+            { "id": "serving", "name": "Serving" },
+            { "id": "leading", "name": "Leading" },
+            { "id": "teaching", "name": "Teaching" },
+            { "id": "worship", "name": "Worship" }
+          ]
+        },
+        {
+          "id": "relationships",
+          "name": "Relationships",
+          "children": [
+            { "id": "marriage", "name": "Marriage" },
+            { "id": "parenting", "name": "Parenting" },
+            { "id": "friendship", "name": "Friendship" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "lessons",
+      "name": "Lessons for groups",
+      "description": "Ready-made lessons with notes and questions for a class or group.",
+      "categories": [
+        { "id": "sunday-school", "name": "Sunday school" },
+        { "id": "small-groups", "name": "Small groups" },
+        { "id": "youth", "name": "Youth" },
+        { "id": "children", "name": "Children" }
+      ]
+    }
+  ]
+}

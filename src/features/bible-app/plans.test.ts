@@ -130,3 +130,31 @@ describe('which day to read', () => {
     expect((await db.plans.get('gospels-40'))!.done).toEqual([1]);
   });
 });
+
+describe('monthly lessons', () => {
+  it('unlock one each calendar month', async () => {
+    const { parsePlanFile } = await import('@/schema/plan');
+    const r = parsePlanFile({
+      format: 'lampstand-plan',
+      version: 2,
+      id: 'monthly-test',
+      name: 'Monthly',
+      description: 'Three months.',
+      pace: 'monthly',
+      days: [{ readings: ['John 1'] }, { readings: ['John 2'] }, { readings: ['John 3'] }],
+    });
+    if (!r.ok) throw new Error(r.errors.join());
+    const start = new Date(2026, 9, 20);
+    expect(currentDay(r.plan, progress(start), new Date(2026, 9, 28))).toEqual({
+      kind: 'read',
+      day: 1,
+    });
+    const waiting = currentDay(r.plan, progress(start, [1]), new Date(2026, 9, 28));
+    expect(waiting).toMatchObject({ kind: 'waiting', next: 2 });
+    if (waiting.kind === 'waiting') expect(waiting.unlocks.getMonth()).toBe(10);
+    expect(currentDay(r.plan, progress(start, [1]), new Date(2026, 10, 2))).toEqual({
+      kind: 'read',
+      day: 2,
+    });
+  });
+});

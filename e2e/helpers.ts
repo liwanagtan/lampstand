@@ -17,5 +17,5 @@ export async function importSample(page: Page) {
   await importFile(page, SAMPLE);
   await expect(page.getByText('Ready to save')).toBeVisible();
   await page.getByRole('button', { name: 'Save to library' }).click();
-  await expect(page.getByRole('heading', { name: 'Library', exact: true })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Screen', exact: true, level: 1 })).toBeVisible();
 }

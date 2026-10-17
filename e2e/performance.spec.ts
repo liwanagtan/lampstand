@@ -15,7 +15,7 @@ async function present(page: Page) {
 test('cold start to library < 2 s', async ({ page }) => {
   await importSample(page);
   await page.reload();
-  await expect(page.getByRole('heading', { name: 'Library', exact: true })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Screen', exact: true, level: 1 })).toBeVisible();
   const ms = await page.evaluate(() => performance.now());
   console.log(`cold start ${ms.toFixed(0)} ms`);
   expect(ms).toBeLessThan(2000);

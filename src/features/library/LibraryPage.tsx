@@ -30,7 +30,8 @@ import { presentationTranslation, slideTranslation } from './translation';
 import { matches } from './libraryHelpers';
 import { PosterContext, posterInfoFor } from '@/slides/poster/posterInfo';
 import styles from './LibraryPage.module.css';
-import { VerseOfTheDay } from '@/features/bible-app/VerseOfTheDay';
+import { ScreenEntries } from './ScreenEntries';
+import { paths } from '@/app/paths';
 
 type SortKey = 'date' | 'lastPresented' | 'updated';
 
@@ -76,12 +77,9 @@ export function LibraryPage() {
 
   return (
     <Page
-      title="Library"
-      description={
-        records && !empty
-          ? `${records.length} presentation${records.length === 1 ? '' : 's'}`
-          : undefined
-      }
+      title="Screen"
+      description="Put sermon slides and Scripture on a TV or projector."
+
       actions={
         records &&
         !empty && (
@@ -107,7 +105,7 @@ export function LibraryPage() {
             <Button
               variant="primary"
               icon={<Upload size={16} />}
-              onClick={() => navigate('/import')}
+              onClick={() => navigate(paths.screenImport)}
             >
               Import
             </Button>
@@ -115,7 +113,20 @@ export function LibraryPage() {
         )
       }
     >
-      {records && <VerseOfTheDay compact />}
+      <ScreenEntries
+        count={records?.length ?? 0}
+        onPresentation={() =>
+          empty
+            ? navigate(paths.screenImport)
+            : document.getElementById('presentations')?.scrollIntoView({ behavior: 'smooth' })
+        }
+        onBible={() => navigate(paths.bible)}
+      />
+      {records && !empty && (
+        <h2 id="presentations" className={styles.sectionTitle}>
+          Presentations <span>{records.length}</span>
+        </h2>
+      )}
       {empty ? (
         <LibraryEmpty />
       ) : (
@@ -192,7 +203,7 @@ function PresentationCard({ record }: { record: LibraryRecord }) {
           <button
             type="button"
             className={styles.thumbButton}
-            onClick={() => navigate(`/present/${record.id}`)}
+            onClick={() => navigate(paths.presentation(record.id))}
           >
             <span className="visually-hidden">Present {record.title}</span>
             <span className={styles.playHint} aria-hidden>
@@ -219,12 +230,12 @@ function PresentationCard({ record }: { record: LibraryRecord }) {
                 {
                   label: 'Present',
                   icon: <Play size={16} />,
-                  onSelect: () => navigate(`/present/${record.id}`),
+                  onSelect: () => navigate(paths.presentation(record.id)),
                 },
                 {
                   label: 'Edit',
                   icon: <Pencil size={16} />,
-                  onSelect: () => navigate(`/edit/${record.id}`),
+                  onSelect: () => navigate(paths.edit(record.id)),
                 },
                 {
                   label: 'Duplicate',
@@ -275,7 +286,11 @@ function LibraryEmpty() {
       <p className={styles.emptyText}>
         Import a presentation file to get started. It’ll be here whenever you’re ready to present.
       </p>
-      <Button variant="primary" icon={<Upload size={16} />} onClick={() => navigate('/import')}>
+      <Button
+        variant="primary"
+        icon={<Upload size={16} />}
+        onClick={() => navigate(paths.screenImport)}
+      >
         Import presentation
       </Button>
       <p className={styles.emptyHint}>Accepts .lampstand.json files</p>

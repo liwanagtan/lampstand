@@ -1,5 +1,7 @@
 import { useMemo, useState } from 'react';
-import { BookOpen, NotebookPen, Plus, Search, Sparkles, Trash2 } from 'lucide-react';
+import { BookOpen, Highlighter, NotebookPen, Plus, Search, Sparkles, Trash2 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { paths } from '@/app/paths';
 import {
   Button,
   EmptyState,
@@ -54,6 +56,7 @@ const refLabel = (ref?: string) => {
 
 /** Every reflection and journal entry, with search; new or open ones edit in a side panel. */
 export function JournalPage() {
+  const navigate = useNavigate();
   const entries = useEntries();
   const [filter, setFilter] = useState<Filter>('all');
   const [query, setQuery] = useState('');
@@ -104,9 +107,14 @@ export function JournalPage() {
             Reflections and notes from your time in the Word. They stay on this computer.
           </p>
         </div>
-        <Button variant="primary" icon={<Plus size={16} />} onClick={startNew}>
-          New entry
-        </Button>
+        <div className={styles.headActions}>
+          <Button icon={<Highlighter size={16} />} onClick={() => navigate(paths.notes)}>
+            Notes &amp; highlights
+          </Button>
+          <Button variant="primary" icon={<Plus size={16} />} onClick={startNew}>
+            New entry
+          </Button>
+        </div>
       </div>
 
       {entries && !any ? (

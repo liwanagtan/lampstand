@@ -36,7 +36,7 @@ for (const scheme of ['light', 'dark'] as const) {
   test(`operator screens pass axe in ${scheme} mode`, async ({ page }) => {
     await page.emulateMedia({ colorScheme: scheme });
     await page.setViewportSize({ width: 1366, height: 768 });
-    await openApp(page, '/');
+    await openApp(page, '/screen');
     await audit(page, 'empty library');
     await importSample(page);
     await audit(page, 'library');
@@ -44,12 +44,12 @@ for (const scheme of ['light', 'dark'] as const) {
     await audit(page, 'import');
     await openApp(page, '/settings');
     await audit(page, 'settings');
-    await openApp(page, '/');
+    await openApp(page, '/screen');
     await page.getByRole('button', { name: 'Actions for A Lamp in the Dark' }).click();
     await page.getByRole('menuitem', { name: 'Edit' }).click();
     await expect(page.getByRole('navigation', { name: 'Slides' })).toBeVisible();
     await audit(page, 'editor');
-    await page.goto('/');
+    await page.goto('/screen');
     await page.getByRole('button', { name: 'Present A Lamp in the Dark' }).click();
     await expect(page.getByText('LIVE', { exact: true })).toBeVisible();
     await audit(page, 'control screen');

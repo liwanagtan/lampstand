@@ -138,3 +138,14 @@
   color: var(--color-text-muted);
   line-height: 1.7;
 }
+
+/* Phones: one column, controls take the full width. */
+@media (max-width: 640px) {
+  .section {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-4);
+  }
+  .segmented {
+    width: 100%;
+  }
+}

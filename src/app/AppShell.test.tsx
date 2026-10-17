@@ -1,24 +1,52 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createMemoryRouter, RouterProvider } from 'react-router-dom';
 import { routes } from './router';
+import { ALL_FEATURES } from './features';
 import { useSettings } from '@/features/settings/settingsStore';
 import { db } from '@/db/db';
 
 function renderAt(path: string) {
   const router = createMemoryRouter(routes, { initialEntries: [path] });
-  return render(<RouterProvider router={router} />);
+  render(<RouterProvider router={router} />);
+  return router;
 }
 
 describe('AppShell', () => {
-  it('shows navigation and the library by default', async () => {
-    renderAt('/');
-    expect(await screen.findByRole('heading', { name: 'Library' })).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: /settings/i })).toBeInTheDocument();
+  afterEach(() => useSettings.setState({ features: ALL_FEATURES }));
+
+  it('shows the five destinations and Me', async () => {
+    renderAt('/screen');
+    expect(await screen.findByRole('heading', { name: 'Screen', level: 1 })).toBeInTheDocument();
+    const nav = screen.getAllByRole('navigation', { name: 'Main' })[0]!;
+    expect(
+      within(nav)
+        .getAllByRole('link')
+        .map((l) => l.textContent),
+    ).toEqual(['Today', 'Bible', 'Plans', 'Journal', 'Screen']);
+    expect(screen.getByRole('link', { name: /Me: profile and settings/ })).toBeInTheDocument();
   });
 
-  it('switches and persists the app appearance', async () => {
-    renderAt('/');
+  it('hides switched-off destinations', async () => {
+    useSettings.setState({ features: { ...ALL_FEATURES, plans: false, screen: false } });
+    renderAt('/me');
+    await screen.findByRole('heading', { name: 'Me', level: 1 });
+    const nav = screen.getAllByRole('navigation', { name: 'Main' })[0]!;
+    expect(
+      within(nav)
+        .getAllByRole('link')
+        .map((l) => l.textContent),
+    ).toEqual(['Today', 'Bible', 'Journal']);
+  });
+
+  it('sends old links to their new homes', async () => {
+    const router = renderAt('/settings');
+    expect(await screen.findByRole('heading', { name: 'Me', level: 1 })).toBeInTheDocument();
+    expect(router.state.location.pathname).toBe('/me');
+  });
+
+  it('switches and persists the app appearance from Me', async () => {
+    renderAt('/me');
     await userEvent.click(await screen.findByRole('radio', { name: 'Light' }));
     expect(document.documentElement.dataset.theme).toBe('light');
     expect(useSettings.getState().uiMode).toBe('light');

@@ -2,13 +2,13 @@
 // never applied in the middle of a service.
 import { registerSW } from 'virtual:pwa-register';
 import { toast } from '@/design-system/components';
+import { isPresentingPath } from './paths';
 
 export function registerServiceWorker(): void {
   if (!('serviceWorker' in navigator) || import.meta.env.DEV) return;
   const update = registerSW({
     onNeedRefresh() {
-      if (location.pathname.startsWith('/present') || location.pathname.startsWith('/output'))
-        return;
+      if (isPresentingPath(location.pathname)) return;
       toast({
         title: 'A new version of Lampstand is ready',
         duration: 60_000,

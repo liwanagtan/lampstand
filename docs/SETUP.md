@@ -11,12 +11,12 @@ A one-time checklist for the church laptop, then a short routine for each servic
 5. **Turn off TV overscan.** Most TVs crop the edges of the picture. On the TV remote, open _Picture → Picture size / Aspect ratio_ and choose **Just Scan**, **Screen Fit**, **Full Pixel** or **1:1** (the name depends on the brand). Lampstand keeps all text inside a 5% safe area, but a cropped picture still looks cramped.
 6. **Allow window placement.** The first time you press **Open output**, Chrome asks to _manage windows on all your displays_. Choose **Allow**, so the output opens full screen on the TV by itself.
 7. **Allow pop-ups** for Lampstand if Chrome blocks the output window.
-8. **Set your defaults** in _Settings_: default translation, template, verse overlay, and your church's logo for the logo screen.
-9. **Export a backup** from _Settings → Data_ after big changes, and keep it on a USB drive.
+8. **Set your defaults** in _Me_ (the avatar at the top right): default translation, template, verse overlay, and your church's logo for the logo screen.
+9. **Export a backup** from _Me → Data_ after big changes, and keep it on a USB drive.
 
 ## Each service
 
-1. Before the service, open the presentation from the **Library** and click its thumbnail to present.
+1. Before the service, open **Screen**, find the presentation under Presentations and click its thumbnail to present.
 2. Press **Start Presentation**. The output appears full screen on the TV; the laptop keeps the control screen.
 3. Start with the countdown slide. At any time press **B** to blank the TV, **L** for the logo, **S** for the sermon poster, or **F** to freeze the TV while you prepare the next thing.
 4. Advance with **→ / Space / PageDown** (a presentation clicker works without setup) and go back with **← / PageUp**.

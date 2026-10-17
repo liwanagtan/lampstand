@@ -35,6 +35,7 @@ import { presentationTranslation, slideTranslation } from './translation';
 import { mediaNeeds } from './importHelpers';
 import { PosterContext, posterInfoFor } from '@/slides/poster/posterInfo';
 import styles from './ImportPage.module.css';
+import { paths } from '@/app/paths';
 
 interface Source {
   name: string;
@@ -166,9 +167,9 @@ export function ImportPage() {
       toast({
         title: `Saved “${record.title}” to your library`,
         tone: 'success',
-        action: { label: 'Present', onClick: () => navigate(`/present/${record.id}`) },
+        action: { label: 'Present', onClick: () => navigate(paths.presentation(record.id)) },
       });
-      navigate('/');
+      navigate(paths.screen);
     } catch (err) {
       toast({
         title: `Couldn't save: ${err instanceof Error ? err.message : String(err)}`,

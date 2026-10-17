@@ -1,3 +1,4 @@
+import type { Features } from '@/app/features';
 import type { PlanFile } from '@/schema/plan';
 import type { OverlayMode, TemplateId, UiMode } from '@/schema/common';
 
@@ -63,6 +64,8 @@ export interface Settings {
   logoAssetId: string | null;
   bundledBiblesVersion: number;
   shortcutHints: Record<string, number>;
+  /** Which destinations show (Me › What I use Lampstand for). */
+  features: Features;
 }
 
 export type SettingKey = keyof Settings;

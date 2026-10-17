@@ -22,6 +22,7 @@ import {
 import { READER_SIZES, useReader } from './readerStore';
 import { useChapter } from './useChapter';
 import styles from './PlanReader.module.css';
+import { paths } from '@/app/paths';
 
 const dateFormat = new Intl.DateTimeFormat(undefined, {
   weekday: 'long',
@@ -50,7 +51,7 @@ export function PlanReaderPage() {
       <div className={styles.page}>
         <EmptyState
           title="This reading isn't available"
-          actions={<Button onClick={() => navigate('/bible/plans')}>Back to plans</Button>}
+          actions={<Button onClick={() => navigate(paths.plans)}>Back to plans</Button>}
         >
           The plan may have been removed.
         </EmptyState>
@@ -64,7 +65,7 @@ export function PlanReaderPage() {
   return (
     <div className={styles.page} ref={top}>
       <header className={styles.header}>
-        <Link to="/bible/plans" className={styles.back}>
+        <Link to={paths.plans} className={styles.back}>
           <ArrowLeft size={16} aria-hidden /> {plan.name}
         </Link>
         <p className={styles.eyebrow}>
@@ -272,12 +273,12 @@ function FinishBlock({
           <Button
             variant="primary"
             iconEnd={<ArrowRight size={16} />}
-            onClick={() => navigate(`/bible/plans/${plan.id}/${next}`)}
+            onClick={() => navigate(paths.planDay(plan.id, next))}
           >
             Read {unit.toLowerCase()} {next} now
           </Button>
         )}
-        <Button onClick={() => navigate('/bible/today')}>Back to Today</Button>
+        <Button onClick={() => navigate(paths.today)}>Back to Today</Button>
         {justFinished && (
           <Button
             variant="ghost"

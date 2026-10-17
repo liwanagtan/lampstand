@@ -16,6 +16,7 @@ import {
   type Plan,
 } from './plans';
 import styles from './Daily.module.css';
+import { paths } from '@/app/paths';
 
 const dateFormat = new Intl.DateTimeFormat(undefined, {
   weekday: 'long',
@@ -216,7 +217,7 @@ export function ActivePlan({
             <Button
               variant="primary"
               icon={<BookOpen size={16} />}
-              onClick={() => navigate(`/bible/plans/${plan.id}/${status.day}`)}
+              onClick={() => navigate(paths.planDay(plan.id, status.day))}
             >
               Read {unit.toLowerCase()} {status.day}
             </Button>

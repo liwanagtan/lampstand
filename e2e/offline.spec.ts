@@ -18,8 +18,8 @@ test('no request ever leaves localhost during a full run (PRD §10)', async ({ p
   await page.setViewportSize({ width: 1366, height: 768 });
   await importSample(page);
   await page.goto('/settings');
-  await expect(page.getByRole('heading', { name: 'Settings' })).toBeVisible();
-  await page.goto('/');
+  await expect(page.getByRole('heading', { name: 'Me', level: 1 })).toBeVisible();
+  await page.goto('/screen');
   await page.getByRole('button', { name: 'Present A Lamp in the Dark' }).click();
   const popup = page.waitForEvent('popup');
   await page.getByRole('button', { name: 'Start Presentation' }).click();
@@ -55,7 +55,7 @@ test('after the first visit the app works with the network unplugged', async ({
 
   await context.setOffline(true);
   await page.reload();
-  await expect(page.getByRole('heading', { name: 'Library', exact: true })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Screen', exact: true, level: 1 })).toBeVisible();
   await page.getByRole('button', { name: 'Present A Lamp in the Dark' }).click();
   await expect(page.getByText('LIVE', { exact: true })).toBeVisible();
   await page.keyboard.press('/');

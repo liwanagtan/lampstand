@@ -1,4 +1,5 @@
 import type { Settings } from '@/db/types';
+import { ALL_FEATURES } from '@/app/features';
 
 export const DEFAULT_SETTINGS: Settings = {
   defaultTranslation: 'KJV',
@@ -9,4 +10,5 @@ export const DEFAULT_SETTINGS: Settings = {
   logoAssetId: null,
   bundledBiblesVersion: 0,
   shortcutHints: {},
+  features: ALL_FEATURES,
 };

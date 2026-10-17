@@ -64,6 +64,7 @@ import {
 } from './slideOps';
 import { PosterContext, posterInfoFor } from '@/slides/poster/posterInfo';
 import styles from './EditorPage.module.css';
+import { paths } from '@/app/paths';
 
 export function EditorPage() {
   const { id = '' } = useParams();
@@ -88,7 +89,7 @@ export function EditorPage() {
     return (
       <EmptyState
         title="Presentation not found"
-        actions={<Button onClick={() => navigate('/')}>Back to Library</Button>}
+        actions={<Button onClick={() => navigate(paths.screen)}>Back to Screen</Button>}
       >
         It may have been deleted.
       </EmptyState>
@@ -146,9 +147,9 @@ function Editor({ id }: { id: string }) {
       <div className={styles.shell}>
         <header className={styles.top}>
           <IconButton
-            label="Back to Library"
+            label="Back to Screen"
             icon={<ArrowLeft size={20} />}
-            onClick={() => navigate('/')}
+            onClick={() => navigate(paths.screen)}
           />
           <div className={styles.titleBlock}>
             <h1 className={styles.title}>{presentation.title}</h1>
@@ -179,7 +180,7 @@ function Editor({ id }: { id: string }) {
               icon={<Play size={16} />}
               onClick={async () => {
                 await useEditor.getState().flush();
-                navigate(`/present/${id}`);
+                navigate(paths.presentation(id));
               }}
             >
               Present

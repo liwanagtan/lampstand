@@ -25,8 +25,8 @@ const OVERLAY_LABELS: Record<OverlayMode, string> = {
 export function SettingsPage() {
   return (
     <Page
-      title="Settings"
-      description="Defaults for new services, the app’s look, Bibles and your data."
+      title="Me"
+      description="Your preferences: reading, the app’s look, presenting defaults, Bibles and your data."
     >
       <div className={styles.sections}>
         <PresentingSection />

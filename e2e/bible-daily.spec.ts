@@ -3,7 +3,7 @@ import { openApp } from './helpers';
 
 test('Today, reading plans and the journal', async ({ page }) => {
   await page.setViewportSize({ width: 1366, height: 860 });
-  await openApp(page, '/bible/today');
+  await openApp(page, '/');
   const verse = page.getByRole('region', { name: 'Verse of the day' });
   await expect(verse.locator('blockquote')).toContainText(/\w{3,}/);
   await expect(page.getByRole('region', { name: 'This week' })).toBeVisible();
@@ -12,7 +12,7 @@ test('Today, reading plans and the journal', async ({ page }) => {
   await verse.getByRole('button', { name: 'Read in context' }).click();
   await expect(page.getByRole('dialog')).toContainText('Around');
   await page.keyboard.press('Escape');
-  await expect(page).toHaveURL(/\/bible\/today$/);
+  await expect(page).toHaveURL(/\/$/);
 
   // Reflect writes into the journal from a side panel.
   await verse.getByRole('button', { name: 'Reflect' }).click();
@@ -27,15 +27,15 @@ test('Today, reading plans and the journal', async ({ page }) => {
 
   // Present turns into Stop Presenting; leaving Today ends a session Today started.
   const popup = page.waitForEvent('popup');
-  await verse.getByRole('button', { name: 'Present' }).click();
+  await verse.getByRole('button', { name: 'Show on screen' }).click();
   const output = await popup;
   await expect(output.getByTestId('output')).toContainText(/\w{3,}/);
-  await verse.getByRole('button', { name: 'Stop Presenting' }).click();
+  await verse.getByRole('button', { name: 'Stop showing' }).click();
   await expect.poll(() => output.isClosed()).toBe(true);
   const popup2 = page.waitForEvent('popup');
-  await verse.getByRole('button', { name: 'Present' }).click();
+  await verse.getByRole('button', { name: 'Show on screen' }).click();
   const output2 = await popup2;
-  await expect(verse.getByRole('button', { name: 'Stop Presenting' })).toBeVisible();
+  await expect(verse.getByRole('button', { name: 'Stop showing' })).toBeVisible();
   await page.getByRole('link', { name: 'Plans' }).click();
   await expect.poll(() => output2.isClosed()).toBe(true);
   await page.getByRole('link', { name: 'Today' }).click();
@@ -107,8 +107,8 @@ test('Today, reading plans and the journal', async ({ page }) => {
   await page.reload();
   await expect(page.getByRole('button', { name: /My shepherd/ })).toBeVisible();
 
-  // The Library shows the verse of the day.
-  await page.getByRole('link', { name: 'Library' }).click();
-  await expect(page.getByRole('heading', { name: 'Library', exact: true })).toBeVisible();
-  await expect(page.getByRole('region', { name: 'Verse of the day' })).toBeVisible();
+  // Screen is one tap away, with its two ways in.
+  await page.getByRole('link', { name: 'Screen' }).click();
+  await expect(page.getByRole('heading', { name: 'Screen', exact: true, level: 1 })).toBeVisible();
+  await expect(page.getByRole('button', { name: /Show the Bible/ })).toBeVisible();
 });

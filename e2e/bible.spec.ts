@@ -3,8 +3,8 @@ import { expect, test } from '@playwright/test';
 test('first run prepares the five Bibles, then never again', async ({ page }) => {
   test.setTimeout(90_000);
   const t0 = Date.now();
-  await page.goto('/');
-  await expect(page.getByRole('heading', { name: 'Library', exact: true })).toBeVisible({
+  await page.goto('/screen');
+  await expect(page.getByRole('heading', { name: 'Screen', exact: true, level: 1 })).toBeVisible({
     timeout: 60_000,
   });
   const elapsed = Date.now() - t0;
@@ -19,7 +19,7 @@ test('first run prepares the five Bibles, then never again', async ({ page }) =>
   });
   expect(count).toBe(5);
   await page.reload();
-  await expect(page.getByRole('heading', { name: 'Library', exact: true })).toBeVisible({
+  await expect(page.getByRole('heading', { name: 'Screen', exact: true, level: 1 })).toBeVisible({
     timeout: 3_000,
   });
 });

@@ -8,6 +8,7 @@ import { verseOfTheDay } from './dailyVerses';
 import { useReader } from './readerStore';
 import { useOpenInReader } from './useOpenInReader';
 import styles from './Daily.module.css';
+import { paths } from '@/app/paths';
 
 /** The verse-of-the-day card (Today page), or a one-line strip (`compact`, on the Library). */
 export function VerseOfTheDay({
@@ -38,7 +39,7 @@ export function VerseOfTheDay({
             <span className={styles.stripRef}> — {passage?.reference ?? ref}</span>
           </p>
         </div>
-        <Button icon={<BookOpen size={16} />} onClick={() => navigate('/bible/today')}>
+        <Button icon={<BookOpen size={16} />} onClick={() => navigate(paths.today)}>
           Today
         </Button>
       </section>
@@ -57,7 +58,7 @@ export function VerseOfTheDay({
         <Button icon={<BookOpen size={16} />} onClick={() => open(range)}>
           Read in context
         </Button>
-        <Button icon={<NotebookPen size={16} />} onClick={() => navigate('/bible/journal')}>
+        <Button icon={<NotebookPen size={16} />} onClick={() => navigate(paths.journal)}>
           Reflect
         </Button>
         {extra}

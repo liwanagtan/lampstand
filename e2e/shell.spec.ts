@@ -2,8 +2,8 @@ import { expect, test } from '@playwright/test';
 import { openApp } from './helpers';
 
 test('app shell loads and the theme switch works', async ({ page }) => {
-  await openApp(page, '/');
-  await expect(page.getByRole('heading', { name: 'Library', exact: true })).toBeVisible();
+  await openApp(page, '/me');
+  await expect(page.getByRole('heading', { name: 'Me', level: 1 })).toBeVisible();
   await page.getByRole('radio', { name: 'Light' }).click();
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
   await page.reload();
@@ -14,7 +14,7 @@ test('app shell loads and the theme switch works', async ({ page }) => {
 
 test('every route renders', async ({ page }) => {
   for (const [path, heading] of [
-    ['/settings', 'Settings'],
+    ['/settings', 'Me'],
     ['/import', 'Import'],
   ] as const) {
     await openApp(page, path);
@@ -31,4 +31,33 @@ test('component gallery renders both themes', async ({ page }) => {
     .getByRole('button', { name: 'Toast', exact: true })
     .click();
   await expect(page.getByText('Switched to WEB')).toBeVisible();
+});
+
+test('old links land on their new homes', async ({ page }) => {
+  for (const [from, to, heading] of [
+    ['/bible/today', /\/$/, null],
+    ['/bible/plans', /\/plans$/, 'Read through the Bible'],
+    ['/bible/journal', /\/journal$/, 'Your journal'],
+    ['/import', /\/screen\/import$/, 'Import'],
+    ['/settings', /\/me$/, 'Me'],
+  ] as const) {
+    await openApp(page, from);
+    await expect(page).toHaveURL(to);
+    if (heading) await expect(page.getByRole('heading', { name: heading }).first()).toBeVisible();
+  }
+});
+
+test('phones get a bottom tab bar and no sideways scroll', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  for (const path of ['/', '/bible', '/plans', '/journal', '/screen', '/me']) {
+    await openApp(page, path);
+    await page.waitForTimeout(300);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(
+      390,
+    );
+  }
+  const tabs = page.getByRole('navigation', { name: 'Main' }).getByRole('link');
+  await expect(tabs).toHaveText(['Today', 'Bible', 'Plans', 'Journal', 'Screen']);
+  await tabs.filter({ hasText: 'Plans' }).click();
+  await expect(page).toHaveURL(/\/plans$/);
 });

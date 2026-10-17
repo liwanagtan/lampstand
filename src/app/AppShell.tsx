@@ -1,73 +1,74 @@
 import { NavLink, Outlet } from 'react-router-dom';
-import { Monitor, Moon, Sun, type LucideIcon } from 'lucide-react';
+import { UserRound } from 'lucide-react';
 import { LampLockup, LampMark } from '@/design-system/LampMark';
+import { cx } from '@/design-system/components';
+import { useControl } from '@/features/present/live/controlStore';
 import { useApplyDocumentTheme } from '@/features/settings/theme';
 import { useSettings } from '@/features/settings/settingsStore';
-import type { UiMode } from '@/schema/common';
+import { visibleNav } from './features';
+import { paths } from './paths';
 import styles from './AppShell.module.css';
 
-const NAV: { to: string; label: string; end?: boolean }[] = [
-  { to: '/', label: 'Library', end: true },
-  { to: '/bible', label: 'Bible' },
-  { to: '/import', label: 'Import' },
-  { to: '/settings', label: 'Settings' },
-];
-
-const MODES: { mode: UiMode; label: string; icon: LucideIcon }[] = [
-  { mode: 'light', label: 'Light', icon: Sun },
-  { mode: 'dark', label: 'Dark', icon: Moon },
-  { mode: 'system', label: 'System', icon: Monitor },
-];
-
+/**
+ * Today · Bible · Plans · Journal · Screen, plus Me. A top bar on laptops; on phones the
+ * destinations move to a bottom tab bar within thumb reach (docs/PRD-ADDENDUM-GROW.md).
+ */
 export function AppShell() {
   useApplyDocumentTheme();
+  const features = useSettings((s) => s.features);
+  const presenting = useControl((s) => s.presenting);
+  const nav = visibleNav(features);
+
   return (
     <div className={styles.shell}>
       <header className={styles.topbar}>
-        <NavLink to="/" className={styles.brand} aria-label="Lampstand home">
+        <NavLink to={paths.today} className={styles.brand} aria-label="Lampstand home">
           <LampLockup size={30} className={styles.lockup} title="" />
           <LampMark size={26} className={styles.mark} />
         </NavLink>
         <nav aria-label="Main" className={styles.nav}>
-          {NAV.map(({ to, label, end }) => (
+          {nav.map(({ to, label, icon: Icon, end }) => (
             <NavLink
               key={to}
               to={to}
               end={end}
-              className={({ isActive }) => `${styles.link} ${isActive ? styles.active : ''}`}
+              className={({ isActive }) => cx(styles.link, isActive && styles.active)}
             >
+              <Icon size={17} strokeWidth={1.75} aria-hidden />
               {label}
             </NavLink>
           ))}
         </nav>
-        <ThemeSwitch />
+        {presenting && (
+          <span className={styles.onAir} role="status">
+            <span className={styles.onAirDot} aria-hidden /> On the TV
+          </span>
+        )}
+        <NavLink
+          to={paths.me}
+          className={({ isActive }) => cx(styles.me, isActive && styles.meActive)}
+          aria-label="Me: profile and settings"
+          title="Me"
+        >
+          <UserRound size={18} strokeWidth={1.75} aria-hidden />
+        </NavLink>
       </header>
-      <main className={styles.main} id="main">
+      <main className={styles.main} id="main" data-scroll>
         <Outlet />
       </main>
-    </div>
-  );
-}
-
-function ThemeSwitch() {
-  const uiMode = useSettings((s) => s.uiMode);
-  const set = useSettings((s) => s.set);
-  return (
-    <div className={styles.theme} role="radiogroup" aria-label="Appearance">
-      {MODES.map(({ mode, label, icon: Icon }) => (
-        <button
-          key={mode}
-          type="button"
-          role="radio"
-          aria-checked={uiMode === mode}
-          aria-label={label}
-          title={label}
-          className={styles.themeBtn}
-          onClick={() => void set('uiMode', mode)}
-        >
-          <Icon size={16} strokeWidth={1.5} aria-hidden />
-        </button>
-      ))}
+      <nav aria-label="Main" className={styles.tabbar}>
+        {nav.map(({ to, label, icon: Icon, end }) => (
+          <NavLink
+            key={to}
+            to={to}
+            end={end}
+            className={({ isActive }) => cx(styles.tab, isActive && styles.tabActive)}
+          >
+            <Icon size={22} strokeWidth={1.75} aria-hidden />
+            <span>{label}</span>
+          </NavLink>
+        ))}
+      </nav>
     </div>
   );
 }

@@ -12,7 +12,7 @@ export function RouteError() {
           ? 'That page does not exist.'
           : 'This screen hit a problem. Your presentations are safe.'}
       </p>
-      <Link to="/">Back to Library</Link>
+      <Link to="/">Back to Lampstand</Link>
     </div>
   );
 }

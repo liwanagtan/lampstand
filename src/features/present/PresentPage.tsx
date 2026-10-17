@@ -62,6 +62,7 @@ import type { OverlayMode } from '@/schema/common';
 import { ModeIcon, OverlayModes } from './OverlayModes';
 import { MODES } from './overlayModeList';
 import styles from './PresentPage.module.css';
+import { paths } from '@/app/paths';
 
 type RailTab = 'notes' | 'queue';
 
@@ -116,7 +117,7 @@ export function PresentPage() {
       <div className={styles.center}>
         <EmptyState
           title="Presentation not found"
-          actions={<Button onClick={() => navigate('/')}>Back to Library</Button>}
+          actions={<Button onClick={() => navigate(paths.screen)}>Back to Screen</Button>}
         >
           It may have been deleted.
         </EmptyState>
@@ -361,9 +362,9 @@ function ControlScreen() {
       <div className={styles.shell}>
         <header className={styles.top}>
           <IconButton
-            label="Back to Library"
+            label="Back to Screen"
             icon={<ArrowLeft size={20} />}
-            onClick={() => navigate('/')}
+            onClick={() => navigate(paths.screen)}
           />
           <div className={styles.titleBlock}>
             <h1 className={styles.title}>{presentation.title}</h1>
@@ -528,7 +529,7 @@ function ControlScreen() {
             setMode: verses.setMode,
             showSheet: () => setSheetOpen(true),
             focusBar,
-            library: () => navigate('/'),
+            library: () => navigate(paths.screen),
           })}
         />
       </div>
@@ -1074,7 +1075,7 @@ function paletteCommands(o: {
       run: o.toggleFreeze,
     },
     { id: 'sheet', group: 'App', label: 'Keyboard shortcuts', shortcut: '?', run: o.showSheet },
-    { id: 'library', group: 'App', label: 'Back to Library', run: o.library },
+    { id: 'library', group: 'App', label: 'Back to Screen', run: o.library },
     ...o.slides.map((s, i) => ({
       id: `slide-${i}`,
       group: 'Go to slide',

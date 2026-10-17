@@ -29,7 +29,8 @@ test('highlight, bookmark and note a passage, then find them on the Notes page',
   await page.reload();
   await expect(page.locator('[data-verse="28"] mark')).toBeVisible();
 
-  await page.getByRole('link', { name: 'Notes & highlights' }).click();
+  await page.getByRole('link', { name: 'Journal' }).click();
+  await page.getByRole('button', { name: 'Notes & highlights' }).click();
   const list = page.getByRole('list', { name: 'Marked passages' });
   await expect(list.getByRole('listitem')).toHaveCount(3);
   await page.getByRole('radio', { name: /Notes/ }).click();

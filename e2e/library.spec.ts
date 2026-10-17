@@ -16,7 +16,7 @@ test('the sample sermon imports with zero errors and saves to the library', asyn
   await expect(page.getByText('2 slides need a background')).toBeVisible();
   await page.getByRole('tab', { name: 'Modern' }).click();
   await page.getByRole('button', { name: 'Save to library' }).click();
-  await expect(page.getByRole('heading', { name: 'Library', exact: true })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Screen', exact: true, level: 1 })).toBeVisible();
   await expect(page.getByText('Pastor Daniel Cruz · Sun, Oct 18, 2026')).toBeVisible();
 });
 
@@ -46,11 +46,11 @@ test('malformed JSON shows one friendly message', async ({ page }) => {
 });
 
 test('empty library invites an import, and import is upload-only', async ({ page }) => {
-  await openApp(page, '/');
+  await openApp(page, '/screen');
   await expect(page.getByRole('heading', { name: 'Your library is empty' })).toBeVisible();
   await expect(page.getByText(/Claude|skill/i)).toHaveCount(0);
   await page.getByRole('button', { name: 'Import presentation' }).click();
-  await expect(page).toHaveURL(/\/import$/);
+  await expect(page).toHaveURL(/\/screen\/import$/);
   await expect(page.getByText('Drop a .lampstand.json file here')).toBeVisible();
   await expect(page.getByRole('textbox')).toHaveCount(0);
 });

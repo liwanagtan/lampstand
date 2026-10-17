@@ -27,6 +27,7 @@ import { useReader } from './readerStore';
 import { ContextPanel, ReflectPanel } from './TodayPanels';
 import { showOnTv } from './tvActions';
 import styles from './Today.module.css';
+import { paths } from '@/app/paths';
 
 const longDate = new Intl.DateTimeFormat(undefined, {
   weekday: 'long',
@@ -215,7 +216,7 @@ function VerseHero({
               onClick={stop}
               className={cx(styles.heroButton, styles.live)}
             >
-              Stop Presenting
+              Stop showing
             </Button>
           ) : (
             <Button
@@ -223,7 +224,7 @@ function VerseHero({
               onClick={() => void present()}
               className={styles.heroButton}
             >
-              Present
+              Show on screen
             </Button>
           )}
           <Tooltip content="Copy">
@@ -316,7 +317,7 @@ function TodayPlans() {
           lessons.
         </p>
         <div className={styles.row}>
-          <Button variant="primary" onClick={() => navigate('/bible/plans')}>
+          <Button variant="primary" onClick={() => navigate(paths.plans)}>
             Choose a plan
           </Button>
         </div>

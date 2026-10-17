@@ -87,6 +87,15 @@ export function BibleReader({ toolbar, selectionActions }: BiblePageSlots) {
   const primary = useChapter(translation, book, chapter);
   const second = useChapter(parallel, book, chapter);
   const body = useRef<HTMLDivElement>(null);
+  // The toolbar quiets while you read down the page and returns when you scroll back up.
+  const [quiet, setQuiet] = useState(false);
+  const lastTop = useRef(0);
+  const onScroll = () => {
+    const top = body.current?.scrollTop ?? 0;
+    if (top < 120 || top < lastTop.current - 4) setQuiet(false);
+    else if (top > lastTop.current + 4) setQuiet(true);
+    lastTop.current = top;
+  };
   const bookName = BOOK_BY_CODE.get(book)?.name ?? book;
   const single = chapterCount(translation, book) === 1;
 
@@ -148,7 +157,7 @@ export function BibleReader({ toolbar, selectionActions }: BiblePageSlots) {
   return (
     <div className={styles.layout}>
       <div className={styles.reader}>
-        <div className={styles.toolbar}>
+        <div className={styles.toolbar} data-quiet={quiet || undefined}>
           <div className={styles.nav}>
             <IconButton
               label="Previous chapter"
@@ -244,7 +253,7 @@ export function BibleReader({ toolbar, selectionActions }: BiblePageSlots) {
           </div>
         </div>
 
-        <div ref={body} className={styles.body} style={{ fontSize: size }}>
+        <div ref={body} className={styles.body} style={{ fontSize: size }} onScroll={onScroll}>
           <article
             className={cx(styles.page, second && styles.parallel)}
             aria-label={`${bookName} ${chapter}`}

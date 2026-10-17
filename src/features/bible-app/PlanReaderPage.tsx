@@ -65,7 +65,7 @@ export function PlanReaderPage() {
   const done = Boolean(progress?.done.includes(n));
 
   return (
-    <div className={styles.page} ref={top}>
+    <div className={styles.page} ref={top} data-enter>
       <header className={styles.header}>
         <Link to={paths.plans} className={styles.back}>
           <ArrowLeft size={16} aria-hidden /> {plan.name}

@@ -353,7 +353,7 @@ function ControlScreen() {
 
   return (
     <PosterContext.Provider value={posterInfo}>
-      <div className={styles.shell}>
+      <div className={styles.shell} data-atmosphere="stage">
         <header className={styles.top}>
           <IconButton
             label="Back to Screen"

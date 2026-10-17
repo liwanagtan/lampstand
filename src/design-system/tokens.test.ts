@@ -1,7 +1,7 @@
 import { colors, tokensCss } from './tokens';
 import { contrastRatio } from './contrast';
 
-const surfaces = ['bg', 'surface', 'surface-raised'] as const;
+const surfaces = ['bg', 'surface', 'surface-raised', 'paper'] as const;
 
 describe.each(['dark', 'light'] as const)('%s tokens meet WCAG AA', (scheme) => {
   const c = colors[scheme];
@@ -31,6 +31,15 @@ describe.each(['dark', 'light'] as const)('%s tokens meet WCAG AA', (scheme) => 
     expect(contrastRatio(c['accent-contrast'], c.accent)).toBeGreaterThanOrEqual(4.5);
     expect(contrastRatio(c['live-contrast'], c.live)).toBeGreaterThanOrEqual(4.5);
   });
+});
+
+it.each(['dark', 'light'] as const)('the %s stage keeps text readable', (scheme) => {
+  const c = colors[scheme];
+  for (const s of ['stage', 'stage-surface', 'stage-raised'] as const) {
+    expect(contrastRatio(c['stage-text'], c[s])).toBeGreaterThanOrEqual(4.5);
+    expect(contrastRatio(c['stage-text-muted'], c[s])).toBeGreaterThanOrEqual(4.5);
+    expect(contrastRatio(colors.dark.accent, c[s])).toBeGreaterThanOrEqual(4.5);
+  }
 });
 
 it('exposes tokens as CSS variables', () => {

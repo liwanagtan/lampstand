@@ -1,4 +1,4 @@
-import { Navigate, NavLink, Outlet } from 'react-router-dom';
+import { Navigate, NavLink, Outlet, useLocation } from 'react-router-dom';
 import { UserRound } from 'lucide-react';
 import { LampLockup, LampMark } from '@/design-system/LampMark';
 import { cx } from '@/design-system/components';
@@ -21,6 +21,8 @@ export function AppShell() {
   const presenting = useControl((s) => s.presenting);
   const nav = visibleNav(features);
   const welcome = !isOnboarded();
+  const { pathname } = useLocation();
+  const atmosphere = atmosphereFor(pathname);
   const initial = useSettings((s) => s.profile.name.trim().charAt(0).toUpperCase());
 
   if (welcome) return <Navigate to="/welcome" replace />;
@@ -64,7 +66,13 @@ export function AppShell() {
           )}
         </NavLink>
       </header>
-      <main className={styles.main} id="main" data-scroll>
+      <main
+        className={styles.main}
+        id="main"
+        data-scroll
+        data-atmosphere={atmosphere}
+        data-daypart={atmosphere === 'today' ? daypart(new Date()) : undefined}
+      >
         <Outlet />
       </main>
       <TipHost />
@@ -83,4 +91,23 @@ export function AppShell() {
       </nav>
     </div>
   );
+}
+
+/** Each workspace has its own atmosphere, so the mood says where you are. */
+function atmosphereFor(pathname: string): string {
+  if (pathname === '/') return 'today';
+  if (pathname.startsWith('/bible')) return 'bible';
+  if (pathname.startsWith('/plans')) return 'plans';
+  if (pathname.startsWith('/journal')) return 'journal';
+  if (pathname.startsWith('/screen')) return 'stage';
+  return 'me';
+}
+
+/** Today's light follows the time of day. */
+function daypart(d: Date): 'dawn' | 'day' | 'dusk' | 'night' {
+  const h = d.getHours();
+  if (h >= 5 && h < 11) return 'dawn';
+  if (h >= 11 && h < 17) return 'day';
+  if (h >= 17 && h < 21) return 'dusk';
+  return 'night';
 }

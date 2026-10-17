@@ -22,8 +22,13 @@
   align-items: center;
   gap: var(--space-3);
   padding: var(--space-3) var(--space-4);
-  border-bottom: 1px solid var(--color-border);
-  background: var(--color-surface);
+  border-bottom: 1px solid color-mix(in srgb, var(--color-border) 70%, transparent);
+  background: var(--color-paper);
+  transition: opacity var(--dur-standard) var(--ease-standard);
+}
+/* Paper and ink: while you read, the chrome steps back. */
+.toolbar[data-quiet]:not(:hover):not(:focus-within) {
+  opacity: 0.35;
 }
 .nav {
   display: flex;

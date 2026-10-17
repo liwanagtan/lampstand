@@ -138,6 +138,46 @@
   overflow: auto;
   min-width: 0;
   min-height: 0;
+  transition: background-color var(--dur-standard) var(--ease-standard);
+}
+/* Bible: paper and ink. */
+.main[data-atmosphere='bible'] {
+  background: var(--color-paper);
+}
+/* Plans, Journal and Me: calm and personal, a little warmth at the top. */
+.main[data-atmosphere='plans'],
+.main[data-atmosphere='journal'],
+.main[data-atmosphere='me'] {
+  background:
+    radial-gradient(
+        120% 40% at 50% 0%,
+        color-mix(in srgb, var(--color-accent) 7%, transparent),
+        transparent 70%
+      )
+      no-repeat,
+    var(--color-bg);
+}
+/* Today: the light changes through the day. */
+.main[data-atmosphere='today'] {
+  background:
+    radial-gradient(130% 55% at 50% 0%, var(--daylight), transparent 72%) no-repeat,
+    var(--color-bg);
+}
+.main[data-daypart='dawn'] {
+  --daylight: color-mix(in srgb, var(--color-accent) 16%, transparent);
+}
+.main[data-daypart='day'] {
+  --daylight: color-mix(in srgb, var(--color-accent) 7%, transparent);
+}
+.main[data-daypart='dusk'] {
+  --daylight: color-mix(
+    in srgb,
+    color-mix(in srgb, var(--color-accent) 55%, var(--color-live)) 14%,
+    transparent
+  );
+}
+.main[data-daypart='night'] {
+  --daylight: color-mix(in srgb, var(--color-stage-raised) 55%, transparent);
 }
 
 /* Phones: the destinations move to a bottom tab bar (thumb reach); the top bar keeps the

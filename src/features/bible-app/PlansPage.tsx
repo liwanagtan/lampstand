@@ -46,7 +46,7 @@ export function PlansPage() {
   };
 
   return (
-    <div className={styles.page}>
+    <div className={styles.page} data-enter>
       <div className={styles.headRow}>
         <div>
           <p className={styles.eyebrow}>Reading plans</p>

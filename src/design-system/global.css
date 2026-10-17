@@ -90,3 +90,40 @@ a {
     scroll-behavior: auto !important;
   }
 }
+
+/* ---- Workspace atmospheres (docs/PRD-ADDENDUM-GROW.md, Design language) ---- */
+
+/* Screen is a dark stage in either theme: every surface, line and word inside takes the
+   stage palette, so components need no special cases. */
+[data-atmosphere='stage'] {
+  --color-bg: var(--color-stage);
+  --color-surface: var(--color-stage-surface);
+  --color-surface-raised: var(--color-stage-raised);
+  --color-border: var(--color-stage-border);
+  --color-text: var(--color-stage-text);
+  --color-text-muted: var(--color-stage-text-muted);
+  --color-accent-text: var(--color-accent);
+  --color-overlay: rgb(5 7 10 / 0.6);
+  color-scheme: dark;
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+/* One motion language: pages arrive with the same short rise. */
+[data-enter] {
+  animation: lamp-enter var(--dur-standard) var(--ease-standard) both;
+}
+@keyframes lamp-enter {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+[data-reduce-motion='true'] [data-enter] {
+  animation: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-enter] {
+    animation: none;
+  }
+}

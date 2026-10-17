@@ -10,7 +10,7 @@ interface PageProps {
 
 export function Page({ title, description, actions, children }: PageProps) {
   return (
-    <div className={styles.page}>
+    <div className={styles.page} data-enter>
       <header className={styles.header}>
         <div>
           <h1 className={styles.title}>{title}</h1>

@@ -61,3 +61,31 @@ test('phones get a bottom tab bar and no sideways scroll', async ({ page }) => {
   await tabs.filter({ hasText: 'Plans' }).click();
   await expect(page).toHaveURL(/\/plans$/);
 });
+
+test('each workspace has its own atmosphere, and reduced motion stills page entrances', async ({
+  page,
+}) => {
+  for (const [path, atmosphere] of [
+    ['/', 'today'],
+    ['/bible', 'bible'],
+    ['/plans', 'plans'],
+    ['/journal', 'journal'],
+    ['/screen', 'stage'],
+  ] as const) {
+    await openApp(page, path);
+    await expect(page.locator('#main')).toHaveAttribute('data-atmosphere', atmosphere);
+  }
+  // Screen is a dark stage even in light mode.
+  await page.emulateMedia({ colorScheme: 'light' });
+  await openApp(page, '/screen');
+  const bg = await page.locator('#main').evaluate((el) => getComputedStyle(el).backgroundColor);
+  expect(bg).toBe('rgb(9, 12, 17)');
+
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await openApp(page, '/plans');
+  const anim = await page
+    .locator('[data-enter]')
+    .first()
+    .evaluate((el) => getComputedStyle(el).animationName);
+  expect(anim).toBe('none');
+});

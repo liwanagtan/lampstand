@@ -1,17 +1,22 @@
 # Lampstand
 
-Offline, web-based church presentation app: AI-prepared sermon slides on a projector, with instant Bible verse lookup that never interrupts the slides.
+A light for your daily reading: a companion for growing in the Word every day, with a focused Bible reader — and, when you teach or lead worship, Scripture and sermon slides on a TV.
 
 > "Thy word is a lamp unto my feet" (Psalm 119:105)
 
-- **Control screen** on the laptop, **output** full screen on the TV, synced in the browser.
+- **Today · Bible · Plans · Journal · Screen**, plus **Me** for your profile and settings. First run asks what brings you to Lampstand and switches on only that; everything else is one tap away in Me.
+- **Today:** the verse of the day, today's plan reading, a reflection, and your week.
+- **Bible:** a focused reader with search, two translations side by side, and your highlights, bookmarks and notes.
+- **Plans:** daily reading plans and weekly Sunday-school lessons, one reading at a time with a Finish button; import more as `.lampstand-plan.json` (skill in `skill/lampstand-plans`).
+- **Journal:** reflections, notes, highlights and bookmarks in one searchable timeline.
+- **Screen:** present sermon slides or the Bible — control screen on the laptop, **output** full screen on the TV, synced in the browser.
 - **Verse command bar:** press `/`, type `jn 3 16`, press Enter — the verse appears over the current slide; Esc clears it.
 - **Five public domain translations** built in (KJV, WEB, ASV, YLT, Darby), with word search.
 - **Slides made in Claude** with the skill in `skill/lampstand-slides`, imported as `.lampstand.json`.
 - **Brand:** the logo kit (mark, lockups, wordmark, app icons, colours and usage rules) lives in `brand/`; see `brand/README.txt`. The app draws the logo from `src/design-system/LampMark.tsx`, and the favicon and PWA icons in `public/` come from `brand/app-icon/`.
-- **Fully offline** after the first visit; installable as a Chrome app. No accounts, no network calls at runtime.
+- **Fully offline** after the first visit; installable as a Chrome app. No accounts yet (they come in v2), no network calls at runtime.
 
-Docs: [docs/PRD.md](docs/PRD.md) (spec) · [docs/SETUP.md](docs/SETUP.md) (operator setup) · [docs/DECISIONS.md](docs/DECISIONS.md) (choices made during the build).
+Docs: [docs/PRD.md](docs/PRD.md) (spec) · [docs/PRD-ADDENDUM-GROW.md](docs/PRD-ADDENDUM-GROW.md) (Grow-first redesign) · [docs/SETUP.md](docs/SETUP.md) (operator setup) · [docs/DECISIONS.md](docs/DECISIONS.md) (choices made during the build).
 
 ## Develop
 

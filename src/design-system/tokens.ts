@@ -22,6 +22,14 @@ export const colors = {
     'focus-ring': 'rgb(242 179 61 / 0.6)',
     overlay: 'rgb(5 7 10 / 0.6)',
     shadow: 'rgb(0 0 0 / 0)',
+    // Workspace atmospheres (docs/PRD-ADDENDUM-GROW.md, Design language).
+    paper: '#15140F',
+    stage: '#090C11',
+    'stage-surface': '#131820',
+    'stage-raised': '#1B212C',
+    'stage-border': '#262E3B',
+    'stage-text': '#ECEEF1',
+    'stage-text-muted': '#A3ACB8',
   },
   light: {
     bg: '#F7F6F3',
@@ -42,6 +50,13 @@ export const colors = {
     'focus-ring': 'rgb(139 94 9 / 0.6)',
     overlay: 'rgb(26 29 35 / 0.35)',
     shadow: 'rgb(26 29 35 / 0.12)',
+    paper: '#F7F2E7',
+    stage: '#090C11',
+    'stage-surface': '#131820',
+    'stage-raised': '#1B212C',
+    'stage-border': '#262E3B',
+    'stage-text': '#ECEEF1',
+    'stage-text-muted': '#A3ACB8',
   },
 } as const;
 

@@ -139,7 +139,7 @@ export function BibleConsolePage() {
     : [live.screen === 'blank' ? 'Blank' : live.screen === 'logo' ? 'Logo' : 'Nothing on screen'];
 
   return (
-    <div className={frame.shell}>
+    <div className={frame.shell} data-atmosphere="stage">
       <header className={frame.top}>
         <IconButton
           label="Back to Screen"

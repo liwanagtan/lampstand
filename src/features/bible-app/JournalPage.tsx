@@ -127,7 +127,7 @@ export function JournalPage() {
   const loaded = entries !== undefined && allMarks !== undefined;
 
   return (
-    <div className={styles.page}>
+    <div className={styles.page} data-enter>
       <div className={styles.head}>
         <div>
           <p className={styles.eyebrow}>Journal</p>

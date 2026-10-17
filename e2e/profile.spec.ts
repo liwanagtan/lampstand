@@ -43,3 +43,20 @@ test('Profile greets you, opens on Journey, and keeps your plans and colour', as
   await expect(page).toHaveURL(/\/profile\/settings$/);
   await expect(page.getByRole('heading', { name: 'Appearance' })).toBeVisible();
 });
+
+test('an empty Journey has one welcome and one way to write', async ({ page }) => {
+  await openApp(page, '/profile');
+  await expect(page.getByRole('heading', { name: 'Your journey starts here' })).toBeVisible();
+  await expect(page.getByRole('button', { name: /entry/ })).toHaveCount(1);
+  await expect(page.getByRole('region', { name: 'Your journey so far' })).toHaveCount(0);
+  await page.getByRole('button', { name: 'Write your first entry' }).click();
+  await page.getByRole('dialog').getByLabel('Your entry').fill('A first word.');
+  await expect(
+    page.getByRole('dialog').getByRole('status').filter({ hasText: 'Saved' }),
+  ).toBeVisible();
+  await page.keyboard.press('Escape');
+  // Now the journal has an entry: New entry moves to its header, and the summary appears.
+  await expect(page.getByRole('button', { name: 'New entry' })).toHaveCount(1);
+  await expect(page.getByRole('button', { name: 'Write your first entry' })).toHaveCount(0);
+  await expect(page.getByRole('region', { name: 'Your journey so far' })).toBeVisible();
+});

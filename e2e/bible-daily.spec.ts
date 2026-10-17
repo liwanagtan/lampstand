@@ -73,26 +73,6 @@ test('Today, reading plans and the journal', async ({ page }) => {
     'Lesson 2 opens',
   );
 
-  // Import a plan file (a version 1 file still works).
-  await page.getByLabel('Choose a plan file').setInputFiles({
-    name: 'advent.lampstand-plan.json',
-    mimeType: 'application/json',
-    buffer: Buffer.from(
-      JSON.stringify({
-        format: 'lampstand-plan',
-        version: 1,
-        id: 'advent-test',
-        name: 'Advent test',
-        description: 'Two days.',
-        pace: 'daily',
-        days: [{ readings: ['Isaiah 9:1-7'] }, { readings: ['Luke 2:1-20'] }],
-      }),
-    ),
-  });
-  await expect(
-    page.getByRole('group', { name: 'More plans' }).getByRole('link', { name: 'Advent test' }),
-  ).toBeVisible();
-
   // Journey's journal: a new entry with a chosen verse, edited in a side panel.
   await page.getByRole('link', { name: /Profile: your journey/ }).click();
   await page.getByRole('button', { name: 'New entry' }).click();

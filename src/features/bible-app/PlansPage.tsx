@@ -1,7 +1,7 @@
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Search, Upload } from 'lucide-react';
-import { Button, Dialog, Input, toast } from '@/design-system/components';
+import { ArrowRight, Search } from 'lucide-react';
+import { Input } from '@/design-system/components';
 import { paths } from '@/app/paths';
 import type { CatalogNode } from '@/schema/planCatalog';
 import { ActivePlan } from './ActivePlan';
@@ -14,7 +14,7 @@ import {
   type PaceFilter,
 } from './discover';
 import { CategoryChip, CategoryTile, PlanCard } from './PlanCards';
-import { importPlan, usePlanProgress, usePlans, type Plan } from './plans';
+import { usePlanProgress, usePlans, type Plan } from './plans';
 import styles from './Discover.module.css';
 
 const PACES: { value: PaceFilter; label: string }[] = [
@@ -28,8 +28,6 @@ const PACES: { value: PaceFilter; label: string }[] = [
 export function PlansPage() {
   const plans = usePlans();
   const progress = usePlanProgress();
-  const fileRef = useRef<HTMLInputElement>(null);
-  const [errors, setErrors] = useState<string[] | null>(null);
   const [query, setQuery] = useState('');
   const [pace, setPace] = useState<PaceFilter>('all');
   const byId = new Map((progress ?? []).map((p) => [p.planId, p]));
@@ -39,17 +37,6 @@ export function PlansPage() {
   const searching = query.trim() !== '' || pace !== 'all';
   const results = searching ? searchPlans(all, query, pace) : [];
 
-  const onFile = async (file: File | undefined) => {
-    if (!file) return;
-    const r = await importPlan(await file.text());
-    if (fileRef.current) fileRef.current.value = '';
-    if (!r.ok) return setErrors(r.errors);
-    toast({
-      title: r.replaced ? `Updated “${r.plan.name}”` : `Added “${r.plan.name}”`,
-      tone: 'success',
-    });
-  };
-
   return (
     <div className={styles.page} data-enter>
       <div className={styles.headRow}>
@@ -57,17 +44,6 @@ export function PlansPage() {
           <p className={styles.eyebrow}>Plans</p>
           <h1 className={styles.title}>Find a plan for where you are</h1>
         </div>
-        <Button icon={<Upload size={16} />} onClick={() => fileRef.current?.click()}>
-          Import plan
-        </Button>
-        <input
-          ref={fileRef}
-          type="file"
-          accept=".json,application/json"
-          hidden
-          aria-label="Choose a plan file"
-          onChange={(e) => void onFile(e.target.files?.[0])}
-        />
       </div>
 
       {active.length > 0 && (
@@ -139,25 +115,6 @@ export function PlansPage() {
           )
         )}
       </section>
-
-      <Dialog
-        open={Boolean(errors)}
-        onOpenChange={(o) => !o && setErrors(null)}
-        size="sm"
-        title="This plan couldn't be imported"
-        description="Fix these in the file and try again."
-        footer={
-          <Button variant="primary" onClick={() => setErrors(null)}>
-            OK
-          </Button>
-        }
-      >
-        <ul className={styles.errorList}>
-          {errors?.map((e) => (
-            <li key={e}>{e}</li>
-          ))}
-        </ul>
-      </Dialog>
     </div>
   );
 }

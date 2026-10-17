@@ -1,4 +1,6 @@
 import { useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { paths } from '@/app/paths';
 import {
   BookOpen,
   Bookmark,
@@ -78,7 +80,9 @@ const refLabel = (ref?: string) => {
  * Journey's timeline: everything you have written or marked — reflections, journal entries,
  * notes, highlights and bookmarks — with filters and search.
  */
-export function JourneyTimeline() {
+export function JourneyTimeline({ welcome = false }: { welcome?: boolean }) {
+  const plansOn = useSettings((s) => s.features.plans);
+  const navigate = useNavigate();
   const entries = useEntries();
   const allMarks = useAllMarks();
   const marksOn = useSettings((s) => s.features.marks);
@@ -121,34 +125,45 @@ export function JourneyTimeline() {
     setOpen({ id: newEntryId(), draft: { id: '', date: localDate(), kind: 'journal', body: '' } });
 
   const loaded = entries !== undefined && allMarks !== undefined;
+  const empty = loaded && timeline.length === 0;
 
   return (
     <section className={styles.timeline} aria-label="Journal">
-      <div className={styles.head}>
+      <div className={styles.head} hidden={welcome && empty}>
         <div>
           <h2 className={styles.title}>Journal</h2>
           <p className={styles.lede}>
             What you have written and marked in the Word. It stays on this device.
           </p>
         </div>
-        <Button variant="primary" icon={<Plus size={16} />} onClick={startNew}>
-          New entry
-        </Button>
+        {/* While the journal is empty, the empty state carries the one way to start. */}
+        {loaded && !empty && (
+          <Button variant="primary" icon={<Plus size={16} />} onClick={startNew}>
+            New entry
+          </Button>
+        )}
       </div>
 
-      {loaded && timeline.length === 0 ? (
+      {empty ? (
         <EmptyState
           icon={<NotebookPen size={28} />}
-          title="Start your journal"
+          title={welcome ? 'Your journey starts here' : 'Start your journal'}
           actions={
-            <Button variant="primary" icon={<Plus size={16} />} onClick={startNew}>
-              Write your first entry
-            </Button>
+            <>
+              <Button variant="primary" icon={<Plus size={16} />} onClick={startNew}>
+                Write your first entry
+              </Button>
+              {welcome && plansOn && (
+                <Button variant="ghost" onClick={() => navigate(paths.plans)}>
+                  Find a plan
+                </Button>
+              )}
+            </>
           }
         >
-          Write about a verse that speaks to you, a prayer, or what you are learning. Reflections
-          from Today, and the notes, highlights and bookmarks you make while reading, appear here
-          too.
+          {welcome
+            ? 'Write about a verse that speaks to you, or start a reading plan. Your plans, reflections, notes and highlights gather here as you go.'
+            : 'Write about a verse that speaks to you, a prayer, or what you are learning. Reflections from Today, and the notes, highlights and bookmarks you make while reading, appear here too.'}
         </EmptyState>
       ) : (
         <>

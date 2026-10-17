@@ -18,17 +18,22 @@ export function JourneyPage() {
   const stats = useJourneyStats();
   const plansOn = useSettings((s) => s.features.plans);
   const hasPlans = Boolean(stats && (stats.going.length || stats.finished.length));
+  // Nothing yet: no zeros, just one welcome with a way to begin. The timeline stays mounted
+  // either way, so an entry sheet opened from the welcome survives the first save.
+  const empty = Boolean(stats && stats.since === null);
   return (
     <>
-      <section aria-label="Your journey so far">
-        <dl className={styles.summary}>
-          <Stat value={stats?.daysThisMonth} label="Days read this month" />
-          {plansOn && <Stat value={stats?.going.length} label="Plans going" />}
-          {plansOn && <Stat value={stats?.finished.length} label="Plans finished" />}
-        </dl>
-      </section>
+      {!empty && (
+        <section aria-label="Your journey so far">
+          <dl className={styles.summary}>
+            <Stat value={stats?.daysThisMonth} label="Days read this month" />
+            {plansOn && <Stat value={stats?.going.length} label="Plans going" />}
+            {plansOn && <Stat value={stats?.finished.length} label="Plans finished" />}
+          </dl>
+        </section>
+      )}
 
-      {plansOn && stats && (
+      {plansOn && stats && !empty && (
         <section className={styles.section} aria-label="Your plans">
           <div className={styles.sectionHead}>
             <h2 className={styles.sectionTitle}>Plans</h2>
@@ -66,7 +71,7 @@ export function JourneyPage() {
         </section>
       )}
 
-      <JourneyTimeline />
+      <JourneyTimeline welcome={empty} />
     </>
   );
 }

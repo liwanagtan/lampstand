@@ -34,6 +34,8 @@ The current build puts all three behind the Bible tab, which causes three proble
 
 ## Information architecture
 
+> Amended on 2026-10-17 by [Profile, Journey and Search](#profile-journey-and-search-milestones-2021-agreed-2026-10-17): Journal becomes Journey inside Profile, and phones get a Search tab.
+
 The main navigation is flat: **Today · Bible · Plans · Journal · Screen**, plus a **Me** avatar for the profile. The app opens on Today.
 
 - **Phones:** a bottom tab bar, within thumb reach (Fitts's law). Five items is the most a phone tab bar holds comfortably.
@@ -83,7 +85,7 @@ Each workspace does one job well; what's already built moves into its new home r
 - Typography first; toolbars stay quiet until needed.
 - Search, book and chapter picker, parallel translation, text size.
 - Your highlights, bookmarks and notes drawn on the text; a Bookmarks menu to jump back.
-- The TV panel leaves the reader. A selection offers one **Show on screen** action that opens the Bible console in Screen with that passage.
+- The TV panel leaves the reader. Since 2026-10-17 the selection bar has no TV action at all: showing scripture on a screen starts in Screen's Bible console.
 
 **Plans**
 
@@ -141,6 +143,8 @@ Rules:
 - **Switching off hides; data stays.** A journal is still there when Journal is switched back on.
 
 ## Me: profile, settings and feature tips
+
+> Amended on 2026-10-17: Me is now **Profile**, with Journey, Profile and Settings tabs (see below).
 
 The Me avatar opens the profile, and Settings moves inside it; Settings leaves the main nav.
 
@@ -254,6 +258,35 @@ After milestone 16 (and 17–19 below): try it on a phone for a week of daily re
     - Notes and bookmarks across chapters by typed reference (search or a journal entry); reader selection stays within one chapter.
     - _Done when:_ a range can be selected, highlighted and noted on a phone with taps only, and a cross-chapter note made by reference appears in the reader on both chapters.
 
+### Profile, Journey and Search (milestones 20–21, agreed 2026-10-17)
+
+**Profile** replaces Me. The avatar at the top right (and the Profile tab on phones) opens it.
+
+- **Header:** the avatar initial and a greeting by name that fits the moment. "Welcome back, Jonathan" after a few days away; otherwise by time of day ("Good evening, Jonathan"), with a short line about your reading ("2 plans going · 5 days read this month"). Without a name: "Your profile" and a link to add one.
+- **Tabs, in this order:** **Journey** (opens first) · **Profile** · **Settings**. An underlined tab row under the header, the same on phones.
+
+| Tab          | Route               | Holds                                                                                                                                                                                                                 |
+| ------------ | ------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Journey**  | `/profile`          | A summary (days read this month, plans going, plans finished); your plans, in progress and finished; the timeline of reflections, journal entries, notes, highlights and bookmarks with filters, search and New entry |
+| **Profile**  | `/profile/you`      | Name and avatar colour, "Reading since …"; What I use Lampstand for with Customize; on phones, a **Present on a screen** card into Screen                                                                             |
+| **Settings** | `/profile/settings` | Reading, appearance, presenting, tips, translations, backup and restore, about                                                                                                                                        |
+
+Journal becomes **Journey**: everything you have done with the Bible in one place. Later candidates for Journey (not now): a prayer list with answered prayers, verses you are memorising, "this time last year".
+
+**Navigation**
+
+- **Laptops:** Today · Bible · Plans · Screen in the top bar, then a Search button and the Profile avatar. Journal leaves the bar.
+- **Phones:** Today · Bible · Plans · Search · Profile in the tab bar. Screen leaves the phone tab bar and lives in Profile, since presenting happens from a laptop. Someone who only presents (no Today, Plans or journaling) keeps Screen in Search's place.
+- **Search** (`/search`): one box over Bible references, Bible words, plans, and your own journal entries, reflections and notes.
+- Old links: `/journal` → `/profile`, `/me` → `/profile/you`, `/settings` → `/profile/settings`.
+
+20. **Profile and Journey**
+    - Profile with the greeting header and the three tabs; Journal moves in as Journey with the summary and plans; avatar colour and "Reading since"; redirects.
+    - _Done when:_ the avatar opens Journey with a greeting by name, every old Journal flow works there, and old links land on the right tab.
+21. **Search and navigation**
+    - The Search page; the new top bar and phone tab bar; Present on a screen in Profile on phones.
+    - _Done when:_ on a phone, Search finds a verse, a plan and one of your notes, and Screen is reachable from Profile.
+
 ## Decisions and open questions
 
 | Decision             | Choice                                                                                                                                     |
@@ -261,16 +294,16 @@ After milestone 16 (and 17–19 below): try it on a phone for a week of daily re
 | Main feature         | Grow (daily reading); presenting is secondary                                                                                              |
 | Devices              | Personal devices only; no shared church laptop                                                                                             |
 | Data                 | Local only for now; accounts, sync and per-person profiles in v2                                                                           |
-| Navigation           | Flat: Today · Bible · Plans · Journal · Screen, plus Me                                                                                    |
+| Navigation           | Laptops: Today · Bible · Plans · Screen, plus Search and Profile. Phones: Today · Bible · Plans · Search · Profile (amended 2026-10-17)    |
 | Presenting tab name  | **Screen**; every action that puts something on the TV is **Show on screen** (not "Share", which phones already use for sending to people) |
 | Home                 | Today (or the first tab still showing)                                                                                                     |
 | Screen size          | Phone first for the personal side; Screen stays laptop first                                                                               |
-| Reader to TV         | A small Show on screen bridge into the Bible console                                                                                       |
+| Reader to TV         | None in the reader; Screen's Bible console is where scripture goes on a TV (amended 2026-10-17)                                            |
 | Presenting Scripture | One dedicated Bible console with the same layout and keys as the presentation console                                                      |
-| Notes and highlights | A layer on verses everywhere; browsed in Journal; Bookmarks menu in the reader                                                             |
+| Notes and highlights | A layer on verses everywhere; browsed in Journey; Bookmarks menu in the reader                                                             |
 | Onboarding           | Checkboxes: Grow daily, Read and study, Teach and present; none preselected                                                                |
 | Feature switches     | The three use cases, with Customize per part, in Me                                                                                        |
-| Settings             | Moved into Me; Settings leaves the nav                                                                                                     |
+| Settings             | A tab in Profile (Journey · Profile · Settings); Me is renamed Profile                                                                     |
 | Feature tips         | From time to time at natural moments; at most one a week; switch in Me                                                                     |
 
 Open questions:

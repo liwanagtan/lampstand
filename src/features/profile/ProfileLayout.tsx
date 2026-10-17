@@ -1,3 +1,4 @@
+import { usePhoneTitle } from '@/app/topBar';
 import { Link, NavLink, Outlet } from 'react-router-dom';
 import { cx } from '@/design-system/components';
 import { paths } from '@/app/paths';
@@ -18,12 +19,13 @@ export function ProfileLayout() {
   const name = useSettings((s) => s.profile.name);
   const stats = useJourneyStats();
   const greeting = profileGreeting(name, new Date(), previousVisit());
+  usePhoneTitle(greeting);
   return (
     <div className={styles.page} data-enter>
       <header className={styles.header}>
-        <Avatar size={64} />
+        <Avatar size={64} className={styles.heroAvatar} />
         <div className={styles.headText}>
-          <h1 className={styles.greeting}>{greeting}</h1>
+          <h1 className={`${styles.greeting} phone-hidden`}>{greeting}</h1>
           {name.trim() ? (
             <p className={styles.line}>{stats ? journeyLine(stats) : ' '}</p>
           ) : (

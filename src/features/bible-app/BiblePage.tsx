@@ -1,3 +1,4 @@
+import { usePhoneTitle } from '@/app/topBar';
 import { useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import {
   Bookmark,
@@ -99,6 +100,7 @@ export function BibleReader({ toolbar, selectionActions }: BiblePageSlots) {
   };
   const bookName = BOOK_BY_CODE.get(book)?.name ?? book;
   const single = chapterCount(translation, book) === 1;
+  usePhoneTitle(single ? bookName : `${bookName} ${chapter}`);
 
   const go = (dir: 1 | -1) => {
     const n = stepChapter(book, chapter, dir, translation);

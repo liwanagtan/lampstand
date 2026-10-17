@@ -1,3 +1,4 @@
+import { usePhoneTitle } from '@/app/topBar';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'motion/react';
@@ -54,6 +55,7 @@ export function TodayPage() {
   const [panel, setPanel] = useState<'context' | 'reflect' | null>(null);
   const reduced = useReducedMotion();
   const name = useSettings((s) => s.profile.name.trim().split(/\s+/)[0] ?? '');
+  usePhoneTitle(`${greeting(now)}${name ? `, ${name}` : ''}`);
 
   return (
     <div className={styles.page}>
@@ -64,7 +66,7 @@ export function TodayPage() {
         transition={{ duration: 0.4 }}
       >
         <p className={styles.date}>{longDate.format(now)}</p>
-        <h1 className={styles.hello}>
+        <h1 className={cx(styles.hello, 'phone-hidden')}>
           {greeting(now)}
           {name ? `, ${name}` : ''}
         </h1>

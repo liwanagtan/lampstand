@@ -129,20 +129,22 @@ export function JourneyTimeline({ welcome = false }: { welcome?: boolean }) {
 
   return (
     <section className={styles.timeline} aria-label="Journal">
-      <div className={styles.head} hidden={welcome && empty}>
-        <div>
-          <h2 className={styles.title}>Journal</h2>
-          <p className={styles.lede}>
-            What you have written and marked in the Word. It stays on this device.
-          </p>
+      {!(welcome && empty) && (
+        <div className={styles.head}>
+          <div>
+            <h2 className={styles.title}>Journal</h2>
+            <p className={styles.lede}>
+              What you have written and marked in the Word. It stays on this device.
+            </p>
+          </div>
+          {/* While the journal is empty, the empty state carries the one way to start. */}
+          {loaded && !empty && (
+            <Button variant="primary" icon={<Plus size={16} />} onClick={startNew}>
+              New entry
+            </Button>
+          )}
         </div>
-        {/* While the journal is empty, the empty state carries the one way to start. */}
-        {loaded && !empty && (
-          <Button variant="primary" icon={<Plus size={16} />} onClick={startNew}>
-            New entry
-          </Button>
-        )}
-      </div>
+      )}
 
       {empty ? (
         <EmptyState

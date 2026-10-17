@@ -1,3 +1,4 @@
+import { usePhoneTitle } from '@/app/topBar';
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { BookOpen, CalendarCheck, NotebookPen, Search, Sparkles, StickyNote } from 'lucide-react';
@@ -27,6 +28,7 @@ const LIMIT = { verses: 12, plans: 6, journey: 8 };
 /** One box over the Bible, plans and your own journey (docs/PRD-ADDENDUM-GROW.md, M21). */
 export function SearchPage() {
   const [value, setValue] = useState('');
+  usePhoneTitle('Search');
   const text = value.trim();
   const translation = useReader((s) => s.translation);
   const codes = useBible((s) => s.translations.map((t) => t.code).join(','));

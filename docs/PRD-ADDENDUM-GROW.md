@@ -287,6 +287,17 @@ Journal becomes **Journey**: everything you have done with the Bible in one plac
     - The Search page; the new top bar and phone tab bar; Present on a screen in Profile on phones.
     - _Done when:_ on a phone, Search finds a verse, a plan and one of your notes, and Screen is reachable from Profile.
 
+### Phone-first polish (milestones 22–23, agreed 2026-10-18)
+
+On a phone the person is holding it: touch only, thumb first, no keyboard, mouse or hover.
+
+22. **Phone top bar and touch pass**
+    - The top bar keeps the lamp at the left and shows the page at the right; Today and Profile show your greeting there. Deeper pages add a back arrow. Big page headings step aside on phones.
+    - Controls at least 40–44px on touch screens; keyboard hints hidden; sheets open from the bottom on phones; Profile's header becomes a compact row.
+23. **Bible reader for thumbs**
+    - Phones: a floating `‹ John 3 ▾ ›` pill above the tab bar (previous, picker, next) that becomes the selection bar when verses are selected; search and Aa (translation, parallel, text size) in the top bar; the picker (with a Bookmarks tab) and Aa open as bottom sheets. No swipe between chapters, so tapping verses never turns the page.
+    - Laptops: one slim bar `‹ John 3 ▾ ›` with search and Aa, quiet while you read.
+
 ## Decisions and open questions
 
 | Decision             | Choice                                                                                                                                     |

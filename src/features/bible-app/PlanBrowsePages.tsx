@@ -1,7 +1,8 @@
+import { usePhoneTitle } from '@/app/topBar';
 import { useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { ArrowLeft, BookOpen, Clock, Play } from 'lucide-react';
-import { Button, Dialog, EmptyState } from '@/design-system/components';
+import { Button, Dialog, EmptyState, cx } from '@/design-system/components';
 import { paths } from '@/app/paths';
 import { categoryById } from '@/schema/planCatalog';
 import { ActivePlan } from './ActivePlan';
@@ -28,6 +29,10 @@ export function PlanCategoryPage() {
   const plans = usePlans();
   const progress = usePlanProgress();
   const navigate = useNavigate();
+  const parent = node && node.path.length > 1 ? node.path[node.path.length - 2]! : null;
+  usePhoneTitle(node?.name ?? 'Plans', {
+    back: parent ? paths.planCategory(parent) : paths.plans,
+  });
   if (!node) {
     return (
       <div className={styles.page}>
@@ -49,7 +54,7 @@ export function PlanCategoryPage() {
 
   return (
     <div className={styles.page} data-enter>
-      <nav className={styles.trail} aria-label="Breadcrumb">
+      <nav className={cx(styles.trail, 'phone-hidden')} aria-label="Breadcrumb">
         <Link to={paths.plans}>Plans</Link>
         {trail.map((t) => (
           <span key={t.id}>
@@ -58,7 +63,7 @@ export function PlanCategoryPage() {
           </span>
         ))}
       </nav>
-      <h1 className={styles.title}>{node.name}</h1>
+      <h1 className={cx(styles.title, 'phone-hidden')}>{node.name}</h1>
       {node.description && <p className={styles.lede}>{node.description}</p>}
       {children.length > 0 && (
         <div className={styles.chips} aria-label="Topics">
@@ -88,6 +93,7 @@ export function PlanPage() {
   const navigate = useNavigate();
   const cover = useCoverUrl(plan?.cover, 'full');
   const [removing, setRemoving] = useState(false);
+  usePhoneTitle(plan?.name ?? 'Plan', { back: paths.plans });
 
   if (plan === undefined || progress === undefined) return <div className={styles.page} />;
   if (!plan) {
@@ -107,7 +113,7 @@ export function PlanPage() {
 
   return (
     <div className={styles.page} data-enter>
-      <Link to={paths.plans} className={styles.back}>
+      <Link to={paths.plans} className={cx(styles.back, 'phone-hidden')}>
         <ArrowLeft size={16} aria-hidden /> Plans
       </Link>
       <header className={styles.hero}>

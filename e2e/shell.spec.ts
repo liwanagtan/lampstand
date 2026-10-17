@@ -37,8 +37,8 @@ test('old links land on their new homes', async ({ page }) => {
   for (const [from, to, heading] of [
     ['/bible/today', /\/$/, null],
     ['/bible/plans', /\/plans$/, 'Find a plan for where you are'],
-    ['/bible/journal', /\/profile$/, 'Journal'],
-    ['/journal', /\/profile$/, 'Journal'],
+    ['/bible/journal', /\/profile$/, 'Your journey starts here'],
+    ['/journal', /\/profile$/, 'Your journey starts here'],
     ['/me', /\/profile\/you$/, 'You'],
     ['/import', /\/screen\/import$/, 'Import'],
     ['/settings', /\/profile\/settings$/, 'Appearance'],

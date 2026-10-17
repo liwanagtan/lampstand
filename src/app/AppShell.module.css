@@ -33,6 +33,10 @@
 .mark {
   display: none;
 }
+.phoneBar,
+.phoneBack {
+  display: none;
+}
 
 .nav {
   display: flex;
@@ -209,8 +213,40 @@
   .mark {
     display: block;
   }
-  .brand {
-    margin-right: auto;
+  .phoneBar {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    gap: var(--space-2);
+    min-width: 0;
+    height: 100%;
+  }
+  .phoneBack {
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    margin: 0 calc(var(--space-3) * -1) 0 calc(var(--space-3) * -1);
+    border-radius: var(--radius-sm);
+    color: var(--color-text);
+  }
+  .phoneTitle {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-align: right;
+    font-size: 17px;
+    font-weight: var(--weight-semibold);
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+  .phoneActions {
+    display: flex;
+    flex: none;
+    align-items: center;
+    gap: var(--space-1);
+    margin-right: calc(var(--space-2) * -1);
   }
   .tabbar {
     display: grid;

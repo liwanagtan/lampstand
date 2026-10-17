@@ -1,3 +1,4 @@
+import { usePhoneTitle } from '@/app/topBar';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Search } from 'lucide-react';
@@ -28,6 +29,7 @@ const PACES: { value: PaceFilter; label: string }[] = [
 export function PlansPage() {
   const plans = usePlans();
   const progress = usePlanProgress();
+  usePhoneTitle('Plans');
   const [query, setQuery] = useState('');
   const [pace, setPace] = useState<PaceFilter>('all');
   const byId = new Map((progress ?? []).map((p) => [p.planId, p]));
@@ -40,7 +42,7 @@ export function PlansPage() {
   return (
     <div className={styles.page} data-enter>
       <div className={styles.headRow}>
-        <div>
+        <div className="phone-hidden">
           <p className={styles.eyebrow}>Plans</p>
           <h1 className={styles.title}>Find a plan for where you are</h1>
         </div>

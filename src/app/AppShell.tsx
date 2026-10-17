@@ -1,5 +1,5 @@
-import { Navigate, NavLink, Outlet, useLocation } from 'react-router-dom';
-import { Search } from 'lucide-react';
+import { Link, Navigate, NavLink, Outlet, useLocation } from 'react-router-dom';
+import { ChevronLeft, Search } from 'lucide-react';
 import { LampLockup, LampMark } from '@/design-system/LampMark';
 import { cx } from '@/design-system/components';
 import { useControl } from '@/features/present/live/controlStore';
@@ -11,6 +11,7 @@ import { noteVisit } from '@/features/profile/journey';
 import { phoneTabs, visibleNav } from './features';
 import { isOnboarded } from './onboarding';
 import { paths } from './paths';
+import { useTopBar } from './topBar';
 import styles from './AppShell.module.css';
 
 /**
@@ -28,15 +29,26 @@ export function AppShell() {
   const { pathname } = useLocation();
   const atmosphere = atmosphereFor(pathname);
   noteVisit();
+  const bar = useTopBar();
 
   if (welcome) return <Navigate to="/welcome" replace />;
   return (
     <div className={styles.shell}>
       <header className={styles.topbar}>
+        {bar.back && (
+          <Link to={bar.back} className={styles.phoneBack} aria-label="Back">
+            <ChevronLeft size={24} strokeWidth={1.75} aria-hidden />
+          </Link>
+        )}
         <NavLink to={paths.today} className={styles.brand} aria-label="Lampstand home">
           <LampLockup size={30} className={styles.lockup} title="" />
           <LampMark size={26} className={styles.mark} />
         </NavLink>
+        {/* Phones: the lamp at the left, the page (or your greeting) at the right. */}
+        <div className={styles.phoneBar}>
+          <div className={styles.phoneTitle}>{bar.title}</div>
+          {bar.actions && <div className={styles.phoneActions}>{bar.actions}</div>}
+        </div>
         <nav aria-label="Main" className={styles.nav}>
           {nav.map(({ to, label, icon: Icon, end }) => (
             <NavLink

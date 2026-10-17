@@ -1,3 +1,4 @@
+import { usePhoneTitle } from '@/app/topBar';
 import { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { motion } from 'motion/react';
@@ -9,7 +10,7 @@ import {
   MessageCircleQuestion,
   NotebookPen,
 } from 'lucide-react';
-import { Button, EmptyState, IconButton, Select, Tooltip } from '@/design-system/components';
+import { Button, EmptyState, IconButton, Select, Tooltip, cx } from '@/design-system/components';
 import { useBible } from '@/features/bible/bibleStore';
 import { BOOK_BY_CODE } from '@/features/bible/books';
 import { formatRef, toOsis } from '@/features/bible/ref';
@@ -52,6 +53,7 @@ export function PlanReaderPage() {
   const navigate = useNavigate();
   const top = useRef<HTMLDivElement>(null);
   const [reflect, setReflect] = useState<{ id: string; draft?: EntryDraft } | null>(null);
+  usePhoneTitle(plan?.name ?? 'Plan', { back: paths.planPage(planId) });
 
   useEffect(() => {
     top.current?.closest('[data-scroll]')?.scrollTo({ top: 0 });
@@ -79,7 +81,7 @@ export function PlanReaderPage() {
   return (
     <div className={styles.page} ref={top} data-enter>
       <header className={styles.header}>
-        <Link to={paths.plans} className={styles.back}>
+        <Link to={paths.planPage(plan.id)} className={cx(styles.back, 'phone-hidden')}>
           <ArrowLeft size={16} aria-hidden /> {plan.name}
         </Link>
         <p className={styles.eyebrow}>

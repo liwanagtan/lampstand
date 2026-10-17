@@ -154,3 +154,10 @@ a {
     display: none !important;
   }
 }
+
+/* Presenting happens from a laptop: TV actions don't appear on phones. */
+@media (max-width: 640px) {
+  .laptop-only {
+    display: none !important;
+  }
+}

@@ -217,11 +217,12 @@ function VerseHero({
           >
             Reflect
           </Button>
+          {/* Putting Scripture on a TV is a laptop job: phones don't offer it. */}
           {live ? (
             <Button
               icon={<MonitorStop size={16} />}
               onClick={stop}
-              className={cx(styles.heroButton, styles.live)}
+              className={cx(styles.heroButton, styles.live, 'laptop-only')}
             >
               Stop showing
             </Button>
@@ -229,7 +230,7 @@ function VerseHero({
             <Button
               icon={<MonitorPlay size={16} />}
               onClick={() => void present()}
-              className={styles.heroButton}
+              className={cx(styles.heroButton, 'laptop-only')}
             >
               Show on screen
             </Button>

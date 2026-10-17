@@ -13,6 +13,8 @@ test('on a phone the top bar keeps the lamp and names the page, personally', asy
   await openApp(page, '/');
   await expect(bar.getByRole('link', { name: 'Lampstand home' })).toBeVisible();
   await expect(bar).toContainText(', Ruth');
+  // No TV actions on a phone.
+  await expect(page.getByRole('button', { name: 'Show on screen' })).toBeHidden();
 
   await openApp(page, '/plans');
   await expect(bar).toContainText('Plans');

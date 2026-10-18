@@ -295,8 +295,8 @@ On a phone the person is holding it: touch only, thumb first, no keyboard, mouse
     - The top bar keeps the lamp at the left and shows the page at the right; Today and Profile show your greeting there. Deeper pages add a back arrow. Big page headings step aside on phones.
     - Controls at least 40–44px on touch screens; keyboard hints hidden; sheets open from the bottom on phones; Profile's header becomes a compact row.
 23. **Bible reader for thumbs**
-    - Phones: a floating `‹ John 3 ▾ ›` pill above the tab bar (previous, picker, next) that becomes the selection bar when verses are selected; search and Aa (translation, parallel, text size) in the top bar; the picker (with a Bookmarks tab) and Aa open as bottom sheets. No swipe between chapters, so tapping verses never turns the page.
-    - Laptops: one slim bar `‹ John 3 ▾ ›` with search and Aa, quiet while you read.
+    - Phones: a floating `‹ John 3 ▾ ›` pill above the tab bar (previous, picker, next) that becomes the selection bar when verses are selected; a personal line and the translation chip (`BSB ▾`: translation, parallel, text size) in the top bar; the picker (with a Bookmarks tab) and the Reading sheet open as bottom sheets. No swipe between chapters, so tapping verses never turns the page.
+    - Laptops: one slim bar `‹ John 3 ▾ ›` with the translation chip, quiet while you read; search lives in the top bar.
 
 ### Mobile experience (milestones 24–28, 2026-10-18)
 
@@ -306,20 +306,20 @@ Phones only; laptops and tablets stay as they are.
 25. **Foundations** — notch-safe, keyboard-aware viewport; 16px fields; no tap flash or double-tap delay; press feedback; no sticky hover; toasts under the top bar; dialogs as bottom sheets; full-screen welcome with pinned actions; "this device" in copy.
 26. **UI refresh** — plan lists as rows with square covers; edge-to-edge snapping rows; full-bleed plan hero; Journey summary strip; segmented Profile tabs; tighter settings; Today's actions on one row; an active-tab pill.
 27. **Gestures and motion** — drag sheets down to close; tap the active tab to return to the top; a small tab icon pop; light haptics for key moments; everything respects Reduce motion.
-28. **Page fixes** — Aa in the plan reader; Screen with a way back and a laptop note; TV settings hidden on phones; stacked parallel translation; swipeable Journey filters.
+28. **Page fixes** — the translation chip in the plan reader; Screen with a way back and a laptop note; TV settings hidden on phones; stacked parallel translation; swipeable Journey filters.
 
 ### Reminders and more plans (milestones 29–30, agreed 2026-10-18)
 
 29. **Reading reminders** — Settings › Reminders: on/off and a reading time. Notifications at that time while Lampstand runs, naming your next plan reading, skipped on days you've read; Android's installed app also checks in the background; "Add to my calendar" gives every phone a daily alert. Push to a closed app needs a server (v2).
-30. **More plans** — plans in our own words for the empty feelings and growth categories, so more of the catalog shows.
+30. **More plans** — plans in our own words for the empty feelings and growth categories, so more of the catalog shows. Done: seventeen new plans (2026-10-18/19), so every catalog category now has at least one.
 
 ### Open content (agreed 2026-10-18)
 
 Sources Lampstand builds on, each credited in Settings › Credits and licences; plans that come from others carry `credits` and `license`.
 
 - **Now:** Berean Standard Bible (public domain) as a modern built-in translation; OpenBible.info Topical Bible (CC BY 4.0) for "Verses for…" in Search and choosing plan readings; the M'Cheyne reading calendar (public domain). **Done 2026-10-18.**
-- **Next:** unfoldingWord Open Bible Stories (CC BY-SA 4.0) for children's and youth lessons; Tyndale Open Study Notes (CC BY-SA 4.0) for an "About this passage" panel. Share-alike content stays in its own files.
-- **Future additions:** Spurgeon's _Morning and Evening_ (public domain) as a classic daily devotional, and STEPBible data (CC BY 4.0) for Hebrew and Greek word studies.
+- **Next (in progress, 2026-10-19):** unfoldingWord Open Bible Stories (CC BY-SA 4.0) for children's and youth lessons; Tyndale Open Study Notes (CC BY-SA 4.0) for an "About this passage" panel; Spurgeon's _Morning and Evening_ (public domain) as a classic daily devotional. Share-alike content stays in its own files.
+- **Future additions:** STEPBible data (CC BY 4.0) for Hebrew and Greek word studies.
 - **Not bundled:** copyrighted material that is only free to read (BibleProject, YouVersion plans, _Our Daily Bread_).
 
 ## Decisions and open questions

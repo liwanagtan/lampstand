@@ -21,6 +21,8 @@ export const PLAN_LIMITS = {
   prayer: 1000,
   categories: 6,
   level: 40,
+  credits: 300,
+  license: 60,
   readings: 12,
   days: 400,
 } as const;
@@ -113,6 +115,13 @@ export const PlanFileSchema = z.strictObject({
     .regex(/^[a-z0-9-]{1,60}$/)
     .optional()
     .meta({ description: 'Version 2. A bundled background id used as the plan’s cover.' }),
+  credits: text(PLAN_LIMITS.credits, 'Credits').optional().meta({
+    description:
+      'Version 2. Who wrote or compiled the plan and its sources, e.g. "Robert Murray M’Cheyne (1842)".',
+  }),
+  license: text(PLAN_LIMITS.license, 'License').optional().meta({
+    description: 'Version 2. e.g. "Public domain", "CC BY-SA 4.0". Shown with the credits.',
+  }),
   days: z.array(PlanDaySchema).min(1).max(PLAN_LIMITS.days),
 });
 
@@ -129,6 +138,8 @@ export interface Plan {
   audience: 'personal' | 'group';
   level?: string;
   cover?: string;
+  credits?: string;
+  license?: string;
   days: PlanDay[];
 }
 
@@ -154,6 +165,8 @@ export function planFromFile(file: PlanFile, source: Plan['source']): Plan {
     audience: file.audience ?? (file.pace === 'daily' ? 'personal' : 'group'),
     level: file.level,
     cover: file.cover,
+    credits: file.credits,
+    license: file.license,
     days: file.days.map((d) => ({
       title: d.title,
       note: d.note,

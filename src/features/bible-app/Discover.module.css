@@ -513,3 +513,8 @@
     font-size: 17px;
   }
 }
+.credits {
+  margin-top: var(--space-2);
+  font-size: var(--text-13);
+  color: var(--color-text-muted);
+}

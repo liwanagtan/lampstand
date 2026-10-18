@@ -313,6 +313,15 @@ Phones only; laptops and tablets stay as they are.
 29. **Reading reminders** — Settings › Reminders: on/off and a reading time. Notifications at that time while Lampstand runs, naming your next plan reading, skipped on days you've read; Android's installed app also checks in the background; "Add to my calendar" gives every phone a daily alert. Push to a closed app needs a server (v2).
 30. **More plans** — plans in our own words for the empty feelings and growth categories, so more of the catalog shows.
 
+### Open content (agreed 2026-10-18)
+
+Sources Lampstand builds on, each credited in Settings › Credits and licences; plans that come from others carry `credits` and `license`.
+
+- **Now:** Berean Standard Bible (public domain) as a modern built-in translation; OpenBible.info Topical Bible (CC BY 4.0) for "Verses for…" in Search and choosing plan readings; the M'Cheyne reading calendar (public domain).
+- **Next:** unfoldingWord Open Bible Stories (CC BY-SA 4.0) for children's and youth lessons; Tyndale Open Study Notes (CC BY-SA 4.0) for an "About this passage" panel. Share-alike content stays in its own files.
+- **Future additions:** Spurgeon's _Morning and Evening_ (public domain) as a classic daily devotional, and STEPBible data (CC BY 4.0) for Hebrew and Greek word studies.
+- **Not bundled:** copyrighted material that is only free to read (BibleProject, YouVersion plans, _Our Daily Bread_).
+
 ## Decisions and open questions
 
 | Decision             | Choice                                                                                                                                     |

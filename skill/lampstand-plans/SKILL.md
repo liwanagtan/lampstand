@@ -25,6 +25,7 @@ Files next to this one:
 - `"format": "lampstand-plan"` and `"version": 2` are required.
 - `categories`: 1–3 ids from `catalog.json` where the plan belongs (a category or a subcategory, never a whole group). A plan on worry might be `["worry", "peace"]`; a new believer's first week `["first-steps"]`. Never invent an id.
 - `audience`: `"personal"` for individual reading, `"group"` for a class or small group. `level` is optional (for example `"New to faith"`).
+- `credits` and `license`: optional; only when a plan comes from someone else's work (e.g. `"credits": "Robert Murray M’Cheyne (1842)"`, `"license": "Public domain"`). Plans you write yourself leave them out.
 - `cover`: optional; one of Lampstand's bundled photos: `sunrise-hills`, `sunrise-clouds`, `park-path`, `forest-light`, `forest-sun`, `milky-way`, `sand-dune`, `misty-lake`, `mountain-lake`, `golden-hills`, `green-hills`, `peak-clouds`, `cloudscape`, `sea-sunset`, `autumn-forest`, `lone-tree`, `lake-mountains`, `river-sunrise`, `misty-valley`, `waterfall`. Pick one whose mood fits the plan.
 - `id` is lowercase letters, numbers and dashes (for example `"advent-25-days"`). Importing a file with the same id later updates that plan.
 - **Never write scripture text.** Each day has `readings`: references only, such as `"Luke 15:11-32"`, `"Psalm 23"` or `"Genesis 1-3"`. Use full book names. Every reference must exist.

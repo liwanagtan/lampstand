@@ -150,6 +150,12 @@ export function PlanPage() {
       )}
 
       <CategoryLinks ids={plan.categories} />
+      {plan.credits && (
+        <p className={styles.credits}>
+          From {plan.credits}
+          {plan.license ? ` · ${plan.license}` : ''}
+        </p>
+      )}
 
       <section className={styles.preview} aria-label="First reading">
         <p className={styles.eyebrow}>{unit} 1</p>

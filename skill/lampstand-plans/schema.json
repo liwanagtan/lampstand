@@ -117,6 +117,18 @@
       "type": "string",
       "pattern": "^[a-z0-9-]{1,60}$"
     },
+    "credits": {
+      "description": "Version 2. Who wrote or compiled the plan and its sources, e.g. \"Robert Murray M’Cheyne (1842)\".",
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 300
+    },
+    "license": {
+      "description": "Version 2. e.g. \"Public domain\", \"CC BY-SA 4.0\". Shown with the credits.",
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 60
+    },
     "days": {
       "minItems": 1,
       "maxItems": 400,

@@ -1,0 +1,30 @@
+// Open content Lampstand builds on (docs/DECISIONS.md 2026-10-18). Each borrowed source is
+// credited here, in Settings › Credits and licences.
+
+export interface CreditSource {
+  name: string;
+  what: string;
+  by: string;
+  license: string;
+  url: string;
+}
+
+export const OPEN_CONTENT: readonly CreditSource[] = [
+  {
+    name: 'OpenBible.info Topical Bible',
+    what: 'Which passages speak to a topic, ranked by readers — used for “Verses for…” in Search and to choose readings for plans.',
+    by: 'OpenBible.info',
+    license: 'CC BY 4.0',
+    url: 'https://www.openbible.info/topics/',
+  },
+  {
+    name: 'M’Cheyne reading calendar',
+    what: 'The classic plan through the Bible in a year.',
+    by: 'Robert Murray M’Cheyne (1842), as published by Andrew Bonar',
+    license: 'Public domain',
+    url: 'https://www.stepbible.org/html/mcheynes_readings.html',
+  },
+];
+
+export const LAMPSTAND_PLANS =
+  'Reading plans marked “Lampstand” are written for the app, in our own words; Scripture always comes from the translation you choose.';

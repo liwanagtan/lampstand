@@ -15,6 +15,7 @@ import { useSettings } from './settingsStore';
 import { ReadingSection, TipsSection } from './MeSections';
 import { RemindersSection } from '@/features/reminders/RemindersSection';
 import { Section } from './Section';
+import { LAMPSTAND_PLANS, OPEN_CONTENT } from './credits';
 import styles from './SettingsPage.module.css';
 
 const OVERLAY_LABELS: Record<OverlayMode, string> = {
@@ -46,6 +47,7 @@ export function SettingsPage() {
       <TipsSection />
       <TranslationsSection />
       <DataSection />
+      <CreditsSection />
       <AboutSection />
     </div>
   );
@@ -384,6 +386,21 @@ function DataSection() {
 }
 
 function AboutSection() {
+  return (
+    <Section
+      title="About Lampstand"
+      description={`Version ${__APP_VERSION__}. “Thy word is a lamp unto my feet” (Psalm 119:105).`}
+    >
+      <p className={styles.small}>
+        Lampstand keeps everything on this device. It is built on open content, credited under
+        Credits and licences.
+      </p>
+    </Section>
+  );
+}
+
+/** Settings › Credits and licences: every translation, source, photo and font we build on. */
+function CreditsSection() {
   const [backgrounds, setBackgrounds] = useState<BackgroundEntry[]>([]);
   const all = useBible((s) => s.translations);
   const translations = useMemo(() => all.filter((t) => t.bundled), [all]);
@@ -392,11 +409,11 @@ function AboutSection() {
   }, []);
   return (
     <Section
-      title="About Lampstand"
-      description={`Version ${__APP_VERSION__}. “Thy word is a lamp unto my feet” (Psalm 119:105).`}
+      title="Credits and licences"
+      description="Lampstand stands on the generous work of others. Thank you."
     >
-      <details className={styles.details}>
-        <summary>Bible sources</summary>
+      <details className={styles.details} open>
+        <summary>Bible translations</summary>
         <ul>
           {translations.map((t) => (
             <li key={t.code}>
@@ -405,8 +422,22 @@ function AboutSection() {
           ))}
         </ul>
       </details>
+      <details className={styles.details} open>
+        <summary>Study and plan content</summary>
+        <ul>
+          {OPEN_CONTENT.map((c) => (
+            <li key={c.name}>
+              <strong>{c.name}</strong> — {c.what} By {c.by}. {c.license}.{' '}
+              <a href={c.url} target="_blank" rel="noreferrer">
+                Source
+              </a>
+            </li>
+          ))}
+          <li>{LAMPSTAND_PLANS}</li>
+        </ul>
+      </details>
       <details className={styles.details}>
-        <summary>Background photo credits</summary>
+        <summary>Background photos</summary>
         <ul>
           {backgrounds.map((b) => (
             <li key={b.id}>
@@ -415,9 +446,14 @@ function AboutSection() {
           ))}
         </ul>
       </details>
-      <p className={styles.small}>
-        Fonts: Inter and Fraunces (SIL Open Font License). Icons: Lucide (ISC).
-      </p>
+      <details className={styles.details}>
+        <summary>Fonts, icons and software</summary>
+        <ul>
+          <li>Inter and Fraunces — SIL Open Font License.</li>
+          <li>Lucide icons — ISC License.</li>
+          <li>Bible reference parsing — bible-passage-reference-parser (MIT).</li>
+        </ul>
+      </details>
     </Section>
   );
 }

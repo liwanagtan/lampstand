@@ -1,0 +1,90 @@
+{
+  "format": "lampstand-plan",
+  "version": 2,
+  "id": "joy-and-thankfulness",
+  "name": "Joy and thankfulness",
+  "description": "Seven days to practise gratitude and find joy that holds up even on ordinary or hard days.",
+  "pace": "daily",
+  "categories": ["joy", "gratitude"],
+  "audience": "personal",
+  "cover": "sunrise-clouds",
+  "days": [
+    {
+      "title": "Count the gifts",
+      "readings": ["Psalm 103:1-5"],
+      "note": "David tells his own soul not to forget God's kindness.",
+      "devotional": "Gratitude is partly remembering. David lists what God has done: forgiving, healing, rescuing, crowning with love.\n\nTry writing down three gifts from this week before you close the app.",
+      "prayer": "Lord, I don't want to forget Your kindness. Thank You for these gifts today.",
+      "questions": [
+        "What three gifts can you name from this week?",
+        "Which of God's kindnesses do you most easily forget?"
+      ]
+    },
+    {
+      "title": "Joy in prison",
+      "readings": ["Philippians 1:12-26"],
+      "note": "Paul writes about joy while in chains.",
+      "devotional": "Paul's circumstances are hard, yet joy runs all through this letter. His joy is rooted in Christ, not in comfort.\n\nJoy and difficulty can live in the same day.",
+      "prayer": "Jesus, root my joy in You, not in how my day goes.",
+      "questions": [
+        "Where is it hard to find joy right now?",
+        "What could Christ be doing even in that?"
+      ]
+    },
+    {
+      "title": "The one who came back",
+      "readings": ["Luke 17:11-19"],
+      "note": "Ten men are healed; one returns to say thank you.",
+      "devotional": "All ten received the gift. Only one turned back to thank the Giver, and Jesus notices.\n\nThanksgiving turns a blessing into a meeting with God.",
+      "prayer": "Lord, make me the one who comes back to say thank You.",
+      "questions": [
+        "What has God done that you have not thanked Him for?",
+        "Who could you thank this week?"
+      ]
+    },
+    {
+      "title": "Thanks in every season",
+      "readings": ["1 Thessalonians 5:12-24"],
+      "note": "Short instructions for everyday faith.",
+      "devotional": "Paul asks for thanks in all circumstances, not for all circumstances. There is always something to thank God for, even when not everything is good.\n\nGratitude is a habit built a day at a time.",
+      "prayer": "Father, teach me to give thanks in every circumstance, even this one.",
+      "questions": [
+        "What is hard to give thanks in right now?",
+        "What good can you still find in it?"
+      ]
+    },
+    {
+      "title": "Joy that is full",
+      "readings": ["John 15:9-17"],
+      "note": "Jesus talks about remaining in His love so that joy may be complete.",
+      "devotional": "Jesus wants His joy to be in us, and complete. It grows as we stay close to Him and love one another.\n\nJoy is not only a feeling to wait for. It is a fruit that grows.",
+      "prayer": "Jesus, let Your joy be in me today, and spill over into how I love others.",
+      "questions": [
+        "What helps you stay close to Jesus day to day?",
+        "How could you share joy with someone today?"
+      ]
+    },
+    {
+      "title": "Content in all things",
+      "readings": ["Philippians 4:10-20"],
+      "note": "Paul describes learning to be content.",
+      "devotional": "Contentment, Paul says, was something he learned, through both plenty and need. The secret is the strength Christ gives.\n\nGratitude and contentment grow together.",
+      "prayer": "Lord, teach me contentment. Thank You for what I have today.",
+      "questions": [
+        "What makes contentment hard for you?",
+        "What are you grateful for that money cannot buy?"
+      ]
+    },
+    {
+      "title": "A song of praise",
+      "readings": ["Psalm 100"],
+      "note": "A short psalm calling everyone to come before God with thanks.",
+      "devotional": "This psalm is an invitation: come in with thanksgiving, because God is good and His love lasts.\n\nEnd this week by praising God for who He is, not only for what He gives.",
+      "prayer": "God, You are good and Your love lasts forever. I praise You today.",
+      "questions": [
+        "What is one thing about God's character you are thankful for?",
+        "How will you keep practising gratitude?"
+      ]
+    }
+  ]
+}

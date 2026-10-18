@@ -1,0 +1,62 @@
+{
+  "format": "lampstand-plan",
+  "version": 2,
+  "id": "big-stories-of-god",
+  "name": "Big stories of God",
+  "description": "Four weekly lessons for children's groups: God makes the world, keeps His promises, is with us when we're brave, and sends Jesus.",
+  "pace": "weekly",
+  "categories": ["children", "sunday-school"],
+  "audience": "group",
+  "level": "Children",
+  "cover": "park-path",
+  "days": [
+    {
+      "title": "God made everything",
+      "readings": ["Genesis 1:1-31"],
+      "note": "Bring pictures or objects from nature. Read the creation story in short parts, asking children to show what God made each day.",
+      "devotional": "Teacher notes: Keep it simple and joyful. God made light, sky, land, plants, animals and people, and everything He made was good.\n\nThe big idea: God made everything, and He made you. Let children draw their favourite thing God made and thank Him for it.",
+      "prayer": "Thank You, God, for making the world and for making me!",
+      "questions": [
+        "What is your favourite thing God made?",
+        "How did God feel about what He made?",
+        "How can we look after God's world?"
+      ]
+    },
+    {
+      "title": "God keeps His promises",
+      "readings": ["Genesis 6:9-22", "Genesis 9:8-17"],
+      "note": "Tell the story of Noah with toy animals or pictures. Show a rainbow if you can.",
+      "devotional": "Teacher notes: Noah trusted God and built the boat even when it seemed strange. After the flood, God put a rainbow in the sky as a sign of His promise.\n\nThe big idea: God always keeps His promises. Ask children about a promise someone kept for them.",
+      "prayer": "Dear God, thank You that You always keep Your promises.",
+      "questions": [
+        "Why did Noah build the boat?",
+        "What did the rainbow mean?",
+        "Can you think of a promise God makes to us?"
+      ]
+    },
+    {
+      "title": "God is with me when I'm brave",
+      "readings": ["1 Samuel 17:32-50"],
+      "note": "Act out David and Goliath: let a tall volunteer be Goliath and a small one be David.",
+      "devotional": "Teacher notes: Everyone was scared of Goliath. David was young, but he trusted that God was with him.\n\nThe big idea: we can be brave because God is with us. Ask children what makes them feel scared, and pray together for courage.",
+      "prayer": "God, when I feel scared, help me remember You are with me.",
+      "questions": [
+        "Why was everyone afraid of Goliath?",
+        "What helped David be brave?",
+        "When do you need to be brave?"
+      ]
+    },
+    {
+      "title": "God sends Jesus",
+      "readings": ["Luke 2:1-20"],
+      "note": "Tell the Christmas story with simple figures: Mary, Joseph, baby Jesus, shepherds and angels.",
+      "devotional": "Teacher notes: God's biggest promise came true when Jesus was born. The angels told shepherds the good news, and they hurried to see Him.\n\nThe big idea: Jesus came because God loves us. Let children share the good news with someone at home this week.",
+      "prayer": "Thank You, God, for sending Jesus because You love us.",
+      "questions": [
+        "Who were the first people to hear about Jesus?",
+        "Why did God send Jesus?",
+        "Who can you tell about Jesus this week?"
+      ]
+    }
+  ]
+}

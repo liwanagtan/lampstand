@@ -1,0 +1,65 @@
+{
+  "format": "lampstand-plan",
+  "version": 2,
+  "id": "called-to-serve",
+  "name": "Called to serve",
+  "description": "Five days on serving and leading the way Jesus did: humbly, faithfully, with your gifts.",
+  "pace": "daily",
+  "categories": ["serving", "leading"],
+  "audience": "personal",
+  "cover": "green-hills",
+  "days": [
+    {
+      "title": "Washing feet",
+      "readings": ["John 13:1-17"],
+      "note": "Jesus takes the place of a servant.",
+      "devotional": "On His last night, Jesus kneels and washes His friends' feet, then tells them to do the same.\n\nGreatness in His kingdom looks like serving.",
+      "prayer": "Jesus, You knelt to serve. Make me willing to do the same.",
+      "questions": [
+        "What is the 'foot-washing' task in your world?",
+        "Who could you serve quietly this week?"
+      ]
+    },
+    {
+      "title": "Gifts for others",
+      "readings": ["1 Peter 4:7-11"],
+      "note": "Peter asks each person to use their gift for others.",
+      "devotional": "Each of us has received something from God to share, whether words or practical help.\n\nYour gifts are meant to be given away.",
+      "prayer": "Lord, show me the gifts You've given me, and how to use them for others.",
+      "questions": ["What gifts do others see in you?", "Where could you use them this month?"]
+    },
+    {
+      "title": "One body",
+      "readings": ["1 Corinthians 12:12-27"],
+      "note": "Paul pictures the church as a body.",
+      "devotional": "Every part matters, even the ones that seem less important. No one can say they are not needed.\n\nYou belong, and your part matters.",
+      "prayer": "God, help me play my part, and value the part others play.",
+      "questions": [
+        "Which part of the body do you feel you are?",
+        "Whose part do you tend to overlook?"
+      ]
+    },
+    {
+      "title": "Leading by serving",
+      "readings": ["Mark 10:35-45"],
+      "note": "James and John ask for the best seats.",
+      "devotional": "Jesus turns their idea of leadership upside down: the one who wants to lead must serve, as He came to serve.\n\nLeadership in His way is costly love.",
+      "prayer": "Jesus, make me a leader who serves, like You.",
+      "questions": [
+        "Where are you leading, at home, work or church?",
+        "What would serving look like there?"
+      ]
+    },
+    {
+      "title": "Faithful in little",
+      "readings": ["Luke 16:10-13"],
+      "note": "Jesus speaks about faithfulness in small things.",
+      "devotional": "Jesus says that people who are trustworthy in small things are the ones trusted with bigger things. Small, unseen faithfulness matters to God.\n\nServing starts where you are.",
+      "prayer": "Lord, help me be faithful in the small things You've given me today.",
+      "questions": [
+        "What small responsibility could you do faithfully?",
+        "What would it mean to serve without being noticed?"
+      ]
+    }
+  ]
+}

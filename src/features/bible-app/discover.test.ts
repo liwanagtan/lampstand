@@ -23,7 +23,12 @@ describe('discover plans', () => {
     const feel = categoryById('feel')!;
     const shown = visibleChildren(feel, plans).map((c) => c.id);
     expect(shown).toContain('anxiety');
-    expect(shown).not.toContain('pride');
+    expect(shown).toContain('pride');
+    // Ministry has plans for serving, none yet for worship: worship stays hidden.
+    const ministry = categoryById('ministry')!;
+    const ministryShown = visibleChildren(ministry, plans).map((c) => c.id);
+    expect(ministryShown).toContain('serving');
+    expect(ministryShown).not.toContain('worship');
     expect(visibleGroups(plans).map((g) => g.id)).toEqual(['feel', 'guided', 'grow', 'lessons']);
     expect(uncategorised(plans)).toEqual([]);
   });

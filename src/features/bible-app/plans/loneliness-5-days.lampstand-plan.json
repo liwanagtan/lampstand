@@ -1,0 +1,65 @@
+{
+  "format": "lampstand-plan",
+  "version": 2,
+  "id": "never-alone",
+  "name": "Never alone",
+  "description": "Five days for lonely seasons: God who sees, Jesus who stays, and a family to belong to.",
+  "pace": "daily",
+  "categories": ["loneliness", "love"],
+  "audience": "personal",
+  "cover": "lone-tree",
+  "days": [
+    {
+      "title": "The God who sees",
+      "readings": ["Genesis 16:1-13"],
+      "note": "Hagar, alone in the wilderness, meets God.",
+      "devotional": "Hagar is used, mistreated and runs away. In the empty desert, God finds her and speaks to her by name.\n\nShe gives God a name of her own: the One who sees me. Loneliness says no one notices. This story says God does.",
+      "prayer": "God who sees me, thank You that I am never unnoticed by You. Meet me where I feel alone.",
+      "questions": ["When do you feel most unseen?", "What does it mean to you that God sees you?"]
+    },
+    {
+      "title": "Known completely",
+      "readings": ["Psalm 139:1-18"],
+      "note": "A psalm about being known through and through.",
+      "devotional": "There is no place the writer can go where God is not already there, and no part of them He does not know.\n\nTo be fully known and still loved is the deepest answer to loneliness.",
+      "prayer": "Lord, You know me completely. Help me rest in being known and loved by You.",
+      "questions": [
+        "Which line of this psalm comforts you most?",
+        "Is there part of you that you hide, even from God?"
+      ]
+    },
+    {
+      "title": "Jesus in the garden",
+      "readings": ["Matthew 26:36-46"],
+      "note": "Jesus asks His friends to stay awake with Him, and they fall asleep.",
+      "devotional": "Jesus knows what it is to be let down by friends at the moment He needed them most. He brings His sorrow honestly to the Father.\n\nWhen you feel alone, you are not praying to someone who doesn't understand.",
+      "prayer": "Jesus, You know loneliness from the inside. Thank You for staying with me.",
+      "questions": [
+        "How does it help to know Jesus felt this too?",
+        "What sorrow can you bring honestly to God today?"
+      ]
+    },
+    {
+      "title": "Always with you",
+      "readings": ["Matthew 28:16-20"],
+      "note": "Jesus' last words in Matthew are a promise of presence.",
+      "devotional": "The disciples are about to be sent all over the world, and Jesus ends with a promise that He will be with them always, to the very end.\n\nThat promise travels with you into every room and every quiet evening.",
+      "prayer": "Lord, thank You for Your promise to be with me always. Help me feel it today.",
+      "questions": [
+        "Where do you most need to remember this promise?",
+        "How could you remind yourself of it this week?"
+      ]
+    },
+    {
+      "title": "A family",
+      "readings": ["Acts 2:42-47"],
+      "note": "The first believers share life together.",
+      "devotional": "God's answer to loneliness includes people. The early church ate together, prayed together and looked after one another.\n\nBelonging often begins with one small step: a meal, a message, showing up.",
+      "prayer": "Father, lead me to people I can belong with, and help me make room for someone else who is lonely.",
+      "questions": [
+        "Who could you reach out to this week?",
+        "What is one step towards community you could take?"
+      ]
+    }
+  ]
+}

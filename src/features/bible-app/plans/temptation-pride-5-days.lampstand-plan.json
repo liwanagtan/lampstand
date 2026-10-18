@@ -1,0 +1,65 @@
+{
+  "format": "lampstand-plan",
+  "version": 2,
+  "id": "standing-firm",
+  "name": "Standing firm",
+  "description": "Five days on temptation and pride: honest about weakness, strong in God's help.",
+  "pace": "daily",
+  "categories": ["temptation", "pride"],
+  "audience": "personal",
+  "cover": "peak-clouds",
+  "days": [
+    {
+      "title": "Jesus in the wilderness",
+      "readings": ["Matthew 4:1-11"],
+      "note": "Jesus is tempted three times and answers each with Scripture.",
+      "devotional": "Jesus was tempted where He was weakest: hungry, alone, tired. Each time He answered with what God had said.\n\nTemptation is not sin. It is a moment to choose, and Jesus shows us how.",
+      "prayer": "Jesus, You were tempted too. Help me answer temptation with Your truth.",
+      "questions": [
+        "When are you most vulnerable to temptation?",
+        "What truth from God could you hold onto in that moment?"
+      ]
+    },
+    {
+      "title": "A way out",
+      "readings": ["1 Corinthians 10:1-13"],
+      "note": "Paul reminds the church that God provides a way through temptation.",
+      "devotional": "No temptation is unique to you, Paul says, and God is faithful: He will not let it be more than you can bear, and He provides a way out.\n\nLooking for that way out is part of faith.",
+      "prayer": "Faithful God, show me the way out when I'm tempted, and give me the strength to take it.",
+      "questions": [
+        "What 'way out' has God given you before?",
+        "What could you change to avoid a familiar temptation?"
+      ]
+    },
+    {
+      "title": "The danger of pride",
+      "readings": ["Luke 18:9-14"],
+      "note": "Jesus tells a story about two men praying.",
+      "devotional": "One man prays about how good he is; the other can only ask for mercy. Jesus says the humble one went home right with God.\n\nPride hides our need. Humility opens the door to grace.",
+      "prayer": "God, have mercy on me. Keep me from looking down on others.",
+      "questions": [
+        "Which man do you most resemble today?",
+        "Where does pride show up in your life?"
+      ]
+    },
+    {
+      "title": "Coming near",
+      "readings": ["James 4:1-10"],
+      "note": "James traces conflict back to desires and pride.",
+      "devotional": "James says God resists pride but is generous with grace to the humble. Coming near to God is the cure for both pride and temptation.\n\nHumility is not thinking badly of yourself; it is depending on God.",
+      "prayer": "Lord, I come near to You. Humble me, and pour out Your grace.",
+      "questions": [
+        "What desires have been pulling at you lately?",
+        "What would coming near to God look like today?"
+      ]
+    },
+    {
+      "title": "Restored after failing",
+      "readings": ["John 21:15-19"],
+      "note": "Jesus restores Peter after his denial.",
+      "devotional": "Peter failed badly, three times. Jesus does not shame him; He asks three times about his love and gives him work to do.\n\nFailure is not the end of the story with Jesus.",
+      "prayer": "Jesus, thank You for restoring me when I fail. Help me get up and follow You again.",
+      "questions": ["Is there a failure you still carry?", "What is Jesus inviting you to do next?"]
+    }
+  ]
+}

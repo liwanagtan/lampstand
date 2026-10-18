@@ -1,0 +1,81 @@
+{
+  "format": "lampstand-plan",
+  "version": 2,
+  "id": "rhythms-of-grace",
+  "name": "Rhythms of grace",
+  "description": "Seven days on simple habits that keep you close to God: Scripture, prayer, rest, worship, generosity and community.",
+  "pace": "daily",
+  "categories": ["spiritual-habits", "character"],
+  "audience": "personal",
+  "cover": "forest-sun",
+  "days": [
+    {
+      "title": "Rooted like a tree",
+      "readings": ["Psalm 1"],
+      "note": "A picture of a life planted by water.",
+      "devotional": "The person who delights in God's word is like a tree by a stream, steady and fruitful in season.\n\nHabits are how roots grow deep: small, daily, quiet.",
+      "prayer": "Lord, plant me deep in Your word, so I grow steady and fruitful.",
+      "questions": [
+        "What helps you delight in God's word?",
+        "When in your day could Scripture fit?"
+      ]
+    },
+    {
+      "title": "A quiet place",
+      "readings": ["Mark 1:29-39"],
+      "note": "After a busy night, Jesus rises early to pray.",
+      "devotional": "Even Jesus, with crowds waiting, made space to be alone with the Father.\n\nPrayer often needs a set time and place before it becomes natural.",
+      "prayer": "Father, help me make a quiet place for You each day.",
+      "questions": ["Where could your quiet place be?", "What usually crowds out prayer for you?"]
+    },
+    {
+      "title": "Rest",
+      "readings": ["Mark 2:23-28"],
+      "note": "Jesus speaks about the Sabbath.",
+      "devotional": "The day of rest exists for people's good, Jesus says: a gift, not a burden.\n\nRest is an act of trust that the world keeps turning without our effort.",
+      "prayer": "Lord, teach me to rest, and to trust You with what I leave undone.",
+      "questions": [
+        "When did you last truly rest?",
+        "What would a weekly rhythm of rest look like for you?"
+      ]
+    },
+    {
+      "title": "Worship together",
+      "readings": ["Hebrews 10:19-25"],
+      "note": "A call to keep meeting together.",
+      "devotional": "The writer urges believers not to give up meeting together, but to encourage one another.\n\nFaith grows best with others beside us.",
+      "prayer": "God, thank You for Your people. Help me show up and encourage someone.",
+      "questions": ["Who encourages your faith?", "Whom could you encourage this week?"]
+    },
+    {
+      "title": "Fasting and the heart",
+      "readings": ["Matthew 6:1-18"],
+      "note": "Jesus speaks about giving, praying and fasting in secret.",
+      "devotional": "Jesus cares about why we do spiritual things. Done for God alone, even small acts are seen and rewarded by the Father.\n\nHabits are about a heart turned towards God, not a performance.",
+      "prayer": "Father, purify my motives. Let my habits be for You alone.",
+      "questions": [
+        "Which habit do you do mostly for others' eyes?",
+        "What could you do in secret for God?"
+      ]
+    },
+    {
+      "title": "The fruit of the Spirit",
+      "readings": ["Galatians 5:16-26"],
+      "note": "Paul describes the character the Spirit grows.",
+      "devotional": "Love, joy, peace, patience and the rest of the Spirit's fruit grow as we walk with Him.\n\nHabits make room; the Spirit makes the fruit.",
+      "prayer": "Holy Spirit, grow Your fruit in me, especially where I'm weakest.",
+      "questions": ["Which fruit do you most want to grow?", "What habit could make room for it?"]
+    },
+    {
+      "title": "Keep going",
+      "readings": ["Galatians 6:7-10"],
+      "note": "Paul encourages people not to grow tired of doing good.",
+      "devotional": "A harvest comes in its season to those who keep sowing. Spiritual habits are long obedience, not quick results.\n\nIf you missed days this week, just begin again.",
+      "prayer": "Lord, help me keep going, and give me grace when I stumble.",
+      "questions": [
+        "Which habit from this week will you keep?",
+        "What will help you begin again when you miss a day?"
+      ]
+    }
+  ]
+}

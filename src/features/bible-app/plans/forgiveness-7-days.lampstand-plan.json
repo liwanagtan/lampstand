@@ -1,0 +1,84 @@
+{
+  "format": "lampstand-plan",
+  "version": 2,
+  "id": "learning-to-forgive",
+  "name": "Learning to forgive",
+  "description": "Seven days on forgiving others and receiving forgiveness: honest about the hurt, hopeful about freedom.",
+  "pace": "daily",
+  "categories": ["forgiveness", "letting-go", "healing"],
+  "audience": "personal",
+  "cover": "river-sunrise",
+  "days": [
+    {
+      "title": "Forgiven first",
+      "readings": ["Psalm 32"],
+      "note": "David describes the relief of being forgiven.",
+      "devotional": "Before we can forgive well, it helps to know what forgiveness feels like from the inside. David describes silence that wore him down, and then the lightness of confessing and being forgiven.\n\nForgiveness starts with God's mercy to us.",
+      "prayer": "God, thank You for forgiving me. Let me feel the freedom of it today.",
+      "questions": [
+        "Is there anything you have kept silent about before God?",
+        "What does being forgiven feel like to you?"
+      ]
+    },
+    {
+      "title": "How many times?",
+      "readings": ["Matthew 18:21-35"],
+      "note": "Peter asks how often he must forgive, and Jesus tells a story.",
+      "devotional": "Peter's offer of seven times sounds generous. Jesus' answer suggests forgiveness is not a number to reach but a way of living.\n\nThe story shows why: we have been released from a debt we could never pay.",
+      "prayer": "Jesus, You forgave me so much. Help me stop counting the wrongs done to me.",
+      "questions": [
+        "Who have you been keeping count with?",
+        "How does the story change how you see that person?"
+      ]
+    },
+    {
+      "title": "Joseph and his brothers",
+      "readings": ["Genesis 50:15-21"],
+      "note": "Years after being betrayed, Joseph faces the brothers who sold him.",
+      "devotional": "Joseph does not pretend nothing happened. He names the harm plainly, and then he chooses kindness.\n\nHe trusts God to bring good out of what others meant for evil. Forgiveness does not erase the wound, but it stops the wound from writing the rest of the story.",
+      "prayer": "God, give me Joseph's courage to name the hurt and still choose kindness.",
+      "questions": ["What hurt are you still carrying?", "Where might God bring good out of it?"]
+    },
+    {
+      "title": "Forgive as you were forgiven",
+      "readings": ["Colossians 3:12-17"],
+      "note": "Paul describes the clothes God's people wear.",
+      "devotional": "Compassion, kindness, humility, gentleness and patience are pictured like clothes we put on each day. Forgiveness is woven through them.\n\nIt is often a daily choice rather than a single moment.",
+      "prayer": "Lord, clothe me today in patience and forgiveness. Let Your peace rule my heart.",
+      "questions": [
+        "Which of these 'clothes' is hardest for you to put on?",
+        "What would forgiving look like today, not someday?"
+      ]
+    },
+    {
+      "title": "Mercy from the cross",
+      "readings": ["Luke 23:32-43"],
+      "note": "Even on the cross, Jesus prays for the people hurting Him.",
+      "devotional": "Jesus forgives in the middle of His suffering, not after it has ended. He also welcomes a dying criminal who asks to be remembered.\n\nNo one is beyond His mercy, and His mercy can grow in us.",
+      "prayer": "Jesus, You forgave from the cross. Grow that kind of mercy in me.",
+      "questions": ["What amazes you most in this scene?", "Who is hardest for you to pray for?"]
+    },
+    {
+      "title": "Letting go of revenge",
+      "readings": ["Romans 12:14-21"],
+      "note": "Paul shows how to answer evil with good.",
+      "devotional": "Letting go of revenge is not saying the wrong did not matter. It is trusting God with justice so it does not have to consume you.\n\nPaul's surprising advice is to overcome evil by doing good.",
+      "prayer": "God, I give You the justice I want. Help me answer hurt with good.",
+      "questions": [
+        "Is there a wrong you want to see paid back?",
+        "What good could you do instead?"
+      ]
+    },
+    {
+      "title": "A new start",
+      "readings": ["2 Corinthians 5:14-21"],
+      "note": "Paul describes a new creation and a ministry of reconciliation.",
+      "devotional": "In Christ the old is gone and something new has begun. God reconciles us to Himself and then sends us out as messengers of reconciliation.\n\nForgiveness opens doors that bitterness keeps shut.",
+      "prayer": "Lord, make me new, and make me someone who helps people come back together.",
+      "questions": [
+        "Where do you long for a new start?",
+        "Where could you help bring reconciliation?"
+      ]
+    }
+  ]
+}

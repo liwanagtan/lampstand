@@ -1,0 +1,62 @@
+{
+  "format": "lampstand-plan",
+  "version": 2,
+  "id": "who-am-i-youth",
+  "name": "Who am I?",
+  "description": "Four weekly lessons for youth groups on identity: made by God, loved as you are, free from comparison, and sent with purpose.",
+  "pace": "weekly",
+  "categories": ["youth", "small-groups"],
+  "audience": "group",
+  "level": "Youth",
+  "cover": "cloudscape",
+  "days": [
+    {
+      "title": "Made on purpose",
+      "readings": ["Psalm 139:13-18", "Genesis 1:26-31"],
+      "note": "Open by asking everyone to share one thing that makes them unique. Then read how God made people in His image.",
+      "devotional": "Leader notes: Many young people measure their worth by looks, grades, followers or performance. Scripture starts somewhere else: every person is made on purpose, in God's image, and called very good.\n\nSpend time on the idea of being 'wonderfully made'. Invite the group to name something they have struggled to accept about themselves, if they feel safe to.",
+      "prayer": "God, thank You for making me on purpose. Help me see myself the way You see me.",
+      "questions": [
+        "What do people your age use to decide if they're worth something?",
+        "What changes if you start with being made in God's image?",
+        "What is one thing about yourself you find hard to accept?"
+      ]
+    },
+    {
+      "title": "Loved as you are",
+      "readings": ["Luke 15:11-32"],
+      "note": "Read the story of the lost son together, perhaps acting it out.",
+      "devotional": "Leader notes: The younger son thinks he must earn his way back as a servant. The father runs to him before he finishes his speech. The older son, who did everything right, is also invited in.\n\nHelp the group see that God's love is not earned by being good or lost by failing. Both sons need the father's grace.",
+      "prayer": "Father, thank You for running to me. Help me believe I'm loved as I am.",
+      "questions": [
+        "Which son do you relate to more, and why?",
+        "What does the father's running say about God?",
+        "Where do you try to earn love?"
+      ]
+    },
+    {
+      "title": "Free from comparison",
+      "readings": ["1 Samuel 16:1-13", "Galatians 6:1-5"],
+      "note": "Ask: where do you compare yourself most? Then read how God chose David.",
+      "devotional": "Leader notes: Samuel expected someone tall and impressive. God looked at the heart and chose the youngest, who wasn't even invited.\n\nComparison steals joy. Paul tells us to look at our own work instead of measuring ourselves against others. Talk honestly about social media and how it shapes how we see ourselves.",
+      "prayer": "Lord, You look at the heart. Free me from comparing myself with others.",
+      "questions": [
+        "Where does comparison hit you hardest?",
+        "What does it mean that God looks at the heart?",
+        "What one change could reduce comparison in your week?"
+      ]
+    },
+    {
+      "title": "Sent with purpose",
+      "readings": ["Ephesians 2:1-10", "Jeremiah 1:4-10"],
+      "note": "Close the series by thinking about purpose and calling.",
+      "devotional": "Leader notes: Jeremiah thought he was too young. God said that was no excuse, because He would be with him. Paul says we are God's handiwork, created for good works He has prepared.\n\nEncourage each person to name one way they could serve or show God's love this month, and pray for one another.",
+      "prayer": "God, I am Your handiwork. Show me the good things You've prepared for me to do.",
+      "questions": [
+        "Have you ever felt too young to matter to God?",
+        "What good work might God have prepared for you?",
+        "How can this group cheer each other on?"
+      ]
+    }
+  ]
+}

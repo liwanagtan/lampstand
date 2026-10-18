@@ -1,0 +1,68 @@
+{
+  "format": "lampstand-plan",
+  "version": 2,
+  "id": "when-youre-afraid",
+  "name": "When you're afraid",
+  "description": "Five days for the nights fear gets loud: God's nearness, His strength, and courage that doesn't depend on feeling brave.",
+  "pace": "daily",
+  "categories": ["fear", "peace"],
+  "audience": "personal",
+  "cover": "lake-mountains",
+  "days": [
+    {
+      "title": "Not alone in the dark",
+      "readings": ["Psalm 23"],
+      "note": "A shepherd's song about valleys, enemies and a table that is set anyway.",
+      "devotional": "Fear often tells us we are on our own. This psalm answers by naming the Shepherd who walks with us through the darkest valley, not around it.\n\nThe danger is real in this song, but so is the company. Courage begins by remembering who is with you.",
+      "prayer": "Shepherd, walk with me through what I'm afraid of today. Let Your nearness be louder than my fear.",
+      "questions": [
+        "What valley are you walking through right now?",
+        "What changes when you picture God walking beside you in it?"
+      ]
+    },
+    {
+      "title": "Held by a strong hand",
+      "readings": ["Isaiah 41:8-13"],
+      "note": "God speaks to a people who feel small and exposed.",
+      "devotional": "Here God repeats Himself on purpose: He chose them, He is with them, He will hold them up. Fear shrinks us; God's words make room for us again.\n\nNotice that God doesn't promise the trouble will vanish. He promises His hand.",
+      "prayer": "Lord, when I feel small, remind me that You chose me and hold me. Steady my hands today.",
+      "questions": [
+        "Which of God's promises in this passage do you most need?",
+        "Where could you take one small brave step today?"
+      ]
+    },
+    {
+      "title": "Storms and sleep",
+      "readings": ["Mark 4:35-41"],
+      "note": "The disciples panic in a storm while Jesus sleeps in the boat.",
+      "devotional": "The disciples were experienced fishermen, and they still thought they would drown. Fear can overtake even people who know what they are doing.\n\nJesus calms the sea and then asks about their faith. He is not scolding fear so much as inviting trust in the One who is in the boat.",
+      "prayer": "Jesus, You are in the boat with me. Speak peace over the storm in my life, and grow my trust.",
+      "questions": [
+        "What storm feels bigger than you right now?",
+        "What would trusting Jesus in it look like this week?"
+      ]
+    },
+    {
+      "title": "A spirit of power and love",
+      "readings": ["2 Timothy 1:3-14"],
+      "note": "Paul writes to a young leader who may have been timid.",
+      "devotional": "Timothy had good reasons to be nervous: a hard task and a mentor in chains. Paul reminds him that the Spirit God gives is not one of timidity but of power, love and a sound mind.\n\nCourage here is not loudness. It is faithfulness, kept going with God's help.",
+      "prayer": "Holy Spirit, fill me with Your power, love and clear thinking where fear has crept in.",
+      "questions": [
+        "Where has fear kept you from doing something good?",
+        "Who could you ask to pray for courage with you?"
+      ]
+    },
+    {
+      "title": "Perfect love",
+      "readings": ["1 John 4:13-19"],
+      "note": "John writes about a love that leaves no room for fear.",
+      "devotional": "Some of our deepest fears are about God Himself: that we have failed Him, that He is waiting to punish. John says love that is made complete drives that fear out.\n\nYou are loved first. Everything else can be faced from there.",
+      "prayer": "Father, let Your love drive out my fear. Help me rest in being loved before I do anything.",
+      "questions": [
+        "Is there any fear you carry about how God sees you?",
+        "How does being loved first change how you face tomorrow?"
+      ]
+    }
+  ]
+}

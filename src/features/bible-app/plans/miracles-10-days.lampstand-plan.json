@@ -1,0 +1,117 @@
+{
+  "format": "lampstand-plan",
+  "version": 2,
+  "id": "the-miracles-of-jesus",
+  "name": "The miracles of Jesus",
+  "description": "Ten days with the signs Jesus did: what each one shows about who He is.",
+  "pace": "daily",
+  "categories": ["miracles", "life-of-jesus"],
+  "audience": "personal",
+  "cover": "waterfall",
+  "days": [
+    {
+      "title": "Water into wine",
+      "readings": ["John 2:1-11"],
+      "note": "Jesus' first sign, at a wedding.",
+      "devotional": "Jesus begins at a party, saving a family from embarrassment. His first sign is about joy and abundance.\n\nHe cares about ordinary needs as well as big ones.",
+      "prayer": "Jesus, thank You for caring about the ordinary parts of my life.",
+      "questions": [
+        "What does this first sign tell you about Jesus?",
+        "What ordinary need can you bring to Him?"
+      ]
+    },
+    {
+      "title": "A healing word",
+      "readings": ["John 4:43-54"],
+      "note": "Jesus heals a boy from a distance.",
+      "devotional": "An official begs Jesus to come; Jesus simply says the boy will live. The man believes the word and goes home.\n\nJesus' word is enough.",
+      "prayer": "Lord, help me trust Your word even before I see the answer.",
+      "questions": [
+        "Where do you need to trust Jesus' word?",
+        "What helps you believe before you see?"
+      ]
+    },
+    {
+      "title": "Calming the storm",
+      "readings": ["Mark 4:35-41"],
+      "note": "Wind and waves obey Jesus.",
+      "devotional": "The disciples ask who this could be, that even the wind obeys Him. The miracle points to His power over creation.\n\nNothing is outside His authority.",
+      "prayer": "Jesus, You rule over every storm. I trust You with mine.",
+      "questions": [
+        "What storm do you need Jesus to calm?",
+        "What does this sign show about who Jesus is?"
+      ]
+    },
+    {
+      "title": "Feeding the crowd",
+      "readings": ["John 6:1-14"],
+      "note": "Five loaves and two fish feed thousands.",
+      "devotional": "A boy's small lunch becomes more than enough in Jesus' hands. There are even leftovers.\n\nWhat we offer, however small, can be multiplied.",
+      "prayer": "Lord, take what little I have and use it for others.",
+      "questions": [
+        "What small thing could you offer Jesus?",
+        "Where have you seen God provide more than enough?"
+      ]
+    },
+    {
+      "title": "Walking on water",
+      "readings": ["Matthew 14:22-33"],
+      "note": "Jesus comes to His disciples on the sea.",
+      "devotional": "Peter walks while he looks at Jesus and sinks when he looks at the wind. Jesus catches him immediately.\n\nFaith keeps its eyes on Jesus.",
+      "prayer": "Jesus, keep my eyes on You, and catch me when I sink.",
+      "questions": ["What 'wind' distracts you from Jesus?", "When has Jesus caught you?"]
+    },
+    {
+      "title": "Sight for the blind",
+      "readings": ["John 9:1-25"],
+      "note": "A man born blind is healed, and questioned.",
+      "devotional": "Everyone argues about the miracle, but the man keeps it simple: he was blind and now he sees.\n\nYour own story of what Jesus has done matters.",
+      "prayer": "Jesus, open my eyes to see You more clearly.",
+      "questions": [
+        "What has Jesus done in your life that you could share?",
+        "Where do you need clearer sight?"
+      ]
+    },
+    {
+      "title": "Touched and healed",
+      "readings": ["Mark 5:21-43"],
+      "note": "A woman reaches for Jesus' cloak; a girl is raised.",
+      "devotional": "Jesus stops for the woman everyone ignored and calls her daughter. Then He goes on to a home where all hope seemed gone.\n\nHe is never too busy for the one who reaches out.",
+      "prayer": "Jesus, I reach out to You today. Thank You for stopping for me.",
+      "questions": [
+        "Which person in this story do you relate to?",
+        "What do you need to reach out to Jesus for?"
+      ]
+    },
+    {
+      "title": "Lazarus",
+      "readings": ["John 11:17-44"],
+      "note": "Jesus weeps, then calls His friend out of the tomb.",
+      "devotional": "Jesus grieves with Mary and Martha before He acts. He is both deeply moved and fully powerful.\n\nHe is the One who gives life that death cannot hold.",
+      "prayer": "Jesus, thank You for grieving with me and for the hope of resurrection.",
+      "questions": [
+        "What does it mean to you that Jesus wept?",
+        "Where do you need His life-giving power?"
+      ]
+    },
+    {
+      "title": "A man let down through a roof",
+      "readings": ["Mark 2:1-12"],
+      "note": "Friends carry a paralysed man to Jesus.",
+      "devotional": "Four friends won't let a crowd stop them. Jesus forgives the man's sins and then heals his body.\n\nFaithful friends bring people to Jesus.",
+      "prayer": "Lord, make me a friend who brings others to You.",
+      "questions": ["Who has carried you to Jesus?", "Who could you help bring to Him?"]
+    },
+    {
+      "title": "The greatest sign",
+      "readings": ["Luke 24:1-12"],
+      "note": "The empty tomb.",
+      "devotional": "Every miracle points here. Jesus Himself rises from the dead, and the women are the first to hear.\n\nBecause He lives, every other promise holds.",
+      "prayer": "Risen Jesus, thank You for the hope of the empty tomb.",
+      "questions": [
+        "Which miracle this week meant the most to you?",
+        "How does the resurrection change your day?"
+      ]
+    }
+  ]
+}

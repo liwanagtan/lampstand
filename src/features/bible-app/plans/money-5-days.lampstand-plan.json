@@ -1,0 +1,65 @@
+{
+  "format": "lampstand-plan",
+  "version": 2,
+  "id": "money-and-contentment",
+  "name": "Money and contentment",
+  "description": "Five days on money worries, generosity and trusting God with what you have.",
+  "pace": "daily",
+  "categories": ["money", "stress"],
+  "audience": "personal",
+  "cover": "golden-hills",
+  "days": [
+    {
+      "title": "Treasure and tomorrow",
+      "readings": ["Matthew 6:19-34"],
+      "note": "Jesus talks about treasure, worry and the Father who provides.",
+      "devotional": "Jesus points to birds and wildflowers: our Father knows what we need. Where our treasure is, our heart follows.\n\nSeeking God first does not make bills disappear, but it changes what holds our heart.",
+      "prayer": "Father, You know what I need. Help me seek You first and trust You with tomorrow.",
+      "questions": [
+        "Where is your treasure, honestly?",
+        "What money worry can you hand to God today?"
+      ]
+    },
+    {
+      "title": "Enough",
+      "readings": ["1 Timothy 6:6-19"],
+      "note": "Paul warns about the love of money and urges generosity.",
+      "devotional": "Paul says a life lived for God, with a heart that is content, is real wealth, and that chasing riches leads into many traps.\n\nHe asks those who have more to be rich in good deeds and generous.",
+      "prayer": "Lord, teach me to be content and to hold money with open hands.",
+      "questions": [
+        "What would 'enough' look like for you?",
+        "How could you be generous this week?"
+      ]
+    },
+    {
+      "title": "The widow's coins",
+      "readings": ["Mark 12:41-44"],
+      "note": "Jesus watches people give at the temple.",
+      "devotional": "The rich give large amounts; a poor widow gives two tiny coins. Jesus says she gave more than all of them.\n\nGod measures generosity by the heart, not the amount.",
+      "prayer": "Jesus, give me a generous heart, whatever I have.",
+      "questions": [
+        "What does this story say about how God sees your giving?",
+        "What could you give that costs you something?"
+      ]
+    },
+    {
+      "title": "Daily bread",
+      "readings": ["Exodus 16:1-21"],
+      "note": "God provides manna in the wilderness, one day at a time.",
+      "devotional": "God gives enough for each day, and what is hoarded spoils. Israel learns to trust God's daily provision.\n\nTrust grows when we stop trying to secure every tomorrow ourselves.",
+      "prayer": "God, thank You for today's bread. Teach me to trust You one day at a time.",
+      "questions": [
+        "Where are you trying to secure tomorrow on your own?",
+        "How has God provided for you before?"
+      ]
+    },
+    {
+      "title": "Cheerful giving",
+      "readings": ["2 Corinthians 9:6-15"],
+      "note": "Paul encourages generous, cheerful giving.",
+      "devotional": "Giving is meant to be free and glad, not forced. God is able to provide all we need so we can be generous on every occasion.\n\nGenerosity often loosens money's grip on us.",
+      "prayer": "Lord, make me a cheerful giver, trusting You to provide.",
+      "questions": ["What makes giving hard for you?", "What one generous step will you take?"]
+    }
+  ]
+}

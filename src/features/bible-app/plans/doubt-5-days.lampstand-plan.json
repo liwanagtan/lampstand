@@ -1,0 +1,65 @@
+{
+  "format": "lampstand-plan",
+  "version": 2,
+  "id": "honest-questions",
+  "name": "Honest questions",
+  "description": "Five days for doubts and big questions: God welcomes honest seekers and shows us who Jesus is.",
+  "pace": "daily",
+  "categories": ["doubt", "who-is-jesus"],
+  "audience": "personal",
+  "cover": "milky-way",
+  "days": [
+    {
+      "title": "Thomas wants to see",
+      "readings": ["John 20:19-31"],
+      "note": "Thomas won't believe until he sees for himself.",
+      "devotional": "Thomas is honest about his doubt, and Jesus comes back for him. He meets Thomas exactly where he is and invites him to look.\n\nDoubt brought to Jesus can become deep faith.",
+      "prayer": "Jesus, meet me in my questions the way You met Thomas.",
+      "questions": [
+        "What question about faith do you carry?",
+        "What would it look like to bring it honestly to Jesus?"
+      ]
+    },
+    {
+      "title": "Mixed faith",
+      "readings": ["Mark 9:14-29"],
+      "note": "A desperate father asks Jesus to help his weak faith.",
+      "devotional": "The father's prayer is both belief and doubt at once, and Jesus answers it. Mixed faith is still faith.\n\nYou don't need to have it all sorted to come to Jesus.",
+      "prayer": "Jesus, I trust You; strengthen the part of me that struggles to trust.",
+      "questions": [
+        "Where is your faith mixed with doubt?",
+        "How does this father's honesty encourage you?"
+      ]
+    },
+    {
+      "title": "The big question",
+      "readings": ["Matthew 16:13-20"],
+      "note": "Jesus asks His disciples the most important question.",
+      "devotional": "People had many opinions about Jesus. He turns the question to His friends, and to us.\n\nFaith grows as we keep looking at who Jesus really is.",
+      "prayer": "Jesus, show me who You really are, and help me answer honestly.",
+      "questions": ["Who do you say Jesus is today?", "What has shaped your answer?"]
+    },
+    {
+      "title": "Questions in the psalms",
+      "readings": ["Psalm 13"],
+      "note": "David asks God how long his trouble will last.",
+      "devotional": "The psalms are full of honest questions to God, even angry ones. David asks how long, and still ends by trusting God's love.\n\nQuestions can be a way of staying in conversation with God.",
+      "prayer": "God, I bring You my questions. Help me trust Your love while I wait for answers.",
+      "questions": [
+        "What 'how long' question would you ask God?",
+        "What helps you keep trusting while you wait?"
+      ]
+    },
+    {
+      "title": "Why we can believe",
+      "readings": ["1 Corinthians 15:1-11"],
+      "note": "Paul lists the people who saw the risen Jesus.",
+      "devotional": "Paul points to real events and real witnesses, many still alive when he wrote. Christian faith is rooted in what happened, not wishful thinking.\n\nIt is good to keep learning the reasons behind the hope.",
+      "prayer": "Lord, strengthen my faith with Your truth, and help me keep learning.",
+      "questions": [
+        "What part of the evidence for Jesus would you like to explore?",
+        "Who could you talk with about your questions?"
+      ]
+    }
+  ]
+}

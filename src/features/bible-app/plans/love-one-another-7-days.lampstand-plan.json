@@ -1,0 +1,87 @@
+{
+  "format": "lampstand-plan",
+  "version": 2,
+  "id": "love-one-another",
+  "name": "Love one another",
+  "description": "Seven days on love in friendship, marriage and family: patient, honest, forgiving and kind.",
+  "pace": "daily",
+  "categories": ["love", "friendship", "marriage", "belonging"],
+  "audience": "personal",
+  "cover": "sea-sunset",
+  "days": [
+    {
+      "title": "What love is",
+      "readings": ["1 Corinthians 13"],
+      "note": "Paul's description of love.",
+      "devotional": "Paul describes love that waits patiently and acts kindly, and he lists what it refuses to be: proud, rude, easily angered, keeping score.\n\nRead it slowly and put your own name where love is described. Where do you need grace?",
+      "prayer": "God, You are love. Grow this kind of love in me.",
+      "questions": [
+        "Which description of love is hardest for you?",
+        "Who needs your patience this week?"
+      ]
+    },
+    {
+      "title": "A friend who stays",
+      "readings": ["1 Samuel 18:1-4", "1 Samuel 20:12-17"],
+      "note": "The friendship of David and Jonathan.",
+      "devotional": "Jonathan loves David as himself and keeps faith with him, even at great cost.\n\nTrue friendship is loyal and generous.",
+      "prayer": "Lord, thank You for my friends. Make me a loyal friend.",
+      "questions": [
+        "Who has been a Jonathan to you?",
+        "How could you be a better friend this week?"
+      ]
+    },
+    {
+      "title": "The way Jesus loves",
+      "readings": ["John 15:9-17"],
+      "note": "Jesus calls His followers friends.",
+      "devotional": "Jesus sets the standard: love each other the way He has loved us, even laying down life for friends.\n\nWe love because we have first been loved.",
+      "prayer": "Jesus, thank You for calling me Your friend. Help me love like You.",
+      "questions": [
+        "What does it mean to you that Jesus calls you friend?",
+        "What is one sacrificial act of love you could do?"
+      ]
+    },
+    {
+      "title": "Marriage and mutual love",
+      "readings": ["Ephesians 5:21-33"],
+      "note": "Paul describes marriage as a picture of Christ and the church.",
+      "devotional": "Paul starts with submitting to one another out of reverence for Christ. Marriage is meant to show self-giving love.\n\nWhether married or not, this calls us to put others' good first.",
+      "prayer": "Lord, teach me self-giving love in my closest relationships.",
+      "questions": [
+        "What does self-giving love look like at home?",
+        "Where could you put someone else's good first?"
+      ]
+    },
+    {
+      "title": "Ruth's loyalty",
+      "readings": ["Ruth 1:1-18"],
+      "note": "Ruth refuses to leave Naomi.",
+      "devotional": "In grief and loss, Ruth chooses to stay with her mother-in-law, binding her life to Naomi's people and God.\n\nLove often looks like staying.",
+      "prayer": "God, give me Ruth's faithfulness to the people You've given me.",
+      "questions": [
+        "Who needs you to stay close right now?",
+        "How has someone's loyalty helped you?"
+      ]
+    },
+    {
+      "title": "Honest and gentle",
+      "readings": ["Ephesians 4:1-16"],
+      "note": "Paul urges unity, patience and honest love.",
+      "devotional": "Love is not avoiding hard conversations; it is saying what is true, gently, so that we grow together.\n\nGentleness and patience keep the peace between us.",
+      "prayer": "Lord, help me speak honestly and gently, and keep peace with others.",
+      "questions": ["Is there a truth you need to speak in love?", "How can you keep it gentle?"]
+    },
+    {
+      "title": "Love in action",
+      "readings": ["1 John 3:11-24"],
+      "note": "John says love shows up in deeds.",
+      "devotional": "Love is more than words; it shows up in actions and in truth. Seeing a need and helping is love made visible.\n\nEnd this week by doing one loving thing nobody asked for.",
+      "prayer": "God, make my love practical and real today.",
+      "questions": [
+        "What need around you could you meet?",
+        "What one loving act will you do today?"
+      ]
+    }
+  ]
+}

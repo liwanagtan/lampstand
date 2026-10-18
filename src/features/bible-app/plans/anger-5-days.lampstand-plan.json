@@ -1,0 +1,65 @@
+{
+  "format": "lampstand-plan",
+  "version": 2,
+  "id": "slow-to-anger",
+  "name": "Slow to anger",
+  "description": "Five days on anger: what it reveals, how it hurts, and how God's patience can shape ours.",
+  "pace": "daily",
+  "categories": ["anger", "forgiveness"],
+  "audience": "personal",
+  "cover": "misty-valley",
+  "days": [
+    {
+      "title": "Quick to listen",
+      "readings": ["James 1:19-27"],
+      "note": "James gives a simple order for hard conversations: listen, speak, then be slow to anger.",
+      "devotional": "Anger usually rushes ahead of listening. James turns the order around, because human anger rarely produces the good life God wants.\n\nSlowing down is not weakness. It makes room to understand before you respond.",
+      "prayer": "Lord, slow me down today. Make me quick to listen and careful with my words.",
+      "questions": ["When does your anger rise fastest?", "What helps you pause before you speak?"]
+    },
+    {
+      "title": "Anger at the door",
+      "readings": ["Genesis 4:1-16"],
+      "note": "The first brothers, and the first warning about anger.",
+      "devotional": "God sees Cain's anger before it becomes violence and talks with him about it. Anger is pictured like something crouching at the door, waiting.\n\nGod's question to Cain is still kind to us: what is going on in you? Anger is a signal worth listening to before it rules us.",
+      "prayer": "God, show me what my anger is pointing to. Help me master it before it masters me.",
+      "questions": [
+        "What usually lies underneath your anger: hurt, fear, unfairness?",
+        "Who could you talk honestly with about it?"
+      ]
+    },
+    {
+      "title": "Don't let the sun go down",
+      "readings": ["Ephesians 4:25-32"],
+      "note": "Paul shows how anger can be felt without becoming sin.",
+      "devotional": "Paul does not say never be angry. He says do not let anger settle in overnight and give evil a foothold.\n\nThe passage ends with kindness, tenderness and forgiveness, because the way out of anger is not pretending; it is grace.",
+      "prayer": "Jesus, help me deal with my anger today, not store it up. Make me kind and forgiving.",
+      "questions": [
+        "Is there anger you have been carrying for a long time?",
+        "What would one step towards peace look like?"
+      ]
+    },
+    {
+      "title": "God is slow to anger",
+      "readings": ["Psalm 103"],
+      "note": "A psalm about the patience and mercy of God.",
+      "devotional": "Before we learn to be patient, we are shown how patient God is with us. He does not treat us as our wrongs deserve.\n\nWhen you remember how much mercy you have received, it becomes easier to give some away.",
+      "prayer": "Father, thank You for Your patience with me. Let Your mercy make me gentle with others.",
+      "questions": [
+        "Where have you seen God's patience with you?",
+        "Who needs that kind of patience from you?"
+      ]
+    },
+    {
+      "title": "Jesus and anger",
+      "readings": ["Matthew 5:21-26"],
+      "note": "Jesus goes beneath actions to the heart.",
+      "devotional": "Jesus takes anger seriously, treating contempt as a heart problem and not only a behaviour problem. He even says reconciliation matters more than a religious offering.\n\nMaking things right is part of following Him. It is hard, and it is freeing.",
+      "prayer": "Lord, search my heart. Give me courage to seek peace with someone I'm at odds with.",
+      "questions": [
+        "Is there someone you need to make things right with?",
+        "What is one thing you could say or do this week?"
+      ]
+    }
+  ]
+}

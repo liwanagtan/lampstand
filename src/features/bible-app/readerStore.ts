@@ -68,7 +68,7 @@ export const READER_SIZES = [16, 18, 20, 22, 24, 28, 32];
 const DEFAULTS: ReaderPrefs = {
   book: 'JHN',
   chapter: 1,
-  translation: 'KJV',
+  translation: 'BSB',
   parallel: null,
   size: 20,
 };

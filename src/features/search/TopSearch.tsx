@@ -214,7 +214,8 @@ export function TopSearch() {
                   it.key === 'all' && styles.all,
                 )}
                 onMouseDown={(e) => e.preventDefault()}
-                onMouseEnter={() => setActive(i)}
+                // Only a mouse that moves picks a row; results appearing under a still pointer don't.
+                onMouseMove={() => active !== i && setActive(i)}
                 onClick={() => pick(i)}
               >
                 <span className={styles.icon} aria-hidden>

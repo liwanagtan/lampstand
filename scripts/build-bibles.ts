@@ -76,7 +76,9 @@ function loadEbibleVpl(id: string): string[][][] {
     const chapters = byBook.get(code) ?? [];
     byBook.set(code, chapters);
     const chapter = (chapters[Number(c) - 1] ??= []);
-    if (chapter.length !== Number(v) - 1) throw new Error(`${id}: ${code} ${c}:${v} out of order`);
+    if (chapter.length > Number(v) - 1) throw new Error(`${id}: ${code} ${c}:${v} out of order`);
+    // Verses a translation leaves out (e.g. BSB Matthew 17:21) are kept as empty verses.
+    while (chapter.length < Number(v) - 1) chapter.push('');
     chapter.push(text);
   }
   // The VPL text uses BibleWorks book codes (SOL, JOH, …); books come in canonical order.
@@ -95,6 +97,15 @@ const tidy = (t: string) =>
     .trim();
 
 const SOURCES: Source[] = [
+  {
+    code: 'BSB',
+    name: 'Berean Standard Bible',
+    license:
+      'Public domain (dedicated April 30, 2023). The Holy Bible, Berean Standard Bible, BSB, is produced in cooperation with Bible Hub, Discovery Bible, OpenBible.com, and the Berean Bible Translation Committee.',
+    source: 'eBible.org (engbsb)',
+    load: () => loadEbibleVpl('engbsb'),
+    clean: tidy,
+  },
   {
     code: 'KJV',
     name: 'King James Version',

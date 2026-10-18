@@ -30,7 +30,7 @@ interface BibleState {
   remove: (code: string) => Promise<void>;
 }
 
-const ORDER = ['KJV', 'WEB', 'ASV', 'YLT', 'DBY'];
+const ORDER = ['BSB', 'KJV', 'WEB', 'ASV', 'YLT', 'DBY'];
 const sortTranslations = (list: TranslationRecord[]) =>
   [...list].sort((a, b) => {
     const ia = ORDER.indexOf(a.code);

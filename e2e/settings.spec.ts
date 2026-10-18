@@ -31,8 +31,8 @@ test('settings: defaults, appearance, reduce motion, translations, backup', asyn
 
   // Built-in translations are listed and can't be removed.
   const rows = page.getByRole('table').getByRole('row');
-  await expect(rows).toHaveCount(6);
-  await expect(page.getByRole('cell', { name: 'Built in' })).toHaveCount(5);
+  await expect(rows).toHaveCount(7);
+  await expect(page.getByRole('cell', { name: 'Built in' })).toHaveCount(6);
 
   // Import a translation, then remove it.
   await page.getByLabel('Choose a translation file').setInputFiles({
@@ -51,9 +51,9 @@ test('settings: defaults, appearance, reduce motion, translations, backup', asyn
     ),
   });
   await expect(page.getByText('Added Test Translation (TST)')).toBeVisible();
-  await expect(rows).toHaveCount(7);
+  await expect(rows).toHaveCount(8);
   await page.getByRole('row', { name: /TST/ }).getByRole('button', { name: 'Remove' }).click();
-  await expect(rows).toHaveCount(6);
+  await expect(rows).toHaveCount(7);
 
   // Export a backup.
   const download = page.waitForEvent('download');

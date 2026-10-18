@@ -24,7 +24,14 @@ const LIMIT = { verses: 12, plans: 6, journey: 8 };
 /** One box over the Bible, plans and your own journey (docs/PRD-ADDENDUM-GROW.md, M21). */
 export function SearchPage() {
   const [params] = useSearchParams();
-  const [value, setValue] = useState(params.get('q') ?? '');
+  const q = params.get('q') ?? '';
+  const [value, setValue] = useState(q);
+  // A new search from the top bar (See all results) replaces what's in the box.
+  const [shownQ, setShownQ] = useState(q);
+  if (q !== shownQ) {
+    setShownQ(q);
+    setValue(q);
+  }
   usePhoneTitle('Search');
   const openInReader = useOpenInReader();
   const [entry, setEntry] = useState<{ id: string } | null>(null);

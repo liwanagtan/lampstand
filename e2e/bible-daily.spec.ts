@@ -81,7 +81,7 @@ test('Today, reading plans and the journal', async ({ page }) => {
   const sheet = page.getByRole('dialog');
   await sheet.getByLabel('Verse').fill('psalm 23 1');
   await sheet.getByLabel('Verse').press('Enter');
-  await expect(sheet).toContainText('The Lord is my shepherd');
+  await expect(sheet).toContainText('The LORD is my shepherd');
   await sheet.getByLabel('Title').fill('My shepherd');
   await sheet.getByLabel('Your entry').fill('Grace upon grace.');
   await expect(sheet.getByRole('status').filter({ hasText: 'Saved' })).toBeVisible();

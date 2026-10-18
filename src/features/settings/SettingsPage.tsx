@@ -231,7 +231,7 @@ function TranslationsSection() {
   return (
     <Section
       title="Translations"
-      description="Five public domain translations are built in. If your church has permission to use another translation, import it as a Lampstand translation file."
+      description="Six public domain translations are built in, including the modern Berean Standard Bible. If your church has permission to use another translation, import it as a Lampstand translation file."
     >
       <table className={styles.table}>
         <thead>

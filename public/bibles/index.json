@@ -2,6 +2,14 @@
   "version": 1,
   "translations": [
     {
+      "code": "BSB",
+      "name": "Berean Standard Bible",
+      "file": "bsb.json",
+      "hash": "af2ccfed60f29be2",
+      "bytes": 3951986,
+      "verses": 31102
+    },
+    {
       "code": "KJV",
       "name": "King James Version",
       "file": "kjv.json",

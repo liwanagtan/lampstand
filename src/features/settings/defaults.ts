@@ -2,7 +2,7 @@ import type { Settings } from '@/db/types';
 import { ALL_FEATURES } from '@/app/features';
 
 export const DEFAULT_SETTINGS: Settings = {
-  defaultTranslation: 'KJV',
+  defaultTranslation: 'BSB',
   defaultTheme: 'classic',
   defaultOverlayMode: 'lowerThird',
   uiMode: 'system',

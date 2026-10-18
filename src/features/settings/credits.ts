@@ -11,6 +11,13 @@ export interface CreditSource {
 
 export const OPEN_CONTENT: readonly CreditSource[] = [
   {
+    name: 'Berean Standard Bible',
+    what: 'A modern, readable translation, built in and the default for new readers.',
+    by: 'Bible Hub, Discovery Bible, OpenBible.com and the Berean Bible Translation Committee',
+    license: 'Public domain (2023)',
+    url: 'https://berean.bible/terms.htm',
+  },
+  {
     name: 'OpenBible.info Topical Bible',
     what: 'Which passages speak to a topic, ranked by readers — used for “Verses for…” in Search and to choose readings for plans.',
     by: 'OpenBible.info',

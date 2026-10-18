@@ -26,7 +26,7 @@ test.describe('Bible reader', () => {
 
   test('word search finds verses', async ({ page }) => {
     await openApp(page, '/bible');
-    await page.getByLabel('Search Lampstand').fill('still waters');
+    await page.getByLabel('Search Lampstand').fill('quiet waters');
     const results = page.getByRole('listbox', { name: 'Search results' });
     await expect(results.getByRole('option').first()).toBeVisible();
     await results.getByRole('option', { name: /Psalm 23:2/ }).click();

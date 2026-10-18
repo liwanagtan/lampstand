@@ -24,7 +24,7 @@ test('a background picture shows behind Bible verses on the TV', async ({ page }
   await page.getByRole('button', { name: 'Show on screen' }).click();
   const output = await popup;
   const tv = output.getByTestId('output');
-  await expect(tv).toContainText('The Lord is my shepherd');
+  await expect(tv).toContainText('The LORD is my shepherd');
 
   await page.getByRole('tab', { name: 'Background' }).click();
   await page.getByRole('button', { name: 'Choose…' }).click();
@@ -57,6 +57,6 @@ test('marks added in the reader appear in the plan reader', async ({ page }) => 
 
   await page.goto('/plans/gospels-40/1');
   const mark = page.locator('mark[data-color="green"]').first();
-  await expect(mark).toContainText('The book of the generation of Jesus Christ');
+  await expect(mark).toContainText('This is the record of the genealogy of Jesus Christ');
   await expect(page.getByLabel('Bookmarked').first()).toBeVisible();
 });

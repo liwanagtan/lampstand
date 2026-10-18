@@ -26,10 +26,10 @@ export const OPEN_CONTENT: readonly CreditSource[] = [
   },
   {
     name: 'M’Cheyne reading calendar',
-    what: 'The classic plan through the Bible in a year.',
+    what: 'The classic plan through the Bible in a year (the M’Cheyne plan). Calendar data from The M’Cheyne Plan app by Andrew Burks, under the Apache License 2.0.',
     by: 'Robert Murray M’Cheyne (1842), as published by Andrew Bonar',
-    license: 'Public domain',
-    url: 'https://www.stepbible.org/html/mcheynes_readings.html',
+    license: 'Public domain (calendar); Apache-2.0 (data)',
+    url: 'https://github.com/willswire/mcheyne',
   },
 ];
 

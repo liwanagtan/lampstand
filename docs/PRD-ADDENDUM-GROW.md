@@ -317,7 +317,7 @@ Phones only; laptops and tablets stay as they are.
 
 Sources Lampstand builds on, each credited in Settings › Credits and licences; plans that come from others carry `credits` and `license`.
 
-- **Now:** Berean Standard Bible (public domain) as a modern built-in translation; OpenBible.info Topical Bible (CC BY 4.0) for "Verses for…" in Search and choosing plan readings; the M'Cheyne reading calendar (public domain).
+- **Now:** Berean Standard Bible (public domain) as a modern built-in translation; OpenBible.info Topical Bible (CC BY 4.0) for "Verses for…" in Search and choosing plan readings; the M'Cheyne reading calendar (public domain). **Done 2026-10-18.**
 - **Next:** unfoldingWord Open Bible Stories (CC BY-SA 4.0) for children's and youth lessons; Tyndale Open Study Notes (CC BY-SA 4.0) for an "About this passage" panel. Share-alike content stays in its own files.
 - **Future additions:** Spurgeon's _Morning and Evening_ (public domain) as a classic daily devotional, and STEPBible data (CC BY 4.0) for Hebrew and Greek word studies.
 - **Not bundled:** copyrighted material that is only free to read (BibleProject, YouVersion plans, _Our Daily Bread_).

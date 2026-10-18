@@ -329,5 +329,5 @@ Phones only; laptops and tablets stay as they are.
 
 Open questions:
 
-- [ ] Reading time on the profile: just stored for Today's greeting, or used later for reminders (which need notifications)?
-- [ ] Should the Library's verse-of-the-day strip move to Screen home, or go away now that Today is home?
+- [x] Reading time on the profile: just stored for Today's greeting, or used later for reminders (which need notifications)? **Reminders (2026-10-18, milestone 29).**
+- [x] Should the Library's verse-of-the-day strip move to Screen home, or go away now that Today is home? **Gone (2026-10-18):** the verse of the day lives on Today only.

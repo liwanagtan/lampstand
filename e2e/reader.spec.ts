@@ -10,7 +10,7 @@ test.describe('Bible reader', () => {
     const bar = page.getByRole('toolbar', { name: 'Selected verses' });
     await expect(bar).toContainText('John 3:16');
     // Shift-click extends the selection.
-    await page.locator('[data-verse="18"] button').click({ modifiers: ['Shift'] });
+    await page.locator('[data-verse="18"] button[aria-pressed]').click({ modifiers: ['Shift'] });
     await expect(bar).toContainText('John 3:16–18');
     await page.keyboard.press('Escape');
     await expect(bar).toBeHidden();
@@ -49,4 +49,19 @@ test.describe('Bible reader', () => {
     await page.reload();
     await expect(page.getByRole('heading', { name: 'Romans 9' })).toBeVisible();
   });
+});
+
+test('study notes: about the book, notes beside verses, links into the reader', async ({
+  page,
+}) => {
+  await openApp(page, '/bible');
+  await page.getByRole('button', { name: 'About John' }).click();
+  await expect(page.getByRole('dialog')).toContainText('The Gospel of John');
+  await expect(page.getByRole('dialog')).toContainText('Adapted from Tyndale Open Study Notes');
+  await page.keyboard.press('Escape');
+  await page.getByRole('button', { name: /Study notes on verse 1$/ }).click();
+  const sheet = page.getByRole('dialog');
+  await expect(sheet).toContainText('logos');
+  await sheet.getByRole('link', { name: 'Gen 1:1' }).first().click();
+  await expect(page.getByRole('heading', { name: 'Genesis 1' })).toBeVisible();
 });

@@ -1,5 +1,5 @@
 import { usePhoneTitle } from '@/app/topBar';
-import { useEffect, useRef, useState, type CSSProperties } from 'react';
+import { useEffect, useMemo, useRef, useState, type CSSProperties } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { motion } from 'motion/react';
 import {
@@ -9,11 +9,15 @@ import {
   Clock,
   MessageCircleQuestion,
   NotebookPen,
+  BookText,
 } from 'lucide-react';
 import { Button, EmptyState, IconButton, Select, Tooltip, cx } from '@/design-system/components';
 import { useBible } from '@/features/bible/bibleStore';
 import { BOOK_BY_CODE } from '@/features/bible/books';
-import { formatRef, toOsis } from '@/features/bible/ref';
+import { formatRef, toOsis, type RefRange } from '@/features/bible/ref';
+import { useSettings } from '@/features/settings/settingsStore';
+import { StudyNotesSheet } from './StudyNotesSheet';
+import { notesForRange, useStudyNotes } from './studyNotes';
 import { localDate } from './dailyVerses';
 import { newEntryId, type EntryDraft } from './journal';
 import { EntrySheet } from './JournalEntrySheet';
@@ -120,6 +124,7 @@ export function PlanReaderPage() {
           {chapterChunks(r).map((c) => (
             <ChapterBlock key={`${c.book}.${c.chapter}`} {...c} />
           ))}
+          <ReadingNotes range={r} />
         </section>
       ))}
 
@@ -361,5 +366,34 @@ function FinishBlock({
         )}
       </div>
     </motion.div>
+  );
+}
+
+/** "Study notes" for one reading: Tyndale's notes on that passage, in a sheet. */
+function ReadingNotes({ range }: { range: RefRange }) {
+  const on = useSettings((s) => s.studyNotes);
+  const book = useStudyNotes(on ? range.start.book : null);
+  const [open, setOpen] = useState(false);
+  const notes = useMemo(() => notesForRange(book, range), [book, range]);
+  if (!on || notes.length === 0) return null;
+  return (
+    <>
+      <Button
+        variant="ghost"
+        size="sm"
+        icon={<BookText size={15} />}
+        className={styles.studyButton}
+        onClick={() => setOpen(true)}
+      >
+        Study notes ({notes.length})
+      </Button>
+      <StudyNotesSheet
+        open={open}
+        onOpenChange={setOpen}
+        eyebrow="Study notes"
+        title={formatRef(range)}
+        notes={notes}
+      />
+    </>
   );
 }

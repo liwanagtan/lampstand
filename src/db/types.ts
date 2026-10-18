@@ -77,6 +77,8 @@ export interface Settings {
   reminders: RemindersState;
   /** Spurgeon's Morning and Evening on Today. */
   classicDevotional: boolean;
+  /** Tyndale study notes in the reader and plan days. */
+  studyNotes: boolean;
 }
 
 export interface RemindersState {

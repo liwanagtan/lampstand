@@ -45,6 +45,15 @@ export default defineConfig({
       workbox: {
         // App shell, fonts, icons, Bible data and the background library all work offline.
         globPatterns: ['**/*.{js,css,html,svg,png,webp,woff2,json}'],
+        // Study notes (8 MB) download a book at a time when first opened, then work offline.
+        globIgnores: ['notes/**'],
+        runtimeCaching: [
+          {
+            urlPattern: ({ url }) => url.pathname.startsWith('/notes/'),
+            handler: 'CacheFirst',
+            options: { cacheName: 'study-notes', expiration: { maxEntries: 80 } },
+          },
+        ],
         maximumFileSizeToCacheInBytes: 12 * 1024 * 1024,
         navigateFallback: '/index.html',
         // Scene compositions load in an iframe as themselves, never as the app shell.

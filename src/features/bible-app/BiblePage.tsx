@@ -11,6 +11,7 @@ import {
 } from 'react';
 import {
   Bookmark,
+  BookText,
   ChevronDown,
   ChevronLeft,
   ChevronRight,
@@ -44,6 +45,8 @@ import {
 import { NoteDialog } from './NoteDialog';
 import { ReadingSettings } from './ReadingSettings';
 import { TranslationChip } from './TranslationChip';
+import { StudyNotesSheet } from './StudyNotesSheet';
+import { notesByVerse, useStudyNotes, type StudyNote } from './studyNotes';
 import { readingGreeting } from './greetings';
 import { haptic } from '@/app/haptics';
 import { noteTipEvent } from '@/features/tips/tipStore';
@@ -90,11 +93,15 @@ export function BibleReader({ toolbar, selectionActions }: BiblePageSlots) {
   } = useReader();
   const [picking, setPicking] = useState(false);
   const [reading, setReading] = useState(false);
+  const [study, setStudy] = useState<number | 'intro' | null>(null);
   const [noteFor, setNoteFor] = useState<{ range: RefRange; note: MarkRecord | null } | null>(null);
   const marksOn = useSettings((st) => st.features.marks);
   const chapterMarks = useChapterMarks(book, chapter);
   // With Read and study switched off, marks stay stored but aren't drawn or offered.
   const marks = marksOn ? chapterMarks : NO_MARKS;
+  const studyOn = useSettings((st) => st.studyNotes);
+  const bookNotes = useStudyNotes(studyOn ? book : null);
+  const studyByVerse = useMemo(() => notesByVerse(bookNotes, chapter), [bookNotes, chapter]);
   const primary = useChapter(translation, book, chapter);
   const second = useChapter(parallel, book, chapter);
   const body = useRef<HTMLDivElement>(null);
@@ -230,6 +237,15 @@ export function BibleReader({ toolbar, selectionActions }: BiblePageSlots) {
               <h1 className={styles.chapterTitle}>
                 {single ? bookName : `${bookName} ${chapter}`}
               </h1>
+              {bookNotes?.intro && (
+                <button
+                  type="button"
+                  className={styles.aboutBook}
+                  onClick={() => setStudy('intro')}
+                >
+                  <BookText size={14} aria-hidden /> About {bookName}
+                </button>
+              )}
               {second && (
                 <div className={styles.columnsHead} aria-hidden>
                   <span>{translation}</span>
@@ -251,6 +267,8 @@ export function BibleReader({ toolbar, selectionActions }: BiblePageSlots) {
                   const r = fromOsis(note.ref);
                   if (r) setNoteFor({ range: r, note });
                 }}
+                studyByVerse={studyByVerse}
+                onOpenStudy={(verse) => setStudy(verse)}
               />
             ) : (
               <p className={styles.loading}>Loading…</p>
@@ -383,6 +401,18 @@ export function BibleReader({ toolbar, selectionActions }: BiblePageSlots) {
       </div>
 
       <NoteDialog target={noteFor} onClose={() => setNoteFor(null)} />
+      <StudyNotesSheet
+        open={study !== null}
+        onOpenChange={(o) => !o && setStudy(null)}
+        eyebrow={study === 'intro' ? 'About this book' : 'Study notes'}
+        title={study === 'intro' ? bookName : `${bookName} ${chapter}:${study ?? ''}`}
+        notes={typeof study === 'number' ? studyByVerse.get(study) : undefined}
+        html={
+          study === 'intro'
+            ? [bookNotes?.summary, bookNotes?.intro].filter((h): h is string => Boolean(h))
+            : undefined
+        }
+      />
       <BookPicker
         open={picking}
         onOpenChange={setPicking}
@@ -420,6 +450,8 @@ function Verses({
   onSelect,
   marks,
   onOpenNote,
+  studyByVerse,
+  onOpenStudy,
 }: {
   primary: Passage;
   second: Passage | null;
@@ -427,6 +459,9 @@ function Verses({
   onSelect: (verse: number, extend: boolean) => void;
   marks: ChapterMarks;
   onOpenNote: (note: MarkRecord) => void;
+  /** Tyndale study notes that start at each verse. */
+  studyByVerse: Map<number, StudyNote[]>;
+  onOpenStudy: (verse: number) => void;
 }) {
   const secondByVerse = useMemo(
     () => new Map(second?.verses.map((v) => [v.verse, v]) ?? []),
@@ -486,6 +521,18 @@ function Verses({
                   </button>
                 </Tooltip>
               ))}
+              {studyByVerse.has(v.verse) && (
+                <Tooltip content="Study notes">
+                  <button
+                    type="button"
+                    className={styles.studyMark}
+                    onClick={() => onOpenStudy(v.verse)}
+                    aria-label={`Study notes on verse ${v.verse}`}
+                  >
+                    <BookText size={13} aria-hidden />
+                  </button>
+                </Tooltip>
+              )}
             </div>
             <button
               type="button"

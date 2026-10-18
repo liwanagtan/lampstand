@@ -25,6 +25,13 @@ export const OPEN_CONTENT: readonly CreditSource[] = [
     url: 'https://www.openbible.info/topics/',
   },
   {
+    name: 'Tyndale Open Study Notes',
+    what: 'Book introductions and notes on the verses, in the Bible reader and plan days. Adapted from Tyndale Open Study Notes; the original work by Tyndale House Publishers is available for free at tyndaleopenresources.com. Split by book, markup simplified and cross-references linked into the reader; wording unchanged. The notes quote phrases of the New Living Translation as part of Tyndale’s work.',
+    by: 'Tyndale House Publishers (2022)',
+    license: 'CC BY-SA 4.0',
+    url: 'https://tyndaleopenresources.com',
+  },
+  {
     name: 'Open Bible Stories',
     what: 'The 50 stories in “The Bible in 50 stories” and “God’s big story”, with their comprehension questions. The original work by unfoldingWord is available from openbiblestories.org. Arranged as reading plans; pictures left out; story text unchanged.',
     by: 'unfoldingWord (stories and questions)',

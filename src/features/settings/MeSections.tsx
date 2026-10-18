@@ -132,6 +132,7 @@ export function ReadingSection() {
   const translations = useBible((b) => b.translations);
   const options = translations.map((t) => ({ value: t.code, label: `${t.code} — ${t.name}` }));
   const classic = useSettings((s) => s.classicDevotional);
+  const studyNotes = useSettings((s) => s.studyNotes);
   const set = useSettings((s) => s.set);
   return (
     <Section title="Reading" description="Used in the Bible, Today, Plans and Journal.">
@@ -163,6 +164,12 @@ export function ReadingSection() {
         onChange={(on) => void set('classicDevotional', on)}
         label="Classic devotional on Today"
         description="Spurgeon's Morning and Evening (1865): a short reading each morning and evening."
+      />
+      <Toggle
+        checked={studyNotes}
+        onChange={(on) => void set('studyNotes', on)}
+        label="Study notes"
+        description="Tyndale Open Study Notes: an introduction to each book, and notes beside the verses that have them."
       />
     </Section>
   );

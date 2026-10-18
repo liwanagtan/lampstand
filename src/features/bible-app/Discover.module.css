@@ -414,9 +414,13 @@
   .headRow + .section {
     margin-top: 0;
   }
+  /* On a phone a pinned search and filters would cover too much of the screen. */
   .searchBar {
-    margin: 0 calc(var(--space-4) * -1) var(--space-5, 20px);
-    padding: var(--space-2) var(--space-4);
+    position: static;
+    margin: 0 0 var(--space-5, 20px);
+    padding: 0;
+    background: none;
+    backdrop-filter: none;
   }
   .searchBox {
     flex-basis: 100%;
@@ -433,5 +437,65 @@
   .tile:hover {
     border-color: var(--color-border);
     background: var(--color-surface);
+  }
+}
+
+/* Phones: plan lists read as rows — a square cover beside the name — so a screen holds
+   several; Discover rows bleed to the edges and snap. */
+@media (max-width: 640px) {
+  .cardGrid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-2);
+  }
+  .cardGrid .planCard {
+    display: grid;
+    grid-template-columns: 76px minmax(0, 1fr);
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-2);
+  }
+  .cardGrid .cover {
+    aspect-ratio: 1;
+    overflow: hidden;
+    border-radius: var(--radius-sm);
+  }
+  .cardGrid .activeBadge {
+    top: auto;
+    bottom: 4px;
+    left: 4px;
+    padding: 1px 6px;
+    font-size: 10px;
+  }
+  .cardGrid .cardBody {
+    padding: 0;
+  }
+  .row {
+    grid-auto-columns: 72%;
+    margin: 0 calc(var(--space-4) * -1);
+    padding: 0 var(--space-4) var(--space-2);
+    scroll-padding: 0 var(--space-4);
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+  .row::-webkit-scrollbar {
+    display: none;
+  }
+  .groupTitle {
+    font-size: 20px;
+  }
+  .groupHead {
+    align-items: center;
+  }
+  /* The plan page: the cover runs edge to edge, Start fills the width. */
+  .hero {
+    min-height: 300px;
+    margin: calc(var(--space-4) * -1) calc(var(--space-4) * -1) var(--space-4);
+    border-radius: 0;
+  }
+  .heroBody {
+    min-height: 300px;
+  }
+  .startRow > :first-child {
+    flex: 1;
   }
 }

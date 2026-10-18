@@ -271,8 +271,35 @@
     font-weight: var(--weight-medium);
     text-decoration: none;
   }
+  .tab {
+    position: relative;
+  }
+  /* The active tab wears a soft pill behind its icon, which grows in when chosen. */
+  .tab::before {
+    content: '';
+    position: absolute;
+    top: 4px;
+    left: 50%;
+    width: 56px;
+    height: 30px;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--color-accent) 18%, transparent);
+    opacity: 0;
+    transform: translateX(-50%) scaleX(0.5);
+    transition:
+      opacity var(--dur-standard) var(--ease-standard),
+      transform var(--dur-standard) var(--ease-standard);
+  }
+  .tab > * {
+    position: relative;
+  }
   .tabActive {
     color: var(--color-text);
+    font-weight: var(--weight-semibold);
+  }
+  .tabActive::before {
+    opacity: 1;
+    transform: translateX(-50%) scaleX(1);
   }
   .tabActive svg {
     color: var(--color-accent-text);

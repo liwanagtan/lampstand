@@ -234,3 +234,18 @@
   font-size: var(--text-14);
   color: var(--color-text-muted);
 }
+
+/* Phones: tighter groups, so controls get the width. */
+@media (max-width: 640px) {
+  .section.section {
+    gap: var(--space-3);
+    padding: var(--space-4);
+  }
+  .sectionTitle {
+    font-size: 17px;
+  }
+  .table {
+    display: block;
+    overflow-x: auto;
+  }
+}

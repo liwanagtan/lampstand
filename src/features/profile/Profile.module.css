@@ -225,3 +225,30 @@
     font-weight: var(--weight-semibold);
   }
 }
+
+@media (max-width: 640px) {
+  /* Journey's summary as one strip, not three boxes. */
+  .summary {
+    gap: 0;
+    overflow: hidden;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: var(--color-surface);
+  }
+  .stat {
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+  }
+  .stat + .stat {
+    border-left: 1px solid var(--color-border);
+  }
+  /* The three tabs share the width, like a segmented header. */
+  .tabs {
+    gap: 0;
+  }
+  .tab {
+    flex: 1;
+    text-align: center;
+  }
+}

@@ -16,9 +16,15 @@ import {
 import { Button, IconButton, Tooltip, cx, toast } from '@/design-system/components';
 import { db } from '@/db/db';
 import { formatRef, toOsis } from '@/features/bible/ref';
-import { backgroundUrl, loadBackgrounds } from '@/features/library/backgrounds';
+import {
+  addBundledBackground,
+  backgroundUrl,
+  loadBackgrounds,
+  type BackgroundEntry,
+} from '@/features/library/backgrounds';
 import { useControl } from '@/features/present/live/controlStore';
 import { closeOutput } from '@/features/present/live/outputWindow';
+import type { LiveState } from '@/features/present/live/types';
 import { useReducedMotion } from '@/features/settings/theme';
 import { useSettings } from '@/features/settings/settingsStore';
 import { usePassage } from '@/slides/usePassage';
@@ -106,8 +112,10 @@ export function TodayPage() {
 }
 
 /** Present / Stop Presenting for one verse. A session Today started ends when you leave Today. */
-function usePresentVerse(osis: string, translation: string) {
+function usePresentVerse(osis: string, translation: string, photo: BackgroundEntry | null) {
   const startedHere = useRef(false);
+  // The TV's own background, put back when Today stops showing its verse.
+  const before = useRef<LiveState['backdrop'] | undefined>(undefined);
   const presenting = useControl((s) => s.presenting);
   const overlayRef = useControl((s) => s.live.overlay?.ref);
   const live = presenting && overlayRef === osis;
@@ -127,32 +135,46 @@ function usePresentVerse(osis: string, translation: string) {
     };
   }, []);
 
+  // The screen looks like the card: today's photo behind the verse, full screen.
   const present = async () => {
     const was = useControl.getState().presenting;
-    await showOnTv(osis, translation);
-    if (!was && useControl.getState().presenting) startedHere.current = true;
+    await showOnTv(osis, translation, 'fullScreen', 'card');
+    if (!useControl.getState().presenting) return;
+    if (!was) startedHere.current = true;
+    if (photo) {
+      const assetId = await addBundledBackground(photo);
+      if (before.current === undefined) before.current = useControl.getState().live.backdrop;
+      useControl.getState().dispatch({
+        type: 'backdrop',
+        backdrop: { type: 'image', description: photo.description, assetId, motion: 'drift' },
+      });
+    }
   };
   const stop = () => {
     useControl.getState().dispatch({ type: 'clearOverlay' });
+    if (before.current !== undefined) {
+      useControl.getState().dispatch({ type: 'backdrop', backdrop: before.current });
+      before.current = undefined;
+    }
     end();
   };
   return { live, present, stop };
 }
 
 /** One of the bundled photos, a different one each day. */
-function useDailyPhoto(now: Date): string | null {
-  const [url, setUrl] = useState<string | null>(null);
+function useDailyPhoto(now: Date): BackgroundEntry | null {
+  const [entry, setEntry] = useState<BackgroundEntry | null>(null);
   useEffect(() => {
     let alive = true;
     void loadBackgrounds().then((list) => {
       if (!alive || list.length === 0) return;
-      setUrl(backgroundUrl(list[localDayNumber(now) % list.length]!.file));
+      setEntry(list[localDayNumber(now) % list.length]!);
     });
     return () => {
       alive = false;
     };
   }, [now]);
-  return url;
+  return entry;
 }
 
 function VerseHero({
@@ -169,8 +191,9 @@ function VerseHero({
   const { ref, range } = verseOfTheDay(now);
   const osis = toOsis(range);
   const { passage } = usePassage(osis, translation);
-  const photo = useDailyPhoto(now);
-  const { live, present, stop } = usePresentVerse(osis, translation);
+  const daily = useDailyPhoto(now);
+  const photo = daily ? backgroundUrl(daily.file) : null;
+  const { live, present, stop } = usePresentVerse(osis, translation, daily);
   const text = passage?.verses
     .filter((v) => !v.missing)
     .map((v) => v.text)

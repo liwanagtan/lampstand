@@ -9,6 +9,8 @@ export interface LiveOverlay {
   mode: OverlayMode;
   page: number;
   emphasis?: string[];
+  /** "card": drawn like Today's verse-of-the-day card (full screen only). */
+  look?: 'card';
 }
 
 /** What covers the slide on the TV: nothing, black, the logo, or the sermon poster. */

@@ -30,6 +30,37 @@ export function VerseOverlay({ overlay, template, animate, background }: VerseOv
       </span>
     ) : null;
 
+  if (overlay.mode === 'fullScreen' && overlay.look === 'card') {
+    // Today's verse of the day, as it looks on the card: the photo, a quiet label, the verse
+    // in quotes, and the reference beneath.
+    const text = page?.segments.map((seg) => seg.text).join(' ') ?? '';
+    return (
+      <div className={styles.full}>
+        <Backdrop
+          background={background}
+          template={template}
+          animate={animate}
+          showPlaceholder={false}
+        />
+        <div className={styles.cardScrim} aria-hidden />
+        <div
+          key={`${passage.osis}-${passage.translation}-${index}`}
+          className={`${s.content} ${s.start} ${styles.card}`}
+          data-animate={animate || undefined}
+        >
+          <p className={styles.cardEyebrow}>Verse of the day</p>
+          <p className={styles.cardQuote} style={page ? { fontSize: page.size } : undefined}>
+            “{text}”
+          </p>
+          <p className={styles.cardRef}>
+            {passage.reference}
+            <span className={styles.cardCode}>{passage.translation}</span>
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   if (overlay.mode === 'fullScreen') {
     return (
       <div className={styles.full}>

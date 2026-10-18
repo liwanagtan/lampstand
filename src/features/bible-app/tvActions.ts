@@ -13,13 +13,18 @@ import { useTv } from './tvStore';
 const counts = (code: string) => verseCountsFor(getTranslation(code));
 
 /** Shows a passage on the TV, starting the presentation first if needed. */
-export async function showOnTv(ref: string, translation: string): Promise<void> {
+export async function showOnTv(
+  ref: string,
+  translation: string,
+  mode = useTv.getState().mode,
+  look?: 'card',
+): Promise<void> {
   const control = useControl.getState();
   if (!control.presenting && !(await startOutput())) return;
   useTv.getState().setPanel(true);
   const { live } = useControl.getState();
   if (live.screen !== 'content') useControl.getState().toggleScreen(live.screen);
-  await useControl.getState().showOverlay({ ref, translation, mode: useTv.getState().mode });
+  await useControl.getState().showOverlay({ ref, translation, mode, ...(look ? { look } : {}) });
 }
 
 /** Next/previous on the TV: the next page of a long passage, then the next verse. */

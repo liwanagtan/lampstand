@@ -29,7 +29,9 @@ test('Today, reading plans and the journal', async ({ page }) => {
   const popup = page.waitForEvent('popup');
   await verse.getByRole('button', { name: 'Show on screen' }).click();
   const output = await popup;
-  await expect(output.getByTestId('output')).toContainText(/\w{3,}/);
+  // The TV looks like the card: its label, the verse in quotes, today's photo behind.
+  await expect(output.getByTestId('output')).toContainText('Verse of the day');
+  await expect(output.getByTestId('output')).toContainText('“');
   await verse.getByRole('button', { name: 'Stop showing' }).click();
   await expect.poll(() => output.isClosed()).toBe(true);
   const popup2 = page.waitForEvent('popup');

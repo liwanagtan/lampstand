@@ -33,7 +33,6 @@ import {
 import type { Passage } from '@/features/bible/passage';
 import type { MarkRecord } from '@/db/types';
 import { useShortcuts } from '@/features/present/useShortcuts';
-import { BibleSearch } from './BibleSearch';
 import { BookPicker } from './BookPicker';
 import {
   HIGHLIGHT_COLORS,
@@ -131,8 +130,6 @@ export function BibleReader({ toolbar, selectionActions }: BiblePageSlots) {
   useShortcuts({
     ArrowRight: () => go(1),
     ArrowLeft: () => go(-1),
-    '/': () =>
-      document.querySelector<HTMLInputElement>('input[aria-label="Search the Bible"]')?.focus(),
     // Esc clears the selection first; with nothing selected it falls through (e.g. to the TV).
     ...(selection ? { Escape: () => setSelection(null) } : {}),
   });
@@ -221,7 +218,6 @@ export function BibleReader({ toolbar, selectionActions }: BiblePageSlots) {
             />
           </div>
           <div className={styles.view}>
-            <BibleSearch translation={translation} onGo={onSearchGo} />
             {toolbar}
             {readingButton}
           </div>

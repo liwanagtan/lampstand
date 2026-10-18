@@ -45,7 +45,7 @@ test.describe('on a phone', () => {
 
 test('a note typed across chapters shows in both chapters', async ({ page }) => {
   await openApp(page, '/bible');
-  await page.getByLabel('Search the Bible').fill('jn 3:34-4:2');
+  await page.getByLabel('Search Lampstand').fill('jn 3:34-4:2');
   await page.keyboard.press('Enter');
   const bar = page.getByRole('toolbar', { name: 'Selected verses' });
   await expect(bar).toContainText('John 3:34–4:2 · 5 verses');

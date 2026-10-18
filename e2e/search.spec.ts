@@ -58,12 +58,28 @@ test.describe('on a phone', () => {
   });
 });
 
-test('laptops keep Screen in the top bar, with a Search button', async ({ page }) => {
+test('laptops keep Screen in the top bar, with search right there', async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 800 });
   await openApp(page, '/');
   const nav = page.getByRole('navigation', { name: 'Main' });
   await expect(nav.getByRole('link')).toHaveText(['Today', 'Bible', 'Plans', 'Screen']);
-  await page.getByRole('link', { name: 'Search', exact: true }).click();
-  await expect(page).toHaveURL(/\/search$/);
   await expect(page.getByRole('link', { name: /Present on a screen/ })).toHaveCount(0);
+
+  // `/` jumps to the field; results drop down as you type.
+  await page.keyboard.press('/');
+  const box = page.getByLabel('Search Lampstand');
+  await expect(box).toBeFocused();
+  await box.fill('anxiety');
+  const results = page.getByRole('listbox', { name: 'Search results' });
+  await expect(results.getByRole('option', { name: /When anxiety rises/ })).toBeVisible();
+  await results.getByRole('option', { name: /See all results/ }).click();
+  await expect(page).toHaveURL(/\/search\?q=anxiety$/);
+  await expect(page.getByRole('searchbox', { name: 'Search', exact: true })).toHaveValue('anxiety');
+
+  // A reference opens the passage, and the reader bar has no search box of its own.
+  await page.getByLabel('Search Lampstand').fill('jn 3 16');
+  await page.keyboard.press('Enter');
+  await expect(page.getByRole('heading', { name: 'John 3' })).toBeVisible();
+  await expect(page.getByRole('toolbar', { name: 'Selected verses' })).toContainText('John 3:16');
+  await expect(page.getByLabel('Search the Bible')).toHaveCount(0);
 });

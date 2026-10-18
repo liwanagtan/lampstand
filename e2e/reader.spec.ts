@@ -4,7 +4,7 @@ import { openApp } from './helpers';
 test.describe('Bible reader', () => {
   test('search by reference opens the chapter and selects the verse', async ({ page }) => {
     await openApp(page, '/bible');
-    await page.getByLabel('Search the Bible').fill('jn 3 16');
+    await page.getByLabel('Search Lampstand').fill('jn 3 16');
     await page.keyboard.press('Enter');
     await expect(page.getByRole('heading', { name: 'John 3' })).toBeVisible();
     const bar = page.getByRole('toolbar', { name: 'Selected verses' });
@@ -18,7 +18,7 @@ test.describe('Bible reader', () => {
 
   test('a whole chapter opens without a selection', async ({ page }) => {
     await openApp(page, '/bible');
-    await page.getByLabel('Search the Bible').fill('ps 23');
+    await page.getByLabel('Search Lampstand').fill('ps 23');
     await page.keyboard.press('Enter');
     await expect(page.getByRole('heading', { name: 'Psalms 23' })).toBeVisible();
     await expect(page.getByRole('toolbar', { name: 'Selected verses' })).toBeHidden();
@@ -26,7 +26,7 @@ test.describe('Bible reader', () => {
 
   test('word search finds verses', async ({ page }) => {
     await openApp(page, '/bible');
-    await page.getByLabel('Search the Bible').fill('still waters');
+    await page.getByLabel('Search Lampstand').fill('still waters');
     const results = page.getByRole('listbox', { name: 'Search results' });
     await expect(results.getByRole('option').first()).toBeVisible();
     await results.getByRole('option', { name: /Psalm 23:2/ }).click();

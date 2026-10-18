@@ -1,5 +1,5 @@
 import { Link, Navigate, NavLink, Outlet, useLocation } from 'react-router-dom';
-import { ChevronLeft, Search } from 'lucide-react';
+import { ChevronLeft } from 'lucide-react';
 import { LampLockup, LampMark } from '@/design-system/LampMark';
 import { cx } from '@/design-system/components';
 import { useControl } from '@/features/present/live/controlStore';
@@ -7,6 +7,7 @@ import { useApplyDocumentTheme } from '@/features/settings/theme';
 import { useSettings } from '@/features/settings/settingsStore';
 import { TipHost } from '@/features/tips/TipHost';
 import { Avatar } from '@/features/profile/Avatar';
+import { TopSearch } from '@/features/search/TopSearch';
 import { noteVisit } from '@/features/profile/journey';
 import { phoneTabs, visibleNav } from './features';
 import { isOnboarded } from './onboarding';
@@ -68,14 +69,7 @@ export function AppShell() {
             <span className={styles.onAirDot} aria-hidden /> On the TV
           </span>
         )}
-        <NavLink
-          to={paths.search}
-          className={({ isActive }) => cx(styles.me, styles.search, isActive && styles.meActive)}
-          aria-label="Search"
-          title="Search verses, plans and your journey"
-        >
-          <Search size={17} strokeWidth={1.75} aria-hidden />
-        </NavLink>
+        <TopSearch />
         <NavLink
           to={paths.profile}
           className={({ isActive }) => cx(styles.me, isActive && styles.meActive)}

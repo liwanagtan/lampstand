@@ -1,0 +1,130 @@
+.root {
+  position: relative;
+  flex: 0 1 300px;
+  min-width: 200px;
+  margin-left: auto;
+  transition: flex-basis var(--dur-standard) var(--ease-standard);
+}
+.root:focus-within {
+  flex-basis: 380px;
+}
+.box {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  height: 38px;
+  padding: 0 var(--space-2) 0 var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  background: var(--color-surface-raised);
+  color: var(--color-text-muted);
+  cursor: text;
+}
+.box:focus-within {
+  border-color: var(--color-accent);
+  background: var(--color-surface);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-accent) 22%, transparent);
+}
+.box input {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: var(--color-text);
+  font: inherit;
+  font-size: var(--text-14);
+}
+.box input::-webkit-search-cancel-button {
+  display: none;
+}
+.results {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  left: 0;
+  z-index: 40;
+  min-width: 380px;
+  max-height: min(70vh, 560px);
+  margin: 0;
+  padding: var(--space-2);
+  overflow-y: auto;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  box-shadow: var(--elevation-2);
+  list-style: none;
+}
+.group {
+  padding: var(--space-2) var(--space-2) 2px;
+  font-size: 11px;
+  font-weight: var(--weight-semibold);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+.item {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  width: 100%;
+  padding: var(--space-2);
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.active {
+  background: var(--color-surface-raised);
+}
+.all {
+  margin-top: var(--space-1);
+  color: var(--color-accent-text);
+  font-weight: var(--weight-medium);
+}
+.icon {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--color-accent) 14%, var(--color-surface));
+  color: var(--color-accent-text);
+}
+.text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.title {
+  font-size: var(--text-14);
+  font-weight: var(--weight-semibold);
+}
+.detail {
+  overflow: hidden;
+  font-size: var(--text-13);
+  color: var(--color-text-muted);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.detail mark {
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--color-accent) 30%, transparent);
+  color: inherit;
+}
+.hint {
+  padding: var(--space-2);
+  font-size: var(--text-13);
+  color: var(--color-text-muted);
+}
+/* Phones have the Search tab instead. */
+@media (max-width: 640px) {
+  .root {
+    display: none;
+  }
+}

@@ -7,7 +7,7 @@ test('the reader keeps to reading: no TV controls, even on a selection', async (
   await page.setViewportSize({ width: 1440, height: 900 });
   await openApp(page, '/bible');
   await expect(page.getByRole('button', { name: /Start Presentation|Present/ })).toHaveCount(0);
-  await page.getByLabel('Search the Bible').fill('jn 3 16');
+  await page.getByLabel('Search Lampstand').fill('jn 3 16');
   await page.keyboard.press('Enter');
   const bar = page.getByRole('toolbar', { name: 'Selected verses' });
   await expect(bar).toContainText('John 3:16');
@@ -42,13 +42,13 @@ test('a background picture shows behind Bible verses on the TV', async ({ page }
 test('marks added in the reader appear in the plan reader', async ({ page }) => {
   await page.setViewportSize({ width: 1366, height: 820 });
   await openApp(page, '/bible');
-  await page.getByLabel('Search the Bible').fill('mt 1 1');
+  await page.getByLabel('Search Lampstand').fill('mt 1 1');
   await page.keyboard.press('Enter');
   await page.getByRole('button', { name: 'Highlight green' }).click();
   await page.getByRole('button', { name: 'Bookmark', exact: true }).click();
 
   // Bookmarks live in the book picker and jump back.
-  await page.getByLabel('Search the Bible').fill('jn 1');
+  await page.getByLabel('Search Lampstand').fill('jn 1');
   await page.keyboard.press('Enter');
   await page.getByRole('button', { name: /^John 1/ }).click();
   await page.getByRole('dialog').getByRole('tab', { name: 'Bookmarks' }).click();

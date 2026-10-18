@@ -1,87 +1,38 @@
 import { usePhoneTitle } from '@/app/topBar';
-import { useEffect, useMemo, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useState } from 'react';
+import { Link, useSearchParams } from 'react-router-dom';
 import { BookOpen, CalendarCheck, NotebookPen, Search, Sparkles, StickyNote } from 'lucide-react';
 import { Input } from '@/design-system/components';
 import { paths } from '@/app/paths';
 import type { MarkRecord } from '@/db/types';
-import { getTranslation, useBible } from '@/features/bible/bibleStore';
-import { formatRef, fromOsis, parseRefDetailed, type RefRange } from '@/features/bible/ref';
-import { searchVerses } from '@/features/bible/search';
-import { highlightRuns, type SearchHit } from '@/features/bible/searchCore';
-import { verseCountsFor } from '@/features/bible/versification';
-import { planMeta, searchPlans } from '@/features/bible-app/discover';
-import { entryPreview, useEntries } from '@/features/bible-app/journal';
+import { formatRef, fromOsis, type RefRange } from '@/features/bible/ref';
+import { highlightRuns } from '@/features/bible/searchCore';
+import { snippetRuns } from './snippet';
+import { planMeta } from '@/features/bible-app/discover';
+import { entryPreview } from '@/features/bible-app/journal';
 import { EntrySheet } from '@/features/bible-app/JournalEntrySheet';
-import { buildTimeline, isEntryItem, searchTimeline } from '@/features/bible-app/journalTimeline';
-import { useAllMarks } from '@/features/bible-app/marks';
+import { isEntryItem } from '@/features/bible-app/journalTimeline';
 import { NoteDialog } from '@/features/bible-app/NoteDialog';
-import { usePlans } from '@/features/bible-app/plans';
 import { useReader } from '@/features/bible-app/readerStore';
 import { useOpenInReader } from '@/features/bible-app/useOpenInReader';
-import { useSettings } from '@/features/settings/settingsStore';
 import styles from './SearchPage.module.css';
+import { useUniversalSearch } from './useUniversalSearch';
 
 const TRY = ['John 3:16', 'peace', 'anxiety', 'Psalm 23'];
 const LIMIT = { verses: 12, plans: 6, journey: 8 };
 
 /** One box over the Bible, plans and your own journey (docs/PRD-ADDENDUM-GROW.md, M21). */
 export function SearchPage() {
-  const [value, setValue] = useState('');
+  const [params] = useSearchParams();
+  const [value, setValue] = useState(params.get('q') ?? '');
   usePhoneTitle('Search');
-  const text = value.trim();
-  const translation = useReader((s) => s.translation);
-  const codes = useBible((s) => s.translations.map((t) => t.code).join(','));
-  const features = useSettings((s) => s.features);
-  const plans = usePlans();
-  const entries = useEntries();
-  const marks = useAllMarks();
   const openInReader = useOpenInReader();
-  const [hits, setHits] = useState<{ q: string; hits: SearchHit[] } | null>(null);
   const [entry, setEntry] = useState<{ id: string } | null>(null);
   const [note, setNote] = useState<{ range: RefRange; note: MarkRecord | null } | null>(null);
-
-  const parsed = useMemo(() => {
-    if (!text) return null;
-    return parseRefDetailed(text, {
-      knownTranslations: codes.split(','),
-      verseCounts: verseCountsFor(getTranslation(translation)),
-    });
-  }, [text, codes, translation]);
-  const isRef = Boolean(parsed?.ok);
-  const wordQuery = text.length >= 3 && !isRef ? text.replace(/["“”‘’]/g, '') : '';
-
-  useEffect(() => {
-    if (!wordQuery) return;
-    let alive = true;
-    const id = setTimeout(() => {
-      void searchVerses(translation, wordQuery, LIMIT.verses).then(
-        (h) => alive && setHits({ q: wordQuery, hits: h }),
-      );
-    }, 120);
-    return () => {
-      alive = false;
-      clearTimeout(id);
-    };
-  }, [wordQuery, translation]);
-
-  const verses = wordQuery && hits?.q === wordQuery ? hits.hits : [];
-  const planHits =
-    features.plans && text.length >= 2
-      ? searchPlans(plans ?? [], text, 'all').slice(0, LIMIT.plans)
-      : [];
-  const timeline = useMemo(
-    () => buildTimeline(entries ?? [], features.marks ? (marks ?? []) : []),
-    [entries, marks, features.marks],
+  const { text, translation, parsed, verses, planHits, journey, nothing } = useUniversalSearch(
+    value,
+    LIMIT,
   );
-  const journey = text.length >= 2 ? searchTimeline(timeline, text).slice(0, LIMIT.journey) : [];
-  const nothing =
-    text.length >= 3 &&
-    !isRef &&
-    hits?.q === wordQuery &&
-    verses.length === 0 &&
-    planHits.length === 0 &&
-    journey.length === 0;
 
   return (
     <div className={styles.page} data-enter>
@@ -190,7 +141,7 @@ export function SearchPage() {
                 key={h.osis}
                 icon={<BookOpen size={16} />}
                 title={formatRef(r)}
-                detail={highlightRuns(h.text, h.terms).map((run, n) =>
+                detail={snippetRuns(highlightRuns(h.text, h.terms)).map((run, n) =>
                   run.hit ? <mark key={n}>{run.text}</mark> : <span key={n}>{run.text}</span>,
                 )}
                 onClick={() => openInReader(r)}

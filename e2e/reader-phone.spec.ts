@@ -8,7 +8,7 @@ test('on a phone the reader is all thumbs: pill, Aa sheet, and the selection bar
 }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await openApp(page, '/bible');
-  await expect(page.getByLabel('Search the Bible')).toBeHidden();
+  await expect(page.getByLabel('Search Lampstand')).toBeHidden();
   const bar = page.getByRole('banner');
   const pill = page.getByRole('navigation', { name: 'Chapter', exact: true });
 

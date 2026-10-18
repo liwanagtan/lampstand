@@ -6,7 +6,7 @@ test('highlight, bookmark and note a passage, then find them on the Notes page',
 }) => {
   await page.setViewportSize({ width: 1366, height: 820 });
   await openApp(page, '/bible');
-  await page.getByLabel('Search the Bible').fill('rom 8 28');
+  await page.getByLabel('Search Lampstand').fill('rom 8 28');
   await page.keyboard.press('Enter');
 
   await page.getByRole('button', { name: 'Highlight yellow' }).click();

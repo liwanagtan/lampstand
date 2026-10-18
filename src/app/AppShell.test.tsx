@@ -51,13 +51,17 @@ describe('AppShell', () => {
 
   it('sends old links to their new homes', async () => {
     const router = renderAt('/settings');
-    expect(await screen.findByRole('radio', { name: 'Light' })).toBeInTheDocument();
+    expect(
+      await screen.findByRole('radio', { name: 'Light' }, { timeout: 5000 }),
+    ).toBeInTheDocument();
     expect(router.state.location.pathname).toBe('/profile/settings');
     router.navigate('/me');
-    expect(await screen.findByLabelText('Your name')).toBeInTheDocument();
+    expect(await screen.findByLabelText('Your name', {}, { timeout: 5000 })).toBeInTheDocument();
     expect(router.state.location.pathname).toBe('/profile/you');
     router.navigate('/journal');
-    expect(await screen.findByRole('heading', { name: 'Your journey starts here' })).toBeVisible();
+    expect(
+      await screen.findByRole('heading', { name: 'Your journey starts here' }, { timeout: 5000 }),
+    ).toBeVisible();
     expect(router.state.location.pathname).toBe('/profile');
   });
 

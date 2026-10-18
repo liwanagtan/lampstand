@@ -17,7 +17,7 @@ export const PLAN_LIMITS = {
   note: 2000,
   question: 300,
   questions: 8,
-  devotional: 3000,
+  devotional: 6000,
   prayer: 1000,
   categories: 6,
   level: 40,

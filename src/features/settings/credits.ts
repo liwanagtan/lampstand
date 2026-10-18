@@ -25,6 +25,13 @@ export const OPEN_CONTENT: readonly CreditSource[] = [
     url: 'https://www.openbible.info/topics/',
   },
   {
+    name: 'Open Bible Stories',
+    what: 'The 50 stories in “The Bible in 50 stories” and “God’s big story”, with their comprehension questions. The original work by unfoldingWord is available from openbiblestories.org. Arranged as reading plans; pictures left out; story text unchanged.',
+    by: 'unfoldingWord (stories and questions)',
+    license: 'CC BY-SA 4.0',
+    url: 'https://openbiblestories.org',
+  },
+  {
     name: 'Morning and Evening',
     what: 'The classic devotional on Today, a reading each morning and evening. Shown as written; Spurgeon quotes the King James Version in his text.',
     by: 'Charles H. Spurgeon (1865), from the Christian Classics Ethereal Library',

@@ -171,7 +171,7 @@
             "description": "Version 2. A short devotional (plain text, your own words) read after the readings.",
             "type": "string",
             "minLength": 1,
-            "maxLength": 3000
+            "maxLength": 6000
           },
           "prayer": {
             "description": "Version 2. A short prayer to close the day, in your own words.",

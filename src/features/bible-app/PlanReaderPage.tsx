@@ -1,5 +1,5 @@
 import { usePhoneTitle } from '@/app/topBar';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type CSSProperties } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { motion } from 'motion/react';
 import {
@@ -240,7 +240,7 @@ function ChapterBlock({
     ? `${b.refName} ${chapter}`
     : formatRef({ start: { book, chapter, verse: from }, end: { book, chapter, verse: to } });
   return (
-    <div className={styles.chapter} style={{ fontSize: size }}>
+    <div className={styles.chapter} style={{ '--reader-size': `${size}px` } as CSSProperties}>
       <h2 className={styles.chapterTitle}>{heading}</h2>
       {passage ? (
         <p className={styles.text}>

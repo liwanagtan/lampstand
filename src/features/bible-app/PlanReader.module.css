@@ -80,6 +80,7 @@
   margin-top: var(--space-8);
 }
 .chapter + .chapter {
+  font-size: var(--reader-size, 20px);
   margin-top: 1.6em;
 }
 .chapterTitle {
@@ -229,4 +230,17 @@
   font-size: 17px;
   font-weight: var(--weight-semibold);
   letter-spacing: -0.02em;
+}
+
+/* Phones: a calmer type scale (docs/DECISIONS.md 2026-10-18). */
+@media (max-width: 640px) {
+  .chapter {
+    font-size: calc(var(--reader-size, 20px) * 0.9);
+  }
+  .title {
+    font-size: 24px;
+  }
+  .doneTitle {
+    font-size: 20px;
+  }
 }

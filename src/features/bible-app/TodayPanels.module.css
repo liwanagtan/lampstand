@@ -43,3 +43,10 @@
   font-size: var(--text-14);
   font-weight: var(--weight-semibold);
 }
+
+/* Phones: a calmer type scale (docs/DECISIONS.md 2026-10-18). */
+@media (max-width: 640px) {
+  .chapter {
+    font-size: 17px;
+  }
+}

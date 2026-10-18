@@ -298,3 +298,16 @@
   color: var(--color-accent-text);
   text-decoration: underline;
 }
+
+/* Phones: a calmer type scale (docs/DECISIONS.md 2026-10-18). */
+@media (max-width: 640px) {
+  .title {
+    font-size: 22px;
+  }
+  .verseText {
+    font-size: 20px;
+  }
+  .reading {
+    font-size: 18px;
+  }
+}

@@ -6,6 +6,7 @@ import {
   useRef,
   useState,
   type ComponentProps,
+  type CSSProperties,
   type ReactNode,
 } from 'react';
 import {
@@ -226,7 +227,12 @@ export function BibleReader({ toolbar, selectionActions }: BiblePageSlots) {
           </div>
         </div>
 
-        <div ref={body} className={styles.body} style={{ fontSize: size }} onScroll={onScroll}>
+        <div
+          ref={body}
+          className={styles.body}
+          style={{ '--reader-size': `${size}px` } as CSSProperties}
+          onScroll={onScroll}
+        >
           <article
             className={cx(styles.page, second && styles.parallel)}
             aria-label={`${bookName} ${chapter}`}

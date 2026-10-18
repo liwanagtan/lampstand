@@ -283,3 +283,10 @@
     padding: 0 var(--space-3);
   }
 }
+
+/* Phones: a calmer type scale (docs/DECISIONS.md 2026-10-18). */
+@media (max-width: 640px) {
+  .heroText {
+    font-size: 20px;
+  }
+}

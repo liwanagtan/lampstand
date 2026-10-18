@@ -15,7 +15,7 @@ export default defineConfig({
     VitePWA({
       registerType: 'prompt',
       injectRegister: false,
-      includeAssets: ['favicon.svg', 'favicon.ico', 'icons/*.png'],
+      includeAssets: ['favicon.svg', 'favicon.ico', 'icons/*.png', 'reminder-sw.js'],
       manifest: {
         name: 'Lampstand',
         short_name: 'Lampstand',
@@ -50,6 +50,8 @@ export default defineConfig({
         // Scene compositions load in an iframe as themselves, never as the app shell.
         navigateFallbackDenylist: [/^\/scenes\//],
         cleanupOutdatedCaches: true,
+        // Reading reminders: Android's background check and opening the app from a reminder.
+        importScripts: ['reminder-sw.js'],
       },
     }),
   ],

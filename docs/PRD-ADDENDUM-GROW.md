@@ -308,6 +308,11 @@ Phones only; laptops and tablets stay as they are.
 27. **Gestures and motion** — drag sheets down to close; tap the active tab to return to the top; a small tab icon pop; light haptics for key moments; everything respects Reduce motion.
 28. **Page fixes** — Aa in the plan reader; Screen with a way back and a laptop note; TV settings hidden on phones; stacked parallel translation; swipeable Journey filters.
 
+### Reminders and more plans (milestones 29–30, agreed 2026-10-18)
+
+29. **Reading reminders** — Settings › Reminders: on/off and a reading time. Notifications at that time while Lampstand runs, naming your next plan reading, skipped on days you've read; Android's installed app also checks in the background; "Add to my calendar" gives every phone a daily alert. Push to a closed app needs a server (v2).
+30. **More plans** — plans in our own words for the empty feelings and growth categories, so more of the catalog shows.
+
 ## Decisions and open questions
 
 | Decision             | Choice                                                                                                                                     |

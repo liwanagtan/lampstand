@@ -13,4 +13,5 @@ export const DEFAULT_SETTINGS: Settings = {
   features: ALL_FEATURES,
   profile: { name: '' },
   tips: { enabled: true, lastShownAt: null, seen: {} },
+  reminders: { enabled: false, time: '07:00', lastNotified: null },
 };

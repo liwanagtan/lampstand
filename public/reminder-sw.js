@@ -1,0 +1,85 @@
+/* Lampstand reading reminders in the service worker (docs/PRD-ADDENDUM-GROW.md, milestone 29).
+   Android, installed app: the periodic background check reminds you once a day, after your
+   reading time, if you haven't read yet. A tap on any reminder opens Lampstand. */
+
+const TAG = 'lampstand-reminder';
+const pad = (n) => String(n).padStart(2, '0');
+const localDate = (d) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+
+function openDb() {
+  return new Promise((resolve, reject) => {
+    const req = indexedDB.open('lampstand');
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => reject(req.error);
+  });
+}
+function getAll(db, store) {
+  return new Promise((resolve) => {
+    try {
+      const req = db.transaction(store).objectStore(store).getAll();
+      req.onsuccess = () => resolve(req.result || []);
+      req.onerror = () => resolve([]);
+    } catch {
+      resolve([]);
+    }
+  });
+}
+function put(db, store, value) {
+  return new Promise((resolve) => {
+    try {
+      const tx = db.transaction(store, 'readwrite');
+      tx.objectStore(store).put(value);
+      tx.oncomplete = () => resolve();
+      tx.onerror = () => resolve();
+    } catch {
+      resolve();
+    }
+  });
+}
+
+async function maybeRemind() {
+  const db = await openDb();
+  const settings = await getAll(db, 'settings');
+  const row = settings.find((r) => r.key === 'reminders');
+  const r = row && row.value;
+  if (!r || !r.enabled) return;
+  const now = new Date();
+  const today = localDate(now);
+  if (r.lastNotified === today) return;
+  const [h, m] = String(r.time || '07:00').split(':').map(Number);
+  if (now.getHours() * 60 + now.getMinutes() < h * 60 + m) return;
+  const plans = await getAll(db, 'plans');
+  const entries = await getAll(db, 'entries');
+  const readPlan = plans.some((p) =>
+    Object.values(p.doneAt || {}).some((t) => localDate(new Date(t)) === today),
+  );
+  const wrote = entries.some((e) => e.date === today);
+  await put(db, 'settings', { key: 'reminders', value: { ...r, lastNotified: today } });
+  if (readPlan || wrote) return;
+  await self.registration.showNotification('Time for today’s reading', {
+    body: 'A few quiet minutes in the Word.',
+    tag: TAG,
+    icon: '/icons/icon-192.png',
+    badge: '/icons/icon-192.png',
+    data: { url: '/' },
+  });
+}
+
+self.addEventListener('periodicsync', (event) => {
+  if (event.tag === TAG) event.waitUntil(maybeRemind());
+});
+
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close();
+  const url = (event.notification.data && event.notification.data.url) || '/';
+  event.waitUntil(
+    self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((list) => {
+      const open = list.find((c) => 'focus' in c);
+      if (open) {
+        open.navigate(url);
+        return open.focus();
+      }
+      return self.clients.openWindow(url);
+    }),
+  );
+});

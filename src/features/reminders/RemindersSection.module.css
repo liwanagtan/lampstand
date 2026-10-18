@@ -1,0 +1,36 @@
+.time {
+  max-width: 200px;
+}
+.warn {
+  padding: var(--space-3);
+  border-radius: var(--radius-sm);
+  background: color-mix(
+    in srgb,
+    var(--color-warning, var(--color-accent)) 14%,
+    var(--color-surface)
+  );
+  font-size: var(--text-14);
+  line-height: 1.5;
+}
+.calendar {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-2);
+}
+.note {
+  display: flex;
+  gap: var(--space-2);
+  font-size: var(--text-13);
+  line-height: 1.5;
+  color: var(--color-text-muted);
+}
+.note svg {
+  flex: none;
+  margin-top: 3px;
+}
+@media (max-width: 640px) {
+  .time {
+    max-width: none;
+  }
+}

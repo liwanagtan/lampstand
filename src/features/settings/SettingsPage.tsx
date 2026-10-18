@@ -13,6 +13,7 @@ import { getTemplate } from '@/templates/templates';
 import { backupFileName, createBackup, restoreBackup } from './backup';
 import { useSettings } from './settingsStore';
 import { ReadingSection, TipsSection } from './MeSections';
+import { RemindersSection } from '@/features/reminders/RemindersSection';
 import { Section } from './Section';
 import styles from './SettingsPage.module.css';
 
@@ -29,6 +30,7 @@ export function SettingsPage() {
   return (
     <div className={styles.sections}>
       <ReadingSection />
+      <RemindersSection />
       <AppearanceSection />
       {/* TV settings belong to the laptop that runs the screen, not to the phone. */}
       {screen && (

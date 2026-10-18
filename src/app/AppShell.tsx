@@ -8,6 +8,7 @@ import { useSettings } from '@/features/settings/settingsStore';
 import { TipHost } from '@/features/tips/TipHost';
 import { Avatar } from '@/features/profile/Avatar';
 import { TopSearch } from '@/features/search/TopSearch';
+import { useReminders } from '@/features/reminders/useReminders';
 import { noteVisit } from '@/features/profile/journey';
 import { phoneTabs, visibleNav } from './features';
 import { isOnboarded } from './onboarding';
@@ -31,6 +32,7 @@ export function AppShell() {
   const { pathname } = useLocation();
   const atmosphere = atmosphereFor(pathname);
   noteVisit();
+  useReminders();
   const bar = useTopBar();
 
   if (welcome) return <Navigate to="/welcome" replace />;

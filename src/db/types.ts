@@ -73,6 +73,16 @@ export interface Settings {
   profile: { name: string; color?: AvatarColor };
   /** Feature tips: on/off, when one last showed, and each tip's state. */
   tips: TipsState;
+  /** A daily reading reminder at a time of your choosing. */
+  reminders: RemindersState;
+}
+
+export interface RemindersState {
+  enabled: boolean;
+  /** Local time, "HH:MM". */
+  time: string;
+  /** The local date (YYYY-MM-DD) a reminder last went out, so it fires once a day. */
+  lastNotified: string | null;
 }
 
 export interface TipsState {

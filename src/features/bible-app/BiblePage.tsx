@@ -43,6 +43,7 @@ import {
 } from './marks';
 import { NoteDialog } from './NoteDialog';
 import { ReadingSettings } from './ReadingSettings';
+import { TranslationChip } from './TranslationChip';
 import { readingGreeting } from './greetings';
 import { haptic } from '@/app/haptics';
 import { noteTipEvent } from '@/features/tips/tipStore';
@@ -109,15 +110,7 @@ export function BibleReader({ toolbar, selectionActions }: BiblePageSlots) {
   const bookName = BOOK_BY_CODE.get(book)?.name ?? book;
   const single = chapterCount(translation, book) === 1;
   const place = single ? bookName : `${bookName} ${chapter}`;
-  const readingButton = (
-    <Tooltip content="Translation and text size">
-      <IconButton
-        label="Reading settings"
-        icon={<span className={styles.aa}>Aa</span>}
-        onClick={() => setReading(true)}
-      />
-    </Tooltip>
-  );
+  const readingButton = <TranslationChip onClick={() => setReading(true)} />;
   // Phones: the place is already on the page and the pill, so the bar is personal.
   const name = useSettings((st) => st.profile.name);
   usePhoneTitle(readingGreeting(name, new Date()), { actions: readingButton });

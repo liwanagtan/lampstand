@@ -38,6 +38,7 @@ import { paths } from '@/app/paths';
 import { haptic } from '@/app/haptics';
 import { MarkedVerseText } from './MarkedVerse';
 import { ReadingSettings } from './ReadingSettings';
+import { TranslationChip } from './TranslationChip';
 import { useVisibleMarks } from './marks';
 
 const dateFormat = new Intl.DateTimeFormat(undefined, {
@@ -61,13 +62,7 @@ export function PlanReaderPage() {
   // Phones: Aa in the top bar replaces the translation and size controls.
   usePhoneTitle(plan?.name ?? 'Plan', {
     back: paths.planPage(planId),
-    actions: (
-      <IconButton
-        label="Reading settings"
-        icon={<span className={styles.aa}>Aa</span>}
-        onClick={() => setReading(true)}
-      />
-    ),
+    actions: <TranslationChip onClick={() => setReading(true)} parallel={false} />,
   });
 
   useEffect(() => {

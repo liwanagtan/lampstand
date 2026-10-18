@@ -228,12 +228,6 @@
   justify-content: center;
   margin-top: var(--space-8);
 }
-.aa {
-  font-family: var(--font-display);
-  font-size: 17px;
-  font-weight: var(--weight-semibold);
-  letter-spacing: -0.02em;
-}
 
 /* Phones: a calmer type scale (docs/DECISIONS.md 2026-10-18). */
 @media (max-width: 640px) {

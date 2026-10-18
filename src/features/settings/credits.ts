@@ -25,6 +25,13 @@ export const OPEN_CONTENT: readonly CreditSource[] = [
     url: 'https://www.openbible.info/topics/',
   },
   {
+    name: 'Morning and Evening',
+    what: 'The classic devotional on Today, a reading each morning and evening. Shown as written; Spurgeon quotes the King James Version in his text.',
+    by: 'Charles H. Spurgeon (1865), from the Christian Classics Ethereal Library',
+    license: 'Public domain',
+    url: 'https://www.ccel.org/s/spurgeon/morn_eve/morn_eve.html',
+  },
+  {
     name: 'M’Cheyne reading calendar',
     what: 'The classic plan through the Bible in a year (the M’Cheyne plan). Calendar data from The M’Cheyne Plan app by Andrew Burks, under the Apache License 2.0.',
     by: 'Robert Murray M’Cheyne (1842), as published by Andrew Bonar',

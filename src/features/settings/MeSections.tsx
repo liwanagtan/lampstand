@@ -131,6 +131,8 @@ export function ReadingSection() {
   const size = useReader((s) => s.size);
   const translations = useBible((b) => b.translations);
   const options = translations.map((t) => ({ value: t.code, label: `${t.code} — ${t.name}` }));
+  const classic = useSettings((s) => s.classicDevotional);
+  const set = useSettings((s) => s.set);
   return (
     <Section title="Reading" description="Used in the Bible, Today, Plans and Journal.">
       <div className={styles.grid3}>
@@ -156,6 +158,12 @@ export function ReadingSection() {
           options={READER_SIZES.map((n) => ({ value: String(n), label: `${n} px` }))}
         />
       </div>
+      <Toggle
+        checked={classic}
+        onChange={(on) => void set('classicDevotional', on)}
+        label="Classic devotional on Today"
+        description="Spurgeon's Morning and Evening (1865): a short reading each morning and evening."
+      />
     </Section>
   );
 }

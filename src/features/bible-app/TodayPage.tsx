@@ -35,6 +35,7 @@ import { ActivePlan } from './ActivePlan';
 import { useReader } from './readerStore';
 import { ContextPanel, ReflectPanel } from './TodayPanels';
 import { showOnTv } from './tvActions';
+import { ClassicDevotional } from './ClassicDevotional';
 import styles from './Today.module.css';
 import { paths } from '@/app/paths';
 
@@ -62,6 +63,7 @@ export function TodayPage() {
   const [panel, setPanel] = useState<'context' | 'reflect' | null>(null);
   const reduced = useReducedMotion();
   const name = useSettings((s) => s.profile.name.trim().split(/\s+/)[0] ?? '');
+  const classic = useSettings((s) => s.classicDevotional);
   // Phones: your greeting leads the top bar, with the date quietly beneath it.
   usePhoneTitle(
     <BarTitle title={`${greeting(now)}${name ? `, ${name}` : ''}`} line={longDate.format(now)} />,
@@ -94,6 +96,8 @@ export function TodayPage() {
         <TodayPlans />
         <ReflectionCard date={date} onReflect={() => setPanel('reflect')} />
       </div>
+
+      {classic && <ClassicDevotional now={now} />}
 
       <ContextPanel
         key={panel === 'context' ? 'open' : 'closed'}

@@ -75,6 +75,8 @@ export interface Settings {
   tips: TipsState;
   /** A daily reading reminder at a time of your choosing. */
   reminders: RemindersState;
+  /** Spurgeon's Morning and Evening on Today. */
+  classicDevotional: boolean;
 }
 
 export interface RemindersState {

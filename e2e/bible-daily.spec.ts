@@ -42,6 +42,14 @@ test('Today, reading plans and the journal', async ({ page }) => {
   await expect.poll(() => output2.isClosed()).toBe(true);
   await page.getByRole('link', { name: 'Today' }).click();
 
+  // A classic devotional: Spurgeon's Morning and Evening, read in a sheet.
+  const classic = page.getByRole('region', { name: 'Classic devotional' });
+  await expect(classic).toContainText('Spurgeon, 1865');
+  await classic.getByRole('radio', { name: 'Evening' }).click();
+  await classic.getByRole('button', { name: 'Read' }).click();
+  await expect(page.getByRole('dialog')).toContainText('Spurgeon · Morning and Evening');
+  await page.keyboard.press('Escape');
+
   // Start a plan; only the next reading is shown.
   await page.getByRole('button', { name: 'Choose a plan' }).click();
   // Discover: open the plan page, preview, then start.

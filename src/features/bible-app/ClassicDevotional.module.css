@@ -1,0 +1,123 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-5, 20px);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background:
+    radial-gradient(
+      120% 90% at 100% 0%,
+      color-mix(in srgb, var(--color-accent) 8%, transparent),
+      transparent 60%
+    ),
+    var(--color-surface);
+}
+.head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+.eyebrow {
+  font-size: var(--text-12);
+  font-weight: var(--weight-semibold);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-accent-text);
+}
+.halves {
+  display: flex;
+  gap: 2px;
+  padding: 2px;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  background: var(--color-surface-raised);
+}
+.half {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 28px;
+  padding: 0 var(--space-3);
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--color-text-muted);
+  font: inherit;
+  font-size: var(--text-13);
+  font-weight: var(--weight-medium);
+  cursor: pointer;
+}
+.half[aria-checked='true'] {
+  background: var(--color-surface);
+  color: var(--color-text);
+  box-shadow: var(--elevation-1);
+}
+.verse {
+  margin: 0;
+}
+.verse blockquote {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 19px;
+  line-height: 1.45;
+}
+.verseLarge blockquote {
+  font-size: 22px;
+}
+.verse figcaption {
+  display: flex;
+  gap: var(--space-2);
+  margin-top: var(--space-1);
+  font-size: var(--text-13);
+  font-weight: var(--weight-semibold);
+}
+.code {
+  font-weight: var(--weight-medium);
+  color: var(--color-text-muted);
+}
+.preview {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  font-size: var(--text-14);
+  line-height: 1.6;
+  color: var(--color-text-muted);
+}
+.row {
+  display: flex;
+  gap: var(--space-2);
+}
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin-top: var(--space-5, 20px);
+  font-family: var(--font-display);
+  font-size: 18px;
+  line-height: 1.7;
+}
+.note {
+  margin-top: var(--space-5, 20px);
+  font-size: var(--text-13);
+  color: var(--color-text-muted);
+}
+@media (pointer: coarse) {
+  .half {
+    height: 36px;
+  }
+}
+@media (max-width: 640px) {
+  .verse blockquote {
+    font-size: 17px;
+  }
+  .verseLarge blockquote {
+    font-size: 19px;
+  }
+  .body {
+    font-size: 16px;
+  }
+}

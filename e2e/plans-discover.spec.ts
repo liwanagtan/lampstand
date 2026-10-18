@@ -78,3 +78,20 @@ test.describe('on a phone', () => {
     await expect(page.getByRole('button', { name: 'Length: Monthly lessons' })).toBeVisible();
   });
 });
+
+test('in a plan day, every part follows the text size', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 860 });
+  await openApp(page, '/plans/p/when-anxiety-rises');
+  await page.getByRole('button', { name: 'Start plan' }).click();
+  const size = (sel: string) =>
+    page
+      .locator(sel)
+      .first()
+      .evaluate((el) => parseFloat(getComputedStyle(el).fontSize));
+  const note = 'p[class*="note"]';
+  const chapter = 'section[aria-label^="Philippians"] div[class*="chapter"]';
+  const before = [await size(note), await size(chapter)];
+  await page.getByRole('button', { name: 'Larger text' }).click();
+  await expect.poll(() => size(chapter)).toBeGreaterThan(before[1]!);
+  expect(await size(note)).toBeGreaterThan(before[0]!);
+});

@@ -56,6 +56,8 @@ export function PlanReaderPage() {
   const top = useRef<HTMLDivElement>(null);
   const [reflect, setReflect] = useState<{ id: string; draft?: EntryDraft } | null>(null);
   const [reading, setReading] = useState(false);
+  // The whole day — note, scripture, devotional, questions, prayer — follows the text size.
+  const size = useReader((s) => s.size);
   // Phones: Aa in the top bar replaces the translation and size controls.
   usePhoneTitle(plan?.name ?? 'Plan', {
     back: paths.planPage(planId),
@@ -92,7 +94,12 @@ export function PlanReaderPage() {
   const done = Boolean(progress?.done.includes(n));
 
   return (
-    <div className={styles.page} ref={top} data-enter>
+    <div
+      className={styles.page}
+      ref={top}
+      data-enter
+      style={{ '--reader-size': `${size}px` } as CSSProperties}
+    >
       <header className={styles.header}>
         <Link to={paths.planPage(plan.id)} className={cx(styles.back, 'phone-hidden')}>
           <ArrowLeft size={16} aria-hidden /> {plan.name}

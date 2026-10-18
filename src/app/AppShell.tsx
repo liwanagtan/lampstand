@@ -12,6 +12,7 @@ import { phoneTabs, visibleNav } from './features';
 import { isOnboarded } from './onboarding';
 import { paths } from './paths';
 import { useTopBar } from './topBar';
+import { haptic } from './haptics';
 import styles from './AppShell.module.css';
 
 /**
@@ -101,6 +102,12 @@ export function AppShell() {
             to={to}
             end={end}
             className={({ isActive }) => cx(styles.tab, isActive && styles.tabActive)}
+            onClick={() => {
+              // Tapping the tab you're on takes you back to the top, as phones expect.
+              const here = end ? pathname === to : pathname === to || pathname.startsWith(`${to}/`);
+              if (here) document.getElementById('main')?.scrollTo({ top: 0, behavior: 'smooth' });
+              else haptic('tap');
+            }}
           >
             {to === paths.profile ? (
               <Avatar size={24} className={styles.tabAvatar} />

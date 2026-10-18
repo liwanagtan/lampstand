@@ -303,6 +303,12 @@
   }
   .tabActive svg {
     color: var(--color-accent-text);
+    animation: tabPop 280ms var(--ease-standard);
+  }
+  @keyframes tabPop {
+    40% {
+      transform: scale(1.14);
+    }
   }
   .tabActive .tabAvatar {
     box-shadow: 0 0 0 2px var(--color-accent);

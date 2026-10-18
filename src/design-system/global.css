@@ -217,6 +217,9 @@ a {
     transform: none !important;
   }
 }
+:root[data-reduce-motion='true'] nav svg {
+  animation: none !important;
+}
 :root[data-reduce-motion='true'] button:active,
 :root[data-reduce-motion='true'] a[href]:active {
   transform: none !important;

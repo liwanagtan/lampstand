@@ -35,6 +35,7 @@ import { READER_SIZES, useReader } from './readerStore';
 import { useChapter } from './useChapter';
 import styles from './PlanReader.module.css';
 import { paths } from '@/app/paths';
+import { haptic } from '@/app/haptics';
 import { MarkedVerseText } from './MarkedVerse';
 import { useVisibleMarks } from './marks';
 
@@ -271,6 +272,7 @@ function FinishBlock({
     if (!progress) await startPlan(plan.id);
     await setDayRead(plan.id, day, true);
     setJustFinished(true);
+    haptic('success');
   };
 
   if (!done) {

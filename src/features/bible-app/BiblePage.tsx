@@ -44,6 +44,7 @@ import {
 import { NoteDialog } from './NoteDialog';
 import { ReadingSettings } from './ReadingSettings';
 import { readingGreeting } from './greetings';
+import { haptic } from '@/app/haptics';
 import { noteTipEvent } from '@/features/tips/tipStore';
 import { useSettings } from '@/features/settings/settingsStore';
 import { selectionRange, useReader, type Selection } from './readerStore';
@@ -246,7 +247,10 @@ export function BibleReader({ toolbar, selectionActions }: BiblePageSlots) {
                 primary={primary}
                 second={second}
                 selection={selection}
-                onSelect={select}
+                onSelect={(v, extend) => {
+                  haptic('tap');
+                  select(v, extend);
+                }}
                 marks={marks}
                 onOpenNote={(note) => {
                   const r = fromOsis(note.ref);
@@ -312,6 +316,7 @@ export function BibleReader({ toolbar, selectionActions }: BiblePageSlots) {
                           aria-pressed={on}
                           onClick={() => {
                             void setHighlight(range, on ? null : color);
+                            haptic('select');
                             if (!on) void noteTipEvent('highlighted');
                           }}
                         />
@@ -341,12 +346,13 @@ export function BibleReader({ toolbar, selectionActions }: BiblePageSlots) {
                       icon={<Bookmark size={18} fill={bookmarked ? 'currentColor' : 'none'} />}
                       aria-pressed={bookmarked}
                       onClick={() =>
-                        void toggleBookmark(range).then((on) =>
+                        void toggleBookmark(range).then((on) => {
+                          haptic('select');
                           toast({
                             title: on ? `Bookmarked ${formatRef(range)}` : 'Bookmark removed',
                             tone: on ? 'success' : 'neutral',
-                          }),
-                        )
+                          });
+                        })
                       }
                     />
                   </Tooltip>

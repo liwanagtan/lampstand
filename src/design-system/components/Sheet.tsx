@@ -1,9 +1,10 @@
 import * as RDialog from '@radix-ui/react-dialog';
 import { X } from 'lucide-react';
-import { useRef, type ReactNode } from 'react';
+import { useRef, useState, type ReactNode } from 'react';
 import { IconButton } from './Button';
 import { cx } from './cx';
 import styles from './Sheet.module.css';
+import { useSwipeToClose } from './useSwipeToClose';
 
 export interface SheetProps {
   open: boolean;
@@ -32,11 +33,14 @@ export function Sheet({
   size = 'md',
 }: SheetProps) {
   const body = useRef<HTMLDivElement>(null);
+  const [content, setContent] = useState<HTMLDivElement | null>(null);
+  useSwipeToClose(content, () => onOpenChange(false));
   return (
     <RDialog.Root open={open} onOpenChange={onOpenChange}>
       <RDialog.Portal>
         <RDialog.Overlay className={styles.overlay} />
         <RDialog.Content
+          ref={setContent}
           className={cx(styles.content, styles[size])}
           onOpenAutoFocus={(e) => {
             // Focus the field that asked for it, else the content — not the first header button.
@@ -66,7 +70,7 @@ export function Sheet({
               </RDialog.Close>
             </div>
           </header>
-          <div ref={body} className={styles.body} tabIndex={-1}>
+          <div ref={body} className={styles.body} tabIndex={-1} data-sheet-body>
             {children}
           </div>
           {footer && <footer className={styles.footer}>{footer}</footer>}

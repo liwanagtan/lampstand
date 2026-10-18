@@ -1,9 +1,10 @@
 import * as RDialog from '@radix-ui/react-dialog';
 import { X } from 'lucide-react';
-import type { ReactNode } from 'react';
+import { useState, type ReactNode } from 'react';
 import { cx } from './cx';
 import { IconButton } from './Button';
 import styles from './Dialog.module.css';
+import { useSwipeToClose } from './useSwipeToClose';
 
 export interface DialogProps {
   open: boolean;
@@ -24,11 +25,13 @@ export function Dialog({
   footer,
   size = 'md',
 }: DialogProps) {
+  const [content, setContent] = useState<HTMLDivElement | null>(null);
+  useSwipeToClose(content, () => onOpenChange(false));
   return (
     <RDialog.Root open={open} onOpenChange={onOpenChange}>
       <RDialog.Portal>
         <RDialog.Overlay className={styles.overlay} />
-        <RDialog.Content className={cx(styles.content, styles[size])}>
+        <RDialog.Content ref={setContent} className={cx(styles.content, styles[size])}>
           <header className={styles.header}>
             <div>
               <RDialog.Title className={styles.title}>{title}</RDialog.Title>
@@ -44,7 +47,11 @@ export function Dialog({
               <IconButton label="Close" icon={<X size={18} />} size="sm" />
             </RDialog.Close>
           </header>
-          {children && <div className={styles.body}>{children}</div>}
+          {children && (
+            <div className={styles.body} data-sheet-body>
+              {children}
+            </div>
+          )}
           {footer && <footer className={styles.footer}>{footer}</footer>}
         </RDialog.Content>
       </RDialog.Portal>

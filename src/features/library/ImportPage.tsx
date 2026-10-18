@@ -182,6 +182,7 @@ export function ImportPage() {
   if (!source || !result) {
     return (
       <Page
+        back={paths.screen}
         title="Import"
         description="Upload a presentation file to preview it, then save it to your library."
       >

@@ -37,6 +37,7 @@ import styles from './PlanReader.module.css';
 import { paths } from '@/app/paths';
 import { haptic } from '@/app/haptics';
 import { MarkedVerseText } from './MarkedVerse';
+import { ReadingSettings } from './ReadingSettings';
 import { useVisibleMarks } from './marks';
 
 const dateFormat = new Intl.DateTimeFormat(undefined, {
@@ -54,7 +55,18 @@ export function PlanReaderPage() {
   const navigate = useNavigate();
   const top = useRef<HTMLDivElement>(null);
   const [reflect, setReflect] = useState<{ id: string; draft?: EntryDraft } | null>(null);
-  usePhoneTitle(plan?.name ?? 'Plan', { back: paths.planPage(planId) });
+  const [reading, setReading] = useState(false);
+  // Phones: Aa in the top bar replaces the translation and size controls.
+  usePhoneTitle(plan?.name ?? 'Plan', {
+    back: paths.planPage(planId),
+    actions: (
+      <IconButton
+        label="Reading settings"
+        icon={<span className={styles.aa}>Aa</span>}
+        onClick={() => setReading(true)}
+      />
+    ),
+  });
 
   useEffect(() => {
     top.current?.closest('[data-scroll]')?.scrollTo({ top: 0 });
@@ -96,6 +108,7 @@ export function PlanReaderPage() {
           </span>
         </p>
         <ReaderOptions />
+        <ReadingSettings open={reading} onOpenChange={setReading} parallel={false} />
       </header>
 
       {day.note && <p className={styles.note}>{day.note}</p>}
@@ -171,7 +184,7 @@ function ReaderOptions() {
   const translations = useBible((s) => s.translations);
   const i = READER_SIZES.indexOf(size);
   return (
-    <div className={styles.options}>
+    <div className={cx(styles.options, 'laptop-only')}>
       <Select
         label="Translation"
         hideLabel

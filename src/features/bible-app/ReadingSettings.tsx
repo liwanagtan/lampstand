@@ -8,9 +8,12 @@ import styles from './ReadingSettings.module.css';
 export function ReadingSettings({
   open,
   onOpenChange,
+  parallel: showParallel = true,
 }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  /** Offer a second translation beside the first (the Bible reader does; plans don't). */
+  parallel?: boolean;
 }) {
   const { translation, parallel, size, setTranslation, setParallel, setSize } = useReader();
   const translations = useBible((s) => s.translations);
@@ -25,15 +28,17 @@ export function ReadingSettings({
           onChange={setTranslation}
           options={options}
         />
-        <Select
-          label="Parallel translation"
-          value={parallel ?? 'none'}
-          onChange={(v) => setParallel(v === 'none' ? null : v)}
-          options={[
-            { value: 'none', label: 'None' },
-            ...options.filter((o) => o.value !== translation),
-          ]}
-        />
+        {showParallel && (
+          <Select
+            label="Parallel translation"
+            value={parallel ?? 'none'}
+            onChange={(v) => setParallel(v === 'none' ? null : v)}
+            options={[
+              { value: 'none', label: 'None' },
+              ...options.filter((o) => o.value !== translation),
+            ]}
+          />
+        )}
         <div className={styles.size}>
           <span className={styles.label} id="text-size-label">
             Text size

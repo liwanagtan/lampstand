@@ -517,6 +517,7 @@ function Verses({
                     styles.secondText,
                     (!other || other.missing) && styles.missing,
                   )}
+                  data-code={second.translation}
                 >
                   {other && !other.missing ? other.text : 'Not included in this translation.'}
                 </span>

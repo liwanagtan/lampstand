@@ -7,10 +7,12 @@ interface PageProps {
   description?: ReactNode;
   actions?: ReactNode;
   children?: ReactNode;
+  /** Phones: where the top bar's back arrow goes. */
+  back?: string;
 }
 
-export function Page({ title, description, actions, children }: PageProps) {
-  usePhoneTitle(title);
+export function Page({ title, description, actions, children, back }: PageProps) {
+  usePhoneTitle(title, { back });
   return (
     <div className={styles.page} data-enter>
       <header className={styles.header}>

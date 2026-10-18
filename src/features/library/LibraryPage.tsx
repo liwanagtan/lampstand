@@ -1,7 +1,17 @@
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLiveQuery } from 'dexie-react-hooks';
-import { Copy, Download, MoreHorizontal, Pencil, Play, Search, Trash2, Upload } from 'lucide-react';
+import {
+  Copy,
+  Download,
+  MoreHorizontal,
+  Pencil,
+  Play,
+  Search,
+  Trash2,
+  Upload,
+  MonitorSmartphone,
+} from 'lucide-react';
 import { Page } from '@/app/Page';
 import { db } from '@/db/db';
 import {
@@ -77,6 +87,7 @@ export function LibraryPage() {
 
   return (
     <Page
+      back={paths.profileYou}
       title="Screen"
       description="Put sermon slides and Scripture on a TV or projector."
 
@@ -113,6 +124,11 @@ export function LibraryPage() {
         )
       }
     >
+      <p className={styles.phoneNote}>
+        <MonitorSmartphone size={18} aria-hidden />
+        Screen is made for a laptop connected to a TV or projector. Look around here, then present
+        from your laptop.
+      </p>
       <ScreenEntries
         count={records?.length ?? 0}
         onPresentation={() =>

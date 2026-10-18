@@ -30,8 +30,17 @@ export function SettingsPage() {
     <div className={styles.sections}>
       <ReadingSection />
       <AppearanceSection />
-      {screen && <PresentingSection />}
-      {screen && <LogoSection />}
+      {/* TV settings belong to the laptop that runs the screen, not to the phone. */}
+      {screen && (
+        <div className="laptop-only">
+          <PresentingSection />
+        </div>
+      )}
+      {screen && (
+        <div className="laptop-only">
+          <LogoSection />
+        </div>
+      )}
       <TipsSection />
       <TranslationsSection />
       <DataSection />

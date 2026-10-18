@@ -468,3 +468,27 @@
     transform: none;
   }
 }
+
+/* Phones: a second translation reads beneath each verse, not squeezed beside it. */
+@media (max-width: 640px) {
+  .parallel .verseButton {
+    display: block;
+  }
+  .parallel .secondText {
+    display: block;
+    margin-top: 0.35em;
+    font-size: 0.88em;
+  }
+  .parallel .secondText::before {
+    content: attr(data-code);
+    margin-right: 0.5em;
+    font-family: var(--font-ui);
+    font-size: 0.68em;
+    font-weight: var(--weight-semibold);
+    letter-spacing: 0.06em;
+    color: var(--color-accent-text);
+  }
+  .columnsHead {
+    display: none;
+  }
+}

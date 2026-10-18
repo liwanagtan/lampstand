@@ -298,6 +298,16 @@ On a phone the person is holding it: touch only, thumb first, no keyboard, mouse
     - Phones: a floating `‹ John 3 ▾ ›` pill above the tab bar (previous, picker, next) that becomes the selection bar when verses are selected; search and Aa (translation, parallel, text size) in the top bar; the picker (with a Bookmarks tab) and Aa open as bottom sheets. No swipe between chapters, so tapping verses never turns the page.
     - Laptops: one slim bar `‹ John 3 ▾ ›` with search and Aa, quiet while you read.
 
+### Mobile experience (milestones 24–28, 2026-10-18)
+
+Phones only; laptops and tablets stay as they are.
+
+24. **Personal headers and plan filters** — the Bible's top bar and the Plans header speak to you by name; plan search is a big rounded field with Length and For filter chips (menus on laptops, bottom sheets on phones).
+25. **Foundations** — notch-safe, keyboard-aware viewport; 16px fields; no tap flash or double-tap delay; press feedback; no sticky hover; toasts under the top bar; dialogs as bottom sheets; full-screen welcome with pinned actions; "this device" in copy.
+26. **UI refresh** — plan lists as rows with square covers; edge-to-edge snapping rows; full-bleed plan hero; Journey summary strip; segmented Profile tabs; tighter settings; Today's actions on one row; an active-tab pill.
+27. **Gestures and motion** — drag sheets down to close; tap the active tab to return to the top; a small tab icon pop; light haptics for key moments; everything respects Reduce motion.
+28. **Page fixes** — Aa in the plan reader; Screen with a way back and a laptop note; TV settings hidden on phones; stacked parallel translation; swipeable Journey filters.
+
 ## Decisions and open questions
 
 | Decision             | Choice                                                                                                                                     |

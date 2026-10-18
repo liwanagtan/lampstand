@@ -49,7 +49,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
       {loading ? <Loader2 className={styles.spinner} size={16} aria-hidden /> : icon}
       {children && <span className={styles.label}>{children}</span>}
       {iconEnd}
-      {shortcut && <kbd className={styles.kbd}>{shortcut}</kbd>}
+      {shortcut && <kbd className={`${styles.kbd} keyboard-hint`}>{shortcut}</kbd>}
     </button>
   );
 });

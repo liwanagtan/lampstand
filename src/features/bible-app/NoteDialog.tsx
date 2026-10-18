@@ -19,7 +19,7 @@ export function NoteDialog({ target, onClose }: NoteDialogProps) {
       open={Boolean(target)}
       onOpenChange={(open) => !open && onClose()}
       title={target ? `Note on ${formatRef(target.range)}` : 'Note'}
-      description="Notes stay on this computer."
+      description="Notes stay on this device."
     >
       {target && <NoteForm key={target.note?.id ?? 'new'} target={target} onClose={onClose} />}
     </Dialog>

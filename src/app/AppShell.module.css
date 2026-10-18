@@ -202,8 +202,10 @@
   }
   .topbar {
     gap: var(--space-3);
-    padding: 0 var(--space-4);
-    height: 52px;
+    /* Clear the notch and status bar when installed full screen. */
+    height: calc(52px + env(safe-area-inset-top));
+    padding: env(safe-area-inset-top) max(var(--space-4), env(safe-area-inset-right)) 0
+      max(var(--space-4), env(safe-area-inset-left));
   }
   .lockup,
   .nav,

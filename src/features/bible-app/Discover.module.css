@@ -423,3 +423,15 @@
     max-width: none;
   }
 }
+/* Phones: no hover lift left behind after a tap. */
+@media (hover: none) and (max-width: 640px) {
+  .planCard:hover {
+    transform: none;
+    border-color: var(--color-border);
+  }
+  .chip:hover,
+  .tile:hover {
+    border-color: var(--color-border);
+    background: var(--color-surface);
+  }
+}

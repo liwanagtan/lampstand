@@ -489,6 +489,7 @@ function Verses({
             <button
               type="button"
               className={styles.verseButton}
+              data-no-press
               aria-pressed={Boolean(selected)}
               onClick={(e) => onSelect(v.verse, e.shiftKey)}
             >

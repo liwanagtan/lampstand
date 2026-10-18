@@ -148,7 +148,7 @@ export function ReflectPanel({
       onOpenChange={onOpenChange}
       eyebrow="Reflect"
       title={formatRef(range)}
-      description="Saved to your journal as you type. It stays on this computer."
+      description="Saved to your journal as you type. It stays on this device."
     >
       {entry !== undefined && open && (
         <EntryEditor

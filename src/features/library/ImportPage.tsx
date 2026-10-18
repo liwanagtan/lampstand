@@ -199,7 +199,7 @@ export function ImportPage() {
             <FileJson size={28} />
           </div>
           <h2 className={styles.dropTitle}>Drop a .lampstand.json file here</h2>
-          <p className={styles.muted}>or choose it from this laptop</p>
+          <p className={styles.muted}>or choose it from this device</p>
           <input
             ref={fileRef}
             type="file"

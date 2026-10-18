@@ -75,3 +75,31 @@
 .close:hover {
   color: var(--color-text);
 }
+
+/* Phones: toasts drop in under the top bar, clear of the tab bar, the reader's pill and
+   bottom actions. */
+@media (max-width: 640px) {
+  .viewport {
+    top: calc(52px + env(safe-area-inset-top) + var(--space-2));
+    right: var(--space-3);
+    bottom: auto;
+    left: var(--space-3);
+    align-items: stretch;
+  }
+  .toast {
+    min-width: 0;
+    max-width: none;
+    animation: toastDown var(--dur-standard) var(--ease-standard);
+  }
+}
+@keyframes toastDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .toast {
+    animation: none;
+  }
+}

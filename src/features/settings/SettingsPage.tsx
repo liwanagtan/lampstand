@@ -292,7 +292,7 @@ function DataSection() {
   useEffect(() => {
     void navigator.storage?.estimate?.().then((e) => {
       if (e.usage !== undefined)
-        setUsage(`${(e.usage / 1024 / 1024).toFixed(0)} MB used on this laptop`);
+        setUsage(`${(e.usage / 1024 / 1024).toFixed(0)} MB used on this device`);
     });
   }, []);
 
@@ -340,7 +340,7 @@ function DataSection() {
   return (
     <Section
       title="Data"
-      description="Everything stays on this laptop. Export a backup before changing computers, and keep it somewhere safe."
+      description="Everything stays on this device. Export a backup before changing computers, and keep it somewhere safe."
     >
       <div className={styles.row}>
         <Button icon={<Download size={16} />} loading={exporting} onClick={() => void onExport()}>

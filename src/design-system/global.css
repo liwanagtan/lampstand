@@ -161,3 +161,63 @@ a {
     display: none !important;
   }
 }
+
+/* ---- Phones (docs/PRD-ADDENDUM-GROW.md, milestone 25): touch-first behaviour ---- */
+@media (max-width: 640px) {
+  html,
+  body {
+    /* The app shell scrolls inside; the page itself never bounces or pulls to refresh. */
+    overscroll-behavior: none;
+  }
+  [data-scroll] {
+    overscroll-behavior-y: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+  a,
+  button,
+  label,
+  summary,
+  [role='button'],
+  [role='tab'],
+  [role='radio'],
+  [role='switch'] {
+    -webkit-tap-highlight-color: transparent;
+    /* No double-tap zoom delay on controls. */
+    touch-action: manipulation;
+  }
+  button,
+  [role='tab'],
+  [role='radio'],
+  [role='switch'] {
+    -webkit-user-select: none;
+    user-select: none;
+  }
+  /* 16px or more keeps iOS from zooming the page when a field is focused. */
+  input,
+  textarea,
+  select {
+    font-size: max(16px, 1em) !important;
+  }
+  /* A press you can feel: controls give a little under the thumb. */
+  button:not(:disabled):not([data-no-press]),
+  a[href]:not([data-no-press]) {
+    transition:
+      transform 120ms var(--ease-quick, ease-out),
+      background-color var(--dur-quick, 120ms) var(--ease-quick, ease-out),
+      opacity 120ms ease-out;
+  }
+  button:not(:disabled):not([data-no-press]):active,
+  a[href]:not([data-no-press]):active {
+    transform: scale(0.97);
+  }
+}
+@media (max-width: 640px) and (prefers-reduced-motion: reduce) {
+  button:active,
+  a[href]:active {
+    transform: none !important;
+  }
+}
+:root[data-reduce-motion='true'] button:active,
+:root[data-reduce-motion='true'] a[href]:active {
+  transform: none !important;
+}

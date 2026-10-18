@@ -20,7 +20,7 @@ const STARTER_PLANS = ['gospels-40', 'psalms-proverbs-30', 'nt-90', 'bible-year'
 
 /**
  * First run: your name, what brings you to Lampstand, your translation, and a plan. Only what
- * you tick is switched on; everything else stays one tap away in Me.
+ * you tick is switched on; everything else stays one tap away in Profile.
  */
 export function WelcomePage() {
   useApplyDocumentTheme();
@@ -115,7 +115,7 @@ export function WelcomePage() {
             <>
               <h1 className={styles.title}>What brings you to Lampstand?</h1>
               <p className={styles.lede}>
-                Choose all that apply. You can change this any time in Me.
+                Choose all that apply. You can change this any time in Profile.
               </p>
               <div className={styles.uses} role="group" aria-label="What brings you to Lampstand?">
                 {USE_CASES.map((u) => {

@@ -456,3 +456,15 @@
     font-weight: var(--weight-medium);
   }
 }
+/* Phones: a tapped verse shows the selection, not a leftover hover. */
+@media (hover: none) and (max-width: 640px) {
+  .verse:hover {
+    background: transparent;
+  }
+  .selected:hover {
+    background: color-mix(in srgb, var(--color-accent) 16%, transparent);
+  }
+  .swatch:hover {
+    transform: none;
+  }
+}

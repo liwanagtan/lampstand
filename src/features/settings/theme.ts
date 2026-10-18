@@ -49,5 +49,9 @@ export function useApplyDocumentTheme(preferDark = false): void {
     const el = document.documentElement;
     el.dataset.theme = scheme;
     el.dataset.reduceMotion = String(reduced);
+    // Phones: the status bar matches the app's top bar in either theme.
+    document
+      .querySelector('meta[name="theme-color"]')
+      ?.setAttribute('content', scheme === 'dark' ? '#161B22' : '#FFFFFF');
   }, [scheme, reduced]);
 }

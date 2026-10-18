@@ -77,7 +77,7 @@ export function BackgroundPicker({
       description={
         description
           ? `The slide asks for: ${description}`
-          : 'Pick a photo from the library or from this laptop.'
+          : 'Pick a photo from the library or from this device.'
       }
       footer={
         <>
@@ -87,14 +87,14 @@ export function BackgroundPicker({
             accept={allowVideo ? 'image/*,video/*' : 'image/*'}
             className="visually-hidden"
             onChange={(e) => void pickFile(e.target.files?.[0])}
-            aria-label="Choose a file from this laptop"
+            aria-label="Choose a file from this device"
           />
           <Button
             icon={<HardDrive size={16} />}
             loading={busy === 'file'}
             onClick={() => fileRef.current?.click()}
           >
-            From this laptop…
+            From this device…
           </Button>
         </>
       }

@@ -1,0 +1,68 @@
+{
+  "format": "lampstand-plan",
+  "version": 2,
+  "id": "faith-at-home",
+  "name": "Faith at home",
+  "description": "Five days for parents and carers: grace for the hard days, wisdom for the everyday, and passing on faith.",
+  "pace": "daily",
+  "categories": ["parenting", "marriage"],
+  "audience": "personal",
+  "cover": "green-hills",
+  "days": [
+    {
+      "title": "Faith woven into home",
+      "readings": ["Deuteronomy 6:4-9"],
+      "note": "Moses gives parents a picture of faith woven into daily life.",
+      "devotional": "Before children can learn to love God, parents are asked to love Him with everything they are. Faith is caught as much as it is taught.\n\nSmall, everyday conversations matter more than perfect lessons.",
+      "prayer": "Lord, fill my heart with love for You, so my children can see it.",
+      "questions": [
+        "What are your children learning about God from watching you?",
+        "What small habit could bring faith into your home?"
+      ]
+    },
+    {
+      "title": "Hannah's prayer",
+      "readings": ["1 Samuel 1:20-28"],
+      "note": "Hannah dedicates the son she prayed for.",
+      "devotional": "Hannah's child was a long-awaited gift, and she gives him back to God. Children belong first to Him.\n\nParenting with open hands is hard, and it is freeing.",
+      "prayer": "Father, my children are Yours before they are mine. Help me trust You with them.",
+      "questions": [
+        "What do you find hardest to trust God with in your children's lives?",
+        "How could you pray for each child by name this week?"
+      ]
+    },
+    {
+      "title": "Patience and encouragement",
+      "readings": ["Ephesians 6:1-4", "Colossians 3:20-21"],
+      "note": "Paul speaks to children and to parents.",
+      "devotional": "Paul asks parents not to provoke or discourage their children, but to raise them with the Lord's training and care.\n\nEncouragement shapes children more than frustration does.",
+      "prayer": "Lord, make me patient and encouraging. Help me not to exasperate my children.",
+      "questions": [
+        "When do you most easily lose patience?",
+        "What encouragement could you give each child today?"
+      ]
+    },
+    {
+      "title": "The waiting father",
+      "readings": ["Luke 15:11-24"],
+      "note": "Jesus' story of a father who runs to his returning son.",
+      "devotional": "This father lets his son go, keeps watching the road, and runs to welcome him home.\n\nIt is a picture of God's love, and an example for every parent with a wandering child.",
+      "prayer": "Father, give me a heart that waits, watches and welcomes, like Yours.",
+      "questions": [
+        "What does this father's love teach you about God?",
+        "Is there a child you need to keep praying for?"
+      ]
+    },
+    {
+      "title": "Grace for parents",
+      "readings": ["Lamentations 3:19-26", "Psalm 127"],
+      "note": "God's mercies come fresh each day, and He is the one who builds a home.",
+      "devotional": "Parents fail and get tired. God's mercies are fresh each morning, and Psalm 127 reminds us that it is God who builds the house.\n\nYou don't have to carry it all alone.",
+      "prayer": "Lord, thank You for new mercies today. Build my home, and give me rest.",
+      "questions": [
+        "Where do you need fresh mercy as a parent?",
+        "What would it look like to rest in God's work, not only your own?"
+      ]
+    }
+  ]
+}

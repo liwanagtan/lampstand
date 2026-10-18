@@ -1,0 +1,68 @@
+{
+  "format": "lampstand-plan",
+  "version": 2,
+  "id": "teaching-the-word",
+  "name": "Teaching the Word",
+  "description": "Five days for anyone who teaches others — a class, a group or their own children: faithful, clear and loving.",
+  "pace": "daily",
+  "categories": ["teaching", "leading"],
+  "audience": "personal",
+  "cover": "park-path",
+  "days": [
+    {
+      "title": "Learn before you lead",
+      "readings": ["Ezra 7:6-10"],
+      "note": "Ezra prepared his heart to study, live and then teach God's word.",
+      "devotional": "The order matters: Ezra first set himself to study God's law, then to practise it, and only then to teach it.\n\nGood teaching grows out of a life that is listening to God first.",
+      "prayer": "Lord, make me a learner before I am a teacher. Let Your word shape my life first.",
+      "questions": [
+        "What helps you study God's word for yourself, not only for a lesson?",
+        "Which part of Ezra's order is hardest for you?"
+      ]
+    },
+    {
+      "title": "Handle it well",
+      "readings": ["2 Timothy 2:14-26"],
+      "note": "Paul tells Timothy to be a worker who handles the truth carefully.",
+      "devotional": "Paul pictures a worker with nothing to be embarrassed about, because they handle the message carefully and accurately.\n\nHe also warns against pointless quarrels. Teaching is patient, gentle and aimed at people coming to the truth.",
+      "prayer": "God, help me handle Your word carefully and teach with patience and gentleness.",
+      "questions": [
+        "How do you prepare so you teach accurately?",
+        "Where do you need more gentleness with those you teach?"
+      ]
+    },
+    {
+      "title": "Jesus the teacher",
+      "readings": ["Mark 4:1-20"],
+      "note": "Jesus teaches a crowd with a story about seeds and soils.",
+      "devotional": "Jesus often taught with stories from ordinary life, then explained them to those who wanted to understand.\n\nGood teaching meets people where they are and invites them to think and respond.",
+      "prayer": "Jesus, teach me to teach like You: simply, vividly, and with an invitation.",
+      "questions": [
+        "What everyday picture could help someone understand a truth this week?",
+        "How do you make room for questions?"
+      ]
+    },
+    {
+      "title": "Teach at home and on the way",
+      "readings": ["Deuteronomy 6:1-9"],
+      "note": "Moses tells parents to talk about God's words everywhere.",
+      "devotional": "Faith was meant to be taught in ordinary moments: sitting at home, walking along the road, lying down and getting up.\n\nTeaching isn't only for a classroom. It happens in conversations.",
+      "prayer": "Lord, let Your words be on my heart, and help me speak of You in ordinary moments.",
+      "questions": [
+        "Where are the 'on the way' moments in your week?",
+        "How could you weave faith into everyday conversations?"
+      ]
+    },
+    {
+      "title": "Teachers carry weight",
+      "readings": ["James 3:1-12"],
+      "note": "James warns that teachers carry responsibility, especially with their words.",
+      "devotional": "James says not many should rush to be teachers, because words are powerful. The tongue can build up or tear down.\n\nThis is not meant to scare teachers away, but to make us humble and careful.",
+      "prayer": "God, guard my words. Use what I say to build others up.",
+      "questions": [
+        "What responsibility do you feel as a teacher?",
+        "Who could pray for you as you teach?"
+      ]
+    }
+  ]
+}

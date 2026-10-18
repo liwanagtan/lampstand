@@ -1,0 +1,65 @@
+{
+  "format": "lampstand-plan",
+  "version": 2,
+  "id": "a-life-of-worship",
+  "name": "A life of worship",
+  "description": "Five days on worship: in song and in spirit, gathered and alone, on Sundays and every day.",
+  "pace": "daily",
+  "categories": ["worship", "spiritual-habits"],
+  "audience": "personal",
+  "cover": "sunrise-hills",
+  "days": [
+    {
+      "title": "Sing, then bow",
+      "readings": ["Psalm 95"],
+      "note": "A psalm that calls God's people to sing and to bow.",
+      "devotional": "This psalm begins with joyful singing and moves to quiet bowing. Worship is both celebration and surrender.\n\nIt ends with a warning not to harden our hearts. Worship includes listening.",
+      "prayer": "Lord, I come to praise You and to bow before You. Soften my heart to hear You.",
+      "questions": [
+        "Which part of worship comes more naturally to you: celebrating or surrendering?",
+        "What might God be saying to you today?"
+      ]
+    },
+    {
+      "title": "Worship from the heart",
+      "readings": ["John 4:19-26"],
+      "note": "Jesus talks with a Samaritan woman about where and how to worship.",
+      "devotional": "The woman asks about the right mountain. Jesus says the Father is looking for people whose worship comes from the heart and rests on what is true.\n\nWorship is less about the place and more about the heart and what is true about God.",
+      "prayer": "Father, make my worship real, from the heart and true to who You are, wherever I am.",
+      "questions": [
+        "Where do you most easily worship?",
+        "What truth about God moves you to worship?"
+      ]
+    },
+    {
+      "title": "Your whole life",
+      "readings": ["Romans 12:1-8"],
+      "note": "Paul calls offering ourselves to God a true act of worship.",
+      "devotional": "Worship is more than songs. Paul asks us to offer our whole selves to God, and to let our minds be renewed.\n\nWork, rest, relationships and service can all become worship.",
+      "prayer": "God, I offer You my whole life today. Renew my mind.",
+      "questions": [
+        "Which ordinary part of your day could become worship?",
+        "What needs renewing in how you think?"
+      ]
+    },
+    {
+      "title": "Isaiah sees the Lord",
+      "readings": ["Isaiah 6:1-8"],
+      "note": "Isaiah sees God's holiness and responds.",
+      "devotional": "Isaiah's vision moves from awe, to confession, to cleansing, to sending. Real worship changes us and sends us out.\n\nWhen we see God more clearly, we see ourselves more honestly too.",
+      "prayer": "Holy God, show me more of who You are. Cleanse me, and send me.",
+      "questions": ["What helps you sense God's greatness?", "Where might God be sending you?"]
+    },
+    {
+      "title": "Every tongue and nation",
+      "readings": ["Revelation 7:9-17"],
+      "note": "A vision of worship at the end of the story.",
+      "devotional": "John sees a crowd too large to count, from every nation and language, worshipping together.\n\nEvery Sunday is a small rehearsal for that day.",
+      "prayer": "Lord, thank You that worship will one day fill all the earth. Let me join in today.",
+      "questions": [
+        "How does this vision change how you see your church?",
+        "What will you carry from this week into Sunday?"
+      ]
+    }
+  ]
+}

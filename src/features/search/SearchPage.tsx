@@ -1,7 +1,15 @@
 import { usePhoneTitle } from '@/app/topBar';
 import { useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import { BookOpen, CalendarCheck, NotebookPen, Search, Sparkles, StickyNote } from 'lucide-react';
+import {
+  BookOpen,
+  CalendarCheck,
+  Heart,
+  NotebookPen,
+  Search,
+  Sparkles,
+  StickyNote,
+} from 'lucide-react';
 import { Input } from '@/design-system/components';
 import { paths } from '@/app/paths';
 import type { MarkRecord } from '@/db/types';
@@ -15,6 +23,7 @@ import { isEntryItem } from '@/features/bible-app/journalTimeline';
 import { NoteDialog } from '@/features/bible-app/NoteDialog';
 import { useReader } from '@/features/bible-app/readerStore';
 import { useOpenInReader } from '@/features/bible-app/useOpenInReader';
+import { RefText } from './RefText';
 import styles from './SearchPage.module.css';
 import { useUniversalSearch } from './useUniversalSearch';
 
@@ -36,10 +45,8 @@ export function SearchPage() {
   const openInReader = useOpenInReader();
   const [entry, setEntry] = useState<{ id: string } | null>(null);
   const [note, setNote] = useState<{ range: RefRange; note: MarkRecord | null } | null>(null);
-  const { text, translation, parsed, verses, planHits, journey, nothing } = useUniversalSearch(
-    value,
-    LIMIT,
-  );
+  const { text, translation, parsed, verses, planHits, journey, topics, nothing } =
+    useUniversalSearch(value, LIMIT);
 
   return (
     <div className={styles.page} data-enter>
@@ -87,6 +94,24 @@ export function SearchPage() {
       {!parsed?.ok && parsed && parsed.problem !== 'unrecognized' && parsed.problem !== 'empty' && (
         <p className={styles.muted}>{parsed.hint}</p>
       )}
+
+      {topics.map((topic) => (
+        <Group key={topic.label} title={`Verses for ${topic.label.toLowerCase()}`}>
+          {topic.refs.map((osis) => {
+            const r = fromOsis(osis);
+            if (!r) return null;
+            return (
+              <ResultButton
+                key={osis}
+                icon={<Heart size={16} />}
+                title={formatRef(r)}
+                detail={<RefText osis={osis} translation={translation} />}
+                onClick={() => openInReader(r)}
+              />
+            );
+          })}
+        </Group>
+      ))}
 
       {journey.length > 0 && (
         <Group title="Your journey">

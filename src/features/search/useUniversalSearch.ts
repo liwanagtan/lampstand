@@ -13,6 +13,7 @@ import { useAllMarks } from '@/features/bible-app/marks';
 import { usePlans } from '@/features/bible-app/plans';
 import { useReader } from '@/features/bible-app/readerStore';
 import { useSettings } from '@/features/settings/settingsStore';
+import { matchTopics } from './topics';
 
 export interface SearchLimits {
   verses: number;
@@ -64,9 +65,16 @@ export function useUniversalSearch(value: string, limits: SearchLimits) {
     [entries, marks, features.marks],
   );
   const journey = text.length >= 2 ? searchTimeline(timeline, text).slice(0, limits.journey) : [];
+  const topics = !isRef && text.length >= 4 ? matchTopics(text) : [];
   const settled = !wordQuery || hits?.q === wordQuery;
   const nothing =
-    text.length >= 3 && !isRef && settled && !verses.length && !planHits.length && !journey.length;
+    text.length >= 3 &&
+    !isRef &&
+    settled &&
+    !verses.length &&
+    !planHits.length &&
+    !journey.length &&
+    !topics.length;
 
-  return { text, translation, parsed, verses, planHits, journey, nothing };
+  return { text, translation, parsed, verses, planHits, journey, topics, nothing };
 }

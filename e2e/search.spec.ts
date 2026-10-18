@@ -39,6 +39,10 @@ test.describe('on a phone', () => {
       page.getByRole('region', { name: 'Plans' }).getByRole('link', { name: /When anxiety rises/ }),
     ).toBeVisible();
 
+    // A feeling brings the passages readers find most helpful (OpenBible.info).
+    await page.getByRole('searchbox', { name: 'Search' }).fill('lonely');
+    await expect(page.getByRole('region', { name: 'Verses for loneliness' })).toBeVisible();
+
     // Your own words come back too.
     await page.getByRole('searchbox', { name: 'Search' }).fill('hard days');
     const mine = page.getByRole('region', { name: 'Your journey' });

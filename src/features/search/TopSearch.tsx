@@ -4,6 +4,7 @@ import {
   ArrowRight,
   BookOpen,
   CalendarCheck,
+  Heart,
   NotebookPen,
   Search,
   Sparkles,
@@ -22,6 +23,7 @@ import { isEntryItem } from '@/features/bible-app/journalTimeline';
 import { NoteDialog } from '@/features/bible-app/NoteDialog';
 import { useReader } from '@/features/bible-app/readerStore';
 import { useOpenInReader } from '@/features/bible-app/useOpenInReader';
+import { RefText } from './RefText';
 import styles from './TopSearch.module.css';
 import { useUniversalSearch } from './useUniversalSearch';
 
@@ -49,10 +51,8 @@ export function TopSearch() {
   const openInReader = useOpenInReader();
   const [entry, setEntry] = useState<{ id: string } | null>(null);
   const [note, setNote] = useState<{ range: RefRange; note: MarkRecord | null } | null>(null);
-  const { text, translation, parsed, verses, planHits, journey, nothing } = useUniversalSearch(
-    value,
-    LIMIT,
-  );
+  const { text, translation, parsed, verses, planHits, journey, topics, nothing } =
+    useUniversalSearch(value, LIMIT);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -79,6 +79,21 @@ export function TopSearch() {
         openInReader(parsed.range);
       },
     });
+  }
+  // Verses for a feeling or topic people search for (OpenBible.info, CC BY 4.0).
+  for (const topic of topics) {
+    for (const osis of topic.refs.slice(0, 3)) {
+      const r = fromOsis(osis);
+      if (!r) continue;
+      items.push({
+        key: `${topic.label}-${osis}`,
+        group: `Verses for ${topic.label.toLowerCase()}`,
+        icon: <Heart size={15} />,
+        title: formatRef(r),
+        detail: <RefText osis={osis} translation={translation} />,
+        go: () => openInReader(r),
+      });
+    }
   }
   for (const i of journey) {
     if (isEntryItem(i)) {

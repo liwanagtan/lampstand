@@ -1,0 +1,25 @@
+.icon {
+  position: relative;
+  display: inline-block;
+  flex: none;
+}
+.static,
+.lottie {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.lottie {
+  opacity: 0;
+}
+.icon[data-ready] .static {
+  opacity: 0;
+}
+.icon[data-ready] .lottie {
+  opacity: 1;
+}
+/* The Lottie files draw ink as #0A0F1C; follow the text colour instead (cream in the evening). */
+.lottie :global(.ink) path {
+  stroke: currentColor;
+}

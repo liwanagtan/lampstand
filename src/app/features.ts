@@ -2,6 +2,7 @@
 import type { LucideIcon } from 'lucide-react';
 import { BookOpen, CalendarCheck, MonitorPlay, Search, Sunrise, UserRound } from 'lucide-react';
 import { paths } from './paths';
+import type { NavGlyph } from './NavIcon';
 
 export type FeatureKey = 'today' | 'plans' | 'journal' | 'marks' | 'screen';
 export type Features = Record<FeatureKey, boolean>;
@@ -18,6 +19,8 @@ export interface NavItem {
   to: string;
   label: string;
   icon: LucideIcon;
+  /** The animated nav icon (design system › Lottie); absent for Profile, which shows the avatar. */
+  glyph?: NavGlyph;
   /** The switch that shows this destination; absent = always shown. */
   feature?: FeatureKey;
   end?: boolean;
@@ -25,17 +28,17 @@ export interface NavItem {
 
 /** Fixed order: hiding a destination never moves the others. */
 export const NAV: readonly NavItem[] = [
-  { to: paths.today, label: 'Today', icon: Sunrise, feature: 'today', end: true },
-  { to: paths.bible, label: 'Bible', icon: BookOpen },
-  { to: paths.plans, label: 'Plans', icon: CalendarCheck, feature: 'plans' },
-  { to: paths.screen, label: 'Screen', icon: MonitorPlay, feature: 'screen' },
+  { to: paths.today, label: 'Today', icon: Sunrise, glyph: 'today', feature: 'today', end: true },
+  { to: paths.bible, label: 'Bible', icon: BookOpen, glyph: 'bible' },
+  { to: paths.plans, label: 'Plans', icon: CalendarCheck, glyph: 'plans', feature: 'plans' },
+  { to: paths.screen, label: 'Screen', icon: MonitorPlay, glyph: 'screen', feature: 'screen' },
 ];
 
 export function visibleNav(features: Features): NavItem[] {
   return NAV.filter((n) => !n.feature || features[n.feature]);
 }
 
-const SEARCH: NavItem = { to: paths.search, label: 'Search', icon: Search };
+const SEARCH: NavItem = { to: paths.search, label: 'Search', icon: Search, glyph: 'search' };
 const PROFILE: NavItem = { to: paths.profile, label: 'Profile', icon: UserRound };
 
 /**

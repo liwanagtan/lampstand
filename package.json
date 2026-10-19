@@ -19,7 +19,8 @@
     "bibles": "tsx scripts/build-bibles.ts",
     "backgrounds": "tsx scripts/build-backgrounds.ts",
     "soak": "SOAK_MINUTES=${SOAK_MINUTES:-120} playwright test e2e/soak.spec.ts",
-    "scenes": "tsx scripts/vendor-scenes.ts"
+    "scenes": "tsx scripts/vendor-scenes.ts",
+    "lottie-icons": "tsx scripts/build-lottie-icons.ts"
   },
   "dependencies": {
     "@fontsource-variable/fraunces": "^5.3.0",
@@ -39,6 +40,7 @@
     "dexie": "^4.4.6",
     "dexie-react-hooks": "^4.4.0",
     "gsap": "^3.15.0",
+    "lottie-web": "^5.13.0",
     "lucide-react": "^1.57.0",
     "minisearch": "^7.2.0",
     "motion": "^14.3.0",

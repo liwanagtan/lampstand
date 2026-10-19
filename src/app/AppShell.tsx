@@ -15,6 +15,7 @@ import { isOnboarded } from './onboarding';
 import { paths } from './paths';
 import { useTopBar } from './topBar';
 import { haptic } from './haptics';
+import { NavIcon } from './NavIcon';
 import styles from './AppShell.module.css';
 
 /**
@@ -54,15 +55,23 @@ export function AppShell() {
           {bar.actions && <div className={styles.phoneActions}>{bar.actions}</div>}
         </div>
         <nav aria-label="Main" className={styles.nav}>
-          {nav.map(({ to, label, icon: Icon, end }) => (
+          {nav.map(({ to, label, icon: Icon, glyph, end }) => (
             <NavLink
               key={to}
               to={to}
               end={end}
               className={({ isActive }) => cx(styles.link, isActive && styles.active)}
             >
-              <Icon size={17} strokeWidth={1.75} aria-hidden />
-              {label}
+              {({ isActive }) => (
+                <>
+                  {glyph ? (
+                    <NavIcon glyph={glyph} active={isActive} size={20} />
+                  ) : (
+                    <Icon size={17} strokeWidth={1.75} aria-hidden />
+                  )}
+                  {label}
+                </>
+              )}
             </NavLink>
           ))}
         </nav>
@@ -92,7 +101,7 @@ export function AppShell() {
       </main>
       <TipHost />
       <nav aria-label="Main" className={styles.tabbar}>
-        {tabs.map(({ to, label, icon: Icon, end }) => (
+        {tabs.map(({ to, label, icon: Icon, glyph, end }) => (
           <NavLink
             key={to}
             to={to}
@@ -105,12 +114,18 @@ export function AppShell() {
               else haptic('tap');
             }}
           >
-            {to === paths.profile ? (
-              <Avatar size={24} className={styles.tabAvatar} />
-            ) : (
-              <Icon size={22} strokeWidth={1.75} aria-hidden />
+            {({ isActive }) => (
+              <>
+                {to === paths.profile ? (
+                  <Avatar size={26} className={styles.tabAvatar} />
+                ) : glyph ? (
+                  <NavIcon glyph={glyph} active={isActive} size={26} />
+                ) : (
+                  <Icon size={22} strokeWidth={1.75} aria-hidden />
+                )}
+                <span>{label}</span>
+              </>
             )}
-            <span>{label}</span>
           </NavLink>
         ))}
       </nav>

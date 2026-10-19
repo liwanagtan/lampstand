@@ -1,17 +1,17 @@
 [data-color='yellow'] {
-  --hl: #f2c94c;
+  --hl: #f2c25f;
 }
 [data-color='green'] {
-  --hl: #6fcf97;
+  --hl: #9ccb9f;
 }
 [data-color='blue'] {
-  --hl: #6fa8ff;
+  --hl: #8fb8f2;
 }
 [data-color='pink'] {
-  --hl: #f28bb5;
+  --hl: #eba0be;
 }
 [data-color='purple'] {
-  --hl: #b794f6;
+  --hl: #b9a3ee;
 }
 .hl {
   padding: 0.04em 0.12em;

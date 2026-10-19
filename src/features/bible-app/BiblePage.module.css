@@ -64,8 +64,9 @@
 }
 .chapterTitle {
   font-family: var(--font-display);
-  font-size: 2em;
+  font-size: 2.2em;
   font-weight: var(--weight-semibold);
+  line-height: 1.1;
   letter-spacing: -0.01em;
 }
 .columnsHead {
@@ -98,6 +99,7 @@
 .selected,
 .selected:hover {
   background: color-mix(in srgb, var(--color-accent) 16%, transparent);
+  box-shadow: inset 0 0 0 1.5px var(--color-text);
 }
 .verseButton {
   display: block;
@@ -173,18 +175,18 @@
   align-items: center;
   gap: 6px;
   margin-top: 0.5em;
-  padding: 4px 10px;
-  border: 1px solid var(--color-border);
+  padding: 6px 12px;
+  border: 1px solid transparent;
   border-radius: 999px;
-  background: transparent;
+  background: var(--color-surface-sunk);
   color: var(--color-text-muted);
   font-family: var(--font-ui);
   font-size: 13px;
-  font-weight: var(--weight-medium);
+  font-weight: var(--weight-bold);
   cursor: pointer;
 }
 .aboutBook:hover {
-  border-color: var(--color-accent);
+  border-color: var(--color-text);
   color: var(--color-text);
 }
 @media (pointer: coarse) {
@@ -229,12 +231,14 @@
   align-items: center;
   gap: var(--space-2);
   translate: -50% 0;
-  padding: var(--space-2) var(--space-2) var(--space-2) var(--space-4);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
-  background: var(--color-surface-raised);
+  padding: var(--space-2) var(--space-2) var(--space-2) var(--space-5);
+  border: 0;
+  border-radius: 999px;
+  /* Verse actions (design system): an ink bar on laptops, a white sheet on phones. */
+  background: var(--color-hero);
+  color: var(--color-hero-text);
   box-shadow: var(--elevation-2);
-  animation: barIn var(--dur-standard) var(--ease-standard);
+  animation: barIn var(--dur-state) var(--ease-sheet);
 }
 .swatches {
   display: flex;
@@ -242,8 +246,8 @@
   gap: 4px;
 }
 .swatch {
-  width: 20px;
-  height: 20px;
+  width: 28px;
+  height: 28px;
   border: 2px solid transparent;
   border-radius: 50%;
   background: var(--hl);
@@ -254,32 +258,35 @@
   transform: scale(1.12);
 }
 .swatch[aria-pressed='true'] {
-  border-color: var(--color-text);
+  box-shadow:
+    0 0 0 2px var(--color-hero),
+    0 0 0 4px var(--color-hero-text);
 }
 .barDivider {
   width: 1px;
-  height: 20px;
+  height: 22px;
   margin: 0 var(--space-1);
-  background: var(--color-border);
+  background: rgb(245 242 234 / 0.2);
 }
+/* The design system's five highlight colours: gold, sage, sky, rose, lilac. */
 [data-color='yellow'] {
-  --hl: #f2c94c;
+  --hl: #f2c25f;
 }
 [data-color='green'] {
-  --hl: #6fcf97;
+  --hl: #9ccb9f;
 }
 [data-color='blue'] {
-  --hl: #6fa8ff;
+  --hl: #8fb8f2;
 }
 [data-color='pink'] {
-  --hl: #f28bb5;
+  --hl: #eba0be;
 }
 [data-color='purple'] {
-  --hl: #b794f6;
+  --hl: #b9a3ee;
 }
 /* Highlights: one band behind the verse; neighbours in the same colour join up. */
 .verse[data-band] .verseButton {
-  background: color-mix(in srgb, var(--hl) 26%, transparent);
+  background: color-mix(in srgb, var(--hl) 35%, transparent);
 }
 .verse[data-join-prev] {
   margin-top: 0;
@@ -320,12 +327,12 @@
 }
 .selectionCount {
   font-weight: var(--weight-regular, 400);
-  color: var(--color-text-muted);
+  color: var(--color-hero-text-muted);
 }
 .hl {
   padding: 0.04em 0.12em;
   border-radius: 0.2em;
-  background: color-mix(in srgb, var(--hl) 28%, transparent);
+  background: color-mix(in srgb, var(--hl) 35%, transparent);
   color: inherit;
   box-decoration-break: clone;
   -webkit-box-decoration-break: clone;
@@ -333,7 +340,7 @@
 .selectionLabel {
   margin-right: var(--space-2);
   white-space: nowrap;
-  font-weight: var(--weight-semibold);
+  font-weight: var(--weight-extrabold);
 }
 .side {
   min-width: 0;
@@ -358,6 +365,13 @@
 .bookmarkMark {
   color: var(--color-accent-text);
 }
+.selectionBar .bookmarkMark,
+.selectionBar :global(button) {
+  color: var(--color-hero-text);
+}
+.selectionBar :global(button):hover:not(:disabled) {
+  background: rgb(245 242 234 / 0.1);
+}
 
 /* Selection actions: icons on laptops. */
 .barActions {
@@ -370,21 +384,21 @@
   align-items: center;
   justify-content: center;
   gap: 2px;
-  width: 34px;
-  height: 34px;
+  width: 40px;
+  height: 40px;
   padding: 0;
   border: 0;
-  border-radius: var(--radius-sm);
+  border-radius: 999px;
   background: transparent;
-  color: var(--color-text);
+  color: var(--color-hero-text);
   font: inherit;
   cursor: pointer;
 }
 .barButton:hover {
-  background: color-mix(in srgb, var(--color-text) 8%, transparent);
+  background: rgb(245 242 234 / 0.1);
 }
 .barButton[aria-pressed='true'] {
-  color: var(--color-accent-text);
+  color: var(--color-accent);
 }
 .barText {
   display: none;
@@ -414,9 +428,11 @@
     align-items: center;
     gap: 2px;
     padding: 4px;
-    border: 1px solid var(--color-border);
+    border: 0;
     border-radius: 999px;
-    background: var(--color-surface-raised);
+    /* The chapter pill (design system): ink, floating in thumb reach. */
+    background: var(--color-hero);
+    color: var(--color-hero-text);
     box-shadow: var(--elevation-2);
     translate: -50% 0;
     transition:
@@ -428,8 +444,13 @@
     transform: translateY(12px);
     pointer-events: none;
   }
-  .pillArrow {
+  .pillArrow,
+  .pillArrow:hover:not(:disabled) {
     border-radius: 999px;
+    color: var(--color-hero-text);
+  }
+  .pillArrow:hover:not(:disabled) {
+    background: rgb(245 242 234 / 0.1);
   }
   .pillPlace {
     display: flex;
@@ -440,9 +461,9 @@
     border: 0;
     border-radius: 999px;
     background: transparent;
-    color: var(--color-text);
+    color: var(--color-hero-text);
     font: inherit;
-    font-weight: var(--weight-semibold);
+    font-weight: var(--weight-bold);
     white-space: nowrap;
   }
   .selectionBar {
@@ -450,9 +471,25 @@
     bottom: var(--space-2);
     left: var(--space-2);
     flex-wrap: wrap;
-    gap: var(--space-2);
-    padding: var(--space-3);
+    gap: var(--space-3);
+    padding: var(--space-4);
     translate: none;
+    border-radius: var(--radius-xl);
+    background: var(--color-surface);
+    color: var(--color-text);
+    box-shadow: var(--elevation-3);
+  }
+  .selectionBar .bookmarkMark,
+  .selectionBar :global(button) {
+    color: var(--color-text);
+  }
+  .selectionCount {
+    color: var(--color-text-muted);
+  }
+  .swatch[aria-pressed='true'] {
+    box-shadow:
+      0 0 0 3px var(--color-surface),
+      0 0 0 5px var(--color-text);
   }
   .selectionLabel {
     flex: 1 1 0;
@@ -470,8 +507,8 @@
     justify-content: space-between;
   }
   .swatch {
-    width: 36px;
-    height: 36px;
+    width: 44px;
+    height: 44px;
   }
   .barDivider {
     display: none;
@@ -479,20 +516,28 @@
   .barActions {
     order: 3;
     flex: 1 1 100%;
-    justify-content: space-around;
-    padding-top: var(--space-2);
-    border-top: 1px solid var(--color-border);
+    gap: var(--space-2);
   }
   .barButton {
+    flex: 1;
     flex-direction: column;
     width: auto;
-    min-width: 72px;
-    height: 52px;
+    min-width: 0;
+    height: 64px;
+    border-radius: var(--radius-md);
+    background: var(--color-surface-sunk);
+    color: var(--color-text);
+  }
+  .barButton:hover {
+    background: var(--color-surface-sunk);
+  }
+  .barButton[aria-pressed='true'] {
+    color: var(--color-accent-text);
   }
   .barText {
     display: block;
-    font-size: 12px;
-    font-weight: var(--weight-medium);
+    font-size: 13px;
+    font-weight: var(--weight-bold);
   }
 }
 /* Phones: a tapped verse shows the selection, not a leftover hover. */

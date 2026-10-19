@@ -4,11 +4,11 @@
   justify-content: center;
   gap: var(--space-2);
   height: var(--control-height);
-  padding: 0 var(--space-4);
+  padding: 0 var(--space-5);
   border: 1px solid transparent;
-  border-radius: var(--radius-sm);
-  font-weight: var(--weight-medium);
-  font-size: var(--text-14);
+  border-radius: var(--radius-pill);
+  font-weight: var(--weight-bold);
+  font-size: var(--text-15);
   line-height: 1;
   white-space: nowrap;
   cursor: pointer;
@@ -38,22 +38,38 @@
 
 .sm {
   height: var(--control-height-sm);
-  padding: 0 var(--space-3);
-  font-size: var(--text-13);
+  padding: 0 var(--space-4);
+  font-size: var(--text-14);
 }
 
+/* Design system: the main action is ink on cream (cream on ink in the evening); on the Screen
+   stage, where it must read from across a dim booth, it is the gold. */
 .primary {
-  background: var(--color-accent);
-  color: var(--color-accent-contrast);
+  background: var(--button-primary, var(--color-text));
+  color: var(--button-primary-text, var(--color-bg));
 }
 .primary:hover:not(:disabled),
 .primary[data-force='hover'] {
+  background: color-mix(in srgb, var(--button-primary, var(--color-text)) 86%, var(--color-bg));
+}
+:global([data-atmosphere='stage']) .primary {
+  --button-primary: var(--color-accent);
+  --button-primary-text: var(--color-accent-contrast);
+}
+
+/* The gold action: on hero cards and wherever the flame is the point (Reflect, Read day). */
+.gold {
+  background: var(--color-accent);
+  color: var(--color-accent-contrast);
+}
+.gold:hover:not(:disabled),
+.gold[data-force='hover'] {
   background: color-mix(in srgb, var(--color-accent) 86%, #fff);
 }
 
 .secondary {
-  background: var(--color-surface-raised);
-  border-color: var(--color-border);
+  background: var(--color-surface);
+  border-color: var(--color-border-strong);
   color: var(--color-text);
 }
 .secondary:hover:not(:disabled),
@@ -63,7 +79,7 @@
 
 .outline {
   background: transparent;
-  border-color: var(--color-border);
+  border-color: var(--color-border-strong);
   color: var(--color-text);
 }
 .outline:hover:not(:disabled),

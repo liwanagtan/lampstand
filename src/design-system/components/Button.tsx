@@ -3,7 +3,7 @@ import { Loader2 } from 'lucide-react';
 import { cx } from './cx';
 import styles from './Button.module.css';
 
-export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'outline';
+export type ButtonVariant = 'primary' | 'gold' | 'secondary' | 'ghost' | 'outline';
 export type ButtonSize = 'md' | 'sm';
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {

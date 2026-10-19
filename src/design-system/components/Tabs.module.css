@@ -6,12 +6,13 @@
 .fill {
   height: 100%;
 }
+/* Design system Segmented: a pill track, the chosen option lifts onto the surface. */
 .list {
   display: flex;
   gap: var(--space-1);
   padding: var(--space-1);
-  border-radius: var(--radius-md);
-  background: var(--color-surface-raised);
+  border-radius: var(--radius-pill);
+  background: var(--color-surface-sunk);
 }
 .trigger {
   flex: 1;
@@ -22,11 +23,11 @@
   height: var(--control-height-sm);
   padding: 0 var(--space-3);
   border: 0;
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-pill);
   background: transparent;
   color: var(--color-text-muted);
-  font-weight: var(--weight-medium);
-  font-size: var(--text-13);
+  font-weight: var(--weight-bold);
+  font-size: var(--text-14);
   cursor: pointer;
   transition:
     background-color var(--dur-quick) var(--ease-quick),

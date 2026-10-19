@@ -1,7 +1,7 @@
 import { colors, tokensCss } from './tokens';
 import { contrastRatio } from './contrast';
 
-const surfaces = ['bg', 'surface', 'surface-raised', 'paper'] as const;
+const surfaces = ['bg', 'surface', 'surface-raised', 'surface-sunk', 'paper'] as const;
 
 describe.each(['dark', 'light'] as const)('%s tokens meet WCAG AA', (scheme) => {
   const c = colors[scheme];
@@ -9,6 +9,16 @@ describe.each(['dark', 'light'] as const)('%s tokens meet WCAG AA', (scheme) => 
   it.each(surfaces)('text and muted text on %s are ≥ 4.5:1', (s) => {
     expect(contrastRatio(c.text, c[s])).toBeGreaterThanOrEqual(4.5);
     expect(contrastRatio(c['text-muted'], c[s])).toBeGreaterThanOrEqual(4.5);
+    expect(contrastRatio(c['text-faint'], c[s])).toBeGreaterThanOrEqual(4.5);
+  });
+
+  it('text on the hero card and the warm tint is ≥ 4.5:1', () => {
+    expect(contrastRatio(c['hero-text'], c.hero)).toBeGreaterThanOrEqual(4.5);
+    expect(contrastRatio(c['hero-text-muted'], c.hero)).toBeGreaterThanOrEqual(4.5);
+    expect(contrastRatio(c.accent, c.hero)).toBeGreaterThanOrEqual(4.5);
+    expect(contrastRatio(c.text, c['accent-tint'])).toBeGreaterThanOrEqual(4.5);
+    expect(contrastRatio(c['text-muted'], c['accent-tint'])).toBeGreaterThanOrEqual(4.5);
+    expect(contrastRatio(c['accent-text'], c['accent-tint'])).toBeGreaterThanOrEqual(4.5);
   });
 
   it.each(surfaces)('UI colors on %s are ≥ 3:1', (s) => {
@@ -44,8 +54,10 @@ it.each(['dark', 'light'] as const)('the %s stage keeps text readable', (scheme)
 
 it('exposes tokens as CSS variables', () => {
   const css = tokensCss();
-  expect(css).toContain('--color-bg: #0E1116');
-  expect(css).toContain('--color-bg: #F7F6F3');
+  expect(css).toContain('--color-bg: #0A0F1C');
+  expect(css).toContain('--color-bg: #F5F2EA');
   expect(css).toContain('--space-4: 16px');
   expect(css).toContain('--dur-standard: 220ms');
+  expect(css).toContain('--dur-sheet: 400ms');
+  expect(css).toContain('--radius-pill: 999px');
 });

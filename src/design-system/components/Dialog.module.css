@@ -16,14 +16,14 @@
   width: min(calc(100vw - 48px), 520px);
   max-height: calc(100vh - 64px);
   translate: -50% -50%;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
+  border: 1px solid transparent;
+  border-radius: var(--radius-xl);
   background: var(--color-surface);
-  box-shadow: var(--elevation-2);
-  animation: dialogIn var(--dur-standard) var(--ease-standard);
+  box-shadow: var(--elevation-3);
+  animation: dialogIn var(--dur-sheet, 400ms) var(--ease-sheet);
 }
 [data-theme='dark'] .content {
-  background: var(--color-surface-raised);
+  background: var(--color-surface);
 }
 .sm {
   width: min(calc(100vw - 48px), 400px);
@@ -39,8 +39,10 @@
   padding: var(--space-6) var(--space-6) var(--space-4);
 }
 .title {
-  font-size: var(--text-20);
-  font-weight: var(--weight-semibold);
+  font-size: var(--text-24);
+  font-weight: var(--weight-extrabold);
+  letter-spacing: -0.02em;
+  line-height: 1.15;
 }
 .description {
   margin-top: var(--space-1);
@@ -81,18 +83,18 @@
     max-height: 92dvh;
     translate: none;
     border-width: 1px 0 0;
-    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
     padding-bottom: env(safe-area-inset-bottom);
     animation-name: dialogUp;
   }
   .content::before {
     content: '';
     align-self: center;
-    width: 36px;
-    height: 4px;
-    margin-top: var(--space-2);
-    border-radius: 2px;
-    background: var(--color-border);
+    width: 40px;
+    height: 5px;
+    margin-top: 10px;
+    border-radius: 3px;
+    background: var(--color-border-strong);
   }
   .header {
     padding: var(--space-3) var(--space-4) var(--space-3);
@@ -119,6 +121,6 @@
 /* Phones: a calmer type scale (docs/DECISIONS.md 2026-10-18). */
 @media (max-width: 640px) {
   .title {
-    font-size: 18px;
+    font-size: 22px;
   }
 }

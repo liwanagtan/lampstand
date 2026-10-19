@@ -1,4 +1,4 @@
-@import '@fontsource-variable/inter/wght.css';
+@import '@fontsource-variable/plus-jakarta-sans/wght.css';
 @import '@fontsource-variable/fraunces/wght.css';
 @import '@fontsource-variable/fraunces/wght-italic.css';
 
@@ -19,7 +19,7 @@ body {
   background: var(--color-bg);
   color: var(--color-text);
   font-family: var(--font-ui);
-  font-size: var(--text-14);
+  font-size: var(--text-15);
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
@@ -33,11 +33,13 @@ p {
   margin: 0;
 }
 
+/* Titles are ExtraBold with tight tracking (design system: title-1 … title-3). */
 h1,
 h2,
 h3 {
-  font-weight: var(--weight-semibold);
-  letter-spacing: -0.01em;
+  font-weight: var(--weight-extrabold);
+  letter-spacing: -0.02em;
+  text-wrap: balance;
 }
 
 button,
@@ -58,8 +60,7 @@ a {
 
 :focus-visible {
   outline: 2px solid var(--color-focus-ring);
-  outline-offset: 2px;
-  border-radius: var(--radius-sm);
+  outline-offset: 3px;
 }
 
 ::selection {
@@ -102,7 +103,13 @@ a {
   --color-border: var(--color-stage-border);
   --color-text: var(--color-stage-text);
   --color-text-muted: var(--color-stage-text-muted);
+  --color-surface-sunk: var(--color-stage-surface);
+  --color-border-strong: var(--color-stage-border);
+  --color-text-faint: var(--color-stage-text-muted);
   --color-accent-text: var(--color-accent);
+  --color-accent-tint: #2a2416;
+  --color-hero: var(--color-stage-raised);
+  --color-focus-ring: rgb(245 242 234 / 0.7);
   --color-overlay: rgb(5 7 10 / 0.6);
   color-scheme: dark;
   background: var(--color-bg);

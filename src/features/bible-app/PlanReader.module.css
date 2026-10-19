@@ -8,8 +8,6 @@
   flex-direction: column;
   gap: var(--space-2);
   margin-bottom: var(--space-6);
-  padding-bottom: var(--space-5, 20px);
-  border-bottom: 1px solid var(--color-border);
 }
 .back {
   display: inline-flex;
@@ -26,16 +24,17 @@
 }
 .eyebrow {
   font-size: var(--text-12);
-  font-weight: var(--weight-semibold);
-  letter-spacing: 0.08em;
+  font-weight: var(--weight-bold);
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--color-accent-text);
 }
 .title {
   font-family: var(--font-display);
-  font-size: 34px;
+  font-size: clamp(34px, 4vw, 48px);
   font-weight: var(--weight-semibold);
-  line-height: 1.15;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
 }
 .meta {
   display: flex;
@@ -130,6 +129,8 @@
   padding-left: 1.4em;
   line-height: 1.55;
 }
+/* Finish: on laptops a gold button after the reading; on phones a dark bar that stays at the
+   bottom of the screen while you read (design system: Plans · Reading a day). */
 .finish {
   display: flex;
   flex-direction: column;
@@ -140,9 +141,46 @@
   border-top: 1px solid var(--color-border);
 }
 .finishButton {
-  height: 48px;
+  height: 56px;
   padding: 0 var(--space-8);
+  background: var(--color-accent);
+  color: var(--color-accent-contrast);
   font-size: var(--text-16);
+  font-weight: var(--weight-extrabold);
+}
+.finishButton:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--color-accent) 86%, #fff);
+}
+@media (max-width: 640px) {
+  .finish {
+    position: sticky;
+    bottom: var(--space-3);
+    z-index: 3;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: var(--space-3);
+    padding: var(--space-2) var(--space-2) var(--space-2) var(--space-5);
+    border-top: 0;
+    border-radius: 999px;
+    background: #0a0f1c;
+    color: #f5f2ea;
+    box-shadow: var(--elevation-2);
+  }
+  /* The bar explains itself; the hint is for laptops. */
+  .finishHint {
+    display: none;
+  }
+  .finish {
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+    padding: var(--space-2);
+  }
+  .finishButton {
+    flex: none;
+    height: 48px;
+    padding: 0 var(--space-5);
+  }
 }
 .finishHint {
   font-size: var(--text-14);
@@ -154,16 +192,22 @@
   align-items: center;
   gap: var(--space-3);
   margin-top: var(--space-10, 48px);
-  padding: var(--space-8) var(--space-6);
-  border: 1px solid color-mix(in srgb, var(--color-accent) 35%, var(--color-border));
-  border-radius: var(--radius-lg);
+  padding: var(--space-10) var(--space-6) var(--space-8);
+  border-radius: var(--radius-xl);
+  /* Day complete (design system): the hero card, lit by the slow rays. */
   background:
-    radial-gradient(
-      80% 120% at 50% 0%,
-      color-mix(in srgb, var(--color-accent) 16%, transparent),
-      transparent 70%
+    conic-gradient(
+      from 160deg at 50% -10%,
+      transparent 0 8deg,
+      rgb(242 179 61 / 0.1) 8deg 12deg,
+      transparent 12deg 18deg,
+      rgb(242 179 61 / 0.08) 18deg 24deg,
+      transparent 24deg 30deg,
+      rgb(242 179 61 / 0.1) 30deg 34deg,
+      transparent 34deg
     ),
-    var(--color-surface);
+    var(--color-hero);
+  color: var(--color-hero-text);
   text-align: center;
 }
 .doneMark {
@@ -176,13 +220,20 @@
   color: var(--color-on-accent, #1b1408);
 }
 .doneTitle {
-  font-family: var(--font-display);
-  font-size: 26px;
-  font-weight: var(--weight-semibold);
+  font-size: clamp(28px, 3vw, 36px);
+  font-weight: var(--weight-extrabold);
+  letter-spacing: -0.03em;
 }
 .doneText {
   max-width: 32em;
-  color: var(--color-text-muted);
+  color: var(--color-hero-text-muted);
+}
+.undo,
+.undo:hover:not(:disabled) {
+  color: var(--color-hero-text);
+}
+.undo:hover:not(:disabled) {
+  background: rgb(245 242 234 / 0.1);
 }
 .doneActions {
   display: flex;

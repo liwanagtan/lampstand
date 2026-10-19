@@ -149,27 +149,58 @@
       no-repeat,
     var(--color-bg);
 }
-/* Today: the light changes through the day. */
+/* Today: the dawn (design system › atmospheres). A gold sun with soft halos on the dawn sky; it
+   sets through the day. In the evening and the dark theme, a few embers instead. Static shapes
+   only: they scroll with the page (background-attachment: local) and never move on their own. */
 .main[data-atmosphere='today'] {
+  --sun-x: calc(100% - 180px);
+  --sun-y: 110px;
+  --sun: var(--color-accent);
+  --halo: color-mix(in srgb, var(--color-accent) 16%, transparent);
+  --sky: var(--color-dawn);
   background:
-    radial-gradient(130% 55% at 50% 0%, var(--daylight), transparent 72%) no-repeat,
+    radial-gradient(circle at var(--sun-x) var(--sun-y), var(--sun) 0 44px, transparent 45px),
+    radial-gradient(circle at var(--sun-x) var(--sun-y), var(--halo) 0 92px, transparent 93px),
+    radial-gradient(circle at var(--sun-x) var(--sun-y), var(--halo) 0 160px, transparent 161px),
+    radial-gradient(circle at var(--sun-x) var(--sun-y), var(--halo) 0 250px, transparent 251px),
+    linear-gradient(var(--sky), var(--color-bg)) 0 0 / 100% 440px no-repeat,
     var(--color-bg);
-}
-.main[data-daypart='dawn'] {
-  --daylight: color-mix(in srgb, var(--color-accent) 16%, transparent);
+  background-attachment: local;
 }
 .main[data-daypart='day'] {
-  --daylight: color-mix(in srgb, var(--color-accent) 7%, transparent);
+  --sun-y: 80px;
+  --halo: color-mix(in srgb, var(--color-accent) 11%, transparent);
 }
 .main[data-daypart='dusk'] {
-  --daylight: color-mix(
+  --sun-y: 230px;
+  --sun: color-mix(in srgb, var(--color-accent) 80%, var(--color-live));
+  --halo: color-mix(
     in srgb,
-    color-mix(in srgb, var(--color-accent) 55%, var(--color-live)) 14%,
+    color-mix(in srgb, var(--color-accent) 60%, var(--color-live)) 12%,
     transparent
   );
 }
-.main[data-daypart='night'] {
-  --daylight: color-mix(in srgb, var(--color-stage-raised) 55%, transparent);
+.main[data-daypart='night'],
+:global([data-theme='dark']) .main[data-atmosphere='today'] {
+  --sky: color-mix(in srgb, var(--color-dawn) 70%, var(--color-bg));
+  background:
+    radial-gradient(circle at 12% 120px, var(--color-accent) 0 2px, transparent 3px),
+    radial-gradient(circle at 34% 260px, var(--color-accent-soft) 0 1.5px, transparent 2.5px),
+    radial-gradient(circle at 58% 80px, var(--color-accent) 0 2px, transparent 3px),
+    radial-gradient(circle at 76% 200px, var(--color-accent) 0 2.5px, transparent 3.5px),
+    radial-gradient(circle at 90% 330px, var(--color-accent-soft) 0 1.5px, transparent 2.5px),
+    linear-gradient(var(--sky), var(--color-bg)) 0 0 / 100% 440px no-repeat,
+    var(--color-bg);
+  background-attachment: local;
+}
+@media (max-width: 640px) {
+  .main[data-atmosphere='today'] {
+    --sun-x: calc(100% - 60px);
+    --sun-y: 40px;
+  }
+  .main[data-daypart='dusk'] {
+    --sun-y: 150px;
+  }
 }
 
 /* Phones: the destinations move to a bottom tab bar (thumb reach); the top bar keeps the

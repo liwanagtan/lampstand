@@ -1,40 +1,58 @@
+/* Today (design system: Today morning and evening). Laptops: a main column and a 360px side
+   column; phones: one column. The dawn behind the greeting comes from the shell's atmosphere. */
 .page {
   display: flex;
   flex-direction: column;
-  gap: var(--space-6);
-  max-width: 980px;
+  gap: var(--space-8);
+  max-width: 1200px;
   margin: 0 auto;
-  padding: var(--space-6) var(--space-6) 96px;
+  padding: var(--space-12) var(--space-8) 96px;
 }
 .greeting {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: var(--space-2);
 }
 .date {
   font-size: var(--text-12);
-  font-weight: var(--weight-semibold);
-  letter-spacing: 0.08em;
+  font-weight: var(--weight-bold);
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--color-accent-text);
 }
 .hello {
-  font-family: var(--font-display);
-  font-size: clamp(28px, 4vw, 40px);
-  font-weight: var(--weight-semibold);
-  letter-spacing: -0.01em;
+  font-size: clamp(32px, 4vw, 52px);
+  font-weight: var(--weight-extrabold);
+  line-height: 1.05;
+  letter-spacing: -0.035em;
+}
+.cols {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 360px;
+  gap: var(--space-6);
+  align-items: start;
+}
+.main,
+.aside {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  min-width: 0;
+}
+@media (max-width: 980px) {
+  .cols {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }
 
-/* Verse of the day */
+/* Verse of the day: the one hero card. The day's photo sits low behind an ink scrim. */
 .hero {
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  min-height: 340px;
-  border-radius: var(--radius-lg);
-  background: radial-gradient(120% 140% at 100% 0%, #3a2f1c, #14181f 60%);
-  color: #f6f1e7;
-  box-shadow: var(--elevation-2);
+  border-radius: var(--radius-xl);
+  background: var(--color-hero);
+  color: var(--color-hero-text);
 }
 .heroPhoto {
   position: absolute;
@@ -43,6 +61,7 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  opacity: 0.4;
   animation: photoIn 900ms ease-out both;
 }
 .heroPhotoDrift {
@@ -55,64 +74,70 @@
   inset: 0;
   z-index: -1;
   background:
-    linear-gradient(
-      90deg,
-      rgb(10 12 16 / 0.82) 0%,
-      rgb(10 12 16 / 0.55) 55%,
-      rgb(10 12 16 / 0.25) 100%
-    ),
-    linear-gradient(0deg, rgb(10 12 16 / 0.6), transparent 50%);
+    linear-gradient(90deg, rgb(10 15 28 / 0.85) 0%, rgb(10 15 28 / 0.55) 60%, rgb(10 15 28 / 0.3)),
+    linear-gradient(0deg, rgb(10 15 28 / 0.7), transparent 55%);
 }
 .heroBody {
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
   max-width: 720px;
-  padding: clamp(24px, 4vw, 48px);
+  padding: clamp(24px, 4vw, 40px);
 }
 .heroEyebrow {
   display: inline-flex;
   align-items: center;
   gap: var(--space-2);
   font-size: var(--text-12);
-  font-weight: var(--weight-semibold);
+  font-weight: var(--weight-bold);
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: #f2b33d;
+  color: var(--color-accent);
 }
 .heroText {
   margin: 0;
   font-family: var(--font-display);
-  font-size: clamp(22px, 3vw, 32px);
-  line-height: 1.4;
+  font-weight: 400;
+  font-size: clamp(22px, 2.6vw, 30px);
+  line-height: 1.42;
   text-wrap: pretty;
-  text-shadow: 0 1px 12px rgb(0 0 0 / 0.35);
 }
 .heroRef {
+  font-size: var(--text-14);
   font-weight: var(--weight-semibold);
+  color: var(--color-hero-text-muted);
 }
 .heroRef span {
-  margin-left: var(--space-2);
-  font-size: var(--text-12);
-  font-weight: var(--weight-medium);
-  opacity: 0.7;
+  margin-left: var(--space-1);
 }
 .heroActions {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-2);
-  margin-top: var(--space-2);
+  gap: 10px;
+  margin-top: var(--space-1);
 }
 .heroButton,
 .heroIcon {
-  border-color: rgb(255 255 255 / 0.22);
-  background: rgb(255 255 255 / 0.12);
-  color: #fff;
-  backdrop-filter: blur(8px);
+  border-color: rgb(245 242 234 / 0.35);
+  background: transparent;
+  color: var(--color-hero-text);
 }
 .heroButton:hover:not(:disabled),
 .heroIcon:hover:not(:disabled) {
-  background: rgb(255 255 255 / 0.22);
+  background: rgb(245 242 234 / 0.1);
+}
+/* The first action, Read in context, is the cream one. */
+.heroActions > .heroButton:first-child {
+  border-color: transparent;
+  background: var(--color-hero-text);
+  color: #0a0f1c;
+}
+.heroActions > .heroButton:first-child:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--color-hero-text) 88%, #0a0f1c);
+}
+.heroIcon {
+  border-color: transparent;
+  background: rgb(245 242 234 / 0.1);
 }
 .live,
 .live:hover:not(:disabled) {
@@ -123,26 +148,31 @@
 /* This week */
 .week {
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
+  flex-direction: column;
   gap: var(--space-4);
-  padding: var(--space-4) var(--space-5, 20px);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
+  padding: var(--space-5) var(--space-6);
+  border-radius: var(--radius-lg);
   background: var(--color-surface);
 }
+.weekText {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-1) var(--space-3);
+}
 .weekTitle {
-  font-size: var(--text-16);
-  font-weight: var(--weight-semibold);
+  font-size: var(--text-18);
+  font-weight: var(--weight-extrabold);
 }
 .weekSub {
-  font-size: var(--text-14);
+  font-size: var(--text-13);
   color: var(--color-text-muted);
 }
 .weekDays {
-  display: flex;
-  gap: var(--space-2);
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: var(--space-1);
   margin: 0;
   padding: 0;
   list-style: none;
@@ -151,63 +181,58 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
 }
 .weekDot {
   display: grid;
   place-items: center;
-  width: 32px;
-  height: 32px;
-  border: 2px solid var(--color-border);
+  width: 34px;
+  height: 34px;
+  border: 1.5px solid var(--color-border);
   border-radius: 50%;
-  color: var(--color-on-accent, #1b1408);
+  color: var(--color-accent-contrast);
   transition:
-    background-color var(--dur-standard) var(--ease-standard),
-    border-color var(--dur-standard) var(--ease-standard);
+    background-color var(--dur-state) var(--ease-state),
+    border-color var(--dur-state) var(--ease-state);
 }
 .weekOn .weekDot {
   border-color: var(--color-accent);
   background: var(--color-accent);
 }
 .weekToday .weekDot {
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-accent) 30%, transparent);
+  border: 2.5px solid var(--color-accent);
 }
 .weekLater .weekDot {
   border-style: dashed;
-  opacity: 0.6;
+  border-color: var(--color-border-strong);
 }
 .weekLetter {
   font-size: var(--text-12);
-  font-weight: var(--weight-medium);
-  color: var(--color-text-muted);
-}
-.weekToday .weekLetter {
-  color: var(--color-accent-text);
   font-weight: var(--weight-semibold);
+  color: var(--color-text-faint);
+}
+.weekToday .weekLetter,
+.weekOn .weekLetter {
+  color: var(--color-text);
+  font-weight: var(--weight-extrabold);
 }
 
 /* Cards */
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: var(--space-4);
-}
 .card {
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
-  padding: var(--space-5, 20px);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
+  padding: var(--space-6);
+  border-radius: var(--radius-lg);
   background: var(--color-surface);
 }
 .cardTitle {
-  font-size: var(--text-16);
-  font-weight: var(--weight-semibold);
+  font-size: var(--text-18);
+  font-weight: var(--weight-extrabold);
 }
 .muted {
-  font-size: var(--text-14);
-  line-height: 1.5;
+  font-size: var(--text-15);
+  line-height: 1.55;
   color: var(--color-text-muted);
 }
 .row {
@@ -216,14 +241,13 @@
   gap: var(--space-2);
   margin-top: auto;
 }
+/* Take five minutes: the warm card, with the flame companion. */
 .reflect {
-  background:
-    radial-gradient(
-      100% 120% at 100% 0%,
-      color-mix(in srgb, var(--color-accent) 10%, transparent),
-      transparent 60%
-    ),
-    var(--color-surface);
+  background: var(--color-accent-tint);
+}
+.companion {
+  align-self: flex-start;
+  margin-bottom: calc(var(--space-2) * -1);
 }
 .preview {
   display: -webkit-box;
@@ -239,7 +263,7 @@
   align-items: center;
   gap: var(--space-1);
   font-size: var(--text-14);
-  font-weight: var(--weight-medium);
+  font-weight: var(--weight-semibold);
   color: var(--color-success, var(--color-accent-text));
 }
 
@@ -258,35 +282,31 @@
 }
 @media (max-width: 640px) {
   .page {
-    padding: var(--space-4) var(--space-4) 72px;
+    gap: var(--space-4);
+    padding: var(--space-4) var(--space-5) 72px;
   }
-  .hero {
-    min-height: 0;
+  .main,
+  .aside {
+    gap: var(--space-4);
   }
-  .weekDays {
-    gap: 6px;
+  .card,
+  .week {
+    padding: var(--space-5);
   }
   .weekDot {
-    width: 28px;
-    height: 28px;
+    width: 32px;
+    height: 32px;
   }
-}
-
-/* Phones: the verse's actions sit on one row — two named buttons and Copy. */
-@media (max-width: 640px) {
+  /* The verse's actions sit on one row: two named buttons and Copy. */
   .heroActions {
     flex-wrap: nowrap;
-    gap: 6px;
+    gap: 8px;
   }
   .heroButton {
     flex: 1 1 auto;
     padding: 0 var(--space-3);
   }
-}
-
-/* Phones: a calmer type scale (docs/DECISIONS.md 2026-10-18). */
-@media (max-width: 640px) {
   .heroText {
-    font-size: 20px;
+    font-size: 21px;
   }
 }

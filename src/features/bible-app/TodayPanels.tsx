@@ -1,6 +1,6 @@
 import { useLayoutEffect, useRef, useState } from 'react';
 import { BookOpen, ChevronLeft, ChevronRight } from 'lucide-react';
-import { Button, Sheet, Tooltip, IconButton, cx } from '@/design-system/components';
+import { Button, Dialog, Sheet, Tooltip, IconButton, cx } from '@/design-system/components';
 import type { JournalEntryRecord } from '@/db/types';
 import { BOOKS, BOOK_BY_CODE, BOOK_INDEX } from '@/features/bible/books';
 import { formatRef, toOsis, type RefRange } from '@/features/bible/ref';
@@ -118,7 +118,8 @@ export function ContextPanel({
   );
 }
 
-/** Reflect on the verse of the day in a side panel; saves into the journal as you type. */
+/** Reflect on the verse of the day: a centred dialog on laptops, a bottom sheet on phones (design
+ * system › Sheet). Saves into the journal as you type. */
 export function ReflectPanel({
   date,
   range,
@@ -143,12 +144,12 @@ export function ReflectPanel({
   const entry: JournalEntryRecord | null | undefined = existing;
 
   return (
-    <Sheet
+    <Dialog
       open={open}
       onOpenChange={onOpenChange}
-      eyebrow="Reflect"
+      size="lg"
       title={formatRef(range)}
-      description="Saved to your journal as you type. It stays on this device."
+      description="Reflect. Saved to your journal as you type. It stays on this device."
     >
       {entry !== undefined && open && (
         <EntryEditor
@@ -174,6 +175,6 @@ export function ReflectPanel({
           }
         />
       )}
-    </Sheet>
+    </Dialog>
   );
 }

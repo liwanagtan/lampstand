@@ -1,7 +1,8 @@
+/* Plans, a category and a plan page (design system: Plans, Plans · Category, Plans · Plan page). */
 .page {
-  max-width: 1040px;
+  max-width: 1200px;
   margin: 0 auto;
-  padding: var(--space-6) var(--space-6) 96px;
+  padding: var(--space-10) var(--space-8) 96px;
 }
 .headRow {
   display: flex;
@@ -11,31 +12,35 @@
 }
 .eyebrow {
   font-size: var(--text-12);
-  font-weight: var(--weight-semibold);
-  letter-spacing: 0.08em;
+  font-weight: var(--weight-bold);
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--color-accent-text);
 }
 .title {
-  margin-top: var(--space-1);
-  font-family: var(--font-display);
-  font-size: clamp(26px, 4vw, 32px);
-  font-weight: var(--weight-semibold);
+  margin-top: var(--space-2);
+  font-size: clamp(32px, 4vw, 52px);
+  font-weight: var(--weight-extrabold);
+  line-height: 1.05;
+  letter-spacing: -0.035em;
 }
 .lede {
   margin-top: var(--space-2);
+  max-width: 640px;
+  font-size: var(--text-16);
+  line-height: 1.55;
   color: var(--color-text-muted);
 }
 .section {
-  margin-top: var(--space-8);
+  margin-top: var(--space-10);
 }
 .sectionTitle {
   margin-bottom: var(--space-4);
   font-size: var(--text-12);
-  font-weight: var(--weight-semibold);
-  letter-spacing: 0.08em;
+  font-weight: var(--weight-bold);
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--color-text-muted);
+  color: var(--color-accent-text);
 }
 .activeGrid {
   display: grid;
@@ -61,8 +66,8 @@
   align-items: center;
   gap: var(--space-2);
   max-width: 520px;
-  height: 48px;
-  padding: 0 var(--space-2) 0 var(--space-4);
+  height: 52px;
+  padding: 0 var(--space-2) 0 var(--space-5);
   border: 1px solid var(--color-border);
   border-radius: 999px;
   background: var(--color-surface);
@@ -70,8 +75,8 @@
   cursor: text;
 }
 .searchBox:focus-within {
-  border-color: var(--color-accent);
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-accent) 22%, transparent);
+  border-color: var(--color-text);
+  box-shadow: 0 0 0 1px var(--color-text);
 }
 .searchBox input {
   flex: 1;
@@ -95,7 +100,7 @@
   height: 36px;
   border: 0;
   border-radius: 50%;
-  background: var(--color-surface-raised);
+  background: var(--color-surface-sunk);
   color: var(--color-text);
   cursor: pointer;
 }
@@ -107,7 +112,7 @@
   color: var(--color-text-muted);
 }
 .group + .group {
-  margin-top: var(--space-8);
+  margin-top: var(--space-10);
 }
 .groupHead {
   display: flex;
@@ -117,13 +122,13 @@
   margin-bottom: var(--space-3);
 }
 .groupTitle {
-  font-family: var(--font-display);
-  font-size: 22px;
-  font-weight: var(--weight-semibold);
+  font-size: var(--text-24);
+  font-weight: var(--weight-extrabold);
+  letter-spacing: -0.02em;
 }
 .groupText {
-  margin-top: 2px;
-  font-size: var(--text-14);
+  margin-top: var(--space-1);
+  font-size: var(--text-15);
   color: var(--color-text-muted);
 }
 .seeAll {
@@ -131,9 +136,10 @@
   flex: none;
   align-items: center;
   gap: 4px;
+  min-height: 44px;
   color: var(--color-accent-text);
-  font-size: var(--text-14);
-  font-weight: var(--weight-medium);
+  font-size: var(--text-15);
+  font-weight: var(--weight-bold);
   text-decoration: none;
 }
 .seeAll:hover {
@@ -151,22 +157,21 @@
   display: inline-flex;
   align-items: center;
   gap: var(--space-2);
-  height: 40px;
+  height: 42px;
   padding: 0 var(--space-4);
   border: 1px solid var(--color-border);
   border-radius: 999px;
   background: var(--color-surface);
   color: var(--color-text);
-  font-size: var(--text-14);
-  font-weight: var(--weight-medium);
+  font-size: var(--text-15);
+  font-weight: var(--weight-bold);
   text-decoration: none;
   transition:
     border-color var(--dur-quick) var(--ease-quick),
     background-color var(--dur-quick) var(--ease-quick);
 }
 .chip:hover {
-  border-color: var(--color-accent);
-  background: color-mix(in srgb, var(--color-accent) 8%, var(--color-surface));
+  border-color: var(--color-text);
 }
 .chipSm {
   height: 30px;
@@ -175,7 +180,8 @@
 }
 .chipCount {
   font-size: var(--text-12);
-  color: var(--color-text-muted);
+  font-weight: var(--weight-semibold);
+  color: var(--color-text-faint);
 }
 
 /* Cover cards */
@@ -190,33 +196,32 @@
 }
 .cardGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: var(--space-4);
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: var(--space-5);
   margin-top: var(--space-4);
 }
+/* Cover cards: the photo in a rounded frame, the name and length beneath, no box around. */
 .planCard {
   display: flex;
   flex-direction: column;
-  overflow: hidden;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  background: var(--color-surface);
+  gap: var(--space-1);
   color: var(--color-text);
   text-decoration: none;
   scroll-snap-align: start;
-  transition:
-    border-color var(--dur-quick) var(--ease-quick),
-    transform var(--dur-quick) var(--ease-quick);
-}
-.planCard:hover {
-  border-color: var(--color-accent);
-  transform: translateY(-2px);
 }
 .cover {
   position: relative;
   display: block;
-  aspect-ratio: 16 / 9;
-  background: linear-gradient(135deg, var(--color-surface-raised), var(--color-border));
+  overflow: hidden;
+  aspect-ratio: 3 / 2;
+  border-radius: var(--radius-lg);
+  background: var(--color-surface-sunk);
+}
+.cover img {
+  transition: transform var(--dur-sheet) var(--ease-standard);
+}
+.planCard:hover .cover img {
+  transform: scale(1.04);
 }
 .cover img {
   width: 100%;
@@ -240,51 +245,52 @@
 .cardBody {
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  padding: var(--space-3) var(--space-4) var(--space-4);
+  gap: 2px;
+  padding: var(--space-2) 2px 0;
 }
 .planName {
-  font-weight: var(--weight-semibold);
+  font-size: var(--text-16);
+  font-weight: var(--weight-bold);
   line-height: 1.3;
 }
 .planMeta {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  font-size: var(--text-12);
+  font-size: var(--text-13);
   color: var(--color-text-muted);
 }
 
 /* Category tiles */
 .tiles {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: var(--space-3);
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: var(--space-4);
 }
 .tile {
   display: flex;
   flex-direction: column;
+  justify-content: flex-end;
   gap: 4px;
-  padding: var(--space-4);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  background:
-    radial-gradient(
-      120% 100% at 100% 0%,
-      color-mix(in srgb, var(--color-accent) 10%, transparent),
-      transparent 60%
-    ),
-    var(--color-surface);
+  min-height: 120px;
+  padding: var(--space-5);
+  border: 1px solid transparent;
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
   color: var(--color-text);
   text-decoration: none;
 }
+/* The first tile is the warm one (design system › Card, gold). */
+.tile:first-child {
+  background: var(--color-accent-tint);
+}
 .tile:hover {
-  border-color: var(--color-accent);
+  border-color: var(--color-text);
 }
 .tileName {
-  font-family: var(--font-display);
-  font-size: 18px;
-  font-weight: var(--weight-semibold);
+  font-size: var(--text-18);
+  font-weight: var(--weight-extrabold);
+  letter-spacing: -0.01em;
 }
 .tileText {
   font-size: var(--text-14);
@@ -321,11 +327,11 @@
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  min-height: 260px;
-  margin-bottom: var(--space-5, 20px);
-  border-radius: var(--radius-lg);
-  background: linear-gradient(135deg, var(--color-stage-raised), var(--color-stage));
-  color: var(--color-stage-text);
+  min-height: 300px;
+  margin-bottom: var(--space-6);
+  border-radius: var(--radius-xl);
+  background: var(--color-hero);
+  color: var(--color-hero-text);
 }
 .heroImg {
   position: absolute;
@@ -339,29 +345,29 @@
   position: absolute;
   inset: 0;
   z-index: -1;
-  background: linear-gradient(0deg, rgb(9 12 17 / 0.85), rgb(9 12 17 / 0.25) 70%);
+  background: linear-gradient(0deg, rgb(10 15 28 / 0.88), rgb(10 15 28 / 0.25) 70%);
 }
 .heroBody {
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
   gap: var(--space-2);
-  min-height: 260px;
-  max-width: 680px;
-  padding: clamp(20px, 4vw, 36px);
+  min-height: 300px;
+  max-width: 720px;
+  padding: clamp(22px, 4vw, 40px);
 }
 .heroMeta {
   font-size: var(--text-12);
-  font-weight: var(--weight-semibold);
-  letter-spacing: 0.06em;
+  font-weight: var(--weight-bold);
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--color-accent);
 }
 .heroTitle {
-  font-family: var(--font-display);
-  font-size: clamp(26px, 4vw, 36px);
-  font-weight: var(--weight-semibold);
-  line-height: 1.15;
+  font-size: clamp(30px, 4vw, 52px);
+  font-weight: var(--weight-extrabold);
+  line-height: 1.05;
+  letter-spacing: -0.035em;
 }
 .heroText {
   line-height: 1.5;
@@ -379,15 +385,15 @@
   align-items: flex-start;
   gap: var(--space-2);
   margin-top: var(--space-6);
-  padding: var(--space-5, 20px);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
+  padding: var(--space-6);
+  border-radius: var(--radius-lg);
   background: var(--color-surface);
 }
 .previewTitle {
   font-family: var(--font-display);
-  font-size: 22px;
-  font-weight: var(--weight-semibold);
+  font-size: 28px;
+  font-weight: 500;
+  line-height: 1.15;
 }
 .previewNote {
   line-height: 1.6;
@@ -404,7 +410,7 @@
 }
 @media (max-width: 640px) {
   .page {
-    padding: var(--space-4) var(--space-4) 72px;
+    padding: var(--space-4) var(--space-5) 72px;
   }
   .headRow {
     flex-direction: column;
@@ -429,14 +435,15 @@
 }
 /* Phones: no hover lift left behind after a tap. */
 @media (hover: none) and (max-width: 640px) {
-  .planCard:hover {
+  .planCard:hover .cover img {
     transform: none;
-    border-color: var(--color-border);
   }
   .chip:hover,
   .tile:hover {
     border-color: var(--color-border);
-    background: var(--color-surface);
+  }
+  .tile:hover {
+    border-color: transparent;
   }
 }
 
@@ -453,11 +460,12 @@
     align-items: center;
     gap: var(--space-3);
     padding: var(--space-2);
+    border-radius: var(--radius-lg);
+    background: var(--color-surface);
   }
   .cardGrid .cover {
     aspect-ratio: 1;
-    overflow: hidden;
-    border-radius: var(--radius-sm);
+    border-radius: var(--radius-md);
   }
   .cardGrid .activeBadge {
     top: auto;
@@ -481,7 +489,7 @@
     display: none;
   }
   .groupTitle {
-    font-size: 20px;
+    font-size: var(--text-20);
   }
   .groupHead {
     align-items: center;
@@ -489,8 +497,8 @@
   /* The plan page: the cover runs edge to edge, Start fills the width. */
   .hero {
     min-height: 300px;
-    margin: calc(var(--space-4) * -1) calc(var(--space-4) * -1) var(--space-4);
-    border-radius: 0;
+    margin: calc(var(--space-4) * -1) calc(var(--space-5) * -1) var(--space-4);
+    border-radius: 0 0 var(--radius-xl) var(--radius-xl);
   }
   .heroBody {
     min-height: 300px;
@@ -502,12 +510,11 @@
 
 /* Phones: a calmer type scale (docs/DECISIONS.md 2026-10-18). */
 @media (max-width: 640px) {
-  .groupTitle,
   .previewTitle {
-    font-size: 19px;
+    font-size: 24px;
   }
   .heroTitle {
-    font-size: 24px;
+    font-size: 30px;
   }
   .tileName {
     font-size: 17px;

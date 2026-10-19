@@ -160,10 +160,10 @@
 }
 .quote {
   margin: 0;
-  padding: var(--space-3) var(--space-4);
-  border-left: 3px solid var(--color-accent);
-  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
-  background: color-mix(in srgb, var(--color-accent) 7%, var(--color-surface));
+  /* Quoted Scripture sits on the warm tint (design system › Card, gold). */
+  padding: var(--space-4) var(--space-5);
+  border-radius: var(--radius-md);
+  background: var(--color-accent-tint);
 }
 .quoteText {
   display: block;

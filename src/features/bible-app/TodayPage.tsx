@@ -36,6 +36,7 @@ import { useReader } from './readerStore';
 import { ContextPanel, ReflectPanel } from './TodayPanels';
 import { showOnTv } from './tvActions';
 import { ClassicDevotional } from './ClassicDevotional';
+import { FlameCompanion } from '@/design-system/FlameCompanion';
 import styles from './Today.module.css';
 import { paths } from '@/app/paths';
 
@@ -84,20 +85,23 @@ export function TodayPage() {
         </h1>
       </motion.header>
 
-      <VerseHero
-        now={now}
-        onContext={() => setPanel('context')}
-        onReflect={() => setPanel('reflect')}
-      />
-
-      <WeekStrip now={now} />
-
-      <div className={styles.grid}>
-        <TodayPlans />
-        <ReflectionCard date={date} onReflect={() => setPanel('reflect')} />
+      {/* Laptops: the verse, your plan and the classic reading in the main column; the week and
+          the invitation to reflect beside them. Phones: one column, in that order. */}
+      <div className={styles.cols}>
+        <div className={styles.main}>
+          <VerseHero
+            now={now}
+            onContext={() => setPanel('context')}
+            onReflect={() => setPanel('reflect')}
+          />
+          <TodayPlans />
+          {classic && <ClassicDevotional now={now} />}
+        </div>
+        <aside className={styles.aside}>
+          <WeekStrip now={now} />
+          <ReflectionCard date={date} onReflect={() => setPanel('reflect')} />
+        </aside>
       </div>
-
-      {classic && <ClassicDevotional now={now} />}
 
       <ContextPanel
         key={panel === 'context' ? 'open' : 'closed'}
@@ -378,6 +382,7 @@ function ReflectionCard({ date, onReflect }: { date: string; onReflect: () => vo
   const { range } = verseOfTheDay();
   return (
     <section className={cx(styles.card, styles.reflect)} aria-label="Reflection">
+      {!written && <FlameCompanion size={96} className={styles.companion} />}
       <h2 className={styles.cardTitle}>{written ? 'Your reflection' : 'Take five minutes'}</h2>
       {written && entry ? (
         <>
@@ -394,7 +399,7 @@ function ReflectionCard({ date, onReflect }: { date: string; onReflect: () => vo
       )}
       <div className={styles.row}>
         <Button
-          variant={written ? 'secondary' : 'primary'}
+          variant={written ? 'secondary' : 'gold'}
           icon={<NotebookPen size={16} />}
           onClick={onReflect}
         >

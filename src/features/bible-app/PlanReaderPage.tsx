@@ -1,4 +1,5 @@
 import { usePhoneTitle } from '@/app/topBar';
+import { FlameCompanion } from '@/design-system/FlameCompanion';
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { motion } from 'motion/react';
@@ -326,15 +327,13 @@ function FinishBlock({
       animate={{ opacity: 1, y: 0, scale: 1 }}
       transition={{ duration: 0.4, ease: [0.2, 0.8, 0.2, 1] }}
     >
-      <motion.span
-        className={styles.doneMark}
-        initial={justFinished && !reduced ? { scale: 0.4 } : false}
-        animate={{ scale: 1 }}
-        transition={{ type: 'spring', stiffness: 380, damping: 18, delay: 0.1 }}
-        aria-hidden
-      >
-        <Check size={28} strokeWidth={2.5} />
-      </motion.span>
+      {justFinished ? (
+        <FlameCompanion mood="celebrate" size={150} />
+      ) : (
+        <motion.span className={styles.doneMark} aria-hidden>
+          <Check size={28} strokeWidth={2.5} />
+        </motion.span>
+      )}
       <h2 className={styles.doneTitle}>
         {justFinished ? 'Well done!' : `${unit} ${day} finished`}
       </h2>
@@ -348,7 +347,7 @@ function FinishBlock({
       <div className={styles.doneActions}>
         {next && (
           <Button
-            variant="primary"
+            variant="gold"
             iconEnd={<ArrowRight size={16} />}
             onClick={() => navigate(paths.planDay(plan.id, next))}
           >
@@ -359,6 +358,7 @@ function FinishBlock({
         {justFinished && (
           <Button
             variant="ghost"
+            className={styles.undo}
             onClick={() => void setDayRead(plan.id, day, false).then(() => setJustFinished(false))}
           >
             Undo

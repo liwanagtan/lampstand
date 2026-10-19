@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { BookOpen, Check, Clock } from 'lucide-react';
-import { Button, Dialog } from '@/design-system/components';
+import { Button, Dialog, cx } from '@/design-system/components';
 import type { PlanProgressRecord } from '@/db/types';
 import { paths } from '@/app/paths';
 import {
@@ -41,7 +41,7 @@ export function ActivePlan({
   const day = status.kind === 'read' ? plan.days[status.day - 1]! : null;
 
   return (
-    <section className={styles.card} aria-label={plan.name}>
+    <section className={cx(styles.card, !compact && styles.hero)} aria-label={plan.name}>
       <div className={styles.cardHead}>
         <h2 className={styles.cardTitle}>
           <Link to={paths.planPage(plan.id)} className={styles.cardLink}>
@@ -64,7 +64,7 @@ export function ActivePlan({
       </div>
       {status.kind === 'read' && day && (
         <>
-          <p className={styles.muted}>
+          <p className={styles.upNext}>
             {currentLabel(plan)} · {unit} {status.day}
           </p>
           <p className={styles.reading}>{day.title ?? formatDay(day)}</p>
@@ -76,14 +76,18 @@ export function ActivePlan({
           </p>
           <div className={styles.row}>
             <Button
-              variant="primary"
+              variant={compact ? 'primary' : 'gold'}
               icon={<BookOpen size={16} />}
               onClick={() => navigate(paths.planDay(plan.id, status.day))}
             >
               Read {unit.toLowerCase()} {status.day}
             </Button>
             {!compact && (
-              <Button variant="ghost" className={styles.push} onClick={() => setStopping(true)}>
+              <Button
+                variant="ghost"
+                className={cx(styles.push, styles.quiet)}
+                onClick={() => setStopping(true)}
+              >
                 Stop plan
               </Button>
             )}

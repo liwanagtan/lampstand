@@ -1,0 +1,58 @@
+{
+  "format": "lampstand-plan",
+  "version": 2,
+  "id": "family-table-four-readings",
+  "name": "Around the table with God",
+  "description": "Four flexible family readings with simple activities and questions for different ages. A parent or trusted caregiver leads; households of every size are welcome.",
+  "pace": "daily",
+  "categories": ["families", "parenting", "reading-the-bible"],
+  "audience": "personal",
+  "level": "Families · Adult-guided",
+  "cover": "park-path",
+  "days": [
+    {
+      "title": "Remember who God is",
+      "readings": ["Psalm 100"],
+      "note": "Read aloud and explain unfamiliar words. Younger children may draw while others listen.",
+      "devotional": "This psalm invites joyful thanks because of God’s character and care. A family reading does not have to be long to give attention to Him. Every member can participate differently; the aim is listening together rather than producing a perfect family moment.\n\nEach person can name, draw, or write something they are thankful for. Older children can explain what the psalm says about God. Allow someone to listen quietly without being made to speak.",
+      "prayer": "God, thank You for Your goodness and care. Help our household learn to thank You together.",
+      "questions": [
+        "What does this psalm tell us about God?",
+        "What is one thing each of us can thank Him for today?"
+      ]
+    },
+    {
+      "title": "Let the word shape home",
+      "readings": ["Deuteronomy 6:4-9", "Mark 12:28-34"],
+      "note": "Moses addresses Israel; Jesus affirms love for God and neighbour as central commandments.",
+      "devotional": "Faith conversations can happen in ordinary life, not only during a formal lesson. These passages connect love for God with everyday attention to His teaching. Parents and caregivers can model learning rather than claiming to have every answer.\n\nChoose an ordinary moment for a short conversation this week. Younger children can describe a kind action; older members can discuss what love for God changes. Remember that family participation cannot replace personal repentance and faith in Christ.",
+      "prayer": "Lord, help us love You and care for others. Make our everyday conversations places where we can learn truthfully.",
+      "questions": [
+        "Where could we make space to talk about God naturally?",
+        "What might love for God and neighbour look like in our home?"
+      ]
+    },
+    {
+      "title": "Practice kindness at home",
+      "readings": ["Ephesians 4:29-32"],
+      "note": "Explain that words should help people rather than tear them down. Adults should apply this to themselves too.",
+      "devotional": "Home is one place where our habits of speech become visible. Kindness includes the way adults speak to children and children speak to one another. We can admit wrong and seek change without mocking someone or making them feel small.\n\nEach person can choose one helpful sentence to use today. An adult can model a specific apology if appropriate. Do not require a child to share something private or accept unsafe behaviour in the name of forgiveness.",
+      "prayer": "Father, help our words bring care instead of hurt. Teach us to apologize honestly and treat each other kindly.",
+      "questions": [
+        "What words help you feel heard and cared for?",
+        "What could each of us change about the way we speak?"
+      ]
+    },
+    {
+      "title": "Serve together",
+      "readings": ["Mark 6:30-44"],
+      "note": "Notice Jesus’ compassion for the crowd and the disciples’ participation. The miracle shows His provision.",
+      "devotional": "The crowd’s needs mattered to Jesus. This miracle is not a promise that our resources will always multiply, but it shows His compassion and authority. As a household, we can learn to notice needs and share what we can responsibly give.\n\nChoose a small act of service suitable for your household: prepare a card, share food safely, or help a neighbour with permission. Let children help plan without making them responsible for adult problems.",
+      "prayer": "Jesus, help us notice people with compassion. Show us a wise and practical way to serve together.",
+      "questions": [
+        "What do you notice about Jesus’ response to the crowd?",
+        "What act of care could our household do this week?"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "format": "lampstand-plan",
+  "version": 2,
+  "id": "reading-with-understanding",
+  "name": "Read the Bible with understanding",
+  "description": "Four practical readings for adults and young adults: observe carefully, read in context, recognize different kinds of writing, and respond faithfully.",
+  "pace": "daily",
+  "categories": ["reading-the-bible", "wisdom", "discipleship"],
+  "audience": "personal",
+  "level": "New or growing readers · Ages 18+",
+  "cover": "forest-light",
+  "days": [
+    {
+      "title": "Notice before applying",
+      "readings": ["Mark 4:35-41"],
+      "note": "Read the account twice. Notice the setting, the disciples’ question, Jesus’ actions, and the final question.",
+      "devotional": "Careful reading begins with what the passage actually says. This account reveals Jesus’ authority and the disciples’ fear. It is more than a picture of our personal problems. Observing the people, events, and emphasis helps us avoid making the passage say whatever we wanted to hear.\n\nWrite three observations and one question before writing an application. Distinguish what the text states from what you infer. Ask what this event reveals about Jesus.",
+      "prayer": "God, help me listen before rushing to conclusions. Give me care and humility as I read Your word.",
+      "questions": [
+        "Which details become clearer on a second reading?",
+        "What does this account reveal about Jesus?"
+      ]
+    },
+    {
+      "title": "Read the surrounding passage",
+      "readings": ["Philippians 4:10-20"],
+      "note": "Read the whole paragraph rather than isolating a familiar sentence about strength.",
+      "devotional": "Context helps us understand the kind of strength Paul describes. He speaks about contentment in both need and plenty, and about others sharing in his trouble. The passage is not a guarantee of success in any ambition we choose.\n\nSummarize the paragraph in one sentence. Look at how the sentences connect. When a verse encourages you, read what comes before and after so that your encouragement rests on its actual meaning.",
+      "prayer": "Lord, help me receive what Scripture teaches in context. Teach me contentment and gratitude in my circumstances.",
+      "questions": [
+        "How does the paragraph explain Paul’s confidence?",
+        "How might an isolated verse be misunderstood?"
+      ]
+    },
+    {
+      "title": "Listen to the kind of writing",
+      "readings": ["Psalm 13", "Proverbs 15:1-4", "Luke 1:1-4"],
+      "note": "Notice the difference between a prayer, wisdom sayings, and an introduction to an ordered account.",
+      "devotional": "The Bible includes different kinds of writing. A lament gives language for distress; a proverb offers wisdom for life; Luke explains his careful account. Reading each kind attentively helps us avoid treating poetry as a technical formula or a proverb as an exceptionless guarantee.\n\nFor each reading, name what the writer is doing and how that shapes your response. When you are unsure about a passage, consult its introduction or ask a trustworthy teacher instead of guessing confidently.",
+      "prayer": "Father, help me appreciate the different ways Your word teaches. Keep me careful and willing to learn.",
+      "questions": [
+        "How is the psalm’s purpose different from Luke’s introduction?",
+        "What reading habit could help you avoid misunderstanding?"
+      ]
+    },
+    {
+      "title": "Respond to what you have read",
+      "readings": ["James 1:19-27"],
+      "note": "James connects receiving the word with practical obedience and care for vulnerable people.",
+      "devotional": "Understanding is meant to shape conduct, not simply increase information. James warns against hearing without doing. Obedience is a response to God’s word, not a way to earn salvation. Faithful application should grow from the meaning of the passage rather than a random thought attached to it.\n\nChoose one action that follows directly from today’s reading. Make it specific enough to practice, then revisit it tomorrow. Keep one unanswered question for further study without letting it prevent a clear step of obedience.",
+      "prayer": "God, help me act on what I understand. Grow a willing and compassionate response to Your word.",
+      "questions": [
+        "Which practical responses does James name?",
+        "What action could you take today because of this passage?"
+      ]
+    }
+  ]
+}

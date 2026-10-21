@@ -1,0 +1,58 @@
+{
+  "format": "lampstand-plan",
+  "version": 2,
+  "id": "good-news-personal-faith",
+  "name": "The good news: trusting Jesus",
+  "description": "Four readings for anyone exploring salvation: our need, Christ’s death and resurrection, repentance and personal faith, and life after receiving His gift.",
+  "pace": "daily",
+  "categories": ["salvation", "who-is-jesus", "exploring-faith"],
+  "audience": "personal",
+  "level": "Exploring or new to faith",
+  "cover": "sunrise-hills",
+  "days": [
+    {
+      "title": "Why we need rescue",
+      "readings": ["Romans 3:9-26"],
+      "note": "Paul addresses religious and nonreligious people alike. Read his diagnosis alongside the rescue God provides through Jesus.",
+      "devotional": "Sin is more than an occasional mistake. We have failed to love and obey God, and we cannot put ourselves right with Him by comparing ourselves with other people. Paul includes everyone in this need. He also points everyone toward the righteousness God gives through faith in Jesus Christ.\n\nTake a quiet moment to acknowledge your own sin honestly. Do not stop at shame: notice how the passage moves toward God’s grace. If this is unfamiliar, write down a question to discuss with a trusted Christian or pastor.",
+      "prayer": "God, help me see my sin honestly. Help me understand the rescue You offer through Jesus.",
+      "questions": [
+        "What does this passage say about why everyone needs salvation?",
+        "How does God’s provision differ from trying to earn His acceptance?"
+      ]
+    },
+    {
+      "title": "What Jesus has done",
+      "readings": ["1 Corinthians 15:1-8", "Romans 5:6-11"],
+      "note": "The gospel rests on what happened to Jesus: He died for our sins, was buried, and rose again.",
+      "devotional": "Jesus is more than an inspiring example. His death deals with our sin, and His resurrection is central to the good news. God’s love reaches sinners who cannot rescue themselves. Our hope rests on the living Saviour and His finished work, rather than our ability to become good enough.\n\nName what each passage tells you Jesus has done. You do not have to manufacture a powerful feeling to consider this news seriously. Bring your questions into the light and continue examining the testimony about Him.",
+      "prayer": "God, thank You for sending Jesus to die for sinners and rise again. Help me understand and trust what He has done.",
+      "questions": [
+        "Why are both the cross and the resurrection essential to the gospel?",
+        "What are you learning about God’s love for people who have sinned?"
+      ]
+    },
+    {
+      "title": "Repent and personally trust Christ",
+      "readings": ["Acts 20:17-21", "Romans 10:8-13", "Ephesians 2:1-10"],
+      "note": "Notice Paul’s message of repentance toward God and faith in Jesus. Salvation is God’s gift, received through faith.",
+      "devotional": "Repentance means turning to God from sin; faith means personally trusting Jesus Christ as your Saviour. Knowing Christian facts, having Christian parents, attending church, or being baptized cannot substitute for this response. Salvation is by grace through faith, never payment for good works or a perfectly reformed life.\n\nIf you are ready, turn to God and trust Jesus to save you on the basis of His death and resurrection. You can express that trust in your own words. Repeating a prayer or finishing this plan does not save you; Jesus saves. If you remain unsure, talk with a trusted pastor about these passages.",
+      "prayer": "God, I have sinned against You and cannot save myself. I turn to You and trust Jesus Christ, who died for my sins and rose again, as my personal Saviour. Thank You for Your grace.",
+      "questions": [
+        "What is the difference between knowing about Jesus and personally trusting Him?",
+        "Are you relying on Christ or on something you have done to make yourself acceptable to God?"
+      ]
+    },
+    {
+      "title": "A new beginning, not a finish line",
+      "readings": ["1 John 5:9-13", "Acts 2:41-47"],
+      "note": "John connects assurance with God’s testimony about His Son. Acts shows believers beginning a shared life of learning and fellowship.",
+      "devotional": "For those who have trusted Christ, confidence rests in God’s promise concerning His Son. Growth will involve learning, questions, obedience, and repentance when you fail. Your reading record cannot establish your standing with God. Jesus is the foundation of your new life.\n\nIf you have trusted Christ, tell a trusted Christian and ask for help finding a Bible-teaching local church. Discuss believer’s baptism as a step of obedience following salvation. Begin a small daily reading habit and keep asking questions; you do not need to understand everything today.",
+      "prayer": "Father, help me rest in Your promise about Jesus. Lead me into a life of learning, obedience, and fellowship with other believers.",
+      "questions": [
+        "Where does John direct a believer’s confidence?",
+        "Who could help you take your next step in following Jesus?"
+      ]
+    }
+  ]
+}

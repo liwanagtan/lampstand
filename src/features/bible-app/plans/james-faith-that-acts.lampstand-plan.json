@@ -1,0 +1,58 @@
+{
+  "format": "lampstand-plan",
+  "version": 2,
+  "id": "james-faith-that-acts",
+  "name": "James: faith in everyday action",
+  "description": "Four studies for growing adult readers connecting genuine faith with endurance, impartial love, responsible speech, humility, and prayer.",
+  "pace": "daily",
+  "categories": ["discipleship", "character", "reading-the-bible"],
+  "audience": "personal",
+  "level": "Growing believers · Ages 18+",
+  "cover": "mountain-lake",
+  "days": [
+    {
+      "title": "Receive and do",
+      "readings": ["James 1"],
+      "note": "James addresses believers facing trials and calls them to receive the word and act on it.",
+      "devotional": "Trials can expose how we respond to pressure, temptation, and other people. James does not praise suffering for its own sake or call temptation God’s work. He directs believers toward wisdom, careful listening, and practical obedience.\n\nChoose one instruction that touches your current circumstances. Read it in its paragraph before deciding how to apply it. Ask for wisdom about a specific action rather than a general wish to become more faithful.",
+      "prayer": "Father, give me wisdom in pressure. Help me receive Your word and put it into practice with care.",
+      "questions": [
+        "How does James distinguish trials from temptation?",
+        "Which response to the word needs to become concrete in your life?"
+      ]
+    },
+    {
+      "title": "Love without favouritism",
+      "readings": ["James 2", "Ephesians 2:8-10"],
+      "note": "Read James’s challenge to empty claims of faith alongside Paul’s explanation of salvation by grace.",
+      "devotional": "James exposes faith that exists only as a claim while neglecting people in need. Paul explains that salvation is a gift through faith, not earned by works. Together these passages distinguish the basis of salvation from the fruit of living faith: good works do not purchase rescue, but genuine faith should affect conduct.\n\nExamine how you treat people with different status or resources. Choose a practical way to show equal dignity and respond to a real need. Keep the action a response to grace rather than a payment to God.",
+      "prayer": "God, expose favouritism and empty words in me. Let my trust in Christ bear fruit in practical love.",
+      "questions": [
+        "What example does James use to expose favouritism?",
+        "How do these readings distinguish salvation’s basis from its fruit?"
+      ]
+    },
+    {
+      "title": "Wisdom that makes peace",
+      "readings": ["James 3:1-4:12"],
+      "note": "James moves from the tongue to rival kinds of wisdom and the desires behind conflict.",
+      "devotional": "Conflict often begins deeper than the sentence spoken aloud. James asks readers to examine envy, ambition, and desires. Godly wisdom is seen in humility and peaceable conduct rather than winning every argument. Submission to God includes turning from pride.\n\nThink of one disagreement without rehearsing only the other person’s faults. Name your own contribution and one step toward truth and peace. Peace does not require concealing wrongdoing or abandoning necessary boundaries.",
+      "prayer": "Lord, show me the desires beneath my arguments. Grow humility, truthful speech, and peaceable wisdom in me.",
+      "questions": [
+        "What distinguishes the wisdom James commends?",
+        "What part of a current conflict can you take responsibility for?"
+      ]
+    },
+    {
+      "title": "Dependence in plans and prayer",
+      "readings": ["James 4:13-5:20"],
+      "note": "James addresses presumption, injustice, patience, prayer, and care for those who wander.",
+      "devotional": "Faith affects how we plan, pay others, wait, and seek help. James challenges confidence that ignores dependence on God and warns those who exploit workers. Prayer belongs within a community that confesses, cares, and restores; it should not become a way to blame a sick person for remaining ill.\n\nIdentify one plan or responsibility you need to hold with greater humility. Ask a trusted believer to pray with you about a real need. If you are sick, seek appropriate medical care alongside prayer and church support.",
+      "prayer": "Father, help me plan humbly and treat others justly. Teach me to pray, receive care, and care for those who are struggling.",
+      "questions": [
+        "How should dependence on God affect the way you make plans?",
+        "Where do you need to give or receive practical support?"
+      ]
+    }
+  ]
+}

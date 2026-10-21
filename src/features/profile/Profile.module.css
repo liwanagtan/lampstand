@@ -1,61 +1,111 @@
+/* Profile (design system: Profile · Journey, Profile, Settings). Laptops: a sidebar with the
+   avatar, greeting and sections; the section's content beside it. Phones: one column with the
+   sections as a segmented control. */
 .page {
-  max-width: 960px;
+  display: grid;
+  grid-template-columns: 260px minmax(0, 1fr);
+  grid-template-rows: auto auto 1fr;
+  grid-template-areas:
+    'head body'
+    'tabs body'
+    '. body';
+  column-gap: var(--space-10);
+  max-width: 1200px;
   margin: 0 auto;
-  padding: var(--space-8) var(--space-6) 96px;
+  padding: var(--space-10) var(--space-8) 96px;
 }
 .header {
+  grid-area: head;
   display: flex;
-  align-items: center;
-  gap: var(--space-4);
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-3);
+}
+.heroAvatar {
+  box-shadow:
+    0 0 0 3px var(--color-bg),
+    0 0 0 5px var(--color-accent);
 }
 .headText {
   min-width: 0;
 }
 .greeting {
-  font-family: var(--font-display);
-  font-size: clamp(26px, 4.5vw, 34px);
-  font-weight: var(--weight-semibold);
+  font-size: var(--text-24);
+  font-weight: var(--weight-extrabold);
   line-height: 1.15;
+  letter-spacing: -0.02em;
 }
 .line {
   margin-top: var(--space-1);
+  font-size: var(--text-14);
   color: var(--color-text-muted);
 }
 .addName {
   color: var(--color-accent-text);
-  font-weight: var(--weight-medium);
+  font-weight: var(--weight-bold);
 }
 .tabs {
+  grid-area: tabs;
   display: flex;
-  gap: var(--space-6);
+  flex-direction: column;
+  gap: var(--space-1);
   margin-top: var(--space-6);
-  border-bottom: 1px solid var(--color-border);
 }
 .tab {
-  position: relative;
-  padding: var(--space-3) 0;
+  display: flex;
+  align-items: center;
+  min-height: 48px;
+  padding: 0 var(--space-4);
+  border-radius: var(--radius-md);
   color: var(--color-text-muted);
-  font-weight: var(--weight-medium);
+  font-weight: var(--weight-bold);
   text-decoration: none;
+  transition:
+    background-color var(--dur-state) var(--ease-state),
+    color var(--dur-state) var(--ease-state);
 }
 .tab:hover {
+  background: var(--color-surface-sunk);
   color: var(--color-text);
 }
-.tabActive {
+.tabActive,
+.tabActive:hover {
+  background: var(--color-surface);
   color: var(--color-text);
-}
-.tabActive::after {
-  content: '';
-  position: absolute;
-  right: 0;
-  bottom: -1px;
-  left: 0;
-  height: 2px;
-  border-radius: 2px;
-  background: var(--color-accent);
+  box-shadow: var(--elevation-1);
 }
 .body {
-  margin-top: var(--space-6);
+  grid-area: body;
+  min-width: 0;
+}
+@media (max-width: 900px) {
+  .page {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      'head'
+      'tabs'
+      'body';
+  }
+  .header {
+    flex-direction: row;
+    align-items: center;
+  }
+  .tabs {
+    flex-direction: row;
+    gap: var(--space-1);
+    padding: var(--space-1);
+    border-radius: 999px;
+    background: var(--color-surface-sunk);
+  }
+  .tab {
+    flex: 1;
+    justify-content: center;
+    min-height: 40px;
+    border-radius: 999px;
+  }
+  .body {
+    margin-top: var(--space-6);
+  }
 }
 
 /* Journey */
@@ -68,17 +118,16 @@
   display: flex;
   flex-direction: column-reverse;
   gap: 2px;
-  padding: var(--space-4);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
+  padding: var(--space-5);
+  border-radius: var(--radius-lg);
   background: var(--color-surface);
 }
 .statValue {
   margin: 0;
-  font-family: var(--font-display);
-  font-size: 28px;
-  font-weight: var(--weight-semibold);
+  font-size: 34px;
+  font-weight: var(--weight-extrabold);
   line-height: 1.1;
+  letter-spacing: -0.03em;
 }
 .statLabel {
   font-size: var(--text-14);
@@ -95,14 +144,17 @@
   margin-bottom: var(--space-3);
 }
 .sectionTitle {
-  font-family: var(--font-display);
-  font-size: 22px;
-  font-weight: var(--weight-semibold);
+  font-size: var(--text-24);
+  font-weight: var(--weight-extrabold);
+  letter-spacing: -0.02em;
 }
 .link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
   color: var(--color-accent-text);
-  font-size: var(--text-14);
-  font-weight: var(--weight-medium);
+  font-size: var(--text-15);
+  font-weight: var(--weight-bold);
   text-decoration: none;
 }
 .link:hover {
@@ -125,15 +177,15 @@
   display: flex;
   align-items: center;
   gap: var(--space-3);
-  padding: var(--space-3) var(--space-4);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
+  padding: var(--space-4) var(--space-5);
+  border: 1px solid transparent;
+  border-radius: var(--radius-lg);
   background: var(--color-surface);
   color: var(--color-text);
   text-decoration: none;
 }
 .finishedItem:hover {
-  border-color: var(--color-accent);
+  border-color: var(--color-text);
 }
 .finishedIcon {
   flex: none;
@@ -142,7 +194,7 @@
 .finishedName {
   flex: 1;
   min-width: 0;
-  font-weight: var(--weight-medium);
+  font-weight: var(--weight-bold);
 }
 .finishedDate {
   font-size: var(--text-12);
@@ -171,22 +223,15 @@
     gap: var(--space-3);
   }
   .heroAvatar {
-    width: 44px !important;
-    height: 44px !important;
-    font-size: 19px !important;
-  }
-  .greeting {
-    font-size: 20px;
+    width: 48px !important;
+    height: 48px !important;
+    font-size: 20px !important;
   }
   .line {
     margin-top: 0;
-    font-size: var(--text-14);
   }
   .tabs {
     margin-top: var(--space-4);
-  }
-  .tab {
-    padding: var(--space-3) var(--space-1);
   }
   .body {
     margin-top: var(--space-4);
@@ -208,11 +253,10 @@
     display: flex;
     align-items: center;
     gap: var(--space-3);
-    padding: var(--space-4);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-md);
-    background: var(--color-surface);
-    color: var(--color-text);
+    padding: var(--space-4) var(--space-5);
+    border-radius: var(--radius-lg);
+    background: var(--color-hero);
+    color: var(--color-hero-text);
     text-decoration: none;
   }
   .screenCardText {
@@ -231,8 +275,7 @@
   .summary {
     gap: 0;
     overflow: hidden;
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-md);
+    border-radius: var(--radius-lg);
     background: var(--color-surface);
   }
   .stat {
@@ -243,14 +286,6 @@
   .stat + .stat {
     border-left: 1px solid var(--color-border);
   }
-  /* The three tabs share the width, like a segmented header. */
-  .tabs {
-    gap: 0;
-  }
-  .tab {
-    flex: 1;
-    text-align: center;
-  }
 }
 
 /* Phones: a calmer type scale (docs/DECISIONS.md 2026-10-18). */
@@ -259,6 +294,6 @@
     font-size: 19px;
   }
   .statValue {
-    font-size: 20px;
+    font-size: 24px;
   }
 }

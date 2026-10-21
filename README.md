@@ -18,6 +18,8 @@ A light for your daily reading: a companion for growing in the Word every day, w
 
 Docs: [docs/PRD.md](docs/PRD.md) (spec) · [docs/PRD-ADDENDUM-GROW.md](docs/PRD-ADDENDUM-GROW.md) (Grow-first redesign) · [docs/SETUP.md](docs/SETUP.md) (operator setup) · [docs/DECISIONS.md](docs/DECISIONS.md) (choices made during the build).
 
+Content: [library coverage and pathways](docs/CONTENT-LIBRARY.md) · [editorial and salvation standards](docs/CONTENT-EDITORIAL.md) · [gamification UX brief](docs/GAMIFICATION-UX-BRIEF.md) (design pending). The library includes 48 plans, with age and life-stage collections under Grow in faith. New content is implemented locally for owner theological review.
+
 ## Develop
 
 Requires Node 22+ and Chrome.

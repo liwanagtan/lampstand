@@ -1,0 +1,58 @@
+{
+  "format": "lampstand-plan",
+  "version": 2,
+  "id": "grief-room-for-tears",
+  "name": "Room for tears, room for hope",
+  "description": "Four gentle readings for adults living with loss. Make room for lament, Christ’s compassion, resurrection hope, and receiving care without a timetable for grief.",
+  "pace": "daily",
+  "categories": ["loss", "hope", "peace"],
+  "audience": "personal",
+  "level": "Adults · Grief and loss",
+  "cover": "sea-sunset",
+  "days": [
+    {
+      "title": "You can speak your sorrow",
+      "readings": ["Psalm 13"],
+      "note": "The psalm moves through distress, request, and trust. Read slowly without demanding that your emotions follow the same timetable.",
+      "devotional": "Grief can make prayer feel fragmented. This psalm gives room for honest questions rather than requiring you to sound composed. Its movement toward trust does not create a rule that sorrow must end quickly. You can bring what is real before God.\n\nWrite a sentence beginning with what you wish you could tell God. You may leave it unfinished. If reading feels difficult, ask someone to read this short psalm with you and sit quietly afterward.",
+      "prayer": "God, You know what I have lost. Hear the words I can say and the sorrow I cannot yet express.",
+      "questions": [
+        "Which part of this prayer gives language to your experience?",
+        "What do you need space to say honestly?"
+      ]
+    },
+    {
+      "title": "Jesus meets people in grief",
+      "readings": ["John 11:17-37"],
+      "note": "Listen to Martha and Mary, and notice Jesus’ response before reading ahead to the miracle.",
+      "devotional": "Jesus does not treat grief as an inconvenience. He speaks about life and resurrection, and He weeps. His compassion makes room for tears alongside truth. This event does not promise that each loss will be reversed in our present circumstances.\n\nNotice what Jesus says and how He responds to the mourners. Consider asking a trusted person to listen without trying to explain your loss. You do not owe anyone an account that makes your grief easier for them.",
+      "prayer": "Jesus, thank You for meeting grieving people with truth and compassion. Help me receive care in my sorrow.",
+      "questions": [
+        "What do you notice about Jesus’ words and tears?",
+        "What kind of support would feel helpful right now?"
+      ]
+    },
+    {
+      "title": "Hope rests in the risen Christ",
+      "readings": ["1 Corinthians 15:12-23", "1 Thessalonians 4:13-18"],
+      "note": "Paul grounds Christian hope in Jesus’ resurrection and addresses grief among believers.",
+      "devotional": "Christian hope is anchored in the risen Jesus, not in our ability to stay positive. Paul does not tell believers never to grieve. He explains the hope of resurrection for those who belong to Christ. We should not make confident claims about a particular person’s faith that we do not know.\n\nRead at your own pace and write one question about resurrection hope. Discuss it with a trusted pastor if you wish. If you are exploring Christianity, consider the testimony about Jesus before feeling pressure to use words of assurance you do not yet understand.",
+      "prayer": "God, help me understand the hope grounded in Jesus’ resurrection. Sustain me as I grieve and bring my questions to You.",
+      "questions": [
+        "What makes Christian hope different from wishing circumstances were different?",
+        "What question would you like to explore further?"
+      ]
+    },
+    {
+      "title": "Receive care one day at a time",
+      "readings": ["Romans 12:9-15", "Galatians 6:2"],
+      "note": "These readings call believers to practical love and to sharing another person’s sorrow.",
+      "devotional": "Grief does not follow an app’s completion schedule. Finishing four readings does not mean you should feel finished grieving. Christian community can help through meals, company, practical tasks, and patient listening. Receiving support is a human need, not a spiritual failure.\n\nChoose one manageable request you could make of someone trustworthy. Seek a qualified counsellor or other appropriate care if grief is overwhelming. If supporting someone else, ask what they need and continue remembering them after the first days.",
+      "prayer": "Father, help me receive care for today. Give those around me patience, and lead me toward support that is helpful and safe.",
+      "questions": [
+        "What form of practical help would ease your present burden?",
+        "Who could you ask to walk alongside you beyond this plan?"
+      ]
+    }
+  ]
+}

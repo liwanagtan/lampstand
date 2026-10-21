@@ -1,0 +1,58 @@
+{
+  "format": "lampstand-plan",
+  "version": 2,
+  "id": "young-adults-roots-and-direction",
+  "name": "Roots for a changing season",
+  "description": "For young adults ages 18–25 navigating independence, decisions, work or study, and Christian community without needing a complete life map.",
+  "pace": "daily",
+  "categories": ["young-adults", "wisdom", "belonging"],
+  "audience": "personal",
+  "level": "Ages 18–25",
+  "cover": "misty-valley",
+  "days": [
+    {
+      "title": "A foundation you can examine",
+      "readings": ["John 20:24-31"],
+      "note": "Thomas meets the risen Jesus. John explains why he has written this testimony.",
+      "devotional": "Moving into adulthood often means examining beliefs you inherited. John invites a response to testimony about Jesus rather than mere loyalty to a family tradition. Christian faith centres on who Jesus is and the life found in Him.\n\nList what you believe about Jesus and what you still need to understand. Read John’s stated purpose slowly. Ask a thoughtful Christian to discuss one question with you without rushing you into a performance of certainty.",
+      "prayer": "God, help me seek truth honestly. Deepen my understanding of Jesus and my trust in Him.",
+      "questions": [
+        "What does John want his readers to understand and believe?",
+        "Which part of your understanding of Jesus needs closer attention?"
+      ]
+    },
+    {
+      "title": "Wisdom for a decision",
+      "readings": ["James 1:2-8", "Proverbs 15:22"],
+      "note": "James addresses believers facing trials. Wisdom is needed for faithful living, not simply predicting outcomes.",
+      "devotional": "A major decision can make you wish for a complete map. God invites believers to ask for wisdom and seek good counsel. A difficult outcome does not automatically prove you made a faithless choice. Wisdom involves prayer, honest facts, and willingness to obey what Scripture already makes clear.\n\nName your decision, the responsibilities involved, and the information you still need. Ask a mature believer for counsel. Look for a faithful next step rather than waiting for a feeling that removes every uncertainty.",
+      "prayer": "Father, give me wisdom and a willing heart. Help me seek good counsel and act responsibly.",
+      "questions": [
+        "What would wisdom look like in the decision before you?",
+        "Who can help you see something you may be missing?"
+      ]
+    },
+    {
+      "title": "Faith in ordinary responsibilities",
+      "readings": ["Colossians 3:12-17", "1 Thessalonians 4:9-12"],
+      "note": "Notice how Christian character appears in relationships and ordinary work.",
+      "devotional": "Study, applications, chores, and paid work can seem less spiritual than a special event. These readings connect faith with patience, peace, love, and responsible daily living. Your current role offers opportunities to serve even before your future feels settled.\n\nChoose one ordinary task to do carefully and one person to treat with patience. If you are unemployed or unable to work, your worth is not reduced; consider a responsibility or act of care that fits your circumstances.",
+      "prayer": "Lord, help me be faithful in today’s responsibilities. Grow patience, gratitude, and love in my ordinary life.",
+      "questions": [
+        "Which quality in Colossians would change your day most?",
+        "What responsibility can you approach with greater care?"
+      ]
+    },
+    {
+      "title": "Build a life with others",
+      "readings": ["Acts 18:24-28", "Hebrews 10:23-25"],
+      "note": "Apollos receives further instruction, and believers are urged to encourage one another.",
+      "devotional": "Independence does not mean you must become spiritually self-sufficient. Apollos had gifts and knowledge, yet benefited from people who helped him understand more accurately. A healthy church makes room for learning, encouragement, and using your gifts alongside others.\n\nIdentify a Bible-teaching church and one relationship where you can both learn and contribute. If you move away, make community part of your plans rather than an afterthought. Begin with showing up and asking how you can help.",
+      "prayer": "God, give me a teachable heart. Lead me into friendships and a church where I can grow and serve.",
+      "questions": [
+        "What can you learn from Apollos’s willingness to receive instruction?",
+        "What step could help you become rooted in Christian community?"
+      ]
+    }
+  ]
+}

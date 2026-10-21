@@ -1,0 +1,58 @@
+{
+  "format": "lampstand-plan",
+  "version": 2,
+  "id": "mark-meeting-the-saviour",
+  "name": "Meet Jesus in Mark",
+  "description": "Four guided readings for adults and young adults exploring Jesus’ authority, compassion, call to repentance, death, and resurrection in Mark’s Gospel.",
+  "pace": "daily",
+  "categories": ["four-gospels", "who-is-jesus", "exploring-faith"],
+  "audience": "personal",
+  "level": "Exploring or growing · Ages 18+",
+  "cover": "sunrise-clouds",
+  "days": [
+    {
+      "title": "The King calls for a response",
+      "readings": ["Mark 1"],
+      "note": "Mark introduces Jesus through proclamation and action. Notice both His message and His authority.",
+      "devotional": "Jesus announces good news and calls people to repent and believe. His teaching and acts reveal authority rather than merely useful advice. As you begin, consider who He is and what kind of response His message asks of the hearer.\n\nList two things Jesus says or does that stand out. Write one question about His identity. Let the chapter establish the direction of your reading rather than searching only for a motivational sentence.",
+      "prayer": "God, help me understand who Jesus is. Give me honesty as I consider His call to repent and believe.",
+      "questions": [
+        "What does Jesus’ message ask people to do?",
+        "Which event most raises questions about His authority?"
+      ]
+    },
+    {
+      "title": "Authority and compassion",
+      "readings": ["Mark 2:1-17", "Mark 4:35-41"],
+      "note": "Read the responses of the crowd, religious teachers, disciples, and people Jesus helps.",
+      "devotional": "Jesus’ compassion does not stand apart from His authority. He forgives sins, calls a tax collector, and commands a storm. People respond with amazement, questions, and opposition. Mark invites us to consider more than whether Jesus seems kind; he asks us to face who He is.\n\nCompare two reactions to Jesus and explain why they differ. Consider whether you approach Him mainly for help or are also willing to hear His claim on your life.",
+      "prayer": "Jesus, help me see both Your compassion and authority. Show me where my understanding of You is too small.",
+      "questions": [
+        "Why does Jesus’ action provoke disagreement in Mark 2?",
+        "What do the disciples still need to understand?"
+      ]
+    },
+    {
+      "title": "The way of the cross",
+      "readings": ["Mark 8:27-38", "Mark 10:32-45"],
+      "note": "Peter recognizes Jesus as the Christ but resists what Jesus says about suffering.",
+      "devotional": "The disciples expect greatness, yet Jesus speaks of His suffering and self-giving service. He came to give His life to rescue others. Following Him involves a changed direction, but discipleship does not replace the need to receive salvation by grace through personal faith.\n\nNotice what the disciples misunderstand. Write how Jesus’ explanation challenges a view of faith built only around comfort or status. Identify one ordinary act of service that reflects His example.",
+      "prayer": "Lord, help me understand why You came. Reshape my expectations and teach me to follow with humility.",
+      "questions": [
+        "What do these passages reveal about Jesus’ mission?",
+        "Where does His teaching challenge your idea of greatness?"
+      ]
+    },
+    {
+      "title": "Crucified and risen",
+      "readings": ["Mark 15:21-47", "Mark 16:1-8", "1 Corinthians 15:3-8"],
+      "note": "Read the cross and empty tomb together. Paul also summarizes the gospel and resurrection witnesses.",
+      "devotional": "Jesus’ death and resurrection stand at the centre of Christian faith. The gospel is not a call to rescue yourself through religious effort. Jesus died for our sins and rose again. The fitting response is repentance toward God and personal trust in Christ as Saviour.\n\nSummarize the good news in your own words. If you want to respond, turn to God and trust Christ; a particular prayer or completed reading cannot save you. Discuss remaining questions with a trusted pastor or Christian friend.",
+      "prayer": "God, help me understand Jesus’ death for our sins and His resurrection. Lead me to personal trust in Him and a life shaped by His grace.",
+      "questions": [
+        "Why must the death and resurrection of Jesus both remain central?",
+        "What response are you considering to what you have read?"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "format": "lampstand-plan",
+  "version": 2,
+  "id": "teens-faith-in-everyday-life",
+  "name": "Faith beyond Sunday",
+  "description": "For teens ages 13–17: four personal readings about belonging, online comparison, courage, and returning to God after failure.",
+  "pace": "daily",
+  "categories": ["teens", "character", "spiritual-habits"],
+  "audience": "personal",
+  "level": "Ages 13–17",
+  "cover": "cloudscape",
+  "days": [
+    {
+      "title": "More than a label",
+      "readings": ["Ephesians 2:1-10"],
+      "note": "Paul describes both our need and God’s grace. Read the whole movement before focusing on good works.",
+      "devotional": "Grades, appearance, friends, and followers cannot tell you whether you are right with God. Paul says salvation is God’s gift through faith in Christ, not something we earn. For believers, good works grow out of that gift rather than securing it.\n\nWrite down one label you often feel trapped by. Compare it with what this passage says about grace. If you have grown up around church without personally trusting Jesus, talk with a trusted Christian about the gospel.",
+      "prayer": "God, help me understand Your grace. Teach me to trust Christ and live from what You have done.",
+      "questions": [
+        "How does Paul explain the relationship between grace, faith, and works?",
+        "What label has too much influence over how you see yourself?"
+      ]
+    },
+    {
+      "title": "When comparison fills the screen",
+      "readings": ["Galatians 6:1-10"],
+      "note": "Paul connects carrying others’ burdens with responsibility for our own conduct.",
+      "devotional": "Comparison can turn other people into rivals or make your own life feel worthless. Paul calls believers to restore gently, help one another, and examine their own work. The passage directs attention toward faithful love rather than winning a public ranking.\n\nNotice how one app or account affects you. Consider a small boundary that frees attention for reading, rest, or a real conversation. Encourage someone without measuring their life against yours.",
+      "prayer": "Father, help me care about people instead of competing with them. Give me wisdom about what receives my attention.",
+      "questions": [
+        "How can you help carry someone’s burden without comparing yourself?",
+        "What change could make your online habits healthier?"
+      ]
+    },
+    {
+      "title": "Courage with gentleness",
+      "readings": ["Daniel 1:8-17", "1 Peter 3:13-17"],
+      "note": "Daniel faces pressure in exile; Peter teaches believers to answer with gentleness and respect.",
+      "devotional": "Following Jesus can mean choosing differently from friends. Courage does not require insults or acting superior. Daniel asks respectfully, and Peter connects a clear conscience with a gentle explanation of Christian hope. Neither passage promises that faithful choices will always be popular.\n\nPrepare a calm sentence for a situation where you feel pressured. Ask a trusted adult for help if pressure becomes bullying, threats, or exploitation. Faithfulness includes seeking support.",
+      "prayer": "Lord, give me courage to do right and gentleness toward others. Help me find support when pressure is hard.",
+      "questions": [
+        "What do these passages teach about both conviction and attitude?",
+        "Where could you practice a calm, respectful response?"
+      ]
+    },
+    {
+      "title": "Failure is a reason to return",
+      "readings": ["Luke 22:54-62", "John 21:15-19"],
+      "note": "Peter’s denial is serious. Read it alongside the risen Jesus’ conversation with him.",
+      "devotional": "Peter failed when he was afraid, and he wept over it. The risen Jesus did not treat that failure as something to pretend never happened. He called Peter to love Him and care for others. Repentance can lead toward responsible service instead of endless hiding.\n\nBring one failure honestly to God. Make a responsible next step, including an apology or asking for help where needed. Do not use forgiveness to avoid consequences, and do not let shame keep you from returning.",
+      "prayer": "Jesus, help me face my failures honestly. Teach me to repent, receive Your grace, and follow You today.",
+      "questions": [
+        "What do you notice about Jesus’ conversation with Peter?",
+        "What would an honest next step look like for you?"
+      ]
+    }
+  ]
+}

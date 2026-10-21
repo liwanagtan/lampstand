@@ -1,0 +1,58 @@
+{
+  "format": "lampstand-plan",
+  "version": 2,
+  "id": "preteens-faith-and-friendship",
+  "name": "Growing roots: faith and friendship",
+  "description": "For ages 10–12, with a trusted adult available: explore questions, friendship, words, and taking responsibility through four Bible readings.",
+  "pace": "daily",
+  "categories": ["preteens", "friendship", "character"],
+  "audience": "personal",
+  "level": "Ages 10–12",
+  "cover": "forest-light",
+  "days": [
+    {
+      "title": "Bring your questions",
+      "readings": ["Luke 2:41-52"],
+      "note": "Jesus’ visit to the temple includes listening and questions. Notice His relationship with His Father and His parents.",
+      "devotional": "Growing up brings new questions about God and life. This account shows Jesus listening and asking questions among the teachers. He is also uniquely the Father’s Son; we should not reduce the story to a lesson about being clever.\n\nWrite one question about the reading and ask a trusted adult to explore it with you. It is fine if you need more time to understand. Asking honest questions is different from pretending to know everything.",
+      "prayer": "God, help me listen and learn. Give me courage to ask honest questions about You.",
+      "questions": [
+        "What do you learn about Jesus in this account?",
+        "What question would you like help exploring?"
+      ]
+    },
+    {
+      "title": "Choose friends with care",
+      "readings": ["Proverbs 13:20", "Mark 2:1-12"],
+      "note": "One reading offers wisdom about companions; the other shows friends bringing someone to Jesus.",
+      "devotional": "Friends influence our choices. In Mark, friends work together to bring a man to Jesus, who shows His authority to forgive sins. Helpful friendship makes room for what is good, rather than pressuring you into things you know are wrong.\n\nThink about one friendship where you can encourage a good choice. If someone bullies or threatens you, tell a trusted adult. Being kind does not mean keeping harmful behaviour secret.",
+      "prayer": "Lord, help me be a wise and caring friend. Give me courage to seek help when I need it.",
+      "questions": [
+        "How do the friends in Mark help the man?",
+        "What does a friend who helps you grow look like?"
+      ]
+    },
+    {
+      "title": "Words can help or hurt",
+      "readings": ["James 3:1-12"],
+      "note": "James uses strong pictures to explain why speech needs care. Everyone needs help with this.",
+      "devotional": "A few words can stay with someone for a long time. James shows how difficult it is to control our speech. That includes jokes, messages, and comments online. We should not use the same mouth to praise God and humiliate people made in His likeness.\n\nBefore sending a message today, ask whether it is true, helpful, and kind. If you have hurt someone, make a clear apology without blaming them. Ask an adult for help with ongoing online cruelty.",
+      "prayer": "God, help me use words carefully. Show me where I need to apologize and speak with kindness.",
+      "questions": [
+        "Which picture in James helps you understand the power of words?",
+        "How could your words encourage someone today?"
+      ]
+    },
+    {
+      "title": "Own your next step",
+      "readings": ["Luke 19:1-10"],
+      "note": "Notice Jesus’ kindness and Zacchaeus’s response. Changed actions follow an encounter with the Saviour.",
+      "devotional": "Zacchaeus had harmed people through dishonest choices. Meeting Jesus brought a change that affected how he treated them. Making amends did not buy salvation; Jesus came to seek and save the lost. His grace calls us toward honest change.\n\nChoose one responsibility you can take today: tell the truth, return something, or make a fair choice. If you want to understand salvation, ask a trusted Christian adult to read the gospel passages with you.",
+      "prayer": "Jesus, help me understand Your grace. Help me be honest and take responsibility for my choices.",
+      "questions": [
+        "What changes do you notice in Zacchaeus?",
+        "What is one responsible step you can take today?"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "format": "lampstand-plan",
+  "version": 2,
+  "id": "couples-practicing-love",
+  "name": "Practicing love together",
+  "description": "Four readings for married or engaged adult couples about listening, kindness, forgiveness, and shared prayer. Read together without using Scripture to control each other.",
+  "pace": "daily",
+  "categories": ["couples", "marriage", "love"],
+  "audience": "personal",
+  "level": "Adult couples",
+  "cover": "lake-mountains",
+  "days": [
+    {
+      "title": "Listen before answering",
+      "readings": ["James 1:19-25"],
+      "note": "James connects careful listening with putting God’s word into practice.",
+      "devotional": "A conversation can become a contest to be understood first. James calls for slower speech and anger, followed by action. In a relationship, listening means trying to understand the other person before preparing your defence.\n\nTake turns describing one ordinary concern without interruption. Each person should summarize what they heard before responding. This exercise is for safe relationships; intimidation or threats require outside support, not a communication exercise.",
+      "prayer": "God, help us listen with patience. Show each of us where our words and actions need to change.",
+      "questions": [
+        "What makes it hard for you to listen when you disagree?",
+        "What would putting this passage into practice change in your conversations?"
+      ]
+    },
+    {
+      "title": "Kindness in ordinary moments",
+      "readings": ["Colossians 3:12-17"],
+      "note": "Paul’s instructions concern believers living together and can shape a couple’s everyday habits.",
+      "devotional": "Love is expressed through repeated choices of patience, humility, and care. These qualities cannot be demanded only from the other person. Each partner can examine their own conduct while remembering that Christian character grows from belonging to Christ.\n\nChoose one small act that would reduce the other person’s burden. Ask what would actually help rather than assuming. Discuss a practical way to share a responsibility more fairly.",
+      "prayer": "Father, grow patience and kindness in us. Help us notice each other’s needs and act with care.",
+      "questions": [
+        "Which quality in this passage most needs attention in your own conduct?",
+        "What ordinary responsibility could you approach together more fairly?"
+      ]
+    },
+    {
+      "title": "Repair requires truth",
+      "readings": ["Ephesians 4:25-32"],
+      "note": "Paul puts truthfulness, responsible anger, honest work, and forgiveness in the same picture of changed life.",
+      "devotional": "Repair begins with naming what happened truthfully. A clear apology accepts responsibility and should be followed by changed behaviour. Forgiveness does not make deception acceptable or mean trust returns immediately. Safety and accountability remain necessary.\n\nIf it is safe, acknowledge one specific wrong without adding an excuse. Agree on a practical step toward change. If there is abuse, coercion, or fear, seek safe outside help; do not use this reading to pressure someone to stay exposed to harm.",
+      "prayer": "Lord, help us tell the truth and take responsibility. Lead us toward repentance, wise boundaries, and real change.",
+      "questions": [
+        "What is the difference between an apology and an excuse?",
+        "What action would show that repair is being taken seriously?"
+      ]
+    },
+    {
+      "title": "Pray without performing",
+      "readings": ["Philippians 4:4-9", "Matthew 6:5-8"],
+      "note": "Jesus rejects showy prayer, while Paul encourages believers to bring their requests to God.",
+      "devotional": "Shared prayer need not sound impressive or be used to correct your partner indirectly. It can be a simple way to bring gratitude and concerns before God. Neither a wedding nor a shared devotional replaces each person’s need to trust Christ personally.\n\nIf both are willing, each name one thing to thank God for and one request. Pray briefly in your own words. If one partner is still exploring faith, invite honest conversation without pressuring them to imitate belief.",
+      "prayer": "God, teach us to pray honestly. Help us bring our concerns to You and treat each other with respect.",
+      "questions": [
+        "What would make shared prayer honest rather than pressured?",
+        "What concern could you bring to God together?"
+      ]
+    }
+  ]
+}

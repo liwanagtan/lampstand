@@ -1,0 +1,58 @@
+{
+  "format": "lampstand-plan",
+  "version": 2,
+  "id": "men-walking-with-christ",
+  "name": "Men walking with Christ",
+  "description": "Four readings for adult men about grace, honest friendship, integrity, and service. Suitable for men who are single or married, with or without children.",
+  "pace": "daily",
+  "categories": ["men", "character", "friendship"],
+  "audience": "personal",
+  "level": "Adult men · All faith stages",
+  "cover": "forest-sun",
+  "days": [
+    {
+      "title": "Begin with grace",
+      "readings": ["Titus 3:3-8"],
+      "note": "Paul places changed conduct after God’s mercy. Notice what saves and what follows salvation.",
+      "devotional": "Success, strength, and the ability to provide cannot rescue a man from sin. Paul points to God’s mercy rather than our record. Men who trust Christ can pursue good works without making achievement the basis of acceptance with God.\n\nNotice where you feel pressure to prove your worth. Bring that pressure to God, and read the passage’s order again: mercy first, then a changed life. If you are exploring faith, consider what personal trust in Christ would mean.",
+      "prayer": "God, help me stop hiding behind achievement. Teach me to trust Your mercy and live faithfully.",
+      "questions": [
+        "What does Paul say is the basis of salvation?",
+        "Where do you feel driven to prove yourself?"
+      ]
+    },
+    {
+      "title": "Friendship that tells the truth",
+      "readings": ["Ecclesiastes 4:9-12", "Galatians 6:1-5"],
+      "note": "These readings show practical help and gentle restoration rather than isolation.",
+      "devotional": "You do not have to carry every struggle alone. Christian friendship can include encouragement, correction, and practical help. Honesty is not the opposite of courage; it can be the step that makes responsible change possible.\n\nContact one trustworthy man who takes Scripture seriously. Share something appropriate and ask how you can support him too. Seek qualified support as well when a struggle involves addiction, serious distress, or harm.",
+      "prayer": "Father, help me build honest friendships. Give me humility to receive help and generosity to support others.",
+      "questions": [
+        "What keeps men from asking for help?",
+        "Who could you begin a more honest friendship with?"
+      ]
+    },
+    {
+      "title": "Integrity when no one applauds",
+      "readings": ["Psalm 15", "Ephesians 4:25-32"],
+      "note": "Read the psalm’s picture of integrity alongside Paul’s practical instructions for believers.",
+      "devotional": "Integrity involves the promises you keep, the truth you tell, and how you handle anger. It matters at home, at work, and in private. These passages do not offer a way to earn salvation; they show conduct consistent with a life shaped by God.\n\nChoose one private habit or unfinished obligation that needs attention. Take a specific step toward honesty, restitution, or accountability. Avoid vague promises that never become action.",
+      "prayer": "Lord, help my private choices match what I say I believe. Show me where I need to tell the truth and make things right.",
+      "questions": [
+        "Which instruction exposes a gap between your words and actions?",
+        "What practical step would help close that gap?"
+      ]
+    },
+    {
+      "title": "Strength used to serve",
+      "readings": ["Mark 10:35-45", "Philippians 2:3-8"],
+      "note": "Jesus corrects His followers’ ambition by pointing to His own service and sacrifice.",
+      "devotional": "Jesus redefines greatness through service. Influence is an opportunity to care for others, not permission to control them. His example challenges pride in every setting, whether you lead a team, care for relatives, or serve quietly without a title.\n\nFind one task that helps someone else without drawing attention to yourself. Where you hold authority, ask whether others can speak honestly and safely. Use your position to make room for their good.",
+      "prayer": "Jesus, reshape my ambitions. Help me use my strength and influence to serve with humility.",
+      "questions": [
+        "How does Jesus challenge the disciples’ idea of greatness?",
+        "Who could benefit from your quiet service today?"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "format": "lampstand-plan",
+  "version": 2,
+  "id": "learning-to-pray-honestly",
+  "name": "Learning to pray honestly",
+  "description": "Four readings for adults and young adults learning to pray: attention to God, daily needs, confession, and trust when answers are difficult.",
+  "pace": "daily",
+  "categories": ["learning-to-pray", "spiritual-habits", "peace"],
+  "audience": "personal",
+  "level": "New or growing believers · Ages 18+",
+  "cover": "misty-lake",
+  "days": [
+    {
+      "title": "Begin with the Father",
+      "readings": ["Matthew 6:5-13"],
+      "note": "Jesus teaches His disciples to pray without performance or empty repetition.",
+      "devotional": "Prayer is not a competition in vocabulary or length. Jesus directs His followers toward their Father and His purposes before daily needs. For believers, this relationship rests in Christ; prayer does not earn a place in God’s family.\n\nBegin with one sentence recognizing who God is. Then name one concern honestly. You may use Jesus’ pattern slowly without treating it as a formula that guarantees the outcome you want.",
+      "prayer": "Father, teach me to pray with attention and honesty. Help me seek Your purposes as I bring You my needs.",
+      "questions": [
+        "What does Jesus correct about the way people pray?",
+        "Which part of His pattern could reshape your prayers?"
+      ]
+    },
+    {
+      "title": "Bring ordinary needs",
+      "readings": ["Philippians 4:4-9"],
+      "note": "Paul writes about prayer, gratitude, and the peace of God in a letter shaped by real difficulty.",
+      "devotional": "You do not have to decide that a concern is important enough before bringing it to God. Paul joins requests with thanksgiving and a life directed toward what is good. God’s peace is not a promise that anxiety will immediately disappear or every problem will resolve.\n\nWrite one request and one thanksgiving. Choose a practical step that belongs alongside prayer, such as seeking advice, resting, or asking for help. Ongoing distress can also need professional care.",
+      "prayer": "God, I bring You what is weighing on me. Help me receive Your care and take the practical steps available today.",
+      "questions": [
+        "How does thanksgiving fit alongside honest requests?",
+        "What practical action could accompany your prayer?"
+      ]
+    },
+    {
+      "title": "Confess without excuses",
+      "readings": ["Psalm 51:1-12", "1 John 1:5-10"],
+      "note": "David asks for mercy; John calls believers away from denial and toward confession.",
+      "devotional": "Prayer makes room for the truth about our sin. Confession names wrong without blaming circumstances or other people. God’s mercy is not permission to continue harming others; repentance includes a changed direction and responsible action.\n\nName one specific sin before God. Consider whether an apology, restitution, or accountability is needed. Keep the focus on honest repentance rather than punishing yourself with repeated words.",
+      "prayer": "God, I confess my sin without excuse. Thank You for mercy through Christ; help me turn toward what is right.",
+      "questions": [
+        "What does honest confession include?",
+        "What change should follow what you are confessing?"
+      ]
+    },
+    {
+      "title": "Trust when the answer is hard",
+      "readings": ["Luke 22:39-46", "2 Corinthians 12:7-10"],
+      "note": "Jesus prays before His suffering, and Paul describes a request God answered differently from what he asked.",
+      "devotional": "Faithful prayer can include anguish and an answer we would not have chosen. Jesus does not hide His distress, and Paul does not receive the removal he requested. Neither account gives us permission to explain every person’s suffering, but both make room for dependence on God in weakness.\n\nBring an unanswered prayer to God in your own words. Ask for help to remain faithful today, and invite someone trustworthy to pray with you. You need not invent a reason for what you cannot understand.",
+      "prayer": "Father, You know the answer I hoped for. Sustain me in what I do not understand and help me trust You today.",
+      "questions": [
+        "What do these readings show about honest requests and surrender?",
+        "Who could accompany you in prayer while you wait?"
+      ]
+    }
+  ]
+}

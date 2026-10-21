@@ -1,0 +1,133 @@
+{
+  "date": "2026-10-21",
+  "status": "Implemented; owner theological review pending",
+  "authorship": "AI-authored original commentary; Scripture supplied by installed translations",
+  "plans": [
+    {
+      "id": "good-news-personal-faith",
+      "name": "The good news: trusting Jesus",
+      "level": "Exploring or new to faith",
+      "days": 4,
+      "categories": ["salvation", "who-is-jesus", "exploring-faith"]
+    },
+    {
+      "id": "returning-to-the-word",
+      "name": "Begin again with God",
+      "level": "Returning to faith · Adults",
+      "days": 4,
+      "categories": ["returning-to-faith", "spiritual-habits", "forgiveness"]
+    },
+    {
+      "id": "children-listen-and-grow",
+      "name": "Little steps with Jesus",
+      "level": "Ages 6–9 · With a trusted adult",
+      "days": 4,
+      "categories": ["young-children", "families", "first-steps"]
+    },
+    {
+      "id": "preteens-faith-and-friendship",
+      "name": "Growing roots: faith and friendship",
+      "level": "Ages 10–12",
+      "days": 4,
+      "categories": ["preteens", "friendship", "character"]
+    },
+    {
+      "id": "teens-faith-in-everyday-life",
+      "name": "Faith beyond Sunday",
+      "level": "Ages 13–17",
+      "days": 4,
+      "categories": ["teens", "character", "spiritual-habits"]
+    },
+    {
+      "id": "young-adults-roots-and-direction",
+      "name": "Roots for a changing season",
+      "level": "Ages 18–25",
+      "days": 4,
+      "categories": ["young-adults", "wisdom", "belonging"]
+    },
+    {
+      "id": "men-walking-with-christ",
+      "name": "Men walking with Christ",
+      "level": "Adult men · All faith stages",
+      "days": 4,
+      "categories": ["men", "character", "friendship"]
+    },
+    {
+      "id": "women-rooted-in-christ",
+      "name": "Women rooted in Christ",
+      "level": "Adult women · All faith stages",
+      "days": 4,
+      "categories": ["women", "spiritual-habits", "serving"]
+    },
+    {
+      "id": "older-adults-fruitful-seasons",
+      "name": "Faithful in every season",
+      "level": "Older adults · Ages 60+",
+      "days": 4,
+      "categories": ["older-adults", "hope", "serving"]
+    },
+    {
+      "id": "couples-practicing-love",
+      "name": "Practicing love together",
+      "level": "Adult couples",
+      "days": 4,
+      "categories": ["couples", "marriage", "love"]
+    },
+    {
+      "id": "family-table-four-readings",
+      "name": "Around the table with God",
+      "level": "Families · Adult-guided",
+      "days": 4,
+      "categories": ["families", "parenting", "reading-the-bible"]
+    },
+    {
+      "id": "learning-to-pray-honestly",
+      "name": "Learning to pray honestly",
+      "level": "New or growing believers · Ages 18+",
+      "days": 4,
+      "categories": ["learning-to-pray", "spiritual-habits", "peace"]
+    },
+    {
+      "id": "reading-with-understanding",
+      "name": "Read the Bible with understanding",
+      "level": "New or growing readers · Ages 18+",
+      "days": 4,
+      "categories": ["reading-the-bible", "wisdom", "discipleship"]
+    },
+    {
+      "id": "faith-in-everyday-work",
+      "name": "Faith in everyday work",
+      "level": "Adults · Work and daily responsibilities",
+      "days": 4,
+      "categories": ["adults", "character", "wisdom"]
+    },
+    {
+      "id": "grief-room-for-tears",
+      "name": "Room for tears, room for hope",
+      "level": "Adults · Grief and loss",
+      "days": 4,
+      "categories": ["loss", "hope", "peace"]
+    },
+    {
+      "id": "mark-meeting-the-saviour",
+      "name": "Meet Jesus in Mark",
+      "level": "Exploring or growing · Ages 18+",
+      "days": 4,
+      "categories": ["four-gospels", "who-is-jesus", "exploring-faith"]
+    },
+    {
+      "id": "james-faith-that-acts",
+      "name": "James: faith in everyday action",
+      "level": "Growing believers · Ages 18+",
+      "days": 4,
+      "categories": ["discipleship", "character", "reading-the-bible"]
+    },
+    {
+      "id": "belonging-baptism-and-church",
+      "name": "Belonging, baptism, and church life",
+      "level": "New believers · Ages 18+",
+      "days": 4,
+      "categories": ["belonging", "first-steps", "salvation"]
+    }
+  ]
+}

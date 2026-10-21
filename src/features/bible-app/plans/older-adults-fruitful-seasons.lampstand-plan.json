@@ -1,0 +1,58 @@
+{
+  "format": "lampstand-plan",
+  "version": 2,
+  "id": "older-adults-fruitful-seasons",
+  "name": "Faithful in every season",
+  "description": "For older adults, roughly 60 and over: four readings about purpose, prayer, sharing wisdom, and hope through changing strength and responsibilities.",
+  "pace": "daily",
+  "categories": ["older-adults", "hope", "serving"],
+  "audience": "personal",
+  "level": "Older adults · Ages 60+",
+  "cover": "golden-hills",
+  "days": [
+    {
+      "title": "Still able to bear fruit",
+      "readings": ["Psalm 92:12-15", "Luke 2:25-38"],
+      "note": "The psalm celebrates continuing fruitfulness; Simeon and Anna welcome the promised Saviour.",
+      "devotional": "Changing work, health, or family responsibilities can unsettle your sense of purpose. These readings show that age does not remove a person from God’s concern. Faithfulness may look different now, but prayer, testimony, love, and patient hope still matter.\n\nName one opportunity that fits your present strength. It may be a conversation, a note, or prayer for someone by name. Your usefulness should not be measured against what you could do decades ago.",
+      "prayer": "God, help me receive this season honestly. Show me a faithful way to love and serve within my present strength.",
+      "questions": [
+        "What kinds of faithfulness do you see in Simeon and Anna?",
+        "What opportunity is available to you in this season?"
+      ]
+    },
+    {
+      "title": "Make room for honest lament",
+      "readings": ["Psalm 71:1-18"],
+      "note": "The psalmist asks for help amid weakness and danger while remembering God’s faithfulness.",
+      "devotional": "You do not need to hide fears about dependence, loneliness, or declining health. This prayer brings need and memory together. Trust includes asking for help rather than pretending that every change is easy to accept.\n\nTell God one fear and one memory of His care. Share a practical need with someone who can help. Receiving assistance can be part of faithful community, not a failure of independence.",
+      "prayer": "Lord, You know my fears and limitations. Help me ask for what I need and remember Your faithfulness.",
+      "questions": [
+        "How does the psalmist speak honestly about weakness?",
+        "What help would make this week more manageable?"
+      ]
+    },
+    {
+      "title": "Pass on wisdom with humility",
+      "readings": ["Psalm 78:1-8", "2 Timothy 1:3-7"],
+      "note": "These readings connect remembering God’s works with the influence of faith across generations.",
+      "devotional": "A faithful legacy points beyond your accomplishments to God’s character and work. Paul remembers the sincere faith of Timothy’s mother and grandmother. Their influence mattered, but each person still needs personal faith rather than relying on a relative’s belief.\n\nShare one account of what Scripture has taught you, including a lesson learned through failure. Ask a younger person what they are facing before offering advice. Humble testimony can open a conversation that a lecture would close.",
+      "prayer": "Father, help me pass on truth with humility. Give those I love understanding and personal faith in Christ.",
+      "questions": [
+        "What would you want another generation to know about God?",
+        "How could listening improve the way you share your experience?"
+      ]
+    },
+    {
+      "title": "Hope through changing strength",
+      "readings": ["2 Corinthians 4:7-18"],
+      "note": "Paul describes suffering alongside hope grounded in the resurrection of Jesus.",
+      "devotional": "Christian hope does not require denying pain or treating the body as unimportant. Paul acknowledges weakness and affliction while looking toward what God will bring through Christ. Resurrection hope can sustain believers when outward strength is changing.\n\nRead the passage slowly and name what gives you hope. Continue seeking appropriate medical and practical care. Consider one way your church could support you, and one way you could encourage someone else within your capacity.",
+      "prayer": "Jesus, sustain me with the hope of Your resurrection. Help me receive care and encourage others with honesty.",
+      "questions": [
+        "What is the foundation of Paul’s hope?",
+        "How can you hold hope and honest grief together?"
+      ]
+    }
+  ]
+}

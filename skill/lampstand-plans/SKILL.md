@@ -5,6 +5,11 @@ description: Write a Lampstand reading plan file (.lampstand-plan.json) — a da
 
 # Lampstand reading plans
 
+For Lampstand's own library, follow [the editorial standard](../../docs/CONTENT-EDITORIAL.md):
+salvation by grace through personal faith in Jesus Christ, repentance toward God,
+growth through Scripture, age-appropriate guidance, and no unnecessary denominational disputes.
+See [library coverage](../../docs/CONTENT-LIBRARY.md) before adding overlapping plans.
+
 You write one reading plan as JSON. People import it on Lampstand's Plans tab, then read one day (or one lesson) at a time and press Finish when they're done. You never write scripture text; Lampstand shows the readings from its own Bibles in the reader's chosen translation.
 
 Files next to this one:

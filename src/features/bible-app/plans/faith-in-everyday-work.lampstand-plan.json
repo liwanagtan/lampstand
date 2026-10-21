@@ -1,0 +1,58 @@
+{
+  "format": "lampstand-plan",
+  "version": 2,
+  "id": "faith-in-everyday-work",
+  "name": "Faith in everyday work",
+  "description": "Four readings for adults in paid work, unpaid care, study, or a season of seeking work: dignity, honesty, rest, and serving others.",
+  "pace": "daily",
+  "categories": ["adults", "character", "wisdom"],
+  "audience": "personal",
+  "level": "Adults · Work and daily responsibilities",
+  "cover": "river-sunrise",
+  "days": [
+    {
+      "title": "Work and worth",
+      "readings": ["Genesis 2:15-17", "Ephesians 2:8-10"],
+      "note": "Work appears before human rebellion; salvation is nevertheless God’s gift, never an achievement.",
+      "devotional": "Human work has dignity, but your occupation is not your identity before God. A job title, income, or level of productivity cannot save you. For believers, good works are a response to grace. Unemployment, disability, retirement, or unpaid care does not make a person less valuable.\n\nList the responsibilities you currently carry, including work nobody pays for. Choose one to approach with care. Notice where productivity has become a measure of your worth and bring that pressure to God.",
+      "prayer": "Father, help me value people beyond productivity. Teach me to carry today’s responsibilities from gratitude for Your grace.",
+      "questions": [
+        "How do these passages distinguish meaningful work from earning salvation?",
+        "What responsibility matters in your present circumstances?"
+      ]
+    },
+    {
+      "title": "Honesty has a daily shape",
+      "readings": ["Proverbs 11:1-3", "Ephesians 4:25-28"],
+      "note": "These passages connect integrity with practical dealings, truthful speech, and honest work.",
+      "devotional": "Integrity appears in small decisions: the hours reported, the promises made, the credit given, and the way money is handled. A workplace culture that accepts dishonesty does not remove personal responsibility. God’s concern reaches beyond what others can see.\n\nReview one area where convenience has begun to excuse dishonesty. Take a responsible corrective step and seek advice if the issue is complex. Do not conceal harm behind a vague intention to do better.",
+      "prayer": "God, show me where I need greater honesty. Give me courage to act with integrity and repair what I can.",
+      "questions": [
+        "Where is honesty under pressure in your daily responsibilities?",
+        "What specific change would integrity require?"
+      ]
+    },
+    {
+      "title": "Limits are part of life",
+      "readings": ["Mark 6:30-32", "Psalm 127:1-2"],
+      "note": "Jesus notices the apostles’ need for rest; the psalm challenges anxious self-reliance.",
+      "devotional": "Constant activity can feel like the only way to remain secure. These passages invite dependence on God and recognition of human limits. Rest does not mean neglecting responsibility, and exhaustion is not proof of spiritual faithfulness.\n\nIdentify one realistic boundary or short rest that could help you recover attention. If responsibilities make rest difficult, ask for practical support. Avoid comparing your options with someone whose circumstances are very different.",
+      "prayer": "Lord, help me work responsibly and accept my limits. Give me wisdom to seek rest and support where I can.",
+      "questions": [
+        "What belief makes it difficult for you to stop working?",
+        "What manageable boundary could you practice this week?"
+      ]
+    },
+    {
+      "title": "Notice the people beside you",
+      "readings": ["Luke 10:25-37", "Philippians 2:3-4"],
+      "note": "Jesus broadens the question of neighbour; Paul urges attention to the interests of others.",
+      "devotional": "People can become obstacles when every day is measured only by tasks. Christian love notices the colleague, customer, classmate, or relative beside us. Helping should be thoughtful and appropriate, without assuming we can solve every problem or ignore our own responsibilities.\n\nAsk one person how they are doing and listen to the answer. Offer a practical kindness within your role and capacity. Respect boundaries and confidentiality as part of caring well.",
+      "prayer": "Jesus, help me see people with compassion. Show me a wise and practical way to serve someone today.",
+      "questions": [
+        "Who is easy for you to overlook during a busy day?",
+        "What act of care fits your responsibilities and capacity?"
+      ]
+    }
+  ]
+}

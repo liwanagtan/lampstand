@@ -1,0 +1,58 @@
+{
+  "format": "lampstand-plan",
+  "version": 2,
+  "id": "children-listen-and-grow",
+  "name": "Little steps with Jesus",
+  "description": "Four short, adult-guided readings for children ages 6–9. Explore Jesus’ welcome, listening, kindness, and prayer with simple activities.",
+  "pace": "daily",
+  "categories": ["young-children", "families", "first-steps"],
+  "audience": "personal",
+  "level": "Ages 6–9 · With a trusted adult",
+  "cover": "green-hills",
+  "days": [
+    {
+      "title": "Jesus welcomes children",
+      "readings": ["Mark 10:13-16"],
+      "note": "Adult: read aloud, explain unfamiliar words, and let the child ask questions without pressure.",
+      "devotional": "Some grown-ups tried to stop children from coming to Jesus. Jesus welcomed them. Children are worth His attention. You do not need to be tall, clever, or important before you can listen and learn about Him.\n\nDraw the people in this story. Talk about what Jesus did and how the children might have felt. Adult: explain that learning about Jesus is the beginning of understanding Him; do not treat a child’s activity or repeated prayer as proof of salvation.",
+      "prayer": "Jesus, thank You for welcoming children. Help me listen and learn about You.",
+      "questions": [
+        "What did Jesus do when the children came?",
+        "What would you like to ask about Jesus?"
+      ]
+    },
+    {
+      "title": "Listen and put it into practice",
+      "readings": ["Matthew 7:24-27"],
+      "note": "Jesus finishes His teaching with a picture of two houses. Help the child connect hearing with doing.",
+      "devotional": "Both houses faced a storm. The difference was what they were built on. Jesus teaches us to listen to His words and put them into practice. Following His teaching matters on ordinary days, not only when we are at church.\n\nDraw two houses and their foundations. Choose one teaching of Jesus you can practice today, such as telling the truth or showing kindness. Adult: do not promise that obedience means nothing difficult will happen.",
+      "prayer": "God, help me listen carefully. Help me do what is right even when it is hard.",
+      "questions": [
+        "What was different about the two houses?",
+        "What is one thing Jesus teaches that you can practice today?"
+      ]
+    },
+    {
+      "title": "Be a neighbour",
+      "readings": ["Luke 10:25-37"],
+      "note": "Explain that some people in the story did not usually get along. Jesus makes kindness the focus.",
+      "devotional": "The injured man needed help, and someone others might have overlooked stopped for him. Jesus teaches us to care about people beyond our usual friends. Kindness can begin with noticing someone who needs help.\n\nWith your adult, choose a safe act of kindness: welcome a child into a game, help at home, or make an encouraging card. Children should get a trusted adult when someone is hurt or a situation feels unsafe.",
+      "prayer": "God, help me notice people who need kindness. Show me a safe way to help today.",
+      "questions": [
+        "Who stopped to care for the injured man?",
+        "Who could you include or encourage?"
+      ]
+    },
+    {
+      "title": "Talk to God",
+      "readings": ["Matthew 6:9-13"],
+      "note": "Adult: explain the prayer slowly. Let the child use their own words or listen quietly.",
+      "devotional": "Jesus taught His followers to pray about God’s goodness, daily needs, forgiveness, and help with doing right. Prayer is not a performance. We can speak honestly to God and ask questions as we learn.\n\nDraw or name one thing to thank God for and one thing you need help with. Pray together in a few simple sentences. Adult: explain that God cares even when the answer is different from what we wanted.",
+      "prayer": "God, thank You for caring about us. Please help our family and teach us to do what is right.",
+      "questions": [
+        "What does Jesus teach His followers to ask for?",
+        "What would you like to thank God for or ask Him about?"
+      ]
+    }
+  ]
+}

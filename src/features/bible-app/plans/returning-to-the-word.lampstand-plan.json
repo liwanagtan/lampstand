@@ -1,0 +1,58 @@
+{
+  "format": "lampstand-plan",
+  "version": 2,
+  "id": "returning-to-the-word",
+  "name": "Begin again with God",
+  "description": "For adults returning after a long gap: honest repentance, grace in Christ, small reading habits, and reconnecting with Christian community.",
+  "pace": "daily",
+  "categories": ["returning-to-faith", "spiritual-habits", "forgiveness"],
+  "audience": "personal",
+  "level": "Returning to faith · Adults",
+  "cover": "park-path",
+  "days": [
+    {
+      "title": "Come honestly",
+      "readings": ["Luke 15:11-24"],
+      "note": "Read the younger son’s return and the father’s welcome. Pay attention to confession and compassion.",
+      "devotional": "A long absence can make the first step feel enormous. Jesus’ story invites us to face our wrong without pretending we can earn our way home. The son returns with an honest confession, and the father responds with compassion. Shame does not need to decide your next step.\n\nTell God why you have stayed away, including what you do not yet understand. If you have never personally trusted Christ, start with the salvation pathway rather than assuming a past church connection saved you.",
+      "prayer": "God, I want to come honestly before You. Help me turn from sin and receive Your grace in Christ.",
+      "questions": [
+        "What do you notice about the son’s change of direction?",
+        "What makes returning difficult for you?"
+      ]
+    },
+    {
+      "title": "Confession without hiding",
+      "readings": ["1 John 1:5-2:2"],
+      "note": "John speaks to believers about walking in the light and the provision God makes when they sin.",
+      "devotional": "Returning does not require a polished account of your life. Walking in the light includes acknowledging sin instead of denying it. John points to Jesus as our advocate; forgiveness is grounded in Him. Honest confession can begin where secrecy has kept you stuck.\n\nName one area that needs repentance and a concrete change. If others were harmed, consider a responsible step toward repair. Ask a trustworthy believer for support without feeling obliged to disclose private details to a whole group.",
+      "prayer": "Father, help me stop hiding and confess honestly. Thank You for Jesus, and guide me toward responsible change.",
+      "questions": [
+        "What contrast does John draw between denial and confession?",
+        "What would walking in the light look like this week?"
+      ]
+    },
+    {
+      "title": "Receive the word again",
+      "readings": ["Luke 10:38-42", "Psalm 119:105-112"],
+      "note": "These readings invite attention to Jesus and steady dependence on God’s word.",
+      "devotional": "You may feel you must make up for every missed reading. Scripture is an invitation to listen, not a backlog you must clear. Mary attends to Jesus while Martha is distracted. The psalmist depends on God’s direction through real difficulty rather than waiting for perfect conditions.\n\nChoose a small passage and a realistic place to read tomorrow. Write one thing you learned and one question. A missed day can be followed by a fresh beginning; you do not need to punish yourself with extra reading.",
+      "prayer": "Lord, help me give attention to Your word. Give me a simple rhythm I can return to with honesty and hope.",
+      "questions": [
+        "What distractions make listening difficult?",
+        "What small reading commitment is realistic for your present season?"
+      ]
+    },
+    {
+      "title": "Find companions for the road",
+      "readings": ["Hebrews 10:19-25"],
+      "note": "Notice how confidence through Jesus leads to drawing near and encouraging one another.",
+      "devotional": "Faith is personal, but growth is not meant to happen in isolation. This passage calls believers to help one another love and do good. A local church can offer teaching, friendship, prayer, and accountability as you begin again.\n\nContact one trusted Christian or a Bible-teaching church. If past church experiences involved harm, seek safe support and take time to assess trustworthy leadership. Reconnecting need not mean returning to an unsafe setting.",
+      "prayer": "Jesus, help me draw near to You. Lead me to believers who will help me grow in truth and love.",
+      "questions": [
+        "How does this passage connect drawing near to God with encouraging others?",
+        "What safe step toward Christian community could you take?"
+      ]
+    }
+  ]
+}

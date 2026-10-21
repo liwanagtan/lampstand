@@ -1,0 +1,58 @@
+{
+  "format": "lampstand-plan",
+  "version": 2,
+  "id": "women-rooted-in-christ",
+  "name": "Women rooted in Christ",
+  "description": "Four readings for adult women about grace, learning, faithful work, and encouragement. Marriage and motherhood are not assumed.",
+  "pace": "daily",
+  "categories": ["women", "spiritual-habits", "serving"],
+  "audience": "personal",
+  "level": "Adult women · All faith stages",
+  "cover": "autumn-forest",
+  "days": [
+    {
+      "title": "Known beyond your roles",
+      "readings": ["Ephesians 2:1-10"],
+      "note": "Read Paul’s account of grace before considering the good works that follow it.",
+      "devotional": "Your roles may change, and some hopes may remain unfulfilled. None of those roles can save you or establish your worth before God. Paul describes salvation as a gift through faith in Christ. For believers, a life of service grows from that grace rather than from proving we are enough.\n\nName one expectation you have been using to judge yourself. Compare it with what this passage says about God’s gift. Bring your hopes honestly to Him without treating a particular life stage as the measure of spiritual maturity.",
+      "prayer": "Father, help me understand Your grace. Root my confidence in Christ rather than in meeting every expectation.",
+      "questions": [
+        "How does grace challenge the standards you use to measure yourself?",
+        "What would it mean to serve from gratitude rather than pressure?"
+      ]
+    },
+    {
+      "title": "Make room to learn",
+      "readings": ["Luke 10:38-42", "Acts 18:24-26"],
+      "note": "Mary listens to Jesus, and Priscilla joins Aquila in helping Apollos understand more accurately.",
+      "devotional": "Women belong among serious learners of Scripture. These accounts make room for attentive listening and thoughtful participation. Caring for others matters, but constant activity should not crowd out receiving God’s word and growing in understanding.\n\nSet aside a realistic moment to study a passage. Write a question and look at the surrounding verses before seeking an answer. Invite a mature Christian woman to read with you if that would help you grow.",
+      "prayer": "Lord, give me a teachable heart and room to listen. Help me grow in understanding and use what I learn wisely.",
+      "questions": [
+        "What do these accounts show about learning and helping others learn?",
+        "What could protect a small space for Scripture in your week?"
+      ]
+    },
+    {
+      "title": "Your ordinary work matters",
+      "readings": ["Acts 9:36-42", "Colossians 3:12-17"],
+      "note": "Tabitha’s care for others was remembered by people she helped. Paul describes the character of shared Christian life.",
+      "devotional": "Faithfulness often takes an ordinary form: careful work, practical kindness, patience, and encouragement. Tabitha’s story notices real people helped by her service. It does not require every woman to serve in the same way or promise that every loss will end as hers did.\n\nChoose an act of service that fits your actual capacity. If you are exhausted, ask for help rather than turning this reading into another demand. Christian community includes receiving care as well as offering it.",
+      "prayer": "God, help me see opportunities for faithful love. Give me wisdom about my limits and willingness to receive care.",
+      "questions": [
+        "Who is helped by the work you do, whether visible or quiet?",
+        "What act of love fits your capacity today?"
+      ]
+    },
+    {
+      "title": "Encourage across generations",
+      "readings": ["Luke 1:39-45", "1 Thessalonians 5:11-15"],
+      "note": "Notice welcome and encouragement in Luke, then the varied care described by Paul.",
+      "devotional": "Encouragement can help another person keep going without pretending life is easy. Paul calls for different kinds of care: patience, help for the weak, and encouragement for the discouraged. A healthy friendship listens before deciding what someone needs.\n\nReach out to a woman in a different season of life. Ask a sincere question and listen without comparison or quick advice. Offer one specific encouragement grounded in what you have actually noticed.",
+      "prayer": "Father, help me encourage with patience and truth. Show me how to listen and care across different seasons of life.",
+      "questions": [
+        "What helps encouragement feel personal and truthful?",
+        "Who might need a listening ear rather than an immediate answer?"
+      ]
+    }
+  ]
+}

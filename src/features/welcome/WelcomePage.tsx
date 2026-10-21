@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { ArrowLeft, ArrowRight, Check } from 'lucide-react';
 import { Button, Input, cx } from '@/design-system/components';
-import { LampLockup } from '@/design-system/LampMark';
+import { LampLockup, LampMark } from '@/design-system/LampMark';
 import { ALL_FEATURES, USE_CASES, featuresFor, homePath, type UseCaseId } from '@/app/features';
 import { markOnboarded } from '@/app/onboarding';
 import { useBible } from '@/features/bible/bibleStore';
@@ -69,6 +69,14 @@ export function WelcomePage() {
 
   return (
     <div className={styles.page}>
+      {/* Laptops: the ink panel beside the steps (design system: Welcome). */}
+      <aside className={styles.aside}>
+        <LampMark size={132} className={styles.asideMark} />
+        <p className={styles.asideTitle}>A light for your daily reading.</p>
+        <p className={styles.asideVerse}>
+          Your word is a lamp to my feet and a light to my path. <span>Psalm 119:105</span>
+        </p>
+      </aside>
       <header className={styles.top}>
         <LampLockup size={30} title="Lampstand" />
         <Button variant="ghost" size="sm" onClick={() => void skip()}>

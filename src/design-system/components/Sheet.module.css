@@ -142,3 +142,16 @@
     font-size: 22px;
   }
 }
+
+/* Medium touch windows use a bounded panel rather than a near-full-width sheet. */
+@media (min-width: 641px) and (max-width: 1100px) {
+  .content,
+  .lg {
+    top: 16px;
+    right: 16px;
+    bottom: 16px;
+    width: min(560px, calc(100vw - 32px));
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-xl);
+  }
+}

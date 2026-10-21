@@ -1,5 +1,6 @@
-import type { MouseEvent } from 'react';
-import { Sheet } from '@/design-system/components';
+import { useEffect, useRef, type MouseEvent, type ReactNode } from 'react';
+import { X } from 'lucide-react';
+import { IconButton, Sheet } from '@/design-system/components';
 import { fromOsis } from '@/features/bible/ref';
 import { STUDY_NOTES_CREDIT, type StudyNote } from './studyNotes';
 import { useOpenInReader } from './useOpenInReader';
@@ -16,6 +17,7 @@ export function StudyNotesSheet({
   title,
   notes,
   html,
+  inline = false,
 }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -24,6 +26,7 @@ export function StudyNotesSheet({
   notes?: StudyNote[];
   /** A book introduction instead of notes. */
   html?: string[];
+  inline?: boolean;
 }) {
   const openInReader = useOpenInReader();
   // Cross-references open in the reader.
@@ -36,8 +39,8 @@ export function StudyNotesSheet({
     openInReader(r);
   };
   const blocks = html ?? notes?.map((n) => n.html) ?? [];
-  return (
-    <Sheet open={open} onOpenChange={onOpenChange} eyebrow={eyebrow} title={title}>
+  const content = (
+    <>
       <div className={styles.notes} onClick={follow}>
         {blocks.length ? (
           blocks.map((b, i) => (
@@ -48,6 +51,63 @@ export function StudyNotesSheet({
         )}
       </div>
       <p className={styles.credit}>{STUDY_NOTES_CREDIT}</p>
+    </>
+  );
+  if (inline) {
+    return open ? (
+      <StudyPanel title={title} eyebrow={eyebrow} onClose={() => onOpenChange(false)}>
+        {content}
+      </StudyPanel>
+    ) : null;
+  }
+  return (
+    <Sheet open={open} onOpenChange={onOpenChange} eyebrow={eyebrow} title={title}>
+      {content}
     </Sheet>
+  );
+}
+
+function StudyPanel({
+  title,
+  eyebrow,
+  onClose,
+  children,
+}: {
+  title: string;
+  eyebrow: string;
+  onClose: () => void;
+  children: ReactNode;
+}) {
+  const body = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const previous = document.activeElement;
+    body.current?.focus({ preventScroll: true });
+    return () => {
+      if (previous instanceof HTMLElement && previous.isConnected)
+        previous.focus({ preventScroll: true });
+    };
+  }, []);
+  return (
+    <aside
+      className={styles.panel}
+      aria-label="Study notes"
+      onKeyDown={(event) => {
+        if (event.key === 'Escape') {
+          event.stopPropagation();
+          onClose();
+        }
+      }}
+    >
+      <header className={styles.panelHeader}>
+        <div>
+          <p className={styles.eyebrow}>{eyebrow}</p>
+          <h2>{title}</h2>
+        </div>
+        <IconButton label="Close study notes" icon={<X size={18} />} onClick={onClose} />
+      </header>
+      <div className={styles.panelBody} ref={body} tabIndex={-1}>
+        {children}
+      </div>
+    </aside>
   );
 }

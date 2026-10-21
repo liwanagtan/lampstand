@@ -92,6 +92,18 @@ export function PlanReaderPage() {
 
   const unit = isLessons(plan) ? 'Lesson' : 'Day';
   const done = Boolean(progress?.done.includes(n));
+  const openReflection = () =>
+    setReflect({
+      id: newEntryId(),
+      draft: {
+        id: '',
+        date: localDate(),
+        kind: 'reflection',
+        ref: toOsis(day.readings[0]!),
+        title: `${plan.name} · ${isLessons(plan) ? 'Lesson' : 'Day'} ${n}`,
+        body: '',
+      },
+    });
 
   return (
     <div
@@ -108,6 +120,17 @@ export function PlanReaderPage() {
           {unit} {n} of {plan.days.length}
         </p>
         <h1 className={styles.title}>{day.title ?? formatDay(day)}</h1>
+        <div
+          className={styles.progress}
+          role="progressbar"
+          aria-label="Plan progress"
+          aria-valuemin={0}
+          aria-valuemax={plan.days.length}
+          aria-valuenow={progress?.done.length ?? 0}
+          aria-valuetext={`${progress?.done.length ?? 0} of ${plan.days.length} readings finished`}
+        >
+          <span style={{ width: `${((progress?.done.length ?? 0) / plan.days.length) * 100}%` }} />
+        </div>
         <p className={styles.meta}>
           {day.title && <span>{formatDay(day)}</span>}
           <span>
@@ -159,29 +182,13 @@ export function PlanReaderPage() {
       )}
 
       <div className={styles.reflectRow}>
-        <Button
-          variant="secondary"
-          icon={<NotebookPen size={16} />}
-          onClick={() =>
-            setReflect({
-              id: newEntryId(),
-              draft: {
-                id: '',
-                date: localDate(),
-                kind: 'reflection',
-                ref: toOsis(day.readings[0]!),
-                title: `${plan.name} · ${unit} ${n}`,
-                body: '',
-              },
-            })
-          }
-        >
+        <Button variant="secondary" icon={<NotebookPen size={16} />} onClick={openReflection}>
           Reflect on this {unit.toLowerCase()}
         </Button>
       </div>
       <EntrySheet target={reflect} onClose={() => setReflect(null)} />
 
-      <FinishBlock plan={plan} day={n} done={done} unit={unit} />
+      <FinishBlock plan={plan} day={n} done={done} unit={unit} onReflect={openReflection} />
     </div>
   );
 }
@@ -273,11 +280,13 @@ function FinishBlock({
   day,
   done,
   unit,
+  onReflect,
 }: {
   plan: Plan;
   day: number;
   done: boolean;
   unit: 'Day' | 'Lesson';
+  onReflect: () => void;
 }) {
   const navigate = useNavigate();
   const progress = usePlanProgressFor(plan.id);
@@ -343,8 +352,12 @@ function FinishBlock({
           : `${count} of ${plan.days.length} ${unit.toLowerCase()}s done.`}
         {status?.kind === 'waiting' &&
           ` The next lesson opens ${dateFormat.format(status.unlocks)}.`}
+        {next && ' Your next reading is ready whenever you are.'}
       </p>
       <div className={styles.doneActions}>
+        <Button icon={<NotebookPen size={16} />} onClick={onReflect}>
+          Reflect on today
+        </Button>
         {next && (
           <Button
             variant="gold"

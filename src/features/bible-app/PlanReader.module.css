@@ -292,3 +292,66 @@
 .studyButton {
   margin-top: var(--space-3);
 }
+
+/* Guided plans keep a readable paper column, with distinct reflection and prayer sections. */
+.page {
+  width: 100%;
+  box-sizing: border-box;
+  max-width: 800px;
+  padding-top: var(--space-10);
+}
+.title {
+  font-family: var(--font-ui);
+  font-weight: var(--weight-extrabold);
+  letter-spacing: -0.03em;
+}
+.devotional {
+  border-top: 1px solid var(--color-border);
+  padding-top: var(--space-6);
+}
+.questions {
+  padding: var(--space-5) var(--space-6);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+}
+.prayer {
+  padding: var(--space-5) var(--space-6);
+  border-radius: var(--radius-lg);
+  background: var(--color-accent-tint);
+}
+.reading {
+  overflow-wrap: anywhere;
+}
+.doneActions {
+  flex-wrap: wrap;
+  justify-content: center;
+}
+@media (max-width: 640px) {
+  .page {
+    padding: var(--space-4) var(--space-4) 112px;
+  }
+  .questions,
+  .prayer {
+    padding: var(--space-4);
+  }
+  .doneActions {
+    width: 100%;
+  }
+  .doneActions > * {
+    width: 100%;
+  }
+}
+
+.progress {
+  height: 4px;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--color-border);
+  margin-block: var(--space-3);
+}
+.progress span {
+  display: block;
+  height: 100%;
+  background: var(--color-accent);
+}

@@ -1,4 +1,5 @@
 import { usePhoneTitle } from '@/app/topBar';
+import { useWideLayout } from '@/app/useWideLayout';
 import {
   useEffect,
   useLayoutEffect,
@@ -94,6 +95,7 @@ export function BibleReader({ toolbar, selectionActions }: BiblePageSlots) {
   const [picking, setPicking] = useState(false);
   const [reading, setReading] = useState(false);
   const [study, setStudy] = useState<number | 'intro' | null>(null);
+  const wide = useWideLayout();
   const [noteFor, setNoteFor] = useState<{ range: RefRange; note: MarkRecord | null } | null>(null);
   const marksOn = useSettings((st) => st.features.marks);
   const chapterMarks = useChapterMarks(book, chapter);
@@ -194,7 +196,7 @@ export function BibleReader({ toolbar, selectionActions }: BiblePageSlots) {
   };
 
   return (
-    <div className={styles.layout}>
+    <div className={cx(styles.layout, wide && study !== null && styles.withSide)}>
       <div className={styles.reader}>
         <div className={styles.toolbar} data-quiet={quiet || undefined}>
           <div className={styles.nav}>
@@ -402,6 +404,7 @@ export function BibleReader({ toolbar, selectionActions }: BiblePageSlots) {
 
       <NoteDialog target={noteFor} onClose={() => setNoteFor(null)} />
       <StudyNotesSheet
+        inline={wide}
         open={study !== null}
         onOpenChange={(o) => !o && setStudy(null)}
         eyebrow={study === 'intro' ? 'About this book' : 'Study notes'}

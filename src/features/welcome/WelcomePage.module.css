@@ -295,3 +295,24 @@
     font-size: 28px;
   }
 }
+
+.preview {
+  margin: 0;
+  padding: var(--space-5);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface-sunk);
+}
+.preview figcaption {
+  color: var(--color-accent-text);
+  font-size: var(--text-12);
+  font-weight: var(--weight-bold);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: var(--space-2);
+}
+.preview blockquote {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 20px;
+  line-height: 1.6;
+}

@@ -7,6 +7,7 @@
   align-items: start;
 }
 .section {
+  min-width: 0;
   display: flex;
   flex-direction: column;
   gap: var(--space-5);
@@ -102,9 +103,16 @@
   color: #f5f2ea;
 }
 .table {
+  min-width: 540px;
   width: 100%;
   border-collapse: collapse;
   font-size: var(--text-14);
+}
+.tableScroll {
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: auto;
+  border-radius: var(--radius-md);
 }
 .table th {
   padding: 0 var(--space-2) var(--space-2);

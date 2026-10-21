@@ -9,6 +9,7 @@ import { markOnboarded } from '@/app/onboarding';
 import { useBible } from '@/features/bible/bibleStore';
 import { builtinPlans, formatDay, startPlan } from '@/features/bible-app/plans';
 import { useReader } from '@/features/bible-app/readerStore';
+import { useChapter } from '@/features/bible-app/useChapter';
 import { useSettings } from '@/features/settings/settingsStore';
 import { useApplyDocumentTheme, useReducedMotion } from '@/features/settings/theme';
 import styles from './WelcomePage.module.css';
@@ -121,6 +122,7 @@ export function WelcomePage() {
 
           {step === 'uses' && (
             <>
+              {name.trim() && <p className={styles.lede}>Nice to meet you, {name.trim()}.</p>}
               <h1 className={styles.title}>What brings you to Lampstand?</h1>
               <p className={styles.lede}>
                 Choose all that apply. You can change this any time in Profile.
@@ -155,6 +157,7 @@ export function WelcomePage() {
             <>
               <h1 className={styles.title}>Which Bible do you read?</h1>
               <p className={styles.lede}>You can switch any time while reading.</p>
+              <TranslationPreview code={translation} />
               <div className={styles.options} role="radiogroup" aria-label="Bible translation">
                 {translations.map((t) => (
                   <button
@@ -237,5 +240,16 @@ export function WelcomePage() {
         </motion.form>
       </main>
     </div>
+  );
+}
+
+function TranslationPreview({ code }: { code: string }) {
+  const chapter = useChapter(code, 'PSA', 119);
+  const verse = chapter?.verses.find((v) => v.verse === 105);
+  return (
+    <figure className={styles.preview} aria-label="Translation preview">
+      <figcaption>Psalm 119:105 · {code}</figcaption>
+      <blockquote>{verse?.text ?? 'Loading the selected translation…'}</blockquote>
+    </figure>
   );
 }

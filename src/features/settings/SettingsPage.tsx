@@ -233,48 +233,55 @@ function TranslationsSection() {
       title="Translations"
       description="Six public domain translations are built in, including the modern Berean Standard Bible. If your church has permission to use another translation, import it as a Lampstand translation file."
     >
-      <table className={styles.table}>
-        <thead>
-          <tr>
-            <th>Code</th>
-            <th>Name</th>
-            <th>License</th>
-            <th aria-label="Actions" />
-          </tr>
-        </thead>
-        <tbody>
-          {translations.map((t) => (
-            <tr key={t.code}>
-              <td>
-                <strong>{t.code}</strong>
-              </td>
-              <td>
-                {t.name}{' '}
-                {t.code === defaultTranslation && (
-                  <Chip tone="accent" className={styles.inlineChip}>
-                    Default
-                  </Chip>
-                )}
-              </td>
-              <td className={styles.muted}>{t.license}</td>
-              <td className={styles.right}>
-                {t.bundled ? (
-                  <span className={styles.muted}>Built in</span>
-                ) : (
-                  <Button
-                    size="sm"
-                    variant="ghost"
-                    icon={<Trash2 size={14} />}
-                    onClick={() => void onRemove(t.code)}
-                  >
-                    Remove
-                  </Button>
-                )}
-              </td>
+      <div
+        className={styles.tableScroll}
+        role="region"
+        aria-label="Installed Bible translations"
+        tabIndex={0}
+      >
+        <table className={styles.table}>
+          <thead>
+            <tr>
+              <th>Code</th>
+              <th>Name</th>
+              <th>License</th>
+              <th aria-label="Actions" />
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {translations.map((t) => (
+              <tr key={t.code}>
+                <td>
+                  <strong>{t.code}</strong>
+                </td>
+                <td>
+                  {t.name}{' '}
+                  {t.code === defaultTranslation && (
+                    <Chip tone="accent" className={styles.inlineChip}>
+                      Default
+                    </Chip>
+                  )}
+                </td>
+                <td className={styles.muted}>{t.license}</td>
+                <td className={styles.right}>
+                  {t.bundled ? (
+                    <span className={styles.muted}>Built in</span>
+                  ) : (
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      icon={<Trash2 size={14} />}
+                      onClick={() => void onRemove(t.code)}
+                    >
+                      Remove
+                    </Button>
+                  )}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
       <div className={styles.row}>
         <input
           ref={fileRef}

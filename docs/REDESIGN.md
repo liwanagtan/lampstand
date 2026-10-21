@@ -15,27 +15,22 @@ The supplied HTML exports cover 24 desktop screens and 23 mobile screens. See
 They are design references, including placeholders, not production content or a
 complete specification of tablet and keyboard behaviour.
 
-First implementation slice:
+Implementation is complete for the six restyle phases. The completion pass adds:
 
-- Medium windows (641–1100px): compact mark, tighter labelled navigation, flexible
-  search, and touch-friendly search input. Phone navigation stays at 640px and below.
-- Bible and plan reading: preserve chosen Scripture size across devices. This
-  supersedes the earlier 90% mobile reading-size decision. Compact headings remain.
-- Phase 5 Profile/Welcome styling exists in the checkpoint; mark it implemented,
-  with responsive and visual verification pending rather than absent.
+- Compact tablet navigation and the same chosen Scripture size on every device.
+- Nonmodal Bible study notes beside the reader above 1100px; bounded tablet dialogs
+  and phone bottom sheets below that width, retaining source text and attribution.
+- Complete guided reading sections, accessible plan progress, self-paced continuation,
+  and reflection directly from completion.
+- A live translation preview and personal greeting in Welcome.
+- Screen entry cards, library, import, editor, both consoles, overlay controls, and TV
+  waiting screen restyled with ink/cream/gold tokens and responsive layouts.
+- Scroll-contained translation tables and keyboard-accessible study panel dismissal.
 
-Next: specify and verify tablet overlays and study panels; add complete guided
-devotional layouts using the new content; reconcile self-paced completion wording;
-review discovery for the 48-plan library. Continue with Screen after the personal
-reading flow. Journal search already exists; result filters remain separate work.
-
-The [gamification UX brief](GAMIFICATION-UX-BRIEF.md) remains a design dependency
-for goals, milestones, and rewards; gamification implementation is deferred.
-
-Verification must cover compact phones, portrait and landscape tablets, narrow
-desktop windows, both themes, enlarged text, keyboard focus, safe areas, software
-keyboards, and reduced motion. Initial CSS work is not a claim of full visual
-verification against the exported screens.
+See [implementation and verification](design/IMPLEMENTATION.md) for layout rules,
+screen coverage, and the remaining browser-test limitation. The
+[gamification UX brief](GAMIFICATION-UX-BRIEF.md) remains a separate design workstream.
+No goals, rewards, streaks, or competitive scoring have been implemented.
 
 ## Sources
 
@@ -61,75 +56,32 @@ verification against the exported screens.
 
 ## Phases
 
-| Phase                 | Scope                                                                                                                                                                                            | Status                            |
-| --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------- |
-| 1 Foundations         | Colours, type, radii, spacing, motion tokens; Button, Card, Chip, Toggle, Tabs, Field, Sheet, Dialog                                                                                             | Done (`83f4ee1`)                  |
-| 2 Navigation          | Phone tab bar and desktop top bar; Lottie nav icons (`NavIcon`)                                                                                                                                  | Done (`88e5633`)                  |
-| 3 Grow pages          | Today (dawn and evening atmospheres, two columns on laptops), Reflect (dialog on laptops), Plans, category, plan page, plan day (floating Finish bar on phones), day complete (`FlameCompanion`) | Done (`3386756`)                  |
-| 4 Bible and Search    | Reader on paper, verse actions (ink bar on laptops, white sheet on phones), the five design highlight colours, ink chapter pill on phones, Go to, study notes; Search and results                | Done (`3ca4ae4`)                  |
-| 5 Profile and Welcome | Journey, Profile, Settings (sidebar on desktop); the four Welcome steps (split screen on desktop)                                                                                                | Implemented; verification pending |
-| 6 Screen              | Library, presenter console, Bible console, editor, import, TV waiting screen (restyle only)                                                                                                      | To do                             |
+| Phase                 | Scope                                                                                                                                                                                            | Status                                  |
+| --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------- |
+| 1 Foundations         | Colours, type, radii, spacing, motion tokens; Button, Card, Chip, Toggle, Tabs, Field, Sheet, Dialog                                                                                             | Done (`83f4ee1`)                        |
+| 2 Navigation          | Phone tab bar and desktop top bar; Lottie nav icons (`NavIcon`)                                                                                                                                  | Done (`88e5633`)                        |
+| 3 Grow pages          | Today (dawn and evening atmospheres, two columns on laptops), Reflect (dialog on laptops), Plans, category, plan page, plan day (floating Finish bar on phones), day complete (`FlameCompanion`) | Done (`3386756`)                        |
+| 4 Bible and Search    | Reader on paper, verse actions (ink bar on laptops, white sheet on phones), the five design highlight colours, ink chapter pill on phones, Go to, study notes; Search and results                | Done (`3ca4ae4`)                        |
+| 5 Profile and Welcome | Journey, Profile, Settings (sidebar on desktop); the four Welcome steps (split screen on desktop)                                                                                                | Implemented; browser regression pending |
+| 6 Screen              | Library, presenter console, Bible console, editor, import, TV waiting screen (restyle only)                                                                                                      | Implemented; browser regression pending |
 
 **Resuming:** `npm install`, then `npm run dev`. Before running e2e, run `npm run build`: the
 Playwright config serves `npm run preview`, which serves `dist/`, so without a build the tests run
 against the previous build.
 
-## New features in the designs (not built — decide before adding)
+## Behaviour decisions and deferred enhancements
 
-These appear in the canvas but change what the app does, not just how it looks. None of them was
-built during the restyle phases.
+Completed in the final pass: persistent wide-screen study notes, completion reflection,
+plan-level progress, Welcome's live translation preview, and greeting by name. Journey
+search already existed before this pass. Daily plans remain self-paced: “ready tomorrow”
+copy is not adopted. Weekly and monthly lesson availability still follows real schedules.
 
-### Today
+The following are enhancements rather than required restyling and remain outside this
+release: recently-read history, chapter-by-chapter scroll tracking, topical verses on
+category pages, additional search-result filters, the Journey calendar, automatic
+next-plan recommendations, moving library entry previews, and a newly authored Lottie
+companion. Existing CSS companion animations and licensed photo covers are preserved.
+The current Today ordering and activity definitions are preserved rather than changed
+into an implicit daily gate or a gamification system.
 
-- **"You're caught up" card** in the evening: the flame companion resting, with "Rest well.
-  Tomorrow's reading will be ready in the morning." (Desktop _Today · evening_.)
-- **"Pick up where you left off"** card on desktop: links back to the last chapter read and the
-  journal.
-- **Evening devotional emphasis**: in the evening the design leads with Spurgeon's evening reading
-  instead of the verse of the day.
-
-### Plans
-
-- **Category page extras**: a "Verses for anxiety" section (topical verses under the plans) and an
-  "Also for how you feel" row of related feelings. The page today lists only the plans.
-- **Plan day progress**: a thin progress bar under the header and "Matthew 1 of 4" in the phone
-  Finish bar, showing which chapter of the day's reading you are on.
-- **Day complete**: the design's wording "Day 1 done. Day 2 is ready tomorrow." and a summary pill
-  ("1 day this week · 1 of 40") with a **Reflect on today** button. The app keeps "Well done!"
-  (an e2e test checks it) and its existing actions.
-- **"Plans you finish appear here"** placeholder in Journey's plan list.
-
-### Bible
-
-- **Recently read** chips at the top of Go to.
-- **Desktop verse toolbar** under the selected verse (highlight colours, Bookmark, Note, Copy,
-  Study) instead of the sheet; and a **Study** action that opens notes for that verse.
-- **Study notes as a persistent side panel** on desktop, alongside the text.
-
-### Search
-
-- **Result filters**: All · Verses · Plans · Bible · My journal chips above the results.
-- **Journal results section** ("Your journal": matches in what you wrote, searched on the device).
-
-### Profile and Journey
-
-- **Reading calendar**: a month grid of days you read, in Journey.
-- **"Open Screen"** link inside the _Teach and present_ card in Profile.
-
-### Welcome
-
-- **Live translation preview**: choosing a translation shows Psalm 119:105 in it.
-- **Greeting by name** on step 2 ("Nice to meet you, Sam.").
-
-### Screen
-
-- **Moving preview** on the "Show a presentation" card and the library tiles' slide thumbnails.
-- **Overlay mode switcher** shown as a segmented control in the Bible console (the modes exist; the
-  control's placement is new).
-
-### Motion
-
-- **Flame companion as a real Lottie file** (one file with markers idle, read, celebrate, rest).
-  The app currently draws it with CSS (`src/design-system/FlameCompanion.tsx`).
-- **Animated atmospheres** (drifting embers, sweeping rays, breathing sun). The app's dawn and
-  embers are static shapes; only day complete has rays, and they do not move.
+Do not merge the design branch into main without the owner's explicit instruction.

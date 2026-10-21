@@ -215,3 +215,130 @@
   padding-bottom: var(--space-2);
   border-bottom: 1px solid var(--color-border);
 }
+
+/* An editing workspace: thumbnails, a generous canvas, then fields. */
+.shell {
+  background: var(--color-bg);
+}
+.top {
+  min-height: 72px;
+  padding-inline: var(--space-5);
+  gap: var(--space-4);
+}
+.title {
+  font-family: var(--font-ui);
+  font-weight: var(--weight-extrabold);
+  letter-spacing: -0.02em;
+}
+.body {
+  grid-template-columns: 200px minmax(0, 1fr) 320px;
+}
+.listItems {
+  padding: var(--space-4);
+}
+.item {
+  background: transparent;
+  padding-block: var(--space-2);
+}
+.thumbWrap > :first-child {
+  border-radius: var(--radius-md);
+}
+.canvasInner {
+  padding: var(--space-8);
+}
+.fields {
+  padding: var(--space-5) var(--space-5) var(--space-12);
+}
+.frame {
+  border-radius: var(--radius-lg);
+}
+@media (min-width: 901px) and (max-width: 1200px) {
+  .body {
+    grid-template-columns: 160px minmax(0, 1fr) 280px;
+  }
+  .canvasInner {
+    padding: var(--space-4);
+  }
+  .top {
+    flex-wrap: wrap;
+  }
+  .titleBlock {
+    flex-basis: 35%;
+  }
+  .actions {
+    flex-wrap: wrap;
+  }
+}
+@media (max-width: 900px) {
+  .shell {
+    height: auto;
+    min-height: 100dvh;
+  }
+  .top {
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+  .titleBlock {
+    flex: 1 1 200px;
+    flex-wrap: wrap;
+  }
+  .actions {
+    flex-wrap: wrap;
+  }
+  .body {
+    grid-template-columns: 140px minmax(0, 1fr);
+    align-items: start;
+  }
+  .list {
+    max-height: 65dvh;
+    position: sticky;
+    top: 0;
+  }
+  .canvas {
+    min-height: 300px;
+  }
+  .canvasInner {
+    padding: var(--space-4);
+  }
+  .fields {
+    grid-column: 1 / -1;
+    border-left: 0;
+    border-top: 1px solid var(--color-border);
+  }
+  .loading {
+    grid-template-columns: 100px minmax(0, 1fr);
+  }
+  .loading > :last-child {
+    display: none;
+  }
+}
+@media (max-width: 640px) {
+  .body {
+    grid-template-columns: 96px minmax(0, 1fr);
+  }
+  .top {
+    padding: var(--space-3);
+  }
+  .actions {
+    width: 100%;
+  }
+  .listItems {
+    padding: var(--space-2);
+  }
+  .item {
+    grid-template-columns: 12px minmax(0, 1fr);
+  }
+  .num {
+    display: none;
+  }
+  .canvasInner {
+    padding: var(--space-2);
+  }
+  .toolbar {
+    flex-wrap: wrap;
+    padding: var(--space-3);
+  }
+  .settingsGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

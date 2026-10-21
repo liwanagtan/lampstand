@@ -30,3 +30,19 @@
   color: var(--color-accent-text);
   box-shadow: var(--elevation-1);
 }
+
+.modes {
+  gap: 4px;
+  padding: 4px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--color-surface-sunk);
+}
+.mode {
+  min-height: 44px;
+  border-radius: 999px;
+}
+.mode[aria-checked='true'] {
+  background: var(--color-text);
+  color: var(--color-bg);
+}

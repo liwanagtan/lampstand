@@ -138,3 +138,40 @@
   right: 4px;
   translate: 0 -50%;
 }
+
+.section {
+  gap: var(--space-4);
+  padding: var(--space-5);
+}
+.sectionTitle {
+  font-weight: var(--weight-bold);
+  letter-spacing: 0.1em;
+}
+.passage {
+  border-radius: 999px;
+  background: var(--color-surface);
+  padding-left: var(--space-4);
+}
+.passageRef {
+  font-weight: var(--weight-bold);
+}
+.verse {
+  min-height: 44px;
+  padding-block: 8px;
+  border-radius: var(--radius-md);
+}
+.queue {
+  min-width: 0;
+  flex-wrap: wrap;
+}
+.queueList {
+  flex: 1 1 240px;
+}
+@media (max-width: 640px) {
+  .section {
+    padding: var(--space-4);
+  }
+  .queue {
+    padding-inline: var(--space-3);
+  }
+}

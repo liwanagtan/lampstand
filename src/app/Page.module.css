@@ -33,3 +33,38 @@
   gap: var(--space-3);
   flex-shrink: 0;
 }
+
+/* Shared Screen/import page composition. */
+.title {
+  font-family: var(--font-ui);
+  font-weight: var(--weight-extrabold);
+  font-size: clamp(28px, 3.6vw, 48px);
+  letter-spacing: -0.035em;
+  line-height: 1.1;
+}
+.actions {
+  flex-wrap: wrap;
+}
+@media (max-width: 900px) {
+  .page {
+    padding: var(--space-6) var(--space-5) 96px;
+  }
+  .header {
+    gap: var(--space-4);
+  }
+}
+@media (max-width: 640px) {
+  .page {
+    padding: var(--space-4) var(--space-4) 96px;
+    gap: var(--space-5);
+  }
+  .actions {
+    width: 100%;
+  }
+  .actions > * {
+    flex: 1;
+  }
+  .description {
+    margin-top: 0;
+  }
+}

@@ -58,3 +58,57 @@
     font-size: 18px;
   }
 }
+
+/* Equal, quiet entry cards; the real slide previews remain in the library below. */
+.entries {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-5);
+}
+.entry {
+  flex-direction: column;
+  min-width: 0;
+  min-height: 220px;
+  padding: var(--space-8);
+  border-color: transparent;
+  border-radius: var(--radius-xl);
+}
+.entry:hover {
+  border-color: var(--color-text);
+}
+.icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 16px;
+  background: var(--color-text);
+  color: var(--color-bg);
+}
+.title {
+  font-family: var(--font-ui);
+  font-size: var(--text-24);
+  font-weight: var(--weight-extrabold);
+  letter-spacing: -0.025em;
+}
+.body {
+  max-width: 36em;
+  font-size: var(--text-15);
+}
+@media (max-width: 700px) {
+  .entries {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .entry {
+    min-height: 0;
+    padding: var(--space-5);
+    flex-direction: row;
+    gap: var(--space-3);
+  }
+  .text {
+    min-width: 0;
+  }
+  .title {
+    font-size: var(--text-18);
+  }
+  .body {
+    font-size: var(--text-14);
+  }
+}

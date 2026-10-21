@@ -598,3 +598,119 @@
   justify-content: space-between;
   padding: 0 6px 0 var(--space-3);
 }
+
+/* Ink workspaces and rounded controls, with Preview/Live semantics preserved. */
+.top {
+  min-height: 72px;
+  gap: var(--space-3);
+}
+.title {
+  font-family: var(--font-ui);
+  font-weight: var(--weight-extrabold);
+  letter-spacing: -0.02em;
+}
+.paneTitle {
+  font-weight: var(--weight-bold);
+  letter-spacing: 0.1em;
+}
+.paneBody {
+  border-radius: var(--radius-lg);
+}
+.sidePanel {
+  border-radius: var(--radius-lg);
+  padding: var(--space-3) var(--space-4);
+}
+.modeChip {
+  height: 32px;
+  border-radius: 999px;
+  padding-inline: var(--space-3);
+  font-weight: var(--weight-bold);
+}
+.dockButton {
+  min-height: 44px;
+  border-radius: 999px;
+  background: var(--color-surface);
+  font-weight: var(--weight-bold);
+}
+.dockKey {
+  border-radius: 999px;
+}
+.thumbLive .thumbWrap > :first-child {
+  box-shadow: 0 0 0 2px var(--color-accent);
+}
+/* Compact operator windows scroll as a workspace, never crop controls off-screen. */
+@media (max-width: 1100px) {
+  .shell {
+    min-width: 0;
+    height: auto;
+    min-height: 100dvh;
+    grid-template-rows: auto auto auto auto;
+  }
+  .top {
+    flex-wrap: wrap;
+  }
+  .commandSlot {
+    order: 3;
+    flex: 1 1 100%;
+    min-width: 0;
+  }
+  .titleBlock {
+    flex: 1;
+    max-width: none;
+  }
+  .status {
+    flex-wrap: wrap;
+  }
+  .main {
+    min-height: 0;
+  }
+  .canvases {
+    container-type: normal;
+    height: auto;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: start;
+  }
+  .narrow {
+    min-width: 0;
+    overflow: visible;
+  }
+  .narrow > .previewStack {
+    max-width: none;
+  }
+  .wide {
+    width: auto;
+  }
+  .sidePanel {
+    min-height: 240px;
+    max-height: 420px;
+  }
+  .loadingPanes {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 700px) {
+  .canvases {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .wide {
+    min-width: 0;
+  }
+  .top {
+    padding: var(--space-3);
+  }
+  .paneActions {
+    flex-wrap: wrap;
+  }
+  .thumb {
+    width: 96px;
+  }
+}
+@media (pointer: coarse) {
+  .dockKey {
+    display: none;
+  }
+  .thumbButton {
+    min-height: 44px;
+  }
+}

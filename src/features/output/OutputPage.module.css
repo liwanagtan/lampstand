@@ -77,3 +77,42 @@
   border-radius: 4px;
   font: inherit;
 }
+
+.idle {
+  gap: 20px;
+  max-width: 560px;
+  color: #a9aebb;
+}
+.idle h1 {
+  font-family: var(--font-ui);
+  font-size: clamp(26px, 3vw, 40px);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  color: #f5f2ea;
+}
+.idle strong {
+  color: #f5f2ea;
+}
+.idleLink {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 24px;
+  border-radius: 999px;
+  color: #f5f2ea;
+  font-weight: 700;
+}
+.hint {
+  max-width: calc(100vw - 32px);
+  width: max-content;
+  box-sizing: border-box;
+  border: 1px solid rgb(245 242 234 / 0.16);
+  border-radius: 999px;
+  background: rgb(22 28 43 / 0.94);
+}
+@media (prefers-reduced-motion: reduce) {
+  .idle {
+    animation: none;
+  }
+}

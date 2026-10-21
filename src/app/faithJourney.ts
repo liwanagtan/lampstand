@@ -9,7 +9,7 @@ export const FAITH_JOURNEYS = [
     value: 'new',
     label: 'I’m new to following Jesus',
     description: 'I want help taking my first steps in faith.',
-    plan: 'first-steps-in-faith',
+    plan: 'good-news-personal-faith',
   },
   {
     value: 'returning',
@@ -45,8 +45,15 @@ export function faithJourneys(value?: FaithJourneySelection): FaithJourney[] {
   );
 }
 export function suggestedPlanIds(value?: FaithJourneySelection): string[] {
-  return faithJourneys(value).flatMap((journey) => {
+  const journeys = faithJourneys(value);
+  const primary = journeys.flatMap((journey) => {
     const plan = suggestedPlan(journey);
     return plan ? [plan] : [];
   });
+  if (journeys.includes('new') || journeys.includes('exploring')) {
+    primary.unshift('good-news-personal-faith');
+  }
+  // Start with the gospel, then offer a follow-on plan for daily growth.
+  if (journeys.includes('new')) primary.push('first-steps-in-faith');
+  return [...new Set(primary)];
 }

@@ -5,7 +5,34 @@ import { WelcomePage } from './WelcomePage';
 import { useSettings } from '@/features/settings/settingsStore';
 import { ALL_FEATURES } from '@/app/features';
 
-it('finishes later with the answers already given instead of enabling every feature', async () => {
+it('selects the salvation plan by default for someone new to following Jesus', async () => {
+  vi.stubGlobal('matchMedia', () => ({
+    matches: false,
+    addEventListener: vi.fn(),
+    removeEventListener: vi.fn(),
+  }));
+  try {
+    const user = userEvent.setup();
+    const router = createMemoryRouter(
+      [{ path: '/welcome', element: <WelcomePage /> }],
+      { initialEntries: ['/welcome'] },
+    );
+    render(<RouterProvider router={router} />);
+    await user.type(screen.getByLabelText('What should we call you?'), 'Grace');
+    await user.click(screen.getByRole('button', { name: 'Continue' }));
+    await user.click(screen.getByText('Grow daily'));
+    await user.click(screen.getByRole('button', { name: 'Continue' }));
+    await user.click(screen.getByRole('checkbox', { name: /I’m new to following Jesus/ }));
+    await user.click(screen.getByRole('button', { name: 'Continue' }));
+    await user.click(screen.getByRole('button', { name: 'Continue' }));
+    expect(screen.getByRole('radio', { name: /The good news: trusting Jesus/ })).toBeChecked();
+    expect(screen.getByRole('radio', { name: /Just the verse of the day/ })).not.toBeChecked();
+  } finally {
+    vi.unstubAllGlobals();
+  }
+});
+
+it('keeps selected choices and allows a daily-verse start without a plan', async () => {
   vi.stubGlobal('matchMedia', () => ({
     matches: false,
     addEventListener: vi.fn(),
@@ -22,20 +49,22 @@ it('finishes later with the answers already given instead of enabling every feat
       { initialEntries: ['/welcome'] },
     );
     render(<RouterProvider router={router} />);
-    expect(screen.getByRole('button', { name: 'Finish setup later' })).toBeDisabled();
+    expect(screen.getByRole('button', { name: 'Continue' })).toBeDisabled();
     await user.type(screen.getByLabelText('What should we call you?'), 'Grace');
     await user.click(screen.getByRole('button', { name: 'Continue' }));
     await user.click(screen.getByText('Teach and present'));
     await user.click(screen.getByRole('button', { name: 'Continue' }));
-    expect(screen.queryByRole('button', { name: 'Skip this question' })).not.toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Continue' })).toBeEnabled();
     await user.click(screen.getByRole('checkbox', { name: /I’m new to following Jesus/ }));
     await user.click(screen.getByRole('checkbox', { name: /I’m returning to faith/ }));
     expect(screen.getAllByRole('checkbox', { checked: true })).toHaveLength(2);
     expect(screen.getByRole('checkbox', { name: /I’m returning to faith/ })).toBeChecked();
-    await user.click(screen.getByRole('button', { name: 'Finish setup later' }));
+    await user.click(screen.getByRole('button', { name: 'Continue' }));
+    await user.click(screen.getByRole('button', { name: 'Continue' }));
+    await user.click(screen.getByRole('radio', { name: /Just the verse of the day/ }));
+    await user.click(screen.getByRole('button', { name: 'Complete setup' }));
     expect(
-      await screen.findByRole('heading', { name: 'Today ready' }, { timeout: 5000 }),
+      await screen.findByRole('heading', { name: 'Today ready' }, { timeout: 7000 }),
     ).toBeInTheDocument();
     expect(useSettings.getState().profile).toMatchObject({
       name: 'Grace',
@@ -54,4 +83,4 @@ it('finishes later with the answers already given instead of enabling every feat
     localStorage.removeItem('lampstand.onboarded');
     vi.unstubAllGlobals();
   }
-}, 10000);
+}, 12000);

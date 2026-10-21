@@ -1,0 +1,36 @@
+.page {
+  min-height: 100dvh;
+  padding: clamp(24px, 5vw, 64px) 20px 80px;
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+.content {
+  width: min(100%, 700px);
+  margin: 0 auto;
+}
+
+.brand {
+  display: inline-flex;
+  margin-bottom: 40px;
+}
+
+.content h1 {
+  margin: 0 0 16px;
+  font-size: clamp(30px, 5vw, 44px);
+}
+
+.content h2 {
+  margin: 36px 0 10px;
+  font-size: 20px;
+}
+
+.content p {
+  margin: 0 0 16px;
+  line-height: 1.7;
+  color: var(--color-text-muted);
+}
+
+.content a {
+  color: var(--color-accent-text);
+}

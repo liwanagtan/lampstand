@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { BookPlus, Download, ImagePlus, Trash2, Upload, ChevronRight } from 'lucide-react';
 import { Button, Chip, Dialog, Select, Toggle, cx, toast } from '@/design-system/components';
 import { useIsPhone } from '@/app/useIsPhone';
@@ -62,6 +63,10 @@ export function SettingsPage() {
             <DataSection embedded />
           </Section>
           <Section title="About">
+            <Link className={styles.detailRow} to="/privacy">
+              <span>Privacy, data and support</span>
+              <ChevronRight size={18} aria-hidden />
+            </Link>
             <button className={styles.detailRow} onClick={() => setDetail('credits')}>
               <span>Credits and licences</span>
               <ChevronRight size={18} aria-hidden />
@@ -454,6 +459,9 @@ function AboutSection() {
         Lampstand keeps everything on this device. It is built on open content, credited under
         Credits and licences.
       </p>
+      <p className={styles.small}>
+        <Link to="/privacy">Privacy, data and support</Link>
+      </p>
     </Section>
   );
 }
@@ -508,7 +516,7 @@ function CreditsSection() {
       <details className={styles.details}>
         <summary>Fonts, icons and software</summary>
         <ul>
-          <li>Inter and Fraunces — SIL Open Font License.</li>
+          <li>Plus Jakarta Sans, Inter and Fraunces — SIL Open Font License.</li>
           <li>Lucide icons — ISC License.</li>
           <li>Bible reference parsing — bible-passage-reference-parser (MIT).</li>
         </ul>

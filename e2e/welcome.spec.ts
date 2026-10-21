@@ -71,14 +71,19 @@ test('growing daily with a plan: opens Today with the plan started', async ({ pa
   await expect(page.getByRole('switch', { name: 'Grow daily (customised)' })).toBeChecked();
 });
 
-test('finishing later requires a name and uses reading defaults', async ({ page }) => {
+test('a name is required and readers can start with only the daily verse', async ({ page }) => {
   await startWelcome(page);
   await expect(page.getByRole('button', { name: 'Continue' })).toBeDisabled();
-  await expect(page.getByRole('button', { name: 'Finish setup later' })).toBeDisabled();
   await page.getByLabel('What should we call you?').fill('  ');
   await expect(page.getByRole('button', { name: 'Continue' })).toBeDisabled();
   await page.getByLabel('What should we call you?').fill('Grace');
-  await page.getByRole('button', { name: 'Finish setup later' }).click();
+  await page.getByRole('button', { name: 'Continue' }).click();
+  await page.getByText('Grow daily').click();
+  await page.getByRole('button', { name: 'Continue' }).click();
+  await page.getByRole('button', { name: 'Continue' }).click();
+  await page.getByRole('button', { name: 'Continue' }).click();
+  await page.getByRole('radio', { name: /Just the verse of the day/ }).click();
+  await page.getByRole('button', { name: 'Complete setup' }).click();
   await expect(page).toHaveURL(/\/$/);
   expect(await navLabels(page)).toEqual(['Today', 'Plans', 'Bible']);
   await page.reload();

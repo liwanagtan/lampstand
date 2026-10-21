@@ -11,12 +11,14 @@ A light for your daily reading: a companion for growing in the Word every day, w
 - **Journal:** reflections, notes, highlights and bookmarks in one searchable timeline.
 - **Screen:** present sermon slides or the Bible — control screen on the laptop, **output** full screen on the TV, synced in the browser.
 - **Verse command bar:** press `/`, type `jn 3 16`, press Enter — the verse appears over the current slide; Esc clears it.
-- **Five public domain translations** built in (KJV, WEB, ASV, YLT, Darby), with word search.
+- **Six public domain translations** built in (BSB, KJV, WEB, ASV, YLT, Darby), with word search.
 - **Slides made in Claude** with the skill in `skill/lampstand-slides`, imported as `.lampstand.json`.
 - **Brand:** the logo kit (mark, lockups, wordmark, app icons, colours and usage rules) lives in `brand/`; see `brand/README.txt`. The app draws the logo from `src/design-system/LampMark.tsx`, and the favicon and PWA icons in `public/` come from `brand/app-icon/`.
 - **Installable PWA:** Profile → Settings offers installation when the browser supports an install prompt, with home-screen instructions otherwise. The production app precaches reading content for offline use; personal data stays on the device.
 
 Docs: [docs/PRD.md](docs/PRD.md) (spec) · [docs/PRD-ADDENDUM-GROW.md](docs/PRD-ADDENDUM-GROW.md) (Grow-first redesign) · [docs/SETUP.md](docs/SETUP.md) (operator setup) · [docs/DECISIONS.md](docs/DECISIONS.md) (choices made during the build).
+
+Working branch policy for contributors and agents: [AGENTS.md](AGENTS.md). Ongoing work belongs on `design/responsive-redesign`; `main` changes only with the owner's explicit merge approval.
 
 Content: [library coverage and pathways](docs/CONTENT-LIBRARY.md) · [editorial and salvation standards](docs/CONTENT-EDITORIAL.md) · [gamification UX brief](docs/GAMIFICATION-UX-BRIEF.md) (design pending). The library includes 48 plans, with age and life-stage collections under Grow in faith. New content is implemented locally for owner theological review.
 

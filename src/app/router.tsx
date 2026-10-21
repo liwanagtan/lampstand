@@ -116,6 +116,11 @@ export const routes: RouteObject[] = [
     lazy: lazyPage(() => import('@/features/welcome/WelcomePage'), 'WelcomePage'),
   },
   {
+    path: '/privacy',
+    errorElement: <RouteError />,
+    lazy: lazyPage(() => import('@/features/settings/PublicInfoPage'), 'PublicInfoPage'),
+  },
+  {
     path: '/screen/bible',
     errorElement: <RouteError />,
     lazy: lazyPage(() => import('@/features/bible-console/BibleConsolePage'), 'BibleConsolePage'),

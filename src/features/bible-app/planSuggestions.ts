@@ -8,6 +8,7 @@ import {
 import type { Plan } from './plans';
 
 const STARTER_REASONS: Record<string, string> = {
+  'first-steps-in-faith': 'Keep growing after the gospel with simple daily readings.',
   'gospels-40': 'Follow Jesus’ life and teaching through the four Gospels.',
   'psalms-proverbs-30': 'Make space for prayer, praise and everyday wisdom.',
   'life-of-jesus-21-days': 'Explore Jesus’ life in a shorter, guided reading plan.',
@@ -15,7 +16,7 @@ const STARTER_REASONS: Record<string, string> = {
 
 const REASONS: Record<FaithJourney, string> = {
   exploring: 'An introduction to Jesus and personal faith.',
-  new: 'A gentle guide for your first steps in faith.',
+  new: 'Understand salvation through repentance and personal faith in Jesus.',
   returning: 'A gentle way back into reading God’s Word.',
   growing: 'Small habits for regular reading and prayer.',
   deepening: 'Help understanding Scripture and putting it into practice.',

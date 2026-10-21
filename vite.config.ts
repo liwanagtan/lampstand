@@ -71,7 +71,7 @@ export default defineConfig({
   },
   // The app is precached and served locally (offline), so a larger first chunk costs ~65 ms.
   build: { chunkSizeWarningLimit: 800 },
-  server: { port: 5310, strictPort: true },
+  server: { port: 5310, strictPort: true, watch: { usePolling: true, interval: 500 } },
   preview: { port: 4173, strictPort: true },
   test: {
     globals: true,

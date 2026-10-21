@@ -5,7 +5,7 @@ const plans = builtinPlans();
 it('suggests a suitable first plan for each faith journey', () => {
   const expected = {
     exploring: 'good-news-personal-faith',
-    new: 'first-steps-in-faith',
+    new: 'good-news-personal-faith',
     returning: 'returning-to-the-word',
     growing: 'rhythms-of-grace',
     deepening: 'reading-with-understanding',
@@ -34,7 +34,7 @@ it('returns no suggestions when all candidates were started', () => {
 it('uses multiple journey answers before general starting points', () => {
   const result = planSuggestions(plans, new Set(), ['new', 'returning']);
   expect(result.slice(0, 2).map(({ plan }) => plan.id)).toEqual([
-    'first-steps-in-faith',
+    'good-news-personal-faith',
     'returning-to-the-word',
   ]);
 });

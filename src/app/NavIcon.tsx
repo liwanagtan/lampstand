@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import type { AnimationItem, LottiePlayer } from 'lottie-web';
 import { useReducedMotion } from '@/features/settings/theme';
 import styles from './NavIcon.module.css';
+import plansAnimation from '../../public/lottie/icons/plans.json';
 
 /**
  * Nav icons (design system › Lottie): a static icon paints at once; after the first paint the
@@ -19,6 +20,8 @@ const loadPlayer = () =>
 
 const data = new Map<NavGlyph, Promise<unknown>>();
 function loadData(glyph: NavGlyph): Promise<unknown> {
+  // Bundle Plans so edits replace the animation instead of reusing a cached public URL.
+  if (glyph === 'plans') return Promise.resolve(plansAnimation);
   let p = data.get(glyph);
   if (!p) {
     p = fetch(`${import.meta.env.BASE_URL}lottie/icons/${glyph}.json`).then((r) => {

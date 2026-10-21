@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Search, X } from 'lucide-react';
+import { ArrowRight, Check, ChevronDown, Search, X } from 'lucide-react';
 import { paths } from '@/app/paths';
 import { useSettings } from '@/features/settings/settingsStore';
 import type { CatalogNode } from '@/schema/planCatalog';
@@ -17,7 +17,7 @@ import {
 import { FilterChip } from './FilterChip';
 import { plansGreeting } from './greetings';
 import { CategoryChip, CategoryTile, PlanCard } from './PlanCards';
-import { usePlanProgress, usePlans, type Plan } from './plans';
+import { currentDay, usePlanProgress, usePlans, type Plan } from './plans';
 import styles from './Discover.module.css';
 
 const PACES: { value: PaceFilter; label: string }[] = [
@@ -42,8 +42,13 @@ export function PlansPage() {
   const [audience, setAudience] = useState<AudienceFilter>('all');
   const byId = new Map((progress ?? []).map((p) => [p.planId, p]));
   const all = plans ?? [];
-  const active = all.filter((p) => byId.has(p.id));
-  const isActive = (p: Plan) => byId.has(p.id);
+  const completed = all.filter((p) => {
+    const record = byId.get(p.id);
+    return record && currentDay(p, record).kind === 'finished';
+  });
+  const completedIds = new Set(completed.map((p) => p.id));
+  const isActive = (p: Plan) => byId.has(p.id) && !completedIds.has(p.id);
+  const active = all.filter(isActive);
   const searching = query.trim() !== '' || pace !== 'all' || audience !== 'all';
   const results = searching ? searchPlans(all, query, pace, audience) : [];
   const hello = plansGreeting(name, active.length);
@@ -140,6 +145,36 @@ export function PlansPage() {
           )
         )}
       </section>
+
+      {completed.length > 0 && (
+        <details className={styles.completedPlans}>
+          <summary>
+            <span>
+              Completed plans <span className={styles.completedCount}>({completed.length})</span>
+            </span>
+            <ChevronDown size={18} aria-hidden />
+          </summary>
+          <p className={styles.completedIntro}>
+            Readings you’ve finished. Revisit them whenever you like.
+          </p>
+          <ul className={styles.completedList}>
+            {completed.map((plan) => (
+              <li key={plan.id}>
+                <Link to={paths.planPage(plan.id)} className={styles.completedLink}>
+                  <Check size={18} aria-hidden />
+                  <span>
+                    <span className={styles.completedName}>{plan.name}</span>
+                    <span className={styles.completedMeta}>
+                      {plan.days.length} {plan.pace === 'daily' ? 'days' : 'readings'} · Completed
+                    </span>
+                  </span>
+                  <ArrowRight size={16} aria-hidden />
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </details>
+      )}
     </div>
   );
 }

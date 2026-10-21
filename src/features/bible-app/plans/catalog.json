@@ -8,7 +8,8 @@
       "categories": [
         {
           "id": "anxiety",
-          "name": "Anxiety"
+          "name": "Anxiety",
+          "description": "Find steady ground in Scripture when your mind won’t rest."
         },
         {
           "id": "worry",

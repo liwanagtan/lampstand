@@ -1,4 +1,3 @@
-import { usePhoneTitle } from '@/app/topBar';
 import { useWideLayout } from '@/app/useWideLayout';
 import {
   useEffect,
@@ -48,7 +47,6 @@ import { ReadingSettings } from './ReadingSettings';
 import { TranslationChip } from './TranslationChip';
 import { StudyNotesSheet } from './StudyNotesSheet';
 import { notesByVerse, useStudyNotes, type StudyNote } from './studyNotes';
-import { readingGreeting } from './greetings';
 import { haptic } from '@/app/haptics';
 import { noteTipEvent } from '@/features/tips/tipStore';
 import { useSettings } from '@/features/settings/settingsStore';
@@ -120,9 +118,6 @@ export function BibleReader({ toolbar, selectionActions }: BiblePageSlots) {
   const single = chapterCount(translation, book) === 1;
   const place = single ? bookName : `${bookName} ${chapter}`;
   const readingButton = <TranslationChip onClick={() => setReading(true)} />;
-  // Phones: the place is already on the page and the pill, so the bar is personal.
-  const name = useSettings((st) => st.profile.name);
-  usePhoneTitle(readingGreeting(name, new Date()), { actions: readingButton });
 
   const go = (dir: 1 | -1) => {
     const n = stepChapter(book, chapter, dir, translation);
@@ -198,6 +193,23 @@ export function BibleReader({ toolbar, selectionActions }: BiblePageSlots) {
   return (
     <div className={cx(styles.layout, wide && study !== null && styles.withSide)}>
       <div className={styles.reader}>
+        <header className={styles.mobileHeader} role="group" aria-label="Bible reading controls">
+          <button type="button" className={styles.mobilePlace} onClick={() => setPicking(true)}>
+            {place}
+            <ChevronDown size={20} aria-hidden />
+          </button>
+          <div className={styles.mobileReadingActions}>
+            {readingButton}
+            <button
+              type="button"
+              className={styles.mobileAa}
+              aria-label="Reading settings"
+              onClick={() => setReading(true)}
+            >
+              Aa
+            </button>
+          </div>
+        </header>
         <div className={styles.toolbar} data-quiet={quiet || undefined}>
           <div className={styles.nav}>
             <IconButton
@@ -236,7 +248,7 @@ export function BibleReader({ toolbar, selectionActions }: BiblePageSlots) {
             aria-label={`${bookName} ${chapter}`}
           >
             <header className={styles.chapterHead}>
-              <h1 className={styles.chapterTitle}>
+              <h1 className={cx(styles.chapterTitle, 'phone-hidden')}>
                 {single ? bookName : `${bookName} ${chapter}`}
               </h1>
               {bookNotes?.intro && (
@@ -404,6 +416,12 @@ export function BibleReader({ toolbar, selectionActions }: BiblePageSlots) {
 
       <NoteDialog target={noteFor} onClose={() => setNoteFor(null)} />
       <StudyNotesSheet
+        key={study === 'intro' ? 'intro' : 'verse'}
+        bookHtml={[bookNotes?.summary, bookNotes?.intro].filter((h): h is string => Boolean(h))}
+        bookTitle={bookName}
+        verseTitle={`${bookName} ${chapter}:${typeof study === 'number' ? study : 1}`}
+        verseNotes={studyByVerse.get(typeof study === 'number' ? study : 1)}
+        startWithBook={study === 'intro'}
         inline={wide}
         open={study !== null}
         onOpenChange={(o) => !o && setStudy(null)}
@@ -545,6 +563,7 @@ function Verses({
               onClick={(e) => onSelect(v.verse, e.shiftKey)}
             >
               <span className={cx(styles.text, v.missing && styles.missing)}>
+                <sup className={styles.mobileVerseNum}>{v.verse}</sup>
                 {v.missing ? (
                   'Not included in this translation.'
                 ) : color ? (

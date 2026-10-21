@@ -52,6 +52,7 @@ describe('journey summary', () => {
       now,
     });
     expect(s.daysThisMonth).toBe(3);
+    expect(s.activityDays).toEqual(['2026-10-03', '2026-10-04', '2026-10-05', '2026-09-30']);
     expect(s.going.map((g) => g.plan.id)).toEqual(['b']);
     expect(s.finished.map((f) => f.plan.id)).toEqual(['a']);
     expect(s.since).toBe(1);

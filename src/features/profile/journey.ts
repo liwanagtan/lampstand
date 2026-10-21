@@ -42,6 +42,7 @@ export function profileGreeting(name: string, now: Date, lastVisit: number | nul
 export interface JourneyStats {
   /** Days this month with any reading, writing or marking. */
   daysThisMonth: number;
+  activityDays: string[];
   going: { plan: Plan; progress: PlanProgressRecord }[];
   finished: { plan: Plan; progress: PlanProgressRecord; finishedAt: number }[];
   /** Your first activity, for "Reading since". */
@@ -89,6 +90,7 @@ export function journeyStats(input: {
   going.sort((a, b) => b.progress.updatedAt - a.progress.updatedAt);
   finished.sort((a, b) => b.finishedAt - a.finishedAt);
   return {
+    activityDays: [...days],
     daysThisMonth: [...days].filter((d) => d.startsWith(month)).length,
     going,
     finished,

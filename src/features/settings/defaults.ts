@@ -5,7 +5,7 @@ export const DEFAULT_SETTINGS: Settings = {
   defaultTranslation: 'BSB',
   defaultTheme: 'classic',
   defaultOverlayMode: 'lowerThird',
-  uiMode: 'system',
+  uiMode: 'light',
   reduceMotion: false,
   logoAssetId: null,
   bundledBiblesVersion: 0,

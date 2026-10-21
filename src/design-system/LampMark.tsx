@@ -1,3 +1,5 @@
+import motionStyles from './LampMark.module.css';
+
 // The Lampstand logo (brand/README.txt): a flame rising from an open book, and the wordmark.
 // Drawn from the logo kit's own outlines, so no font is needed. The flame is always brand gold
 // in colour variants; the book and wordmark follow the text colour, so they read on light and dark.
@@ -51,6 +53,22 @@ export function LampMark({ size = 24, variant = 'color', className, title }: Log
       {...a11y(title)}
     >
       <MarkPaths variant={variant} />
+    </svg>
+  );
+}
+
+/** Welcome mark: supplied book-opening, rising flame and gentle flicker animation. */
+export function AnimatedLampMark({ size = 150, className, title }: Omit<LogoProps, 'variant'>) {
+  return (
+    <svg viewBox="0 0 64 64" width={size} height={size} className={className} {...a11y(title)}>
+      <g className={motionStyles.rise}>
+        <g className={motionStyles.flame}>
+          <path className={motionStyles.glow} d={FLAME} fill={BRAND_GOLD} />
+          <path d={FLAME} fill={BRAND_GOLD} />
+        </g>
+      </g>
+      <path className={motionStyles.leftPage} d={BOOK_LEFT} fill="currentColor" />
+      <path className={motionStyles.rightPage} d={BOOK_RIGHT} fill="currentColor" />
     </svg>
   );
 }

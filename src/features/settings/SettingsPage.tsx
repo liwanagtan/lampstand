@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { BookPlus, Download, ImagePlus, Trash2, Upload } from 'lucide-react';
-import { Button, Chip, Select, Toggle, cx, toast } from '@/design-system/components';
+import { BookPlus, Download, ImagePlus, Trash2, Upload, ChevronRight } from 'lucide-react';
+import { Button, Chip, Dialog, Select, Toggle, cx, toast } from '@/design-system/components';
+import { useIsPhone } from '@/app/useIsPhone';
 import { LampLockup } from '@/design-system/LampMark';
 import { db } from '@/db/db';
 import { useBible } from '@/features/bible/bibleStore';
@@ -28,6 +29,8 @@ const OVERLAY_LABELS: Record<OverlayMode, string> = {
 /** Profile › Settings: how Lampstand reads, looks and presents, and your data. */
 export function SettingsPage() {
   const screen = useSettings((s) => s.features.screen);
+  const phone = useIsPhone();
+  const [detail, setDetail] = useState<'translations' | 'credits' | null>(null);
   return (
     <div className={styles.sections}>
       <ReadingSection />
@@ -45,10 +48,49 @@ export function SettingsPage() {
         </div>
       )}
       <TipsSection />
-      <TranslationsSection />
-      <DataSection />
-      <CreditsSection />
-      <AboutSection />
+      {phone ? (
+        <>
+          <Section title="Translations and data">
+            <button className={styles.detailRow} onClick={() => setDetail('translations')}>
+              <span>
+                <strong>Translations</strong>
+                <small>Six public domain translations built in</small>
+              </span>
+              <ChevronRight size={18} aria-hidden />
+            </button>
+            <DataSection embedded />
+          </Section>
+          <Section title="About">
+            <button className={styles.detailRow} onClick={() => setDetail('credits')}>
+              <span>Credits and licences</span>
+              <ChevronRight size={18} aria-hidden />
+            </button>
+          </Section>
+          <Dialog
+            open={detail !== null}
+            onOpenChange={(open) => {
+              if (!open) setDetail(null);
+            }}
+            title={detail === 'translations' ? 'Translations' : 'Credits and licences'}
+          >
+            {detail === 'translations' ? (
+              <TranslationsSection />
+            ) : (
+              <>
+                <CreditsSection />
+                <AboutSection />
+              </>
+            )}
+          </Dialog>
+        </>
+      ) : (
+        <>
+          <TranslationsSection />
+          <DataSection />
+          <CreditsSection />
+          <AboutSection />
+        </>
+      )}
     </div>
   );
 }
@@ -90,13 +132,12 @@ function PresentingSection() {
 }
 
 function AppearanceSection() {
-  const uiMode = useSettings((s) => s.uiMode);
   const reduceMotion = useSettings((s) => s.reduceMotion);
   const set = useSettings((s) => s.set);
   return (
     <Section
       title="Appearance"
-      description="The control screen uses Dark when this is set to System, because booths are dim."
+      description="Light mode is enabled. Dark and System modes are temporarily unavailable."
     >
       <div className={styles.segmented} role="radiogroup" aria-label="App appearance">
         {(['light', 'dark', 'system'] as UiMode[]).map((m) => (
@@ -104,7 +145,8 @@ function AppearanceSection() {
             key={m}
             type="button"
             role="radio"
-            aria-checked={uiMode === m}
+            aria-checked={m === 'light'}
+            disabled={m !== 'light'}
             className={styles.segment}
             onClick={() => void set('uiMode', m)}
           >
@@ -303,7 +345,7 @@ function TranslationsSection() {
   );
 }
 
-function DataSection() {
+function DataSection({ embedded = false }: { embedded?: boolean }) {
   const fileRef = useRef<HTMLInputElement>(null);
   const [exporting, setExporting] = useState(false);
   const [restoring, setRestoring] = useState(false);
@@ -357,11 +399,8 @@ function DataSection() {
     }
   };
 
-  return (
-    <Section
-      title="Data"
-      description="Everything stays on this device. Export a backup before changing computers, and keep it somewhere safe."
-    >
+  const controls = (
+    <div className={embedded ? styles.mobileData : undefined}>
       <div className={styles.row}>
         <Button icon={<Download size={16} />} loading={exporting} onClick={() => void onExport()}>
           Export backup
@@ -388,6 +427,16 @@ function DataSection() {
         Importing a backup adds presentations you don’t have and updates ones that were edited more
         recently. Nothing is deleted.
       </p>
+    </div>
+  );
+  return embedded ? (
+    controls
+  ) : (
+    <Section
+      title="Data"
+      description="Everything stays on this device. Export a backup before changing computers, and keep it somewhere safe."
+    >
+      {controls}
     </Section>
   );
 }

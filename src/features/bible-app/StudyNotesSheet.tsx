@@ -1,4 +1,5 @@
-import { useEffect, useRef, type MouseEvent, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type MouseEvent, type ReactNode } from 'react';
+import { useIsPhone } from '@/app/useIsPhone';
 import { X } from 'lucide-react';
 import { IconButton, Sheet } from '@/design-system/components';
 import { fromOsis } from '@/features/bible/ref';
@@ -18,6 +19,11 @@ export function StudyNotesSheet({
   notes,
   html,
   inline = false,
+  bookHtml,
+  bookTitle,
+  verseTitle,
+  verseNotes,
+  startWithBook = false,
 }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -27,8 +33,16 @@ export function StudyNotesSheet({
   /** A book introduction instead of notes. */
   html?: string[];
   inline?: boolean;
+  bookHtml?: string[];
+  bookTitle?: string;
+  verseTitle?: string;
+  verseNotes?: StudyNote[];
+  startWithBook?: boolean;
 }) {
   const openInReader = useOpenInReader();
+  const phone = useIsPhone();
+  const [tab, setTab] = useState(startWithBook ? 'book' : 'verse');
+  const tabs = phone && Boolean(bookHtml);
   // Cross-references open in the reader.
   const follow = (e: MouseEvent<HTMLDivElement>) => {
     const a = (e.target as HTMLElement).closest<HTMLElement>('a[data-ref]');
@@ -38,7 +52,11 @@ export function StudyNotesSheet({
     onOpenChange(false);
     openInReader(r);
   };
-  const blocks = html ?? notes?.map((n) => n.html) ?? [];
+  const blocks = tabs
+    ? tab === 'book'
+      ? (bookHtml ?? [])
+      : ((verseNotes ?? notes)?.map((n) => n.html) ?? [])
+    : (html ?? notes?.map((n) => n.html) ?? []);
   const content = (
     <>
       <div className={styles.notes} onClick={follow}>
@@ -61,7 +79,22 @@ export function StudyNotesSheet({
     ) : null;
   }
   return (
-    <Sheet open={open} onOpenChange={onOpenChange} eyebrow={eyebrow} title={title}>
+    <Sheet
+      open={open}
+      onOpenChange={onOpenChange}
+      eyebrow={tabs ? 'Study notes' : eyebrow}
+      title={tabs ? (tab === 'book' ? (bookTitle ?? title) : (verseTitle ?? title)) : title}
+    >
+      {tabs && (
+        <div className={styles.mobileTabs} role="group" aria-label="Study notes view">
+          <button aria-pressed={tab === 'verse'} onClick={() => setTab('verse')}>
+            This verse
+          </button>
+          <button aria-pressed={tab === 'book'} onClick={() => setTab('book')}>
+            About {bookTitle}
+          </button>
+        </div>
+      )}
       {content}
     </Sheet>
   );

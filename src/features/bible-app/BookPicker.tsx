@@ -1,5 +1,7 @@
 import { useState } from 'react';
-import { ArrowLeft, Bookmark } from 'lucide-react';
+import { ArrowLeft, Bookmark, ChevronDown } from 'lucide-react';
+import { useIsPhone } from '@/app/useIsPhone';
+import { useReader } from './readerStore';
 import { IconButton, Sheet, Tabs, cx } from '@/design-system/components';
 import { BOOKS, BOOK_BY_CODE } from '@/features/bible/books';
 import { formatRef, fromOsis, type RefRange } from '@/features/bible/ref';
@@ -30,6 +32,11 @@ export function BookPicker({
   onPick,
   onPickBookmark,
 }: BookPickerProps) {
+  const phone = useIsPhone();
+  const recent = useReader((s) => s.recent);
+  const [testament, setTestament] = useState<'OT' | 'NT'>(
+    () => BOOK_BY_CODE.get(current.book)?.testament ?? 'NT',
+  );
   const [book, setBook] = useState<string | null>(null);
   const close = (o: boolean) => {
     onOpenChange(o);
@@ -63,15 +70,89 @@ export function BookPicker({
       ))}
     </div>
   );
+  const mobileBooks = (
+    <div className={styles.mobileBooks}>
+      {recent.length > 0 && (
+        <section className={styles.recent}>
+          <h3>Recently read</h3>
+          <div>
+            {recent.map((p) => (
+              <button
+                key={`${p.book}.${p.chapter}`}
+                onClick={() => {
+                  onPick(p.book, p.chapter);
+                  close(false);
+                }}
+              >
+                {BOOK_BY_CODE.get(p.book)?.refName} {p.chapter}
+              </button>
+            ))}
+          </div>
+        </section>
+      )}
+      {(['OT', 'NT'] as const).map((t) => (
+        <section key={t}>
+          <button
+            className={styles.testamentButton}
+            aria-expanded={testament === t}
+            onClick={() => setTestament(t)}
+          >
+            <strong>{t === 'OT' ? 'Old Testament' : 'New Testament'}</strong>
+            <span>{t === 'OT' ? '39' : '27'} books</span>
+            <ChevronDown size={18} aria-hidden />
+          </button>
+          {testament === t && (
+            <ul className={styles.mobileBookList}>
+              {BOOKS.filter((b) => b.testament === t).map((b) => (
+                <li key={b.code}>
+                  <button
+                    className={styles.bookRow}
+                    aria-expanded={(book ?? current.book) === b.code}
+                    onClick={() => setBook(b.code)}
+                  >
+                    <span>{b.name}</span>
+                    <small>{chapterCount(translation, b.code)}</small>
+                  </button>
+                  {(book ?? current.book) === b.code && (
+                    <ul className={styles.chapters}>
+                      {Array.from(
+                        { length: chapterCount(translation, b.code) },
+                        (_, i) => i + 1,
+                      ).map((c) => (
+                        <li key={c}>
+                          <button
+                            className={cx(
+                              styles.chapter,
+                              b.code === current.book && c === current.chapter && styles.current,
+                            )}
+                            onClick={() => {
+                              onPick(b.code, c);
+                              close(false);
+                            }}
+                          >
+                            {c}
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </li>
+              ))}
+            </ul>
+          )}
+        </section>
+      ))}
+    </div>
+  );
   return (
     <Sheet
       open={open}
       onOpenChange={close}
       size="lg"
-      title={book ? BOOK_BY_CODE.get(book)!.name : 'Go to'}
-      description={book ? 'Choose a chapter' : undefined}
+      title={!phone && book ? BOOK_BY_CODE.get(book)!.name : 'Go to'}
+      description={!phone && book ? 'Choose a chapter' : undefined}
     >
-      {book ? (
+      {!phone && book ? (
         <div className={styles.chapterView}>
           <IconButton
             label="Back to books"
@@ -103,7 +184,7 @@ export function BookPicker({
         <Tabs
           label="Go to"
           items={[
-            { value: 'books', label: 'Books', content: books },
+            { value: 'books', label: 'Books', content: phone ? mobileBooks : books },
             {
               value: 'bookmarks',
               label: 'Bookmarks',
@@ -118,6 +199,8 @@ export function BookPicker({
             },
           ]}
         />
+      ) : phone ? (
+        mobileBooks
       ) : (
         books
       )}

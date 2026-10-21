@@ -286,3 +286,46 @@
     font-size: var(--text-20);
   }
 }
+
+.mobileDescription {
+  display: none;
+}
+@media (max-width: 640px) {
+  .mobileDescription {
+    display: inline;
+  }
+}
+
+.mobileScreenPreview {
+  display: none;
+}
+@media (max-width: 640px) {
+  .mobileScreenPreview {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 130px;
+    margin-bottom: 16px;
+    border-radius: 22px;
+    background: #000;
+    box-shadow: inset 0 0 0 1px #222a3b;
+    overflow: hidden;
+  }
+  .empty {
+    align-items: flex-start;
+    gap: 10px;
+    margin: 0;
+    padding: 6px 4px 0;
+    text-align: left;
+  }
+  .emptyArt {
+    display: none;
+  }
+  .emptyTitle {
+    font-size: 16px;
+  }
+  .emptyText {
+    font-size: 14px;
+    line-height: 1.5;
+  }
+}

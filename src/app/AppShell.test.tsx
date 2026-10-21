@@ -65,13 +65,15 @@ describe('AppShell', () => {
     expect(router.state.location.pathname).toBe('/profile');
   });
 
-  it('switches and persists the app appearance from Profile › Settings', async () => {
+  it('keeps light appearance and disables Dark/System from Profile › Settings', async () => {
     renderAt('/profile/settings');
     await userEvent.click(await screen.findByRole('radio', { name: 'Light' }));
     expect(document.documentElement.dataset.theme).toBe('light');
     expect(useSettings.getState().uiMode).toBe('light');
     expect((await db.settings.get('uiMode'))?.value).toBe('light');
     await userEvent.click(screen.getByRole('radio', { name: 'Dark' }));
-    expect(document.documentElement.dataset.theme).toBe('dark');
+    expect(screen.getByRole('radio', { name: 'Dark' })).toBeDisabled();
+    expect(screen.getByRole('radio', { name: 'System' })).toBeDisabled();
+    expect(document.documentElement.dataset.theme).toBe('light');
   });
 });

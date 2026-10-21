@@ -525,3 +525,358 @@
   font-size: var(--text-13);
   color: var(--color-text-muted);
 }
+
+.mobileHeroBack {
+  display: none;
+}
+@media (max-width: 640px) {
+  .page {
+    padding: 20px 20px 40px;
+  }
+  .headRow {
+    padding: 8px 4px 0;
+  }
+  .title {
+    font-size: 32px;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+  }
+  .lede {
+    font-size: 15px;
+  }
+  .section {
+    margin-top: 22px;
+  }
+  .activeGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .trail {
+    display: flex;
+    flex-wrap: wrap;
+    min-height: 44px;
+    align-items: center;
+    font-size: 13px;
+  }
+  .hero {
+    margin-top: -20px;
+  }
+  .mobileHeroBack {
+    display: grid;
+    place-items: center;
+    position: absolute;
+    z-index: 2;
+    top: 12px;
+    left: 12px;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    color: var(--color-hero-text);
+    background: rgb(245 242 234 / 0.14);
+  }
+  .heroBody {
+    padding-top: 76px;
+  }
+}
+
+.mobileDays {
+  display: none;
+}
+@media (max-width: 640px) {
+  /* Reference screen 15: image first, then a rounded paper panel with title and tags. */
+  .hero {
+    position: relative;
+    overflow: visible;
+    padding-top: 300px;
+    min-height: 0;
+    background: transparent;
+    margin-bottom: 18px;
+    border-radius: 0;
+  }
+  .heroImg,
+  .heroScrim {
+    height: 300px;
+  }
+  .heroBody {
+    position: relative;
+    min-height: 0;
+    margin-top: -28px;
+    padding: 24px 20px 0;
+    border-radius: 28px 28px 0 0;
+    background: var(--color-bg);
+    color: var(--color-text);
+  }
+  .heroTitle {
+    color: var(--color-text);
+  }
+  .heroText {
+    color: var(--color-text-muted);
+  }
+  .heroMeta {
+    color: var(--color-accent-text);
+  }
+  .mobileDays {
+    display: flex;
+    flex-direction: column;
+    margin-top: 22px;
+    gap: 0;
+  }
+  .mobileDays h2 {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-size: 20px;
+    font-weight: var(--weight-extrabold);
+    margin-bottom: 8px;
+  }
+  .mobileDays h2 span {
+    font-size: 13px;
+    color: var(--color-text-muted);
+    font-weight: var(--weight-medium);
+  }
+  .dayRow {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-height: 68px;
+    padding: 8px 4px;
+    border-bottom: 1px solid var(--color-border);
+    color: var(--color-text);
+    text-decoration: none;
+  }
+  .dayNumber {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1.5px solid var(--color-border-strong);
+    font-size: 14px;
+    font-weight: var(--weight-extrabold);
+  }
+  .dayRow > span:nth-child(2) {
+    flex: 1;
+    min-width: 0;
+  }
+  .dayRow strong {
+    display: block;
+    font-size: 15px;
+  }
+  .dayRow small {
+    display: block;
+    color: var(--color-text-muted);
+    font-size: 13px;
+    margin-top: 2px;
+  }
+  .dayArrow {
+    rotate: 180deg;
+    flex: none;
+  }
+}
+
+.activeHeading {
+  margin-bottom: 16px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--color-accent-text);
+}
+@media (max-width: 640px) {
+  .activeHeading {
+    display: none;
+  }
+  .searchBox {
+    display: none;
+  }
+  .searchBar {
+    position: static;
+    background: none;
+    backdrop-filter: none;
+    margin: 0 0 18px;
+    padding: 0;
+  }
+  .sectionTitle {
+    font-size: 22px;
+    letter-spacing: -0.02em;
+    text-transform: none;
+    color: var(--color-text);
+    margin-bottom: 12px;
+  }
+  .groupTitle {
+    font-size: 20px;
+  }
+  .groupText {
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  .row {
+    grid-auto-columns: 156px;
+    gap: 12px;
+  }
+  .chipCount,
+  .tileText {
+    display: none;
+  }
+  .chip {
+    font-size: 14px;
+    font-weight: 600;
+    padding-inline: 14px;
+  }
+  .group[data-group='lessons'] .row {
+    display: flex;
+    flex-direction: column;
+  }
+  .group[data-group='lessons'] .planCard {
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+    padding: 14px;
+    border-radius: 18px;
+    background: var(--color-surface);
+  }
+  .group[data-group='lessons'] .cover {
+    width: 48px;
+    height: 48px;
+    flex: none;
+    border-radius: 12px;
+  }
+}
+
+.mobileProgress {
+  display: none;
+}
+@media (max-width: 640px) {
+  .hero {
+    margin-inline: -20px;
+  }
+  .heroTitle {
+    font-size: 30px;
+  }
+  .mobileProgress {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 20px;
+    margin-top: 20px;
+    background: var(--color-surface);
+    border-radius: 22px;
+  }
+  .mobileProgress > div {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .mobileProgress h2 {
+    font-size: 15px;
+    font-weight: 800;
+  }
+  .mobileProgress span,
+  .mobileProgress small {
+    font-size: 12px;
+    color: var(--color-text-muted);
+  }
+  .mobileProgress progress {
+    width: 100%;
+    height: 6px;
+    border: 0;
+    border-radius: 3px;
+    overflow: hidden;
+    background: var(--color-surface-sunk);
+  }
+  .mobileProgress progress::-webkit-progress-bar {
+    background: var(--color-surface-sunk);
+  }
+  .mobileProgress progress::-webkit-progress-value {
+    background: var(--color-accent);
+  }
+  .mobileProgress progress::-moz-progress-bar {
+    background: var(--color-accent);
+  }
+  .mobileProgress > div > button {
+    flex: none;
+    border: 0;
+    background: none;
+    font: inherit;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--color-text-muted);
+    min-height: 44px;
+    cursor: pointer;
+  }
+}
+
+.categoryVerses,
+.relatedCategories {
+  display: none;
+}
+@media (max-width: 640px) {
+  [data-category] .cardGrid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 18px;
+  }
+  .page[data-category] .cardGrid .planCard {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    padding: 0 0 18px;
+    overflow: hidden;
+    border-radius: 22px;
+    background: var(--color-surface);
+  }
+  .page[data-category] .cardGrid .planCard .cover {
+    width: 100%;
+    flex: none;
+    aspect-ratio: 350 / 160;
+    border-radius: 0;
+  }
+  .page[data-category] .cardGrid .cardBody {
+    padding: 12px 18px;
+  }
+  .page[data-category] .cardGrid .planCard::after {
+    flex: none;
+    content: 'See the plan';
+    display: grid;
+    place-items: center;
+    height: 44px;
+    margin: 0 18px;
+    border-radius: 999px;
+    background: var(--color-text);
+    color: var(--color-bg);
+    font-size: 14px;
+    font-weight: 700;
+  }
+  .categoryVerses,
+  .relatedCategories {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 24px;
+  }
+  .categoryVerses h2,
+  .relatedCategories h2 {
+    font-size: 20px;
+    font-weight: 800;
+  }
+  .categoryVerses button {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    text-align: left;
+    padding: 18px;
+    border: 0;
+    border-radius: 18px;
+    background: var(--color-surface);
+    color: var(--color-text);
+    cursor: pointer;
+  }
+  .categoryVerses strong {
+    font-size: 14px;
+  }
+  .categoryVerses span {
+    font-family: var(--font-display);
+    font-size: 18px;
+    line-height: 1.55;
+  }
+}

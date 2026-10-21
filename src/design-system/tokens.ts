@@ -225,8 +225,8 @@ function staticVars(): string {
 /** Builds the stylesheet that exposes every token as a CSS variable. */
 export function tokensCss(): string {
   return `:root {\n  ${staticVars()}\n}
-:root, [data-theme='dark'] {\n  ${cssVars('dark')}\n}
-[data-theme='light'] {\n  ${cssVars('light')}\n}
+[data-theme='dark'] {\n  ${cssVars('dark')}\n}
+:root, [data-theme='light'] {\n  ${cssVars('light')}\n}
 [data-reduce-motion='true'] {\n  --dur-instant: var(--dur-reduced); --dur-quick: var(--dur-reduced); --dur-standard: var(--dur-reduced); --dur-slide: var(--dur-reduced); --dur-reveal: var(--dur-reduced); --dur-state: var(--dur-reduced); --dur-sheet: var(--dur-reduced); --dur-celebrate: var(--dur-reduced); --dur-overshoot: var(--dur-reduced); --press-scale: 1;\n}`;
 }
 

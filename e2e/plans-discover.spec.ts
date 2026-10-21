@@ -70,7 +70,8 @@ test.describe('on a phone', () => {
   test('Plans greets you, and filters open as a bottom sheet', async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await openApp(page, '/plans');
-    await expect(page.getByRole('banner')).toContainText('A plan for you');
+    await expect(page.getByRole('heading', { name: 'A plan for you', exact: true })).toBeVisible();
+    await expect(page.getByRole('banner')).toHaveCount(0);
     await page.getByRole('button', { name: 'Length' }).tap();
     const sheet = page.getByRole('dialog', { name: 'Length' });
     await sheet.getByRole('radio', { name: 'Monthly lessons' }).tap();

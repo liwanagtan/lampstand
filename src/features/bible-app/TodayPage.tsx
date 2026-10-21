@@ -1,7 +1,5 @@
-import { BarTitle } from '@/app/BarTitle';
-import { usePhoneTitle } from '@/app/topBar';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { useLiveQuery } from 'dexie-react-hooks';
 import {
@@ -15,10 +13,10 @@ import {
 } from 'lucide-react';
 import { Button, IconButton, Tooltip, cx, toast } from '@/design-system/components';
 import { db } from '@/db/db';
+import { BOOK_BY_CODE } from '@/features/bible/books';
 import { formatRef, toOsis } from '@/features/bible/ref';
 import {
   addBundledBackground,
-  backgroundUrl,
   loadBackgrounds,
   type BackgroundEntry,
 } from '@/features/library/backgrounds';
@@ -30,7 +28,7 @@ import { useSettings } from '@/features/settings/settingsStore';
 import { usePassage } from '@/slides/usePassage';
 import { localDate, localDayNumber, verseOfTheDay } from './dailyVerses';
 import { entryHasContent, entryPreview, useReflection } from './journal';
-import { usePlanProgress, usePlans } from './plans';
+import { formatDay, usePlanProgress, usePlans } from './plans';
 import { ActivePlan } from './ActivePlan';
 import { useReader } from './readerStore';
 import { ContextPanel, ReflectPanel } from './TodayPanels';
@@ -38,6 +36,7 @@ import { showOnTv } from './tvActions';
 import { ClassicDevotional } from './ClassicDevotional';
 import { FlameCompanion } from '@/design-system/FlameCompanion';
 import styles from './Today.module.css';
+import { useIsPhone } from '@/app/useIsPhone';
 import { paths } from '@/app/paths';
 
 const longDate = new Intl.DateTimeFormat(undefined, {
@@ -65,15 +64,22 @@ export function TodayPage() {
   const reduced = useReducedMotion();
   const name = useSettings((s) => s.profile.name.trim().split(/\s+/)[0] ?? '');
   const classic = useSettings((s) => s.classicDevotional);
-  // Phones: your greeting leads the top bar, with the date quietly beneath it.
-  usePhoneTitle(
-    <BarTitle title={`${greeting(now)}${name ? `, ${name}` : ''}`} line={longDate.format(now)} />,
-  );
+  const phone = useIsPhone();
+  const progress = usePlanProgress();
+  const plans = usePlans();
+  const finishedToday = progress
+    ?.flatMap((p) =>
+      Object.entries(p.doneAt ?? {})
+        .filter(([, t]) => localDate(new Date(t)) === date)
+        .map(([day]) => ({ plan: plans?.find((x) => x.id === p.planId), day: Number(day) })),
+    )
+    .find((p) => p.plan);
+  const evening = phone && now.getHours() >= 17 && Boolean(finishedToday);
 
   return (
-    <div className={styles.page}>
+    <div className={styles.page} data-evening={evening || undefined}>
       <motion.header
-        className={cx(styles.greeting, 'phone-hidden')}
+        className={styles.greeting}
         initial={reduced ? false : { opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
@@ -85,22 +91,61 @@ export function TodayPage() {
         </h1>
       </motion.header>
 
-      {/* Laptops: the verse, your plan and the classic reading in the main column; the week and
-          the invitation to reflect beside them. Phones: one column, in that order. */}
+      {evening && finishedToday?.plan && (
+        <Link className={styles.eveningRead} to={paths.planPage(finishedToday.plan.id)}>
+          <Check size={22} aria-hidden />
+          <span>
+            <strong>
+              Day {finishedToday.day} read ·{' '}
+              {formatDay(finishedToday.plan.days[finishedToday.day - 1]!)}
+            </strong>
+            <small>{finishedToday.plan.name} · Carry on at your pace</small>
+          </span>
+        </Link>
+      )}
       <div className={styles.cols}>
-        <div className={styles.main}>
-          <VerseHero
-            now={now}
-            onContext={() => setPanel('context')}
-            onReflect={() => setPanel('reflect')}
-          />
-          <TodayPlans />
-          {classic && <ClassicDevotional now={now} />}
-        </div>
-        <aside className={styles.aside}>
-          <WeekStrip now={now} />
-          <ReflectionCard date={date} onReflect={() => setPanel('reflect')} />
-        </aside>
+        {phone ? (
+          <>
+            <div className={styles.verseSlot}>
+              <VerseHero
+                now={now}
+                onContext={() => setPanel('context')}
+                onReflect={() => setPanel('reflect')}
+              />
+            </div>
+            <div className={styles.weekSlot}>
+              <WeekStrip now={now} />
+            </div>
+            <div className={styles.plansSlot}>
+              <TodayPlans />
+            </div>
+            <div className={styles.reflectSlot}>
+              <ReflectionCard date={date} onReflect={() => setPanel('reflect')} />
+            </div>
+            {classic && (
+              <div className={styles.classicSlot}>
+                <ClassicDevotional now={now} />
+              </div>
+            )}
+          </>
+        ) : (
+          <>
+            <div className={styles.main}>
+              <VerseHero
+                now={now}
+                onContext={() => setPanel('context')}
+                onReflect={() => setPanel('reflect')}
+              />
+              <TodayPlans />
+              {classic && <ClassicDevotional now={now} />}
+            </div>
+            <aside className={styles.aside} aria-label="Your daily reading">
+              <WeekStrip now={now} />
+              <ReflectionCard date={date} onReflect={() => setPanel('reflect')} />
+              <ResumeReading />
+            </aside>
+          </>
+        )}
       </div>
 
       <ContextPanel
@@ -200,7 +245,6 @@ function VerseHero({
   const osis = toOsis(range);
   const { passage } = usePassage(osis, translation);
   const daily = useDailyPhoto(now);
-  const photo = daily ? backgroundUrl(daily.file) : null;
   const { live, present, stop } = usePresentVerse(osis, translation, daily);
   const text = passage?.verses
     .filter((v) => !v.missing)
@@ -225,14 +269,6 @@ function VerseHero({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.05 }}
     >
-      {photo && (
-        <img
-          className={cx(styles.heroPhoto, !reduced && styles.heroPhotoDrift)}
-          src={photo}
-          alt=""
-        />
-      )}
-      <div className={styles.heroScrim} aria-hidden />
       <div className={styles.heroBody}>
         <p className={styles.heroEyebrow}>
           <Sparkles size={14} aria-hidden /> Verse of the day
@@ -383,29 +419,53 @@ function ReflectionCard({ date, onReflect }: { date: string; onReflect: () => vo
   return (
     <section className={cx(styles.card, styles.reflect)} aria-label="Reflection">
       {!written && <FlameCompanion size={96} className={styles.companion} />}
-      <h2 className={styles.cardTitle}>{written ? 'Your reflection' : 'Take five minutes'}</h2>
-      {written && entry ? (
-        <>
-          <p className={styles.preview}>“{entryPreview(entry)}”</p>
-          <p className={styles.done}>
-            <Check size={16} aria-hidden /> Saved to your journal
+      <div className={styles.reflectBody}>
+        <h2 className={styles.cardTitle}>{written ? 'Your reflection' : 'Take five minutes'}</h2>
+        {written && entry ? (
+          <>
+            <p className={styles.preview}>“{entryPreview(entry)}”</p>
+            <p className={styles.done}>
+              <Check size={16} aria-hidden /> Saved to your journal
+            </p>
+          </>
+        ) : (
+          <p className={styles.muted}>
+            Sit with {formatRef(range)} for a moment. What is God saying to you? A few simple
+            questions can help.
           </p>
-        </>
-      ) : (
-        <p className={styles.muted}>
-          Sit with {formatRef(range)} for a moment. What is God saying to you? A few simple
-          questions can help.
-        </p>
-      )}
-      <div className={styles.row}>
-        <Button
-          variant={written ? 'secondary' : 'gold'}
-          icon={<NotebookPen size={16} />}
-          onClick={onReflect}
-        >
-          {written ? 'Keep writing' : 'Reflect'}
-        </Button>
+        )}
+        <div className={styles.row}>
+          <Button
+            variant={written ? 'secondary' : 'gold'}
+            icon={<NotebookPen size={16} />}
+            onClick={onReflect}
+          >
+            {written ? 'Keep writing' : 'Reflect'}
+          </Button>
+        </div>
       </div>
+    </section>
+  );
+}
+
+/** Desktop Today: resume the actual saved chapter and open the journal in Journey. */
+function ResumeReading() {
+  const book = useReader((s) => s.book);
+  const chapter = useReader((s) => s.chapter);
+  const translation = useReader((s) => s.translation);
+  return (
+    <section className={styles.resume} aria-label="Pick up where you left off">
+      <h2 className={styles.date}>Pick up where you left off</h2>
+      <Link to={paths.bible}>
+        <strong>
+          {BOOK_BY_CODE.get(book)?.refName ?? book} {chapter}
+        </strong>
+        <span>Bible · {translation}</span>
+      </Link>
+      <Link to={paths.profile}>
+        <strong>Your journal</strong>
+        <span>Journey</span>
+      </Link>
     </section>
   );
 }

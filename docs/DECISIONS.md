@@ -157,3 +157,25 @@ Dated choices not covered by the PRD (docs/PRD.md §14).
 - 2026-10-19 — Spurgeon's Morning and Evening (1865, public domain, CCEL) is Today's classic devotional: a card with Morning and Evening (morning until 5 pm), his key verse shown in the reader's translation, and the full reading in a sheet with Open in the Bible. His words stay exactly as written, King James quotations included — the one agreed exception to scripture-only-from-translation-files, labelled "Written by Charles H. Spurgeon in 1865". Built by scripts/build-spurgeon.ts into public/devotionals/morning-evening.json (732 readings, 1.4 MB, offline); Settings › Reading can hide it.
 - 2026-10-19 — Open Bible Stories (unfoldingWord en_obs v9, questions en_obs-tq v10; CC BY-SA 4.0) as two plans: The Bible in 50 stories (daily, families and new readers) and God's big story: a year of Sunday lessons (weekly, children). Each day reads the first passage the story comes from (at most two chapters), lists all its sources, gives the story unchanged as the day's reading notes and up to five of unfoldingWord's questions. As a changed work they don't carry the unfoldingWord® trademark; credits use unfoldingWord's attribution wording and say what changed; the two plan files stay CC BY-SA. Built by scripts/build-obs.ts. The plan format's devotional limit rises to 6,000 characters for the longer stories.
 - 2026-10-19 — Tyndale Open Study Notes (CC BY-SA 4.0, © 2022 Tyndale House Publishers): an "About {book}" button by each chapter title (summary and full introduction) and a small notes mark beside verses that have notes, opening a sheet; plan days get a "Study notes (n)" button per reading. Cross-references are real links that open the reader. Built by scripts/build-notes.ts into public/notes/<BOOK>.json (16,923 notes, 8.9 MB): markup reduced to paragraphs, emphasis and links, psalm-heading notes on verse 1, partial verses as whole verses; wording unchanged. Credited with Tyndale's prescribed "Adapted from…" wording in every notes sheet and in Credits. Notes aren't precached (8.9 MB): each book downloads when first opened and then works offline. Settings › Reading can hide them.
+
+- 2026-10-21 — Owner instruction: app appearance is temporarily locked to Light. Dark and System choices remain disabled until the owner explicitly asks to restore them. This supersedes the earlier System/Dark defaults; ink surfaces in the supplied designs remain intentional.
+- 2026-10-21 — Owner instruction: desktop onboarding progress belongs in the form body above its step content; mobile retains its reference header placement.
+
+- 2026-10-21 — Owner instruction: desktop/tablet Welcome now shares the mobile dark opening composition and animated light rays. This supersedes the prior desktop light form/split illustration. Desktop progress remains in the form body; mobile progress stays in its reference header. Ray sweep (12s) and pulse (6s) stop for OS/app Reduce Motion. The rest of the app remains locked to Light.
+
+- 2026-10-21 — Latest owner instruction supersedes dark Welcome: every onboarding step uses Light with the same sun/halo graphic as Today. Remove the ray animation. Desktop progress remains in the body, mobile progress in the header.
+
+
+### 2026-10-21 — Dark Welcome and flame-shaped glow
+
+Welcome now uses the existing dark design-system color tokens locally, including cream text, muted secondary text, and gold accents. This supersedes the light Welcome/sun treatment: remove the sun from Welcome while retaining it on Today. The animated book lamp uses an enlarged, softly blurred copy of the flame silhouette for its glow, synchronized with the flame animation, instead of a circular halo. The rest of the app remains locked to light appearance.
+
+
+### 2026-10-21 — Welcome completes on Today
+
+Completing or skipping onboarding saves the profile and opens Today. A chosen plan is started and ready on Today, without opening day one automatically. Today remains enabled for every onboarding path. The final action reads “Go to Today”. A brief dark handoff screen says “Preparing your daily reading…” with the animated book lamp; reduced-motion users skip the minimum display delay. Save failures return to the form with a retry message.
+
+
+### 2026-10-21 — Setup companion and preview
+
+Use the celebrating FlameCompanion from day completion on the setup screen, rather than the book logo. Keep the screen visible for at least three seconds, including for reduced-motion users (the companion respects reduced motion). Reveal three short previews of Today at one-second intervals, with plain status copy and no simulated percentage.

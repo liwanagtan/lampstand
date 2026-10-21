@@ -33,10 +33,6 @@
 .mark {
   display: none;
 }
-.phoneBar,
-.phoneBack {
-  display: none;
-}
 
 .nav {
   display: flex;
@@ -184,13 +180,7 @@
   --sun: var(--color-accent);
   --halo: color-mix(in srgb, var(--color-accent) 16%, transparent);
   --sky: var(--color-dawn);
-  background:
-    radial-gradient(circle at var(--sun-x) var(--sun-y), var(--sun) 0 44px, transparent 45px),
-    radial-gradient(circle at var(--sun-x) var(--sun-y), var(--halo) 0 92px, transparent 93px),
-    radial-gradient(circle at var(--sun-x) var(--sun-y), var(--halo) 0 160px, transparent 161px),
-    radial-gradient(circle at var(--sun-x) var(--sun-y), var(--halo) 0 250px, transparent 251px),
-    linear-gradient(var(--sky), var(--color-bg)) 0 0 / 100% 440px no-repeat,
-    var(--color-bg);
+  background: var(--today-sun-background);
   background-attachment: local;
 }
 .main[data-daypart='day'] {
@@ -229,62 +219,8 @@
   }
 }
 
-/* Phones: the destinations move to a bottom tab bar (thumb reach); the top bar keeps the
-   mark, the TV status and Me. */
+/* Mobile reference: page-owned headers and five bottom destinations. */
 @media (max-width: 640px) {
-  .shell {
-    grid-template-rows: auto minmax(0, 1fr) auto;
-  }
-  .topbar {
-    gap: var(--space-3);
-    /* Clear the notch and status bar when installed full screen. */
-    height: calc(52px + env(safe-area-inset-top));
-    padding: env(safe-area-inset-top) max(var(--space-4), env(safe-area-inset-right)) 0
-      max(var(--space-4), env(safe-area-inset-left));
-  }
-  .lockup,
-  .nav,
-  .me {
-    display: none;
-  }
-  .mark {
-    display: block;
-  }
-  .phoneBar {
-    display: flex;
-    flex: 1;
-    align-items: center;
-    gap: var(--space-2);
-    min-width: 0;
-    height: 100%;
-  }
-  .phoneBack {
-    display: grid;
-    flex: none;
-    place-items: center;
-    width: 44px;
-    height: 44px;
-    margin: 0 calc(var(--space-3) * -1) 0 calc(var(--space-3) * -1);
-    border-radius: var(--radius-sm);
-    color: var(--color-text);
-  }
-  .phoneTitle {
-    flex: 1;
-    min-width: 0;
-    overflow: hidden;
-    text-align: right;
-    font-size: 16px;
-    font-weight: var(--weight-semibold);
-    white-space: nowrap;
-    text-overflow: ellipsis;
-  }
-  .phoneActions {
-    display: flex;
-    flex: none;
-    align-items: center;
-    gap: var(--space-1);
-    margin-right: calc(var(--space-2) * -1);
-  }
   .tabbar {
     display: grid;
     grid-auto-columns: minmax(0, 1fr);
@@ -321,5 +257,39 @@
     box-shadow:
       0 0 0 2px var(--color-surface),
       0 0 0 4px var(--color-accent);
+  }
+}
+
+/* Supplied mobile screens: no shared brand/title bar. Headers belong to each page. */
+@media (max-width: 640px) {
+  .shell {
+    grid-template-rows: minmax(0, 1fr) auto;
+  }
+  .topbar {
+    display: none;
+  }
+  .main {
+    padding-top: env(safe-area-inset-top);
+  }
+  .tabbar {
+    padding-bottom: max(24px, env(safe-area-inset-bottom));
+  }
+}
+
+@media (max-width: 640px) {
+  .shell[data-focus-reading] {
+    grid-template-rows: minmax(0, 1fr);
+  }
+  .shell[data-focus-reading] .tabbar {
+    display: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .main[data-atmosphere='today']:not([data-daypart='night']) {
+    --sun-x: calc(100% - 70px);
+    --sun-y: 26px;
+    background: var(--today-sun-background);
+    background-attachment: local;
   }
 }

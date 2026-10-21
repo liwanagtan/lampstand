@@ -1,7 +1,8 @@
 import { Link } from 'react-router-dom';
-import { CircleCheck } from 'lucide-react';
+import { CircleCheck, ChevronRight, BookOpen } from 'lucide-react';
 import { paths } from '@/app/paths';
 import { ActivePlan } from '@/features/bible-app/ActivePlan';
+import { currentDay } from '@/features/bible-app/plans';
 import { JourneyTimeline } from '@/features/bible-app/JourneyTimeline';
 import { useSettings } from '@/features/settings/settingsStore';
 import { useJourneyStats } from './useJourneyStats';
@@ -33,6 +34,8 @@ export function JourneyPage() {
         </section>
       )}
 
+      {stats && !empty && <ReadingCalendar days={stats.activityDays} />}
+
       {plansOn && stats && !empty && (
         <section className={styles.section} aria-label="Your plans">
           <div className={styles.sectionHead}>
@@ -49,7 +52,24 @@ export function JourneyPage() {
           {stats.going.length > 0 && (
             <div className={styles.plans}>
               {stats.going.map(({ plan, progress }) => (
-                <ActivePlan key={plan.id} plan={plan} progress={progress} />
+                <div key={plan.id}>
+                  <div className="laptop-only">
+                    <ActivePlan plan={plan} progress={progress} />
+                  </div>
+                  <Link to={paths.planPage(plan.id)} className={styles.journeyPlan}>
+                    <BookOpen size={24} aria-hidden />
+                    <span>
+                      <strong>{plan.name}</strong>
+                      <small>
+                        {progress.done.length} of {plan.days.length} ·{' '}
+                        {currentDay(plan, progress).kind === 'read'
+                          ? 'Next reading ready'
+                          : 'Reading in progress'}
+                      </small>
+                    </span>
+                    <ChevronRight size={18} aria-hidden />
+                  </Link>
+                </div>
               ))}
             </div>
           )}
@@ -82,5 +102,50 @@ function Stat({ value, label }: { value: number | undefined; label: string }) {
       <dt className={styles.statLabel}>{label}</dt>
       <dd className={styles.statValue}>{value ?? '–'}</dd>
     </div>
+  );
+}
+
+function ReadingCalendar({ days }: { days: readonly string[] }) {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = now.getMonth();
+  const offset = new Date(year, month, 1).getDay();
+  const count = new Date(year, month + 1, 0).getDate();
+  const active = new Set(days);
+  return (
+    <section className={styles.calendar} aria-label="Days you read this month">
+      <div className={styles.calendarHead}>
+        <h2>{new Intl.DateTimeFormat(undefined, { month: 'long' }).format(now)}</h2>
+        <span>Days you read</span>
+      </div>
+      <div className={styles.calendarGrid}>
+        {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((label, i) => (
+          <span key={i} className={styles.calendarWeekday} aria-hidden>
+            {label}
+          </span>
+        ))}
+      </div>
+      <div className={styles.calendarGrid}>
+        {Array.from({ length: offset }, (_, i) => (
+          <span key={`blank${i}`} />
+        ))}
+        {Array.from({ length: count }, (_, i) => {
+          const n = i + 1;
+          const key = `${year}-${String(month + 1).padStart(2, '0')}-${String(n).padStart(2, '0')}`;
+          const read = active.has(key);
+          return (
+            <span
+              key={n}
+              className={styles.calendarDay}
+              data-read={read || undefined}
+              aria-current={n === now.getDate() ? 'date' : undefined}
+              aria-label={`${key}${read ? ': read' : ''}`}
+            >
+              {n}
+            </span>
+          );
+        })}
+      </div>
+    </section>
   );
 }

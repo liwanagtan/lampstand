@@ -1,4 +1,8 @@
+import { FAITH_JOURNEYS } from '@/app/faithJourney';
 import { useState } from 'react';
+import { useIsPhone } from '@/app/useIsPhone';
+import { Link } from 'react-router-dom';
+import { paths } from '@/app/paths';
 import { ChevronDown } from 'lucide-react';
 import { Input, Select, Toggle, cx } from '@/design-system/components';
 import {
@@ -19,16 +23,22 @@ import styles from './SettingsPage.module.css';
 
 /** Profile › You: your name and colour. Becomes the signed-in account in v2. */
 export function YouSection() {
+  const phone = useIsPhone();
   const profile = useSettings((s) => s.profile);
   const set = useSettings((s) => s.set);
   const [name, setName] = useState(profile.name);
   const stats = useJourneyStats();
   return (
-    <Section title="You" description="Today and Profile greet you by name.">
+    <Section
+      profile
+      title={phone ? 'Your name' : 'You'}
+      description="Today and Profile greet you by name."
+    >
       <div className={styles.you}>
         <Avatar size={48} />
         <Input
           label="Your name"
+          hideLabel={phone}
           value={name}
           maxLength={40}
           placeholder="What should Lampstand call you?"
@@ -38,6 +48,20 @@ export function YouSection() {
           className={styles.grow}
         />
       </div>
+      <Select
+        label="Your faith journey"
+        value={profile.faithJourney ?? 'private'}
+        onChange={(value) =>
+          void set('profile', {
+            ...profile,
+            faithJourney: FAITH_JOURNEYS.find((option) => option.value === value)?.value,
+          })
+        }
+        options={[
+          { value: 'private', label: 'I’d rather not say' },
+          ...FAITH_JOURNEYS.map((option) => ({ value: option.value, label: option.label })),
+        ]}
+      />
       <div className={styles.colors} role="radiogroup" aria-label="Avatar colour">
         {AVATAR_COLORS.map(({ color, label }) => (
           <button
@@ -68,6 +92,7 @@ const sinceFormat = new Intl.DateTimeFormat(undefined, { month: 'long', year: 'n
 export function UsesSection() {
   return (
     <Section
+      profile
       title="What I use Lampstand for"
       description="Turn parts of Lampstand on or off. Switching off hides them; nothing you wrote is lost. The Bible is always here."
     >
@@ -95,6 +120,11 @@ function UseCaseSwitch({ useCase: u }: { useCase: UseCase }) {
         label={state === 'some' ? `${u.title} (customised)` : u.title}
         description={`${u.description} ${u.turnsOn}`}
       />
+      {u.id === 'teach' && features.screen && (
+        <Link to={paths.screen} className={styles.mobileOpenScreen}>
+          Open Screen
+        </Link>
+      )}
       {u.parts.length > 1 && (
         <>
           <button
@@ -126,11 +156,15 @@ function UseCaseSwitch({ useCase: u }: { useCase: UseCase }) {
 
 /** Settings › Reading: how the Bible reads, everywhere it appears. */
 export function ReadingSection() {
+  const phone = useIsPhone();
   const translation = useReader((s) => s.translation);
   const parallel = useReader((s) => s.parallel);
   const size = useReader((s) => s.size);
   const translations = useBible((b) => b.translations);
-  const options = translations.map((t) => ({ value: t.code, label: `${t.code} — ${t.name}` }));
+  const options = translations.map((t) => ({
+    value: t.code,
+    label: phone ? t.code : `${t.code} — ${t.name}`,
+  }));
   const classic = useSettings((s) => s.classicDevotional);
   const studyNotes = useSettings((s) => s.studyNotes);
   const set = useSettings((s) => s.set);
@@ -163,13 +197,21 @@ export function ReadingSection() {
         checked={classic}
         onChange={(on) => void set('classicDevotional', on)}
         label="Classic devotional on Today"
-        description="Spurgeon's Morning and Evening (1865): a short reading each morning and evening."
+        description={
+          phone
+            ? 'Spurgeon’s Morning and Evening (1865)'
+            : "Spurgeon's Morning and Evening (1865): a short reading each morning and evening."
+        }
       />
       <Toggle
         checked={studyNotes}
         onChange={(on) => void set('studyNotes', on)}
         label="Study notes"
-        description="Tyndale Open Study Notes: an introduction to each book, and notes beside the verses that have them."
+        description={
+          phone
+            ? 'Tyndale Open Study Notes beside the verses'
+            : 'Tyndale Open Study Notes: an introduction to each book, and notes beside the verses that have them.'
+        }
       />
     </Section>
   );

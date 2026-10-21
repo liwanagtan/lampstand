@@ -1,3 +1,5 @@
+> Mobile correction: the earlier completion notes below are superseded by [MOBILE-FIDELITY.md](MOBILE-FIDELITY.md). The prior mobile shared-header implementation did not follow the supplied HTML. The correction is currently uncommitted and its browser verification limits are recorded there.
+
 # Responsive redesign implementation
 
 21 October 2026 · Branch `design/responsive-redesign` · Do not merge into main without

@@ -20,11 +20,12 @@ export const useSettings = create<SettingsState>((setState) => ({
         (loaded as Record<string, unknown>)[row.key] = row.value;
       }
     }
-    setState({ ...loaded, loaded: true });
+    setState({ ...loaded, uiMode: 'light', loaded: true });
   },
   set: async (key, value) => {
-    setState({ [key]: value } as Partial<SettingsState>);
-    await db.settings.put({ key, value } as SettingRecord);
+    const nextValue = key === 'uiMode' ? 'light' : value;
+    setState({ [key]: nextValue } as Partial<SettingsState>);
+    await db.settings.put({ key, value: nextValue } as SettingRecord);
   },
 }));
 

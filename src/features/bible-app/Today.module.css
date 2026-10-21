@@ -28,7 +28,7 @@
 }
 .cols {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 360px;
+  grid-template-columns: minmax(0, 1fr) 380px;
   gap: var(--space-6);
   align-items: start;
 }
@@ -53,29 +53,6 @@
   border-radius: var(--radius-xl);
   background: var(--color-hero);
   color: var(--color-hero-text);
-}
-.heroPhoto {
-  position: absolute;
-  inset: 0;
-  z-index: -2;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  opacity: 0.4;
-  animation: photoIn 900ms ease-out both;
-}
-.heroPhotoDrift {
-  animation:
-    photoIn 900ms ease-out both,
-    drift 40s ease-in-out infinite alternate;
-}
-.heroScrim {
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  background:
-    linear-gradient(90deg, rgb(10 15 28 / 0.85) 0%, rgb(10 15 28 / 0.55) 60%, rgb(10 15 28 / 0.3)),
-    linear-gradient(0deg, rgb(10 15 28 / 0.7), transparent 55%);
 }
 .heroBody {
   display: flex;
@@ -267,19 +244,6 @@
   color: var(--color-success, var(--color-accent-text));
 }
 
-@keyframes photoIn {
-  from {
-    opacity: 0;
-  }
-}
-@keyframes drift {
-  from {
-    transform: scale(1.04) translate(0, 0);
-  }
-  to {
-    transform: scale(1.1) translate(-2%, -1%);
-  }
-}
 @media (max-width: 640px) {
   .page {
     gap: var(--space-4);
@@ -309,4 +273,210 @@
   .heroText {
     font-size: 21px;
   }
+}
+
+/* Mobile screen 5: the date/greeting is part of Today, never app chrome. */
+@media (max-width: 640px) {
+  .page {
+    padding: 20px 20px 40px;
+    gap: 22px;
+  }
+  .greeting {
+    padding: 8px 4px 0;
+    gap: 6px;
+  }
+  .hello {
+    font-size: 32px;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+  }
+  .heroBody {
+    padding: 24px 22px 22px;
+  }
+  .heroText {
+    font-size: 21px;
+    line-height: 1.55;
+  }
+}
+
+.verseSlot,
+.weekSlot,
+.plansSlot,
+.reflectSlot,
+.classicSlot {
+  min-width: 0;
+}
+.plansSlot {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+@media (max-width: 640px) {
+  .cols {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .cols > * {
+    width: 100%;
+  }
+}
+
+.reflectBody {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+}
+@media (max-width: 640px) {
+  .page {
+    gap: 16px;
+  }
+  .greeting {
+    padding-bottom: 18px;
+  }
+  .hero {
+    border-radius: 26px;
+  }
+  .heroText {
+    font-size: 22px;
+    line-height: 1.45;
+  }
+  .heroActions {
+    gap: 10px;
+    margin-top: 0;
+    align-items: center;
+  }
+  .heroButton {
+    flex: none;
+    padding-inline: 16px;
+  }
+  .heroButton > svg {
+    display: none;
+  }
+  .heroIcon {
+    margin-left: auto;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    flex: none;
+  }
+  .week {
+    border-radius: 22px;
+    padding: 20px;
+  }
+  .weekDot {
+    width: 34px;
+    height: 34px;
+  }
+  .reflect {
+    flex-direction: row;
+    align-items: center;
+    gap: 16px;
+    padding: 18px 20px 20px;
+    border-radius: 22px;
+  }
+  .companion {
+    width: 72px;
+    height: 112px;
+    flex: none;
+    align-self: center;
+    margin: 0;
+  }
+  .reflectBody {
+    gap: 10px;
+  }
+  .reflect .muted {
+    font-size: 14px;
+    line-height: 1.5;
+  }
+}
+@media (max-width: 359px) {
+  .heroButton {
+    padding-inline: 10px;
+    font-size: 13px;
+  }
+}
+
+.eveningRead {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 18px 20px;
+  border-radius: 22px;
+  background: var(--color-surface);
+  color: var(--color-text);
+  text-decoration: none;
+}
+.eveningRead strong {
+  display: block;
+  font-size: 15px;
+}
+.eveningRead small {
+  display: block;
+  font-size: 13px;
+  color: var(--color-text-muted);
+  margin-top: 4px;
+}
+@media (max-width: 640px) {
+  .page[data-evening] .verseSlot,
+  .page[data-evening] .plansSlot,
+  .page[data-evening] .reflectSlot {
+    display: none;
+  }
+  .page[data-evening] .cols {
+    grid-template-areas: 'week' 'classic';
+  }
+}
+
+/* Desktop reference 1: each column flows independently, without shared card rows. */
+@media (min-width: 641px) {
+  .page {
+    padding-top: 56px;
+    padding-bottom: 80px;
+    gap: 44px;
+  }
+  .main,
+  .aside {
+    gap: 24px;
+  }
+  .heroBody {
+    gap: 20px;
+    padding: 40px;
+  }
+  .reflect .cardTitle {
+    font-size: 20px;
+  }
+}
+.resume {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 24px;
+  border-radius: 24px;
+  background: var(--color-surface);
+}
+.resume h2 {
+  padding-bottom: 6px;
+}
+.resume a {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 48px;
+  gap: 12px;
+  color: var(--color-text);
+  text-decoration: none;
+}
+.resume a + a {
+  border-top: 1px solid var(--color-surface-sunk);
+}
+.resume strong {
+  font-size: 15px;
+  font-weight: 700;
+}
+.resume a span {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text-faint);
 }

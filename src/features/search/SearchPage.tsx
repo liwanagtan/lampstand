@@ -1,4 +1,3 @@
-import { usePhoneTitle } from '@/app/topBar';
 import { useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import {
@@ -33,6 +32,7 @@ const LIMIT = { verses: 12, plans: 6, journey: 8 };
 /** One box over the Bible, plans and your own journey (docs/PRD-ADDENDUM-GROW.md, M21). */
 export function SearchPage() {
   const [params] = useSearchParams();
+  const [filter, setFilter] = useState('all');
   const q = params.get('q') ?? '';
   const [value, setValue] = useState(q);
   // A new search from the top bar (See all results) replaces what's in the box.
@@ -41,7 +41,6 @@ export function SearchPage() {
     setShownQ(q);
     setValue(q);
   }
-  usePhoneTitle('Search');
   const openInReader = useOpenInReader();
   const [entry, setEntry] = useState<{ id: string } | null>(null);
   const [note, setNote] = useState<{ range: RefRange; note: MarkRecord | null } | null>(null);
@@ -50,7 +49,7 @@ export function SearchPage() {
 
   return (
     <div className={styles.page} data-enter>
-      <h1 className="visually-hidden">Search</h1>
+      <h1 className={styles.pageTitle}>Search</h1>
       <Input
         label="Search"
         hideLabel
@@ -63,22 +62,42 @@ export function SearchPage() {
         className={styles.box}
       />
 
+      {text && (
+        <div className={styles.filters} role="group" aria-label="Search results filter">
+          {[
+            ['all', 'All'],
+            ['topics', 'Verses'],
+            ['plans', 'Plans'],
+            ['bible', 'Bible'],
+            ['mine', 'My journal'],
+          ].map(([id, label]) => (
+            <button key={id} aria-pressed={filter === id} onClick={() => setFilter(id!)}>
+              {label}
+            </button>
+          ))}
+        </div>
+      )}
       {!text && (
         <div className={styles.try}>
-          <p className={styles.muted}>
-            Try a reference, a word, a feeling, or something you wrote.
-          </p>
+          <p className={styles.muted}>Search finds verses, plans and what you have written.</p>
+          <h2 className={styles.tryTitle}>Try</h2>
           <div className={styles.chips}>
             {TRY.map((t) => (
               <button key={t} type="button" className={styles.chip} onClick={() => setValue(t)}>
+                <span className={styles.suggestionIcon} aria-hidden>
+                  {/\d/.test(t) ? <BookOpen size={20} /> : <Heart size={20} />}
+                </span>
                 {t}
+                <span className={styles.suggestionKind}>
+                  {/\d/.test(t) ? 'Passage' : 'Feeling'}
+                </span>
               </button>
             ))}
           </div>
         </div>
       )}
 
-      {parsed?.ok && (
+      {(filter === 'all' || filter === 'bible') && parsed?.ok && (
         <Group title="Passage">
           <ResultButton
             icon={<BookOpen size={16} />}
@@ -95,25 +114,26 @@ export function SearchPage() {
         <p className={styles.muted}>{parsed.hint}</p>
       )}
 
-      {topics.map((topic) => (
-        <Group key={topic.label} title={`Verses for ${topic.label.toLowerCase()}`}>
-          {topic.refs.map((osis) => {
-            const r = fromOsis(osis);
-            if (!r) return null;
-            return (
-              <ResultButton
-                key={osis}
-                icon={<Heart size={16} />}
-                title={formatRef(r)}
-                detail={<RefText osis={osis} translation={translation} />}
-                onClick={() => openInReader(r)}
-              />
-            );
-          })}
-        </Group>
-      ))}
+      {(filter === 'all' || filter === 'topics') &&
+        topics.map((topic) => (
+          <Group key={topic.label} title={`Verses for ${topic.label.toLowerCase()}`}>
+            {topic.refs.map((osis) => {
+              const r = fromOsis(osis);
+              if (!r) return null;
+              return (
+                <ResultButton
+                  key={osis}
+                  icon={<Heart size={16} />}
+                  title={formatRef(r)}
+                  detail={<RefText osis={osis} translation={translation} />}
+                  onClick={() => openInReader(r)}
+                />
+              );
+            })}
+          </Group>
+        ))}
 
-      {journey.length > 0 && (
+      {(filter === 'all' || filter === 'mine') && journey.length > 0 && (
         <Group title="Your journey">
           {journey.map((i) =>
             isEntryItem(i) ? (
@@ -145,7 +165,7 @@ export function SearchPage() {
         </Group>
       )}
 
-      {planHits.length > 0 && (
+      {(filter === 'all' || filter === 'plans') && planHits.length > 0 && (
         <Group title="Plans">
           {planHits.map((p) => (
             <li key={p.id}>
@@ -163,7 +183,7 @@ export function SearchPage() {
         </Group>
       )}
 
-      {verses.length > 0 && (
+      {(filter === 'all' || filter === 'bible') && verses.length > 0 && (
         <Group title={`Bible · ${translation}`}>
           {verses.map((h) => {
             const r = fromOsis(h.osis);
@@ -184,6 +204,12 @@ export function SearchPage() {
       )}
 
       {nothing && <p className={styles.muted}>Nothing found for “{text}”. Try another word.</p>}
+
+      {!text && (
+        <p className={styles.privacy}>
+          Your journal, notes and highlights are searched on this device only.
+        </p>
+      )}
 
       <EntrySheet target={entry} onClose={() => setEntry(null)} />
       <NoteDialog target={note} onClose={() => setNote(null)} />

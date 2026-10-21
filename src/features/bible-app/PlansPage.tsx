@@ -1,8 +1,6 @@
-import { usePhoneTitle } from '@/app/topBar';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Search, X } from 'lucide-react';
-import { BarTitle } from '@/app/BarTitle';
 import { paths } from '@/app/paths';
 import { useSettings } from '@/features/settings/settingsStore';
 import type { CatalogNode } from '@/schema/planCatalog';
@@ -49,12 +47,11 @@ export function PlansPage() {
   const searching = query.trim() !== '' || pace !== 'all' || audience !== 'all';
   const results = searching ? searchPlans(all, query, pace, audience) : [];
   const hello = plansGreeting(name, active.length);
-  usePhoneTitle(<BarTitle title={hello.title} line={hello.line} />);
 
   return (
     <div className={styles.page} data-enter>
       <div className={styles.headRow}>
-        <div className="phone-hidden">
+        <div>
           <p className={styles.eyebrow}>Plans</p>
           <h1 className={styles.title}>{hello.title}</h1>
           <p className={styles.lede}>{hello.line}</p>
@@ -63,7 +60,7 @@ export function PlansPage() {
 
       {active.length > 0 && (
         <section className={styles.section} aria-label="Your plans">
-          <h2 className={styles.sectionTitle}>Your plans</h2>
+          <h2 className={styles.activeHeading}>Your plans</h2>
           <div className={styles.activeGrid}>
             {active.map((plan) => (
               <ActivePlan key={plan.id} plan={plan} progress={byId.get(plan.id)!} />
@@ -160,7 +157,7 @@ function GroupSection({
   const children = visibleChildren(group, plans);
   const inGroup = plansIn(plans, group.id);
   return (
-    <div className={styles.group} role="group" aria-label={group.name}>
+    <div className={styles.group} data-group={group.id} role="group" aria-label={group.name}>
       <div className={styles.groupHead}>
         <div>
           <h3 className={styles.groupTitle}>{group.name}</h3>

@@ -68,3 +68,31 @@
     margin-top: 0;
   }
 }
+
+.mobileBack {
+  display: none;
+}
+@media (max-width: 640px) {
+  .page {
+    padding: 12px 20px 48px;
+    gap: 18px;
+  }
+  .mobileBack {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 44px;
+    width: fit-content;
+    margin-left: -8px;
+    color: var(--color-text-muted);
+    text-decoration: none;
+    font-size: 14px;
+  }
+  .title {
+    font-size: 32px;
+  }
+  .description {
+    font-size: 15px;
+    margin-top: 6px;
+  }
+}

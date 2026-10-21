@@ -41,13 +41,51 @@ export function ActivePlan({
   const day = status.kind === 'read' ? plan.days[status.day - 1]! : null;
 
   return (
-    <section className={cx(styles.card, !compact && styles.hero)} aria-label={plan.name}>
+    <section
+      className={cx(styles.card, compact ? styles.compact : styles.hero)}
+      aria-label={plan.name}
+    >
       <div className={styles.cardHead}>
-        <h2 className={styles.cardTitle}>
-          <Link to={paths.planPage(plan.id)} className={styles.cardLink}>
-            {plan.name}
-          </Link>
-        </h2>
+        <div>
+          <h2 className={styles.cardTitle}>
+            <Link to={paths.planPage(plan.id)} className={styles.cardLink}>
+              {plan.name}
+            </Link>
+          </h2>
+          <p className={styles.mobilePlanMeta}>
+            {status.kind === 'read'
+              ? `${unit} ${status.day} of ${total}`
+              : `${progress.done.length} of ${total} finished`}
+            {progress.done.length === 0 ? ' · just started' : ''}
+          </p>
+        </div>
+        <svg className={styles.mobileRing} viewBox="0 0 48 48" width={52} height={52} aria-hidden>
+          <circle
+            cx="24"
+            cy="24"
+            r="20"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="4"
+            opacity="0.2"
+          />
+          <circle
+            cx="24"
+            cy="24"
+            r="20"
+            fill="none"
+            stroke="var(--color-accent)"
+            strokeWidth="4"
+            strokeLinecap="round"
+            strokeDasharray={Math.PI * 40}
+            strokeDashoffset={Math.PI * 40 * (1 - pct / 100)}
+            transform="rotate(-90 24 24)"
+          />
+          <path
+            d="M24 13 C28 18 30 21 30 24.5 A6 6 0 0 1 18 24.5 C18 21 20 18 24 13 Z"
+            fill="var(--color-accent)"
+          />
+        </svg>
         <span className={styles.cardMeta}>
           {progress.done.length} of {total} · {pct}%
         </span>

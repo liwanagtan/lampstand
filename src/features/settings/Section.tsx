@@ -7,13 +7,15 @@ export function Section({
   title,
   description,
   children,
+  profile = false,
 }: {
   title: string;
   description?: ReactNode;
   children: ReactNode;
+  profile?: boolean;
 }) {
   return (
-    <Card className={styles.section}>
+    <Card className={`${styles.section} ${profile ? styles.profileSection : ''}`}>
       <div className={styles.sectionHead}>
         <h2 className={styles.sectionTitle}>{title}</h2>
         {description && <p className={styles.muted}>{description}</p>}

@@ -1,17 +1,7 @@
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLiveQuery } from 'dexie-react-hooks';
-import {
-  Copy,
-  Download,
-  MoreHorizontal,
-  Pencil,
-  Play,
-  Search,
-  Trash2,
-  Upload,
-  MonitorSmartphone,
-} from 'lucide-react';
+import { Copy, Download, MoreHorizontal, Pencil, Play, Search, Trash2, Upload } from 'lucide-react';
 import { Page } from '@/app/Page';
 import { db } from '@/db/db';
 import {
@@ -89,7 +79,15 @@ export function LibraryPage() {
     <Page
       back={paths.profileYou}
       title="Screen"
-      description="Put sermon slides and Scripture on a TV or projector."
+      description={
+        <>
+          <span className="laptop-only">Put sermon slides and Scripture on a TV or projector.</span>
+          <span className={styles.mobileDescription}>
+            Put sermon slides and Scripture on a TV or projector. Look around here, then present
+            from a laptop.
+          </span>
+        </>
+      }
 
       actions={
         records &&
@@ -124,11 +122,33 @@ export function LibraryPage() {
         )
       }
     >
-      <p className={styles.phoneNote}>
-        <MonitorSmartphone size={18} aria-hidden />
-        Screen is made for a laptop connected to a TV or projector. Look around here, then present
-        from your laptop.
-      </p>
+      <div className={styles.mobileScreenPreview} aria-hidden>
+        <svg viewBox="0 0 300 120" width="300" height="120">
+          <clipPath id="mobile-screen-preview">
+            <rect x="40" y="30" width="220" height="60" />
+          </clipPath>
+          <g clipPath="url(#mobile-screen-preview)">
+            {[
+              [70, 44, 160],
+              [60, 58, 180],
+              [80, 72, 140],
+              [66, 86, 168],
+              [84, 100, 132],
+            ].map(([x, y, width]) => (
+              <rect
+                key={y}
+                x={x}
+                y={y}
+                width={width}
+                height="6"
+                rx="3"
+                fill={y === 58 ? '#F2B33D' : '#F5F2EA'}
+                opacity={y === 58 ? 1 : 0.5}
+              />
+            ))}
+          </g>
+        </svg>
+      </div>
       <ScreenEntries
         count={records?.length ?? 0}
         onPresentation={() =>

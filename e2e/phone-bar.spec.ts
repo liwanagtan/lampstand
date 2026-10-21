@@ -3,28 +3,36 @@ import { openApp } from './helpers';
 
 test.use({ hasTouch: true });
 
-test('on a phone the top bar keeps the lamp and names the page, personally', async ({ page }) => {
+for (const width of [360, 390, 430, 640]) {
+  test(`mobile reference uses page headings and bottom navigation at ${width}px`, async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width, height: 844 });
+    for (const [path, heading] of [
+      ['/', /Good|Peace/],
+      ['/plans', /A plan for you/],
+      ['/search', 'Search'],
+      ['/profile', 'Your profile'],
+    ] as const) {
+      await openApp(page, path);
+      await expect(page.getByRole('banner')).toHaveCount(0);
+      await expect(page.getByRole('link', { name: 'Lampstand home' })).toHaveCount(0);
+      await expect(page.getByRole('heading', { name: heading, level: 1 })).toBeVisible();
+      await expect(page.getByRole('navigation', { name: 'Main', exact: true })).toBeVisible();
+    }
+  });
+}
+
+test('mobile pages retain contextual back links and reading controls without the brand bar', async ({
+  page,
+}) => {
   await page.setViewportSize({ width: 390, height: 844 });
-  await openApp(page, '/profile/you');
-  await page.getByLabel('Your name').fill('Ruth');
-  await page.getByLabel('Your name').blur();
-
-  const bar = page.getByRole('banner');
-  await openApp(page, '/');
-  await expect(bar.getByRole('link', { name: 'Lampstand home' })).toBeVisible();
-  await expect(bar).toContainText(', Ruth');
-  // No TV actions on a phone.
-  await expect(page.getByRole('button', { name: 'Show on screen' })).toBeHidden();
-
-  await openApp(page, '/plans');
-  await expect(bar).toContainText('Plans');
-
-  // Deeper pages get a way back.
   await openApp(page, '/plans/p/when-anxiety-rises');
-  await expect(bar).toContainText('When anxiety rises');
-  await bar.getByRole('link', { name: 'Back' }).tap();
+  await page.getByRole('link', { name: 'Back to Plans', exact: true }).tap();
   await expect(page).toHaveURL(/\/plans$/);
-
-  await openApp(page, '/profile');
-  await expect(bar).toContainText('Ruth');
+  await openApp(page, '/plans/good-news-personal-faith/1');
+  const controls = page.getByRole('group', { name: 'Plan reading controls' });
+  await expect(controls).toContainText('The good news: trusting Jesus');
+  await controls.getByRole('button', { name: /Reading settings:/ }).tap();
+  await expect(page.getByRole('dialog', { name: 'Reading', exact: true })).toBeVisible();
 });

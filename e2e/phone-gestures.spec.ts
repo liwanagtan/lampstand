@@ -8,7 +8,7 @@ test('on a phone, sheets close with a downward drag, and the active tab returns 
 }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await openApp(page, '/bible');
-  await page.getByRole('banner').getByRole('button', { name: 'Reading settings' }).tap();
+  await page.getByRole('button', { name: 'Reading settings', exact: true }).tap();
   const sheet = page.getByRole('dialog', { name: 'Reading' });
   await expect(sheet).toBeVisible();
 

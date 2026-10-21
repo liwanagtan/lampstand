@@ -12,11 +12,16 @@ import {
 } from '@/features/bible/ref';
 import { parsePlanFile, type Plan, type PlanDay } from '@/schema/plan';
 import { localDayNumber } from './dailyVerses';
+import goodNews from './plans/good-news-personal-faith.lampstand-plan.json';
+import returning from './plans/returning-to-the-word.lampstand-plan.json';
+import understanding from './plans/reading-with-understanding.lampstand-plan.json';
 // Every bundled plan file in ./plans is a built-in plan.
-const BUNDLED = import.meta.glob<unknown>('./plans/*.lampstand-plan.json', {
-  eager: true,
-  import: 'default',
-});
+const BUNDLED = {
+  ...import.meta.glob<unknown>('./plans/*.lampstand-plan.json', { eager: true, import: 'default' }),
+  './plans/good-news-personal-faith.lampstand-plan.json': goodNews,
+  './plans/returning-to-the-word.lampstand-plan.json': returning,
+  './plans/reading-with-understanding.lampstand-plan.json': understanding,
+};
 
 export type { Plan, PlanDay };
 

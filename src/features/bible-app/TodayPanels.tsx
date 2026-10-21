@@ -11,6 +11,7 @@ import { useReader } from './readerStore';
 import { chapterCount, useChapter } from './useChapter';
 import { useOpenInReader } from './useOpenInReader';
 import styles from './TodayPanels.module.css';
+import { useIsPhone } from '@/app/useIsPhone';
 import { MarkedVerseText } from './MarkedVerse';
 import { useVisibleMarks } from './marks';
 
@@ -131,6 +132,7 @@ export function ReflectPanel({
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }) {
+  const phone = useIsPhone();
   const existing = useReflection(date);
   const translation = useReader((s) => s.translation);
   const osis = toOsis(range);
@@ -148,8 +150,17 @@ export function ReflectPanel({
       open={open}
       onOpenChange={onOpenChange}
       size="lg"
-      title={formatRef(range)}
-      description="Reflect. Saved to your journal as you type. It stays on this device."
+      title={phone ? 'Reflect' : formatRef(range)}
+      description={
+        phone
+          ? `${formatRef(range)} · Saved to your journal as you type. Only on this device.`
+          : 'Reflect. Saved to your journal as you type. It stays on this device.'
+      }
+      footer={
+        <Button variant="primary" onClick={() => onOpenChange(false)}>
+          Done
+        </Button>
+      }
     >
       {entry !== undefined && open && (
         <EntryEditor

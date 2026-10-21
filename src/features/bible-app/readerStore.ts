@@ -55,6 +55,7 @@ export function pickSelection(
 
 interface ReaderState extends ReaderPrefs {
   selection: Selection | null;
+  recent: { book: string; chapter: number }[];
   goTo: (book: string, chapter: number, select?: Selection | null) => void;
   setTranslation: (code: string) => void;
   setParallel: (code: string | null) => void;
@@ -99,11 +100,36 @@ function save(s: ReaderPrefs) {
   }
 }
 
+function recentChapters(): { book: string; chapter: number }[] {
+  try {
+    const value: unknown = JSON.parse(localStorage.getItem('lampstand.recentChapters') ?? '[]');
+    return Array.isArray(value)
+      ? value
+          .filter(
+            (x) => x && BOOK_BY_CODE.has(x.book) && Number.isInteger(x.chapter) && x.chapter > 0,
+          )
+          .slice(0, 6)
+      : [];
+  } catch {
+    return [];
+  }
+}
+
 export const useReader = create<ReaderState>((set, get) => ({
   ...readPrefs(),
   selection: null,
+  recent: recentChapters(),
   goTo: (book, chapter, select = null) => {
-    set({ book, chapter, selection: select });
+    const recent = [
+      { book, chapter },
+      ...get().recent.filter((p) => p.book !== book || p.chapter !== chapter),
+    ].slice(0, 6);
+    set({ book, chapter, selection: select, recent });
+    try {
+      localStorage.setItem('lampstand.recentChapters', JSON.stringify(recent));
+    } catch {
+      /* Reading remains available if storage is full. */
+    }
     save(get());
   },
   setTranslation: (translation) => {

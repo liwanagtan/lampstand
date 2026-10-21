@@ -1,15 +1,21 @@
-import { usePhoneTitle } from '@/app/topBar';
 import { useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { ArrowLeft, BookOpen, Clock, Play } from 'lucide-react';
 import { Button, Dialog, EmptyState, cx } from '@/design-system/components';
 import { paths } from '@/app/paths';
+import { matchTopics } from '@/features/search/topics';
+import { RefText } from '@/features/search/RefText';
+import { fromOsis, formatRef } from '@/features/bible/ref';
+import { useReader } from './readerStore';
+import { useOpenInReader } from './useOpenInReader';
 import { categoryById } from '@/schema/planCatalog';
 import { ActivePlan } from './ActivePlan';
 import { planMeta, plansIn, visibleChildren } from './discover';
 import { CategoryChip, CategoryLinks, PlanCard } from './PlanCards';
 import { useCoverUrl } from './useCoverUrl';
 import {
+  currentDay,
+  stopPlan,
   formatDay,
   isLessons,
   readingMinutes,
@@ -29,10 +35,6 @@ export function PlanCategoryPage() {
   const plans = usePlans();
   const progress = usePlanProgress();
   const navigate = useNavigate();
-  const parent = node && node.path.length > 1 ? node.path[node.path.length - 2]! : null;
-  usePhoneTitle(node?.name ?? 'Plans', {
-    back: parent ? paths.planCategory(parent) : paths.plans,
-  });
   if (!node) {
     return (
       <div className={styles.page}>
@@ -53,8 +55,8 @@ export function PlanCategoryPage() {
   });
 
   return (
-    <div className={styles.page} data-enter>
-      <nav className={cx(styles.trail, 'phone-hidden')} aria-label="Breadcrumb">
+    <div className={styles.page} data-enter data-category>
+      <nav className={styles.trail} aria-label="Breadcrumb">
         <Link to={paths.plans}>Plans</Link>
         {trail.map((t) => (
           <span key={t.id}>
@@ -63,7 +65,7 @@ export function PlanCategoryPage() {
           </span>
         ))}
       </nav>
-      <h1 className={cx(styles.title, 'phone-hidden')}>{node.name}</h1>
+      <h1 className={styles.title}>{node.name}</h1>
       {node.description && <p className={styles.lede}>{node.description}</p>}
       {children.length > 0 && (
         <div className={styles.chips} aria-label="Topics">
@@ -81,6 +83,20 @@ export function PlanCategoryPage() {
           ))}
         </div>
       )}
+      {node.path[0] === 'feel' && <CategoryVerses name={node.name} />}
+      {node.path[0] === 'feel' && trail.at(-1) && (
+        <section className={styles.relatedCategories}>
+          <h2>Also for how you feel</h2>
+          <div className={styles.chips}>
+            {visibleChildren(trail.at(-1)!, all)
+              .filter((c) => c.id !== node.id)
+              .slice(0, 4)
+              .map((c) => (
+                <CategoryChip key={c.id} node={c} plans={all} />
+              ))}
+          </div>
+        </section>
+      )}
     </div>
   );
 }
@@ -93,7 +109,8 @@ export function PlanPage() {
   const navigate = useNavigate();
   const cover = useCoverUrl(plan?.cover, 'full');
   const [removing, setRemoving] = useState(false);
-  usePhoneTitle(plan?.name ?? 'Plan', { back: paths.plans });
+  const [allDays, setAllDays] = useState(false);
+  const [stopping, setStopping] = useState(false);
 
   if (plan === undefined || progress === undefined) return <div className={styles.page} />;
   if (!plan) {
@@ -110,6 +127,8 @@ export function PlanPage() {
   }
   const first = plan.days[0]!;
   const unit = isLessons(plan) ? 'Lesson' : 'Day';
+  const status = progress ? currentDay(plan, progress) : null;
+  const next = status?.kind === 'read' ? status.day : null;
 
   return (
     <div className={styles.page} data-enter>
@@ -117,6 +136,9 @@ export function PlanPage() {
         <ArrowLeft size={16} aria-hidden /> Plans
       </Link>
       <header className={styles.hero}>
+        <Link to={paths.plans} className={styles.mobileHeroBack} aria-label="Back to Plans">
+          <ArrowLeft size={22} aria-hidden />
+        </Link>
         {cover && <img className={styles.heroImg} src={cover} alt="" />}
         <div className={styles.heroScrim} aria-hidden />
         <div className={styles.heroBody}>
@@ -130,8 +152,40 @@ export function PlanPage() {
         </div>
       </header>
 
+      <CategoryLinks ids={plan.categories} />
+
       {progress ? (
-        <ActivePlan plan={plan} progress={progress} />
+        <>
+          <div className="laptop-only">
+            <ActivePlan plan={plan} progress={progress} />
+          </div>
+          <section className={styles.mobileProgress} aria-label="Your progress">
+            <div>
+              <h2>Your progress</h2>
+              <span>
+                {progress.done.length} of {plan.days.length} {isLessons(plan) ? 'lessons' : 'days'}
+              </span>
+            </div>
+            <progress
+              max={plan.days.length}
+              value={progress.done.length}
+              aria-label="Plan progress"
+            />
+            {next && (
+              <Button variant="primary" onClick={() => navigate(paths.planDay(plan.id, next))}>
+                Read {unit.toLowerCase()} {next} · {formatDay(plan.days[next - 1]!)}
+              </Button>
+            )}
+            {status?.kind === 'finished' && <p>Plan complete. Well done!</p>}
+            {status?.kind === 'waiting' && (
+              <p>Your next lesson opens {new Date(status.unlocks).toLocaleDateString()}.</p>
+            )}
+            <div>
+              <small>Miss a day and simply carry on.</small>
+              <button onClick={() => setStopping(true)}>Stop plan</button>
+            </div>
+          </section>
+        </>
       ) : (
         <div className={styles.startRow}>
           <Button
@@ -149,7 +203,6 @@ export function PlanPage() {
         </div>
       )}
 
-      <CategoryLinks ids={plan.categories} />
       {plan.credits && (
         <p className={styles.credits}>
           From {plan.credits}
@@ -157,7 +210,7 @@ export function PlanPage() {
         </p>
       )}
 
-      <section className={styles.preview} aria-label="First reading">
+      <section className={cx(styles.preview, 'laptop-only')} aria-label="First reading">
         <p className={styles.eyebrow}>{unit} 1</p>
         <h2 className={styles.previewTitle}>{first.title ?? formatDay(first)}</h2>
         <p className={styles.planMeta}>
@@ -174,6 +227,53 @@ export function PlanPage() {
         </Button>
       </section>
 
+      <section className={styles.mobileDays} aria-label="Plan readings">
+        <h2>
+          Days <span>{plan.days.length} readings</span>
+        </h2>
+        {plan.days.slice(0, allDays ? undefined : 4).map((day, index) => (
+          <Link
+            key={index}
+            to={paths.planDay(plan.id, index + 1)}
+            className={styles.dayRow}
+            aria-label={`Read ${unit.toLowerCase()} ${index + 1}: ${day.title ?? formatDay(day)}`}
+          >
+            <span className={styles.dayNumber}>{index + 1}</span>
+            <span>
+              <strong>{day.title ?? formatDay(day)}</strong>
+              <small>
+                {readingMinutes(day)} min{progress?.done.includes(index + 1) ? ' · Finished' : ''}
+              </small>
+            </span>
+            <ArrowLeft size={18} className={styles.dayArrow} aria-hidden />
+          </Link>
+        ))}
+        {plan.days.length > 4 && !allDays && (
+          <Button variant="ghost" onClick={() => setAllDays(true)}>
+            Show all {plan.days.length} {isLessons(plan) ? 'lessons' : 'days'}
+          </Button>
+        )}
+      </section>
+
+      <Dialog
+        open={stopping}
+        onOpenChange={setStopping}
+        title={`Stop ${plan.name}?`}
+        description="Your progress on this plan is removed. You can start it again any time."
+        footer={
+          <>
+            <Button variant="ghost" onClick={() => setStopping(false)}>
+              Keep going
+            </Button>
+            <Button
+              variant="primary"
+              onClick={() => void stopPlan(plan.id).then(() => setStopping(false))}
+            >
+              Stop plan
+            </Button>
+          </>
+        }
+      />
       <Dialog
         open={removing}
         onOpenChange={setRemoving}
@@ -195,5 +295,28 @@ export function PlanPage() {
         }
       />
     </div>
+  );
+}
+
+function CategoryVerses({ name }: { name: string }) {
+  const translation = useReader((s) => s.translation);
+  const open = useOpenInReader();
+  const topic = matchTopics(name)[0];
+  if (!topic) return null;
+  return (
+    <section className={styles.categoryVerses}>
+      <h2>Verses for {name.toLowerCase()}</h2>
+      {topic.refs.slice(0, 2).map((osis) => {
+        const range = fromOsis(osis);
+        return range ? (
+          <button key={osis} onClick={() => open(range)}>
+            <strong>{formatRef(range)}</strong>
+            <span>
+              <RefText osis={osis} translation={translation} />
+            </span>
+          </button>
+        ) : null;
+      })}
+    </section>
   );
 }

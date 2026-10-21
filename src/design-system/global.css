@@ -135,8 +135,8 @@ a {
   }
 }
 
-/* On phones the top bar names the page, so the page's own heading steps aside (still read
-   by screen readers). */
+/* Hide desktop-only duplicate labels while retaining their accessible names. Mobile page
+   headings are rendered by the pages themselves. */
 @media (max-width: 640px) {
   .phone-hidden {
     position: absolute;

@@ -1,4 +1,3 @@
-import { usePhoneTitle } from '@/app/topBar';
 import { FlameCompanion } from '@/design-system/FlameCompanion';
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
@@ -62,17 +61,33 @@ export function PlanReaderPage() {
   const top = useRef<HTMLDivElement>(null);
   const [reflect, setReflect] = useState<{ id: string; draft?: EntryDraft } | null>(null);
   const [reading, setReading] = useState(false);
+  const [position, setPosition] = useState('');
   // The whole day — note, scripture, devotional, questions, prayer — follows the text size.
   const size = useReader((s) => s.size);
-  // Phones: Aa in the top bar replaces the translation and size controls.
-  usePhoneTitle(plan?.name ?? 'Plan', {
-    back: paths.planPage(planId),
-    actions: <TranslationChip onClick={() => setReading(true)} parallel={false} />,
-  });
 
   useEffect(() => {
     top.current?.closest('[data-scroll]')?.scrollTo({ top: 0 });
   }, [planId, n]);
+
+  useEffect(() => {
+    const root = top.current?.closest('[data-scroll]');
+    if (!root) return;
+    const update = () => {
+      const chapters = Array.from(
+        top.current?.querySelectorAll<HTMLElement>('[data-reading-chapter]') ?? [],
+      );
+      if (!chapters.length) return;
+      const boundary = root.getBoundingClientRect().top + 180;
+      const current =
+        chapters.filter((c) => c.getBoundingClientRect().top <= boundary).at(-1) ?? chapters[0]!;
+      setPosition(
+        `${current.dataset.readingChapter} · ${chapters.indexOf(current) + 1} of ${chapters.length}`,
+      );
+    };
+    update();
+    root.addEventListener('scroll', update, { passive: true });
+    return () => root.removeEventListener('scroll', update);
+  }, [plan, progress, n]);
 
   if (plan === undefined || progress === undefined)
     return <div className={styles.page} aria-busy="true" />;
@@ -109,9 +124,30 @@ export function PlanReaderPage() {
     <div
       className={styles.page}
       ref={top}
-      data-enter
       style={{ '--reader-size': `${size}px` } as CSSProperties}
     >
+      <header className={styles.mobileHeader} role="group" aria-label="Plan reading controls">
+        <Link
+          to={paths.planPage(plan.id)}
+          className={styles.mobileBack}
+          aria-label="Back to the plan"
+        >
+          <ArrowLeft size={22} aria-hidden />
+        </Link>
+        <span className={styles.mobilePlanName}>{plan.name}</span>
+        <TranslationChip onClick={() => setReading(true)} parallel={false} />
+      </header>
+      <div
+        className={styles.progress}
+        role="progressbar"
+        aria-label="Plan progress"
+        aria-valuemin={0}
+        aria-valuemax={plan.days.length}
+        aria-valuenow={progress?.done.length ?? 0}
+        aria-valuetext={`${progress?.done.length ?? 0} of ${plan.days.length} readings finished`}
+      >
+        <span style={{ width: `${((progress?.done.length ?? 0) / plan.days.length) * 100}%` }} />
+      </div>
       <header className={styles.header}>
         <Link to={paths.planPage(plan.id)} className={cx(styles.back, 'phone-hidden')}>
           <ArrowLeft size={16} aria-hidden /> {plan.name}
@@ -120,17 +156,6 @@ export function PlanReaderPage() {
           {unit} {n} of {plan.days.length}
         </p>
         <h1 className={styles.title}>{day.title ?? formatDay(day)}</h1>
-        <div
-          className={styles.progress}
-          role="progressbar"
-          aria-label="Plan progress"
-          aria-valuemin={0}
-          aria-valuemax={plan.days.length}
-          aria-valuenow={progress?.done.length ?? 0}
-          aria-valuetext={`${progress?.done.length ?? 0} of ${plan.days.length} readings finished`}
-        >
-          <span style={{ width: `${((progress?.done.length ?? 0) / plan.days.length) * 100}%` }} />
-        </div>
         <p className={styles.meta}>
           {day.title && <span>{formatDay(day)}</span>}
           <span>
@@ -188,7 +213,14 @@ export function PlanReaderPage() {
       </div>
       <EntrySheet target={reflect} onClose={() => setReflect(null)} />
 
-      <FinishBlock plan={plan} day={n} done={done} unit={unit} onReflect={openReflection} />
+      <FinishBlock
+        plan={plan}
+        day={n}
+        done={done}
+        unit={unit}
+        onReflect={openReflection}
+        position={position}
+      />
     </div>
   );
 }
@@ -255,7 +287,11 @@ function ChapterBlock({
     ? `${b.refName} ${chapter}`
     : formatRef({ start: { book, chapter, verse: from }, end: { book, chapter, verse: to } });
   return (
-    <div className={styles.chapter} style={{ '--reader-size': `${size}px` } as CSSProperties}>
+    <div
+      data-reading-chapter={heading}
+      className={styles.chapter}
+      style={{ '--reader-size': `${size}px` } as CSSProperties}
+    >
       <h2 className={styles.chapterTitle}>{heading}</h2>
       {passage ? (
         <p className={styles.text}>
@@ -281,7 +317,9 @@ function FinishBlock({
   done,
   unit,
   onReflect,
+  position,
 }: {
+  position: string;
   plan: Plan;
   day: number;
   done: boolean;
@@ -294,8 +332,28 @@ function FinishBlock({
   const [justFinished, setJustFinished] = useState(false);
   const doneRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
-    if (justFinished)
-      doneRef.current?.scrollIntoView({ block: 'center', behavior: reduced ? 'auto' : 'smooth' });
+    if (!justFinished) return;
+    const node = doneRef.current;
+    const previous = document.activeElement;
+    node?.focus({ preventScroll: true });
+    node?.scrollIntoView({ block: 'center', behavior: reduced ? 'auto' : 'smooth' });
+    const phone = window.matchMedia?.('(max-width: 640px)').matches;
+    const siblings = phone
+      ? Array.from(node?.parentElement?.children ?? []).filter(
+          (el): el is HTMLElement => el instanceof HTMLElement && el !== node,
+        )
+      : [];
+    const states = siblings.map((el) => el.inert);
+    siblings.forEach((el) => {
+      el.inert = true;
+    });
+    return () => {
+      siblings.forEach((el, index) => {
+        el.inert = states[index]!;
+      });
+      if (previous instanceof HTMLElement && previous.isConnected)
+        previous.focus({ preventScroll: true });
+    };
   }, [justFinished, reduced]);
 
   const finish = async () => {
@@ -308,6 +366,10 @@ function FinishBlock({
   if (!done) {
     return (
       <div className={styles.finish}>
+        <div className={styles.mobilePosition}>
+          <strong>{position}</strong>
+          <button onClick={onReflect}>Reflect</button>
+        </div>
         <Button
           variant="primary"
           icon={<Check size={18} />}
@@ -331,11 +393,15 @@ function FinishBlock({
     <motion.div
       ref={doneRef}
       className={styles.done}
-      role="status"
+      data-complete={justFinished || undefined}
+      role={justFinished ? 'dialog' : 'status'}
+      aria-label={justFinished ? `${unit} ${day} done` : undefined}
+      tabIndex={justFinished ? -1 : undefined}
       initial={justFinished && !reduced ? { opacity: 0, y: 12, scale: 0.98 } : false}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       transition={{ duration: 0.4, ease: [0.2, 0.8, 0.2, 1] }}
     >
+      {justFinished && <p className={styles.completionPlan}>{plan.name}</p>}
       {justFinished ? (
         <FlameCompanion mood="celebrate" size={150} />
       ) : (
@@ -344,7 +410,7 @@ function FinishBlock({
         </motion.span>
       )}
       <h2 className={styles.doneTitle}>
-        {justFinished ? 'Well done!' : `${unit} ${day} finished`}
+        {justFinished ? `${unit} ${day} done` : `${unit} ${day} finished`}
       </h2>
       <p className={styles.doneText}>
         {status?.kind === 'finished'
@@ -354,6 +420,11 @@ function FinishBlock({
           ` The next lesson opens ${dateFormat.format(status.unlocks)}.`}
         {next && ' Your next reading is ready whenever you are.'}
       </p>
+      {justFinished && (
+        <div className={styles.completionCount}>
+          {count} of {plan.days.length} readings finished
+        </div>
+      )}
       <div className={styles.doneActions}>
         <Button icon={<NotebookPen size={16} />} onClick={onReflect}>
           Reflect on today
@@ -361,6 +432,7 @@ function FinishBlock({
         {next && (
           <Button
             variant="gold"
+            className="laptop-only"
             iconEnd={<ArrowRight size={16} />}
             onClick={() => navigate(paths.planDay(plan.id, next))}
           >

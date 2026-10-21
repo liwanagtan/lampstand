@@ -355,3 +355,236 @@
   height: 100%;
   background: var(--color-accent);
 }
+
+.mobileHeader {
+  display: none;
+}
+@media (max-width: 640px) {
+  .page {
+    padding: 0 24px 72px;
+  }
+  .mobileHeader {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin: 0 -8px 12px -16px;
+    padding: 12px 0 8px;
+  }
+  .mobileBack {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    flex: none;
+    border-radius: 50%;
+    color: var(--color-text);
+  }
+  .mobilePlanName {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    font-size: 15px;
+    font-weight: var(--weight-bold);
+  }
+  .title {
+    font-family: var(--font-display);
+    font-size: 34px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+  .header {
+    gap: 8px;
+  }
+  .meta {
+    font-size: 13px;
+  }
+  .chapterTitle {
+    font-family: var(--font-ui);
+    font-size: 14px;
+    font-weight: var(--weight-extrabold);
+    color: var(--color-text-muted);
+  }
+}
+
+@media (max-width: 640px) {
+  .page > .progress {
+    margin: 0 -24px 24px;
+    width: calc(100% + 48px);
+    height: 3px;
+    border-radius: 0;
+  }
+}
+
+.completionPlan {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--color-text-muted);
+}
+@media (max-width: 640px) {
+  .finish {
+    position: sticky;
+    bottom: 0;
+    width: calc(100% + 48px);
+    margin: 32px -24px -72px;
+    border-radius: 0;
+    padding: 16px 20px max(24px, env(safe-area-inset-bottom));
+    background: var(--color-surface);
+    box-shadow: none;
+    border-top: 1px solid var(--color-border);
+  }
+  .finishButton {
+    width: 100%;
+    height: 52px;
+    background: #0a0f1c;
+    color: #f5f2ea;
+  }
+  .finishButton:hover:not(:disabled) {
+    background: #161c2b;
+  }
+  .done[data-complete] {
+    position: fixed;
+    inset: 0;
+    z-index: 20;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: max(24px, env(safe-area-inset-top)) 24px max(34px, env(safe-area-inset-bottom));
+    margin: 0;
+    border: 0;
+    border-radius: 0;
+    background: var(--color-bg);
+    overflow-y: auto;
+  }
+  .done[data-complete] .doneTitle {
+    font-size: 34px;
+    font-weight: 800;
+  }
+}
+
+@media (max-width: 640px) {
+  .finish {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    margin: 0;
+  }
+  .page {
+    padding-bottom: 140px;
+  }
+}
+
+@media (max-width: 640px) {
+  .verse {
+    display: block;
+  }
+  .verse + .verse {
+    margin-top: 10px;
+  }
+  .text {
+    line-height: 1.7;
+  }
+}
+
+@media (max-width: 640px) {
+  .done[data-complete] {
+    color: var(--color-text);
+  }
+  .done[data-complete] .doneText {
+    color: var(--color-text-muted);
+  }
+}
+
+.mobilePosition {
+  display: none;
+}
+@media (max-width: 640px) {
+  .finish {
+    flex-direction: column;
+    gap: 12px;
+  }
+  .mobilePosition {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    color: var(--color-text);
+  }
+  .mobilePosition strong {
+    font-size: 13px;
+  }
+  .mobilePosition button {
+    border: 0;
+    background: none;
+    color: var(--color-accent-text);
+    font: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 6px 0;
+    cursor: pointer;
+  }
+}
+
+.completionCount {
+  padding: 12px 18px;
+  border-radius: 999px;
+  background: rgb(245 242 234 / 0.08);
+  font-size: 14px;
+  font-weight: 700;
+}
+@media (max-width: 640px) {
+  .done[data-complete] {
+    justify-content: flex-start;
+    gap: 18px;
+    padding-top: max(76px, env(safe-area-inset-top));
+    padding-bottom: max(40px, env(safe-area-inset-bottom));
+    background: #0a0f1c;
+    color: #f5f2ea;
+  }
+  .done[data-complete] > svg {
+    order: -2;
+  }
+  .done[data-complete] .completionPlan {
+    order: -1;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #f2b33d;
+  }
+  .done[data-complete] .doneTitle {
+    font-size: 36px;
+  }
+  .done[data-complete] .doneText {
+    color: #c9cdd6;
+    font-size: 16px;
+  }
+  .done[data-complete] .doneActions {
+    margin-top: auto;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .done[data-complete] .doneActions > button {
+    height: 48px;
+    background: transparent;
+    border-color: rgb(245 242 234 / 0.35);
+    color: #f5f2ea;
+  }
+  .done[data-complete] .doneActions > button:first-child {
+    background: #f5f2ea;
+    color: #0a0f1c;
+  }
+  .done[data-complete] .doneActions > button svg {
+    display: none;
+  }
+  .done[data-complete] .undo {
+    position: absolute;
+    top: 12px;
+    right: 16px;
+    width: auto;
+    border: 0;
+  }
+}

@@ -103,3 +103,9 @@
     animation: none;
   }
 }
+
+@media (max-width: 640px) {
+  .viewport {
+    top: calc(env(safe-area-inset-top) + var(--space-2));
+  }
+}

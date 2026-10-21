@@ -50,7 +50,7 @@ export function ClassicDevotional({ now }: { now: Date }) {
           <p className={styles.preview}>{reading.body[0]}</p>
           <div className={styles.row}>
             <Button icon={<BookOpen size={16} />} onClick={() => setOpen(true)}>
-              Read
+              Read the whole reading
             </Button>
           </div>
           <ClassicSheet

@@ -6,11 +6,11 @@ const QUERY = '(max-width: 640px)';
 export function useIsPhone(): boolean {
   return useSyncExternalStore(
     (cb) => {
-      const m = window.matchMedia(QUERY);
-      m.addEventListener('change', cb);
-      return () => m.removeEventListener('change', cb);
+      const m = window.matchMedia?.(QUERY);
+      m?.addEventListener('change', cb);
+      return () => m?.removeEventListener('change', cb);
     },
-    () => window.matchMedia(QUERY).matches,
+    () => window.matchMedia?.(QUERY).matches ?? false,
     () => false,
   );
 }

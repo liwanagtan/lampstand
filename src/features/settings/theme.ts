@@ -3,7 +3,6 @@ import type { ColorScheme } from '@/design-system/tokens';
 import type { UiMode } from '@/schema/common';
 import { useSettings } from './settingsStore';
 
-const darkQuery = '(prefers-color-scheme: dark)';
 const motionQuery = '(prefers-reduced-motion: reduce)';
 
 function subscribeMedia(query: string) {
@@ -22,17 +21,13 @@ function useMediaQuery(query: string): boolean {
   );
 }
 
-export function resolveScheme(mode: UiMode, systemDark: boolean): ColorScheme {
-  if (mode === 'system') return systemDark ? 'dark' : 'light';
-  return mode;
+/** Dark/System appearance is paused until the owner explicitly re-enables it. */
+export function resolveScheme(_mode: UiMode, _systemDark: boolean): ColorScheme {
+  return 'light';
 }
 
-/** Resolved color scheme for the app UI. `preferDark` makes "System" resolve to dark (control screen, PRD §8). */
-export function useColorScheme(preferDark = false): ColorScheme {
-  const uiMode = useSettings((s) => s.uiMode);
-  const systemDark = useMediaQuery(darkQuery);
-  if (preferDark && uiMode === 'system') return 'dark';
-  return resolveScheme(uiMode, systemDark);
+export function useColorScheme(_preferDark = false): ColorScheme {
+  return 'light';
 }
 
 export function useReducedMotion(): boolean {

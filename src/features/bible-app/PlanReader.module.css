@@ -280,19 +280,8 @@
   margin-top: var(--space-8);
 }
 
-/* Phones: a calmer type scale (docs/DECISIONS.md 2026-10-18). */
+/* Compact headings; reading sizes retain the same meaning on every device. */
 @media (max-width: 640px) {
-  .chapter {
-    font-size: calc(var(--reader-size, 20px) * 0.9);
-  }
-  .note,
-  .devotional,
-  .questions ol {
-    font-size: calc(var(--reader-size, 20px) * 0.72);
-  }
-  .prayer {
-    font-size: calc(var(--reader-size, 20px) * 0.81);
-  }
   .title {
     font-size: 24px;
   }

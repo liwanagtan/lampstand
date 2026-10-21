@@ -126,6 +126,32 @@
   display: none;
 }
 
+/* Medium windows keep desktop navigation, with room for touch and search. */
+@media (min-width: 641px) and (max-width: 1100px) {
+  .topbar {
+    gap: var(--space-2);
+    padding-inline: var(--space-4);
+  }
+  .brand {
+    flex: none;
+  }
+  .lockup {
+    display: none;
+  }
+  .mark {
+    display: block;
+  }
+  .nav {
+    flex: 0 0 auto;
+    gap: 0;
+  }
+  .link {
+    gap: var(--space-1);
+    padding-inline: var(--space-2);
+    font-size: var(--text-14);
+  }
+}
+
 .main {
   overflow: auto;
   min-width: 0;

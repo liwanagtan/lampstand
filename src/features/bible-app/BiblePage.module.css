@@ -576,11 +576,3 @@
     display: none;
   }
 }
-
-/* Phones: a calmer type scale (docs/DECISIONS.md 2026-10-18). */
-@media (max-width: 640px) {
-  /* Scripture reads at 90% of the chosen size on a phone. */
-  .body {
-    font-size: calc(var(--reader-size, 20px) * 0.9);
-  }
-}

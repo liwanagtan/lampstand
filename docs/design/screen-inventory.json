@@ -1,0 +1,331 @@
+[
+  {
+    "layout": "desktop",
+    "screen": 1,
+    "title": "Today",
+    "width": 1440,
+    "height": 1420
+  },
+  {
+    "layout": "desktop",
+    "screen": 2,
+    "title": "Welcome",
+    "width": 1440,
+    "height": 960
+  },
+  {
+    "layout": "desktop",
+    "screen": 3,
+    "title": "Bible · reader with study notes",
+    "width": 1440,
+    "height": 1080
+  },
+  {
+    "layout": "desktop",
+    "screen": 4,
+    "title": "Plans · reading a day",
+    "width": 1440,
+    "height": 1000
+  },
+  {
+    "layout": "desktop",
+    "screen": 5,
+    "title": "Plans",
+    "width": 1440,
+    "height": 2020
+  },
+  {
+    "layout": "desktop",
+    "screen": 6,
+    "title": "Plans · plan page",
+    "width": 1440,
+    "height": 1000
+  },
+  {
+    "layout": "desktop",
+    "screen": 7,
+    "title": "Search · results",
+    "width": 1440,
+    "height": 1120
+  },
+  {
+    "layout": "desktop",
+    "screen": 8,
+    "title": "Profile · Journey",
+    "width": 1440,
+    "height": 1000
+  },
+  {
+    "layout": "desktop",
+    "screen": 9,
+    "title": "Profile · Settings",
+    "width": 1440,
+    "height": 1260
+  },
+  {
+    "layout": "desktop",
+    "screen": 10,
+    "title": "Screen · library",
+    "width": 1440,
+    "height": 1060
+  },
+  {
+    "layout": "desktop",
+    "screen": 11,
+    "title": "Screen · presenter console",
+    "width": 1440,
+    "height": 900
+  },
+  {
+    "layout": "desktop",
+    "screen": 12,
+    "title": "Screen · the TV output",
+    "width": 1440,
+    "height": 810
+  },
+  {
+    "layout": "desktop",
+    "screen": 13,
+    "title": "Screen · Show the Bible",
+    "width": 1440,
+    "height": 900
+  },
+  {
+    "layout": "desktop",
+    "screen": 14,
+    "title": "Screen · editor",
+    "width": 1440,
+    "height": 900
+  },
+  {
+    "layout": "desktop",
+    "screen": 15,
+    "title": "Screen · import",
+    "width": 1440,
+    "height": 900
+  },
+  {
+    "layout": "desktop",
+    "screen": 16,
+    "title": "Today · evening, dark",
+    "width": 1440,
+    "height": 1000
+  },
+  {
+    "layout": "desktop",
+    "screen": 17,
+    "title": "Today · Reflect dialog",
+    "width": 1440,
+    "height": 900
+  },
+  {
+    "layout": "desktop",
+    "screen": 18,
+    "title": "Plans · day complete dialog",
+    "width": 1440,
+    "height": 900
+  },
+  {
+    "layout": "desktop",
+    "screen": 19,
+    "title": "Bible · Go to",
+    "width": 1440,
+    "height": 900
+  },
+  {
+    "layout": "desktop",
+    "screen": 20,
+    "title": "Plans · category",
+    "width": 1440,
+    "height": 900
+  },
+  {
+    "layout": "desktop",
+    "screen": 21,
+    "title": "Profile · You",
+    "width": 1440,
+    "height": 1000
+  },
+  {
+    "layout": "desktop",
+    "screen": 22,
+    "title": "Welcome · name",
+    "width": 1440,
+    "height": 900
+  },
+  {
+    "layout": "desktop",
+    "screen": 23,
+    "title": "Welcome · your Bible",
+    "width": 1440,
+    "height": 900
+  },
+  {
+    "layout": "desktop",
+    "screen": 24,
+    "title": "Welcome · first plan",
+    "width": 1440,
+    "height": 900
+  },
+  {
+    "layout": "mobile",
+    "screen": 1,
+    "title": "Welcome · Name",
+    "width": 390,
+    "height": 844
+  },
+  {
+    "layout": "mobile",
+    "screen": 2,
+    "title": "Welcome · What brings you",
+    "width": 390,
+    "height": 844
+  },
+  {
+    "layout": "mobile",
+    "screen": 3,
+    "title": "Welcome · Your Bible",
+    "width": 390,
+    "height": 844
+  },
+  {
+    "layout": "mobile",
+    "screen": 4,
+    "title": "Welcome · First plan",
+    "width": 390,
+    "height": 844
+  },
+  {
+    "layout": "mobile",
+    "screen": 5,
+    "title": "Today · morning (full scroll)",
+    "width": 390,
+    "height": 1720
+  },
+  {
+    "layout": "mobile",
+    "screen": 6,
+    "title": "Today · evening",
+    "width": 390,
+    "height": 844
+  },
+  {
+    "layout": "mobile",
+    "screen": 7,
+    "title": "Today · Reflect sheet",
+    "width": 390,
+    "height": 844
+  },
+  {
+    "layout": "mobile",
+    "screen": 8,
+    "title": "Bible · Reader",
+    "width": 390,
+    "height": 844
+  },
+  {
+    "layout": "mobile",
+    "screen": 9,
+    "title": "Bible · Verse actions",
+    "width": 390,
+    "height": 844
+  },
+  {
+    "layout": "mobile",
+    "screen": 10,
+    "title": "Bible · Go to",
+    "width": 390,
+    "height": 844
+  },
+  {
+    "layout": "mobile",
+    "screen": 11,
+    "title": "Bible · Reading settings",
+    "width": 390,
+    "height": 844
+  },
+  {
+    "layout": "mobile",
+    "screen": 12,
+    "title": "Bible · Study notes",
+    "width": 390,
+    "height": 844
+  },
+  {
+    "layout": "mobile",
+    "screen": 13,
+    "title": "Plans (full scroll)",
+    "width": 390,
+    "height": 1560
+  },
+  {
+    "layout": "mobile",
+    "screen": 14,
+    "title": "Plans · Category",
+    "width": 390,
+    "height": 844
+  },
+  {
+    "layout": "mobile",
+    "screen": 15,
+    "title": "Plans · Plan page",
+    "width": 390,
+    "height": 1100
+  },
+  {
+    "layout": "mobile",
+    "screen": 16,
+    "title": "Plans · Reading a day",
+    "width": 390,
+    "height": 844
+  },
+  {
+    "layout": "mobile",
+    "screen": 17,
+    "title": "Plans · Day complete",
+    "width": 390,
+    "height": 844
+  },
+  {
+    "layout": "mobile",
+    "screen": 18,
+    "title": "Search",
+    "width": 390,
+    "height": 844
+  },
+  {
+    "layout": "mobile",
+    "screen": 19,
+    "title": "Search · Results",
+    "width": 390,
+    "height": 844
+  },
+  {
+    "layout": "mobile",
+    "screen": 20,
+    "title": "Profile · Journey",
+    "width": 390,
+    "height": 1300
+  },
+  {
+    "layout": "mobile",
+    "screen": 21,
+    "title": "Profile · You",
+    "width": 390,
+    "height": 1000
+  },
+  {
+    "layout": "mobile",
+    "screen": 22,
+    "title": "Profile · Settings",
+    "width": 390,
+    "height": 1500
+  },
+  {
+    "layout": "mobile",
+    "screen": 23,
+    "title": "Screen (from Profile)",
+    "width": 390,
+    "height": 844
+  }
+]

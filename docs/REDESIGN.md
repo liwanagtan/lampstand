@@ -5,6 +5,38 @@ Scripture; calm motion. This file tracks what is built, what is left, and the pa
 that are **new features** rather than a restyle, so they are decided on deliberately instead of
 slipping in with the styling work.
 
+## Active design branch — 21 October 2026
+
+Work continues on `design/responsive-redesign`, starting from checkpoint `dbec524`.
+Do not merge this branch into main until the owner explicitly requests it.
+
+The supplied HTML exports cover 24 desktop screens and 23 mobile screens. See
+[screen review](design/SCREEN-REVIEW.md) and [inventory](design/screen-inventory.json).
+They are design references, including placeholders, not production content or a
+complete specification of tablet and keyboard behaviour.
+
+First implementation slice:
+
+- Medium windows (641–1100px): compact mark, tighter labelled navigation, flexible
+  search, and touch-friendly search input. Phone navigation stays at 640px and below.
+- Bible and plan reading: preserve chosen Scripture size across devices. This
+  supersedes the earlier 90% mobile reading-size decision. Compact headings remain.
+- Phase 5 Profile/Welcome styling exists in the checkpoint; mark it implemented,
+  with responsive and visual verification pending rather than absent.
+
+Next: specify and verify tablet overlays and study panels; add complete guided
+devotional layouts using the new content; reconcile self-paced completion wording;
+review discovery for the 48-plan library. Continue with Screen after the personal
+reading flow. Journal search already exists; result filters remain separate work.
+
+The [gamification UX brief](GAMIFICATION-UX-BRIEF.md) remains a design dependency
+for goals, milestones, and rewards; gamification implementation is deferred.
+
+Verification must cover compact phones, portrait and landscape tablets, narrow
+desktop windows, both themes, enlarged text, keyboard focus, safe areas, software
+keyboards, and reduced motion. Initial CSS work is not a claim of full visual
+verification against the exported screens.
+
 ## Sources
 
 - **Design canvas** — "Lampstand Motion" (claude.ai artifact
@@ -29,14 +61,14 @@ slipping in with the styling work.
 
 ## Phases
 
-| Phase                 | Scope                                                                                                                                                                                            | Status             |
-| --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------ |
-| 1 Foundations         | Colours, type, radii, spacing, motion tokens; Button, Card, Chip, Toggle, Tabs, Field, Sheet, Dialog                                                                                             | Done (`83f4ee1`)   |
-| 2 Navigation          | Phone tab bar and desktop top bar; Lottie nav icons (`NavIcon`)                                                                                                                                  | Done (`88e5633`)   |
-| 3 Grow pages          | Today (dawn and evening atmospheres, two columns on laptops), Reflect (dialog on laptops), Plans, category, plan page, plan day (floating Finish bar on phones), day complete (`FlameCompanion`) | Done (`3386756`)   |
-| 4 Bible and Search    | Reader on paper, verse actions (ink bar on laptops, white sheet on phones), the five design highlight colours, ink chapter pill on phones, Go to, study notes; Search and results                | Done (this commit) |
-| 5 Profile and Welcome | Journey, Profile, Settings (sidebar on desktop); the four Welcome steps (split screen on desktop)                                                                                                | To do              |
-| 6 Screen              | Library, presenter console, Bible console, editor, import, TV waiting screen (restyle only)                                                                                                      | To do              |
+| Phase                 | Scope                                                                                                                                                                                            | Status                            |
+| --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------- |
+| 1 Foundations         | Colours, type, radii, spacing, motion tokens; Button, Card, Chip, Toggle, Tabs, Field, Sheet, Dialog                                                                                             | Done (`83f4ee1`)                  |
+| 2 Navigation          | Phone tab bar and desktop top bar; Lottie nav icons (`NavIcon`)                                                                                                                                  | Done (`88e5633`)                  |
+| 3 Grow pages          | Today (dawn and evening atmospheres, two columns on laptops), Reflect (dialog on laptops), Plans, category, plan page, plan day (floating Finish bar on phones), day complete (`FlameCompanion`) | Done (`3386756`)                  |
+| 4 Bible and Search    | Reader on paper, verse actions (ink bar on laptops, white sheet on phones), the five design highlight colours, ink chapter pill on phones, Go to, study notes; Search and results                | Done (`3ca4ae4`)                  |
+| 5 Profile and Welcome | Journey, Profile, Settings (sidebar on desktop); the four Welcome steps (split screen on desktop)                                                                                                | Implemented; verification pending |
+| 6 Screen              | Library, presenter console, Bible console, editor, import, TV waiting screen (restyle only)                                                                                                      | To do                             |
 
 **Resuming:** `npm install`, then `npm run dev`. Before running e2e, run `npm run build`: the
 Playwright config serves `npm run preview`, which serves `dist/`, so without a build the tests run

@@ -14,7 +14,7 @@ A light for your daily reading: a companion for growing in the Word every day, w
 - **Five public domain translations** built in (KJV, WEB, ASV, YLT, Darby), with word search.
 - **Slides made in Claude** with the skill in `skill/lampstand-slides`, imported as `.lampstand.json`.
 - **Brand:** the logo kit (mark, lockups, wordmark, app icons, colours and usage rules) lives in `brand/`; see `brand/README.txt`. The app draws the logo from `src/design-system/LampMark.tsx`, and the favicon and PWA icons in `public/` come from `brand/app-icon/`.
-- **Fully offline** after the first visit; installable as a Chrome app. No accounts yet (they come in v2), no network calls at runtime.
+- **Installable PWA:** Profile → Settings offers installation when the browser supports an install prompt, with home-screen instructions otherwise. The production app precaches reading content for offline use; personal data stays on the device.
 
 Docs: [docs/PRD.md](docs/PRD.md) (spec) · [docs/PRD-ADDENDUM-GROW.md](docs/PRD-ADDENDUM-GROW.md) (Grow-first redesign) · [docs/SETUP.md](docs/SETUP.md) (operator setup) · [docs/DECISIONS.md](docs/DECISIONS.md) (choices made during the build).
 
@@ -39,6 +39,12 @@ npm run dev          # http://localhost:5310
 | `npm run bibles`                    | Rebuild `public/bibles/*.json` from the sources (downloads into `scripts/.cache`) |
 | `npm run backgrounds`               | Rebuild the bundled background library in `public/backgrounds`                    |
 | `npm run schema`                    | Regenerate `skill/lampstand-slides/schema.json` from the Zod schema               |
+
+## Install and use offline
+
+Run `npm run build` and `npm run preview`, then open the preview address in a browser. In Profile → Settings, choose **Install Lampstand** when offered. On iPhone or iPad, open the app in Safari and use **Share → Add to Home Screen**. A deployed PWA needs HTTPS; localhost works for local testing. The development server on port 5310 does not register the service worker.
+
+Wait for the Bible preparation step to finish before disconnecting. After that, Today, Plans, the Bible reader and saved data are available offline. Profile → Settings → Data exports a backup for moving to another device; installation does not sync data between devices. Updates are offered with a Restart action and wait until a presentation is finished.
 
 ## Project layout
 

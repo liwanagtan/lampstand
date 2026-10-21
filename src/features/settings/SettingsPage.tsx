@@ -15,6 +15,7 @@ import { useSettings } from './settingsStore';
 import { ReadingSection, TipsSection } from './MeSections';
 import { RemindersSection } from '@/features/reminders/RemindersSection';
 import { Section } from './Section';
+import { InstallSection } from './InstallSection';
 import { LAMPSTAND_PLANS, OPEN_CONTENT } from './credits';
 import styles from './SettingsPage.module.css';
 
@@ -34,6 +35,7 @@ export function SettingsPage() {
     <div className={styles.sections}>
       <ReadingSection />
       <RemindersSection />
+      <InstallSection />
       <AppearanceSection />
       {/* TV settings belong to the laptop that runs the screen, not to the phone. */}
       {screen && (

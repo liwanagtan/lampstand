@@ -5,8 +5,10 @@ import '@/design-system/global.css';
 import { App } from '@/app/App';
 import { useSettings } from '@/features/settings/settingsStore';
 import { registerServiceWorker } from '@/app/pwa';
+import { listenForInstall } from '@/app/install';
 
 applyTokens();
+listenForInstall();
 registerServiceWorker();
 
 const root = createRoot(document.getElementById('root')!);

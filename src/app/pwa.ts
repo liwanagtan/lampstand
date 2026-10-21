@@ -8,12 +8,19 @@ export function registerServiceWorker(): void {
   if (!('serviceWorker' in navigator) || import.meta.env.DEV) return;
   const update = registerSW({
     onNeedRefresh() {
-      if (isPresentingPath(location.pathname)) return;
-      toast({
-        title: 'A new version of Lampstand is ready',
-        duration: 60_000,
-        action: { label: 'Restart', onClick: () => void update(true) },
-      });
+      const offerUpdate = () => {
+        if (isPresentingPath(location.pathname)) return;
+        window.clearInterval(waitUntilFinished);
+        toast({
+          title: 'A new version of Lampstand is ready',
+          duration: 60_000,
+          action: { label: 'Restart', onClick: () => void update(true) },
+        });
+      };
+      // A presentation may finish long after the worker downloads. Offer its update when
+      // the operator leaves the control screen instead of silently losing the notice.
+      const waitUntilFinished = window.setInterval(offerUpdate, 2_000);
+      offerUpdate();
     },
     onOfflineReady() {
       toast({ title: 'Lampstand is ready to work offline', tone: 'success' });

@@ -19,12 +19,13 @@ export default defineConfig({
       manifest: {
         name: 'Lampstand',
         short_name: 'Lampstand',
-        description: 'Offline church presentations with instant Bible verse overlays.',
+        description:
+          'Daily Bible reading, faith-building plans, reflections and Scripture presentations.',
         start_url: '/',
         scope: '/',
         display: 'standalone',
-        background_color: '#0A0F1C',
-        theme_color: '#0A0F1C',
+        background_color: '#F5F2EA',
+        theme_color: '#FFFFFF',
         icons: [
           { src: '/icons/icon-192.png', sizes: '192x192', type: 'image/png' },
           { src: '/icons/icon-512.png', sizes: '512x512', type: 'image/png' },

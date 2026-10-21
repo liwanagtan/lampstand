@@ -68,7 +68,7 @@ test('phones get a bottom tab bar and no sideways scroll', async ({ page }) => {
     );
   }
   const tabs = page.getByRole('navigation', { name: 'Main' }).getByRole('link');
-  await expect(tabs).toHaveText(['Today', 'Bible', 'Plans', 'Search', 'Profile']);
+  await expect(tabs).toHaveText(['Today', 'Plans', 'Bible', 'Search', 'Profile']);
   await tabs.filter({ hasText: 'Plans' }).click();
   await expect(page).toHaveURL(/\/plans$/);
 });

@@ -10,7 +10,7 @@ import styles from './Profile.module.css';
 
 const TABS = [
   { to: paths.profile, label: 'Journey', end: true },
-  { to: paths.profileYou, label: 'Profile' },
+  { to: paths.profileYou, label: 'About you' },
   { to: paths.settings, label: 'Settings' },
 ];
 

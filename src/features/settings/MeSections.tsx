@@ -1,4 +1,4 @@
-import { FAITH_JOURNEYS } from '@/app/faithJourney';
+import { FAITH_JOURNEYS, faithJourneys } from '@/app/faithJourney';
 import { useState } from 'react';
 import { useIsPhone } from '@/app/useIsPhone';
 import { Link } from 'react-router-dom';
@@ -48,20 +48,28 @@ export function YouSection() {
           className={styles.grow}
         />
       </div>
-      <Select
-        label="Your faith journey"
-        value={profile.faithJourney ?? 'private'}
-        onChange={(value) =>
-          void set('profile', {
-            ...profile,
-            faithJourney: FAITH_JOURNEYS.find((option) => option.value === value)?.value,
-          })
-        }
-        options={[
-          { value: 'private', label: 'I’d rather not say' },
-          ...FAITH_JOURNEYS.map((option) => ({ value: option.value, label: option.label })),
-        ]}
-      />
+      <fieldset className={styles.faithChoices}>
+        <legend>Your faith journey</legend>
+        <p>Choose all that describe you today. This is optional.</p>
+        {FAITH_JOURNEYS.map((option) => (
+          <label key={option.value}>
+            <input
+              type="checkbox"
+              checked={faithJourneys(profile.faithJourney).includes(option.value)}
+              onChange={(event) => {
+                const selected = faithJourneys(profile.faithJourney);
+                void set('profile', {
+                  ...profile,
+                  faithJourney: event.target.checked
+                    ? [...selected, option.value]
+                    : selected.filter((value) => value !== option.value),
+                });
+              }}
+            />
+            <span>{option.label}</span>
+          </label>
+        ))}
+      </fieldset>
       <div className={styles.colors} role="radiogroup" aria-label="Avatar colour">
         {AVATAR_COLORS.map(({ color, label }) => (
           <button

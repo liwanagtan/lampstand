@@ -24,7 +24,7 @@ describe('AppShell', () => {
       within(nav)
         .getAllByRole('link')
         .map((l) => l.textContent),
-    ).toEqual(['Today', 'Bible', 'Plans', 'Screen']);
+    ).toEqual(['Today', 'Plans', 'Bible', 'Screen']);
     expect(screen.getByRole('link', { name: /Profile: your journey/ })).toBeInTheDocument();
   });
 

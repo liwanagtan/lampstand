@@ -29,8 +29,8 @@ export interface NavItem {
 /** Fixed order: hiding a destination never moves the others. */
 export const NAV: readonly NavItem[] = [
   { to: paths.today, label: 'Today', icon: Sunrise, glyph: 'today', feature: 'today', end: true },
-  { to: paths.bible, label: 'Bible', icon: BookOpen, glyph: 'bible' },
   { to: paths.plans, label: 'Plans', icon: CalendarCheck, glyph: 'plans', feature: 'plans' },
+  { to: paths.bible, label: 'Bible', icon: BookOpen, glyph: 'bible' },
   { to: paths.screen, label: 'Screen', icon: MonitorPlay, glyph: 'screen', feature: 'screen' },
 ];
 

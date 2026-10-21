@@ -24,6 +24,9 @@ export function JourneyPage() {
   const empty = Boolean(stats && stats.since === null);
   return (
     <>
+      <a href="#your-journal" className={styles.journalShortcut}>
+        Open your journal <ChevronRight size={16} aria-hidden />
+      </a>
       {!empty && (
         <section aria-label="Your journey so far">
           <dl className={styles.summary}>

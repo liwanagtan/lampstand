@@ -28,7 +28,7 @@ import { useSettings } from '@/features/settings/settingsStore';
 import { usePassage } from '@/slides/usePassage';
 import { localDate, localDayNumber, verseOfTheDay } from './dailyVerses';
 import { entryHasContent, entryPreview, useReflection } from './journal';
-import { formatDay, isPlanFinished, usePlanProgress, usePlans } from './plans';
+import { currentDay, formatDay, isPlanFinished, usePlanProgress, usePlans } from './plans';
 import { ActivePlan } from './ActivePlan';
 import { useReader } from './readerStore';
 import { ContextPanel, ReflectPanel } from './TodayPanels';
@@ -96,18 +96,6 @@ export function TodayPage() {
         </h1>
       </motion.header>
 
-      {evening && finishedToday?.plan && (
-        <Link className={styles.eveningRead} to={paths.planPage(finishedToday.plan.id)}>
-          <Check size={22} aria-hidden />
-          <span>
-            <strong>
-              Day {finishedToday.day} read ·{' '}
-              {formatDay(finishedToday.plan.days[finishedToday.day - 1]!)}
-            </strong>
-            <small>{finishedToday.plan.name} · Carry on at your pace</small>
-          </span>
-        </Link>
-      )}
       <div className={styles.cols}>
         {phone ? (
           <>
@@ -118,6 +106,18 @@ export function TodayPage() {
                 onReflect={() => setPanel('reflect')}
               />
             </div>
+            {evening && finishedToday?.plan && (
+              <Link className={styles.eveningRead} to={paths.planPage(finishedToday.plan.id)}>
+                <Check size={22} aria-hidden />
+                <span>
+                  <strong>
+                    Day {finishedToday.day} read ·{' '}
+                    {formatDay(finishedToday.plan.days[finishedToday.day - 1]!)}
+                  </strong>
+                  <small>{finishedToday.plan.name} · Carry on at your pace</small>
+                </span>
+              </Link>
+            )}
             <div className={styles.weekSlot}>
               <WeekStrip now={now} />
             </div>
@@ -388,10 +388,16 @@ function TodayPlans() {
   const plans = usePlans();
   const progress = usePlanProgress();
   if (!progress || !plans) return <section className={styles.card} aria-label="Reading plans" />;
-  const active = progress.flatMap((p) => {
-    const plan = plans.find((x) => x.id === p.planId);
-    return plan && !isPlanFinished(plan, p) ? [{ plan, p }] : [];
-  });
+  const active = progress
+    .flatMap((p) => {
+      const plan = plans.find((x) => x.id === p.planId);
+      return plan && !isPlanFinished(plan, p) ? [{ plan, p }] : [];
+    })
+    .sort((a, b) => {
+      const aReady = currentDay(a.plan, a.p).kind === 'read';
+      const bReady = currentDay(b.plan, b.p).kind === 'read';
+      return Number(bReady) - Number(aReady) || b.p.updatedAt - a.p.updatedAt;
+    });
   if (active.length === 0) {
     return (
       <section className={styles.card} aria-label="Reading plans">
@@ -410,9 +416,24 @@ function TodayPlans() {
   }
   return (
     <>
-      {active.map(({ plan, p }) => (
-        <ActivePlan key={plan.id} plan={plan} progress={p} compact />
-      ))}
+      <section className={styles.nextReading} aria-label="Continue your reading">
+        <h2 className={styles.nextHeading}>
+          {currentDay(active[0]!.plan, active[0]!.p).kind === 'read'
+            ? 'Continue your reading'
+            : 'Your reading plan'}
+        </h2>
+        <ActivePlan plan={active[0]!.plan} progress={active[0]!.p} compact />
+      </section>
+      {active.length > 1 && (
+        <details className={styles.otherPlans}>
+          <summary>Other reading plans ({active.length - 1})</summary>
+          <div className={styles.otherPlansList}>
+            {active.slice(1).map(({ plan, p }) => (
+              <ActivePlan key={plan.id} plan={plan} progress={p} compact />
+            ))}
+          </div>
+        </details>
+      )}
     </>
   );
 }

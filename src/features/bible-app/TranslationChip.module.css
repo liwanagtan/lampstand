@@ -22,8 +22,8 @@
 .chip svg {
   color: var(--color-text-muted);
 }
-@media (pointer: coarse) {
+@media (pointer: coarse), (max-width: 640px) {
   .chip {
-    height: 36px;
+    height: 44px;
   }
 }

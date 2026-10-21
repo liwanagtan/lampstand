@@ -171,6 +171,7 @@
   color: var(--color-accent-text);
 }
 .aboutBook {
+  min-height: 44px;
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -630,7 +631,7 @@
     margin-bottom: 14px;
   }
   .aboutBook {
-    min-height: 36px;
+    min-height: 44px;
     padding: 0 12px;
     border-radius: 999px;
     background: var(--color-surface-sunk);

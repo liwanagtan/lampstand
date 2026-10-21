@@ -199,3 +199,33 @@ Restore the app’s main scrolling pane by browser history entry on Back/Forward
 ### 2026-10-21 — Devotional reading refinements
 
 Following owner review, remove the top Back to Today action and retain the bottom return button with scroll restoration. Feature the devotional key verse in italics without adding outer quotation marks; preserve Scripture punctuation. Split long source paragraphs at sentence boundaries for readability in the page and sheet, with text-preservation checks across all 732 readings.
+
+
+### 2026-10-21 — UX phase 2: next reading and plan discovery
+
+Owner approved phase 2. Put active plan continuation before the daily verse on phone and desktop, matching visual and document order. Prefer a plan ready to read, then latest progress activity; disclose additional active plans in an expandable list. Keep the no-plan invitation after the verse. Plans offers at most three unstarted suggestions using the saved faith journey, or introductory options when no journey is supplied; never imply these are mandatory. Restore mobile plan search and reduce the initial feeling category preview to eight, retaining See all. Phase 3 remains pending review.
+
+
+### 2026-10-21 — Phase 2 review: verse first and simple suggestions
+
+Owner prefers Verse of the Day first at every width. Restore it as the first content block, including before the phone evening acknowledgement; keep desktop verse/plans/devotional in the main column with weekly activity, reflection and resume in the aligned side column. Suggestions now use plain linked list rows with plan name, length and reason, without cover cards or a surrounding card.
+
+
+### 2026-10-21 — Focused Suggestions section
+
+Remove Browse all from Suggestions; Discover already provides browsing below it. Keep at most three plain list rows, each grouping a plan name, length, reason and View plan affordance. Use a shorter section explanation and semantic heading/list structure. This applies Hick’s Law (reduce competing choices) and proximity (keep each suggestion’s explanation with its action).
+
+
+### 2026-10-21 — UX phase 3: clearer choices and saved content
+
+Owner approved phase 3 after reviewing phase 2. Replace Skip/show everything with Finish setup later, applying answers already supplied and reading defaults only when no uses were chosen. Preserve selected translation and plan; offer an explicit Skip this question for optional faith journey. Rename the personal-details subtab About you while keeping the main Profile destination. Add a Journal shortcut within Journey. Distinguish Topics, Bible, Plans and Saved in universal search. Raise standalone phone translation/About/search-filter targets to 44px. Clarify device-local journal storage and actual backup coverage in writing and settings. Stop for owner review before further UX work.
+
+
+### 2026-10-21 — Multi-select faith journey and onboarding spacing
+
+Owner explicitly requested multi-select faith journey, superseding the earlier single-choice decision. Save multiple answers as an array while accepting older single-value profiles. Use checkbox indicators, allow clearing through I’d rather not say, and derive recommendations from all selected journeys. About you edits the same multiple answers. Standardize heading, option and action spacing across steps, remove the large mobile bottom-action gap, and reset scroll/focus when moving between steps. Keep the existing dark palette, animated book introduction and flame setup transition.
+
+
+### 2026-10-21 — Final reviewed UI refinements
+
+Suggestions use a softly tinted section with all corners rounded and no left border. Bible sits in the middle of the full phone navigation (Today, Plans, Bible, Search, Profile). Hide Finish setup later on translation and plan steps; label the final action Complete setup. Welcome’s form does not flex-shrink, preserving 48px bottom clearance at all widths. Screen library/import, presentation controls and Bible console use the light interface palette; slide content and live output retain their designed appearance.

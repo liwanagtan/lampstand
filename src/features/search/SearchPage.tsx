@@ -66,10 +66,10 @@ export function SearchPage() {
         <div className={styles.filters} role="group" aria-label="Search results filter">
           {[
             ['all', 'All'],
-            ['topics', 'Verses'],
+            ['topics', 'Topics'],
             ['plans', 'Plans'],
             ['bible', 'Bible'],
-            ['mine', 'My journal'],
+            ['mine', 'Saved'],
           ].map(([id, label]) => (
             <button key={id} aria-pressed={filter === id} onClick={() => setFilter(id!)}>
               {label}
@@ -79,7 +79,9 @@ export function SearchPage() {
       )}
       {!text && (
         <div className={styles.try}>
-          <p className={styles.muted}>Search finds verses, plans and what you have written.</p>
+          <p className={styles.muted}>
+            Find Bible passages, reading plans, reflections and saved verses.
+          </p>
           <h2 className={styles.tryTitle}>Try</h2>
           <div className={styles.chips}>
             {TRY.map((t) => (
@@ -134,7 +136,7 @@ export function SearchPage() {
         ))}
 
       {(filter === 'all' || filter === 'mine') && journey.length > 0 && (
-        <Group title="Your journey">
+        <Group title="Saved reflections and verses">
           {journey.map((i) =>
             isEntryItem(i) ? (
               <ResultButton

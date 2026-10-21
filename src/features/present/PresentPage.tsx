@@ -61,7 +61,7 @@ import { paths } from '@/app/paths';
 type RailTab = 'notes' | 'queue';
 
 export function PresentPage() {
-  useApplyDocumentTheme(true);
+  useApplyDocumentTheme();
   const { id = '' } = useParams();
   const navigate = useNavigate();
   const [state, setState] = useState<'loading' | 'ready' | 'missing'>('loading');
@@ -353,7 +353,7 @@ function ControlScreen() {
 
   return (
     <PosterContext.Provider value={posterInfo}>
-      <div className={styles.shell} data-atmosphere="stage">
+      <div className={styles.shell} data-atmosphere="screen">
         <header className={styles.top}>
           <IconButton
             label="Back to Screen"

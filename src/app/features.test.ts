@@ -5,8 +5,8 @@ describe('feature switches', () => {
   it('shows every destination in a fixed order', () => {
     expect(visibleNav(ALL_FEATURES).map((n) => n.label)).toEqual([
       'Today',
-      'Bible',
       'Plans',
+      'Bible',
       'Screen',
     ]);
   });
@@ -55,12 +55,12 @@ describe('use cases', () => {
 });
 
 describe('phone tab bar', () => {
-  it('is Today, Bible, Plans, Search and Profile; Screen waits in Profile', async () => {
+  it('is Today, Plans, Bible, Search and Profile; Screen waits in Profile', async () => {
     const { phoneTabs } = await import('./features');
     expect(phoneTabs(ALL_FEATURES).map((n) => n.label)).toEqual([
       'Today',
-      'Bible',
       'Plans',
+      'Bible',
       'Search',
       'Profile',
     ]);

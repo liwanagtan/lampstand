@@ -19,8 +19,8 @@ import styles from './AppShell.module.css';
 import sun from './TodaySun.module.css';
 
 /**
- * Laptops: Today · Bible · Plans · Screen, then Search and Profile in the top bar. Phones: a
- * bottom tab bar within thumb reach — Today · Bible · Plans · Search · Profile
+ * Laptops: Today · Plans · Bible · Screen, then Search and Profile in the top bar. Phones: a
+ * bottom tab bar within thumb reach — Today · Plans · Bible · Search · Profile
  * (docs/PRD-ADDENDUM-GROW.md).
  */
 export function AppShell() {
@@ -131,7 +131,7 @@ function atmosphereFor(pathname: string): string {
   if (pathname.startsWith('/bible')) return 'bible';
   if (pathname.startsWith('/plans')) return 'plans';
   if (pathname.startsWith('/profile')) return 'journal';
-  if (pathname.startsWith('/screen')) return 'stage';
+  if (pathname.startsWith('/screen')) return 'screen';
   return 'me';
 }
 

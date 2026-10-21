@@ -227,3 +227,9 @@
     border-radius: 18px;
   }
 }
+
+@media (pointer: coarse), (max-width: 640px) {
+  .filters button {
+    min-height: 44px;
+  }
+}

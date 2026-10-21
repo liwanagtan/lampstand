@@ -2,10 +2,12 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Check, ChevronDown, Search, X } from 'lucide-react';
 import { paths } from '@/app/paths';
+import { faithJourneys } from '@/app/faithJourney';
 import { useSettings } from '@/features/settings/settingsStore';
 import type { CatalogNode } from '@/schema/planCatalog';
 import { ActivePlan } from './ActivePlan';
 import {
+  planMeta,
   plansIn,
   searchPlans,
   uncategorised,
@@ -16,6 +18,7 @@ import {
 } from './discover';
 import { FilterChip } from './FilterChip';
 import { plansGreeting } from './greetings';
+import { planSuggestions } from './planSuggestions';
 import { CategoryChip, CategoryTile, PlanCard } from './PlanCards';
 import { isPlanFinished, usePlanProgress, usePlans, type Plan } from './plans';
 import styles from './Discover.module.css';
@@ -37,6 +40,7 @@ export function PlansPage() {
   const plans = usePlans();
   const progress = usePlanProgress();
   const name = useSettings((s) => s.profile.name);
+  const journey = useSettings((s) => s.profile.faithJourney);
   const [query, setQuery] = useState('');
   const [pace, setPace] = useState<PaceFilter>('all');
   const [audience, setAudience] = useState<AudienceFilter>('all');
@@ -52,6 +56,7 @@ export function PlansPage() {
   const searching = query.trim() !== '' || pace !== 'all' || audience !== 'all';
   const results = searching ? searchPlans(all, query, pace, audience) : [];
   const hello = plansGreeting(name, active.length);
+  const suggestions = planSuggestions(all, new Set(byId.keys()), journey);
 
   return (
     <div className={styles.page} data-enter>
@@ -74,7 +79,40 @@ export function PlansPage() {
         </section>
       )}
 
-      <section className={styles.section} aria-label="Discover">
+      {!searching && suggestions.length > 0 && (
+        <section className={styles.suggestions} aria-labelledby="plan-suggestions-title">
+          <div className={styles.suggestionHeader}>
+            <div>
+              <h2 id="plan-suggestions-title" className={styles.groupTitle}>
+                {faithJourneys(journey).length ? 'Suggested for you' : 'A place to start'}
+              </h2>
+              <p className={styles.groupText}>
+                {faithJourneys(journey).length
+                  ? 'Chosen with your faith journey in mind.'
+                  : 'Start with Jesus’ life or a daily rhythm in the Psalms.'}
+              </p>
+            </div>
+          </div>
+          <ul className={styles.suggestionList}>
+            {suggestions.map(({ plan, reason }) => (
+              <li key={plan.id}>
+                <Link to={paths.planPage(plan.id)} className={styles.suggestionLink}>
+                  <span>
+                    <span className={styles.suggestionName}>{plan.name}</span>
+                    <span className={styles.suggestionMeta}>{planMeta(plan)}</span>
+                    <span className={styles.suggestionReason}>{reason}</span>
+                  </span>
+                  <span className={styles.suggestionAction} aria-hidden>
+                    View plan <ArrowRight size={18} />
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      <section id="discover-plans" className={styles.section} aria-label="Discover">
         <h2 className={styles.sectionTitle}>Discover</h2>
         <div className={styles.searchBar}>
           <label className={styles.searchBox}>
@@ -204,7 +242,7 @@ function GroupSection({
       </div>
       {group.id === 'feel' ? (
         <div className={styles.chips}>
-          {children.map((c) => (
+          {children.slice(0, 8).map((c) => (
             <CategoryChip key={c.id} node={c} plans={plans} />
           ))}
         </div>

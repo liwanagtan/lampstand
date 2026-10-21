@@ -3,7 +3,6 @@ import { BookPlus, Download, ImagePlus, Trash2, Upload, ChevronRight } from 'luc
 import { Button, Chip, Dialog, Select, Toggle, cx, toast } from '@/design-system/components';
 import { useIsPhone } from '@/app/useIsPhone';
 import { LampLockup } from '@/design-system/LampMark';
-import { db } from '@/db/db';
 import { useBible } from '@/features/bible/bibleStore';
 import { invalidateSearch } from '@/features/bible/search';
 import { storeMediaFile } from '@/features/library/media';
@@ -368,9 +367,10 @@ function DataSection({ embedded = false }: { embedded?: boolean }) {
       a.download = backupFileName();
       a.click();
       setTimeout(() => URL.revokeObjectURL(url), 2000);
-      const count = await db.presentations.count();
       toast({
-        title: `Backup saved (${count} presentation${count === 1 ? '' : 's'})`,
+        title: 'Backup saved',
+        description:
+          'Includes your journal, notes, highlights, bookmarks, plan progress, preferences and presentations.',
         tone: 'success',
       });
     } finally {
@@ -424,8 +424,9 @@ function DataSection({ embedded = false }: { embedded?: boolean }) {
         {usage && <span className={cx(styles.muted, styles.usage)}>{usage}</span>}
       </div>
       <p className={styles.small}>
-        Importing a backup adds presentations you don’t have and updates ones that were edited more
-        recently. Nothing is deleted.
+        Your backup includes journal entries, notes, highlights, bookmarks, plan progress,
+        preferences and presentations. Keep a copy before changing devices. Import merges saved
+        content without deleting existing items.
       </p>
     </div>
   );

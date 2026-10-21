@@ -128,7 +128,7 @@ export function JourneyTimeline({ welcome = false }: { welcome?: boolean }) {
   const empty = loaded && timeline.length === 0;
 
   return (
-    <section className={styles.timeline} aria-label="Journal">
+    <section id="your-journal" className={styles.timeline} aria-label="Journal">
       {!(welcome && empty) && (
         <div className={styles.head}>
           <div>

@@ -127,7 +127,7 @@
     height: 48px;
     border-radius: 14px;
     background: rgb(242 179 61 / 0.14);
-    color: #f2b33d;
+    color: var(--color-accent-text);
   }
   .title {
     font-size: 16px;

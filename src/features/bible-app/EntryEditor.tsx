@@ -122,6 +122,9 @@ export function EntryEditor({
             onBlur={flush}
           />
         ))}
+      <p className={styles.storageNote}>
+        Your writing stays on this device. To keep a copy, export a backup in Profile → Settings.
+      </p>
       <p className={styles.saved} role="status" aria-live="polite">
         {status === 'saving' ? 'Saving…' : status === 'saved' ? 'Saved' : ' '}
       </p>

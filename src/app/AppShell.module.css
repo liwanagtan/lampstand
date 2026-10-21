@@ -161,7 +161,8 @@
 /* Plans, Journal and Me: calm and personal, a little warmth at the top. */
 .main[data-atmosphere='plans'],
 .main[data-atmosphere='journal'],
-.main[data-atmosphere='me'] {
+.main[data-atmosphere='me'],
+.main[data-atmosphere='screen'] {
   background:
     radial-gradient(
         120% 40% at 50% 0%,

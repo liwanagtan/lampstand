@@ -5,9 +5,9 @@ import { ArrowLeft, ArrowRight, Check } from 'lucide-react';
 import { Button, Input, cx } from '@/design-system/components';
 import { FlameCompanion } from '@/design-system/FlameCompanion';
 import { LampLockup, AnimatedLampMark } from '@/design-system/LampMark';
-import { ALL_FEATURES, USE_CASES, featuresFor, type UseCaseId } from '@/app/features';
+import { USE_CASES, featuresFor, type UseCaseId } from '@/app/features';
 import { useIsPhone } from '@/app/useIsPhone';
-import { FAITH_JOURNEYS, suggestedPlan, type FaithJourney } from '@/app/faithJourney';
+import { FAITH_JOURNEYS, suggestedPlanIds, type FaithJourney } from '@/app/faithJourney';
 import { paths } from '@/app/paths';
 import { markOnboarded } from '@/app/onboarding';
 import { useBible } from '@/features/bible/bibleStore';
@@ -40,22 +40,27 @@ export function WelcomePage() {
   const reduced = useReducedMotion();
   const translations = useBible((s) => s.translations);
   const saving = useRef(false);
+  const main = useRef<HTMLElement>(null);
   const [settingUp, setSettingUp] = useState(false);
   const [setupError, setSetupError] = useState('');
   const [step, setStep] = useState<Step>('name');
   const [name, setName] = useState('');
+  useEffect(() => {
+    main.current?.scrollTo?.({ top: 0 });
+    main.current?.querySelector('h1')?.focus({ preventScroll: true });
+  }, [step]);
   const [uses, setUses] = useState<Set<UseCaseId>>(new Set());
   const [translation, setTranslation] = useState(useReader.getState().translation);
   const [plan, setPlan] = useState<string | null>(null);
-  const [journey, setJourney] = useState<FaithJourney | undefined>();
-  const recommended = suggestedPlan(journey);
-  const starterIds = [...new Set([...(recommended ? [recommended] : []), ...STARTER_PLANS])];
+  const [journey, setJourney] = useState<FaithJourney[]>([]);
+  const recommended = suggestedPlanIds(journey);
+  const starterIds = [...new Set([...recommended, ...STARTER_PLANS])];
 
   const steps: Step[] = ['name', 'uses', 'journey', 'translation', 'plan'];
   const index = steps.indexOf(step);
   const last = index === steps.length - 1;
 
-  const complete = async (skipChoices = false) => {
+  const complete = async () => {
     if (!name.trim()) {
       setStep('name');
       return;
@@ -66,9 +71,9 @@ export function WelcomePage() {
     setSettingUp(true);
     const started = Date.now();
     try {
-      const features = skipChoices ? { ...ALL_FEATURES } : featuresFor(uses);
+      const features = featuresFor(uses.size ? uses : ['grow']);
       features.today = true;
-      if (!skipChoices && plan) features.plans = true;
+      if (plan) features.plans = true;
       const settings = useSettings.getState();
       await settings.set('profile', {
         ...settings.profile,
@@ -76,11 +81,9 @@ export function WelcomePage() {
         faithJourney: journey,
       });
       await settings.set('features', features);
-      if (!skipChoices) {
-        await settings.set('defaultTranslation', translation);
-        useReader.getState().setTranslation(translation);
-        if (plan) await startPlan(plan);
-      }
+      await settings.set('defaultTranslation', translation);
+      useReader.getState().setTranslation(translation);
+      if (plan) await startPlan(plan);
       // Give the short handoff time to read; never show invented percentage progress.
       const remaining = 3000 - (Date.now() - started);
       if (remaining > 0) await new Promise((resolve) => setTimeout(resolve, remaining));
@@ -154,7 +157,7 @@ export function WelcomePage() {
           <LampLockup size={30} title="Lampstand" />
         </span>
       </header>
-      <main className={styles.main}>
+      <main ref={main} className={styles.main}>
         <motion.form
           key={step}
           className={styles.card}
@@ -172,7 +175,9 @@ export function WelcomePage() {
               <div className={styles.mobileMark}>
                 <AnimatedLampMark size={150} title="Lampstand" />
               </div>
-              <h1 className={styles.title}>Welcome to Lampstand</h1>
+              <h1 tabIndex={-1} className={styles.title}>
+                Welcome to Lampstand
+              </h1>
               <p className={styles.lede}>Grow in faith, one day at a time.</p>
               <div className={styles.nameField}>
                 <Input
@@ -192,7 +197,9 @@ export function WelcomePage() {
 
           {step === 'uses' && (
             <>
-              <h1 className={styles.title}>What brings you to Lampstand?</h1>
+              <h1 tabIndex={-1} className={styles.title}>
+                What brings you to Lampstand?
+              </h1>
               <p className={styles.lede}>
                 Choose all that apply. You can change this any time in Profile.
               </p>
@@ -242,35 +249,49 @@ export function WelcomePage() {
 
           {step === 'journey' && (
             <>
-              <h1 className={styles.title}>Where are you in your faith journey?</h1>
+              <h1 tabIndex={-1} className={styles.title}>
+                Where are you in your faith journey?
+              </h1>
               <p className={styles.lede}>
-                Choose what feels closest to you today. This is optional and helps us suggest a
-                first plan. You can change it later in Profile.
+                Choose all that describe you today to help us suggest reading plans. You can also
+                continue without answering, or change this later in Profile.
               </p>
-              <div className={styles.options} role="radiogroup" aria-label="Your faith journey">
+              <div className={styles.options} role="group" aria-label="Your faith journey">
                 {FAITH_JOURNEYS.map((option) => (
                   <button
                     key={option.value}
                     type="button"
-                    role="radio"
-                    aria-checked={journey === option.value}
+                    role="checkbox"
+                    aria-checked={journey.includes(option.value)}
                     className={styles.option}
-                    onClick={() => setJourney(option.value)}
+                    onClick={() =>
+                      setJourney((current) =>
+                        current.includes(option.value)
+                          ? current.filter((value) => value !== option.value)
+                          : [...current, option.value],
+                      )
+                    }
                   >
                     <span className={styles.optionText}>
                       <span className={styles.optionTitle}>{option.label}</span>
                       <span className={styles.optionBody}>{option.description}</span>
                     </span>
+                    <span className={styles.choiceIndicator} aria-hidden>
+                      <Check size={13} />
+                    </span>
                   </button>
                 ))}
                 <button
                   type="button"
-                  role="radio"
-                  aria-checked={journey === undefined}
+                  role="checkbox"
+                  aria-checked={journey.length === 0}
                   className={styles.option}
-                  onClick={() => setJourney(undefined)}
+                  onClick={() => setJourney([])}
                 >
-                  I’d rather not say
+                  <span className={styles.optionText}>I’d rather not say</span>
+                  <span className={styles.choiceIndicator} aria-hidden>
+                    <Check size={13} />
+                  </span>
                 </button>
               </div>
             </>
@@ -278,7 +299,9 @@ export function WelcomePage() {
 
           {step === 'translation' && (
             <>
-              <h1 className={styles.title}>Which Bible do you read?</h1>
+              <h1 tabIndex={-1} className={styles.title}>
+                Which Bible do you read?
+              </h1>
               <p className={styles.lede}>You can switch any time while reading.</p>
               <TranslationPreview code={translation} />
               <div className={styles.options} role="radiogroup" aria-label="Bible translation">
@@ -301,10 +324,12 @@ export function WelcomePage() {
 
           {step === 'plan' && (
             <>
-              <h1 className={styles.title}>Start a reading plan?</h1>
+              <h1 tabIndex={-1} className={styles.title}>
+                Start a reading plan?
+              </h1>
               <p className={styles.lede}>
-                {recommended
-                  ? 'We’ve suggested a plan based on your faith journey. Choose it, pick another, or start without a plan.'
+                {recommended.length > 0
+                  ? 'These plans reflect your answers. Choose one, or begin with the daily verse.'
                   : 'One reading a day, at your pace. Miss a day and simply carry on.'}
               </p>
               <div className={styles.options} role="radiogroup" aria-label="Reading plan">
@@ -323,7 +348,7 @@ export function WelcomePage() {
                       <span className={styles.optionText}>
                         <span className={styles.optionTitle}>
                           {p.name}
-                          {p.id === recommended && (
+                          {recommended.includes(p.id) && (
                             <small className={styles.recommendation}>Suggested for you</small>
                           )}
                         </span>
@@ -369,17 +394,24 @@ export function WelcomePage() {
               disabled={!canContinue}
               className={styles.continue}
             >
-              {last ? 'Go to Today' : 'Continue'}
+              {last ? 'Complete setup' : 'Continue'}
             </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              className={styles.skip}
-              disabled={!name.trim()}
-              onClick={() => void complete(true)}
-            >
-              Skip, show me everything
-            </Button>
+            {step !== 'translation' && step !== 'plan' && (
+              <>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className={styles.skip}
+                  disabled={!name.trim()}
+                  onClick={() => void complete()}
+                >
+                  Finish setup later
+                </Button>
+                <p className={styles.finishLaterHint}>
+                  Your answers are saved when you finish. Preferences can be changed in Profile.
+                </p>
+              </>
+            )}
           </div>
         </motion.form>
       </main>
@@ -423,7 +455,9 @@ function SetupPreview({ hasPlan, reduced }: { hasPlan: boolean; reduced: boolean
       ref={(element) => element?.focus()}
     >
       <FlameCompanion mood="celebrate" size={150} />
-      <h1 className={styles.title}>Preparing your daily reading…</h1>
+      <h1 tabIndex={-1} className={styles.title}>
+        Preparing your daily reading…
+      </h1>
       <p className={styles.lede}>Here’s what’s waiting for you on Today.</p>
       <div className={styles.setupExpectations}>
         {expectations.map((text, i) => (

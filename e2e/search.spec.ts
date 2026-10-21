@@ -55,7 +55,7 @@ test.describe('on a phone', () => {
     await tabs.getByRole('link', { name: 'Profile' }).tap();
     await page
       .getByRole('navigation', { name: 'Profile sections' })
-      .getByRole('link', { name: 'Profile' })
+      .getByRole('link', { name: 'About you' })
       .tap();
     await page.getByRole('link', { name: /Open Screen/ }).tap();
     await expect(page).toHaveURL(/\/screen$/);
@@ -66,7 +66,7 @@ test('laptops keep Screen in the top bar, with search right there', async ({ pag
   await page.setViewportSize({ width: 1280, height: 800 });
   await openApp(page, '/');
   const nav = page.getByRole('navigation', { name: 'Main' });
-  await expect(nav.getByRole('link')).toHaveText(['Today', 'Bible', 'Plans', 'Screen']);
+  await expect(nav.getByRole('link')).toHaveText(['Today', 'Plans', 'Bible', 'Screen']);
   await expect(page.getByRole('link', { name: /Open Screen/ })).toHaveCount(0);
 
   // `/` jumps to the field; results drop down as you type.

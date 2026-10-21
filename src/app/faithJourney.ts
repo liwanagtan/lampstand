@@ -35,3 +35,18 @@ export type FaithJourney = (typeof FAITH_JOURNEYS)[number]['value'];
 export function suggestedPlan(journey?: FaithJourney): string | undefined {
   return FAITH_JOURNEYS.find((option) => option.value === journey)?.plan;
 }
+
+/** Accept older single-choice profiles while saving new selections as arrays. */
+export type FaithJourneySelection = FaithJourney | FaithJourney[];
+export function faithJourneys(value?: FaithJourneySelection): FaithJourney[] {
+  const values = Array.isArray(value) ? value : value ? [value] : [];
+  return [...new Set(values)].filter((item) =>
+    FAITH_JOURNEYS.some((option) => option.value === item),
+  );
+}
+export function suggestedPlanIds(value?: FaithJourneySelection): string[] {
+  return faithJourneys(value).flatMap((journey) => {
+    const plan = suggestedPlan(journey);
+    return plan ? [plan] : [];
+  });
+}

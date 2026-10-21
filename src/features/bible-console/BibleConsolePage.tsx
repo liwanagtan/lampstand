@@ -74,7 +74,7 @@ function selectFound(r: RefRange) {
  * dock and keys — with a chapter to pick verses from and a passage queue instead of slides.
  */
 export function BibleConsolePage() {
-  useApplyDocumentTheme(true);
+  useApplyDocumentTheme();
   useBibleTvSession();
   const navigate = useNavigate();
   const { book, chapter, translation, selection } = useReader();
@@ -139,7 +139,7 @@ export function BibleConsolePage() {
     : [live.screen === 'blank' ? 'Blank' : live.screen === 'logo' ? 'Logo' : 'Nothing on screen'];
 
   return (
-    <div className={frame.shell} data-atmosphere="stage">
+    <div className={frame.shell} data-atmosphere="screen">
       <header className={frame.top}>
         <IconButton
           label="Back to Screen"

@@ -281,11 +281,17 @@ const sundayOnOrBefore = (dayNumber: number) => {
   return dayNumber - ((dayNumber + 4) % 7);
 };
 
+/** A plan is completed only when every scheduled reading has been marked read. */
+export function isPlanFinished(plan: Plan, progress: PlanProgressRecord): boolean {
+  const done = new Set(progress.done);
+  return plan.days.every((_, i) => done.has(i + 1));
+}
+
 /** What the reader should see for a plan right now. */
 export function currentDay(plan: Plan, progress: PlanProgressRecord, now = new Date()): DayStatus {
   const done = new Set(progress.done);
   const total = plan.days.length;
-  if (done.size >= total && plan.days.every((_, i) => done.has(i + 1))) return { kind: 'finished' };
+  if (isPlanFinished(plan, progress)) return { kind: 'finished' };
   if (plan.pace === 'daily') {
     for (let d = 1; d <= total; d++) if (!done.has(d)) return { kind: 'read', day: d };
     return { kind: 'finished' };

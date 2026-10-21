@@ -10,11 +10,13 @@ import { useReader } from './readerStore';
 import { useOpenInReader } from './useOpenInReader';
 import { categoryById } from '@/schema/planCatalog';
 import { ActivePlan } from './ActivePlan';
+import { CompletedPlanActions } from './CompletedPlanActions';
 import { planMeta, plansIn, visibleChildren } from './discover';
 import { CategoryChip, CategoryLinks, PlanCard } from './PlanCards';
 import { useCoverUrl } from './useCoverUrl';
 import {
   currentDay,
+  isPlanFinished,
   stopPlan,
   formatDay,
   isLessons,
@@ -46,7 +48,14 @@ export function PlanCategoryPage() {
     );
   }
   const all = plans ?? [];
-  const active = new Set((progress ?? []).map((p) => p.planId));
+  const active = new Set(
+    (progress ?? [])
+      .filter((record) => {
+        const plan = all.find((p) => p.id === record.planId);
+        return plan && !isPlanFinished(plan, record);
+      })
+      .map((p) => p.planId),
+  );
   const children = visibleChildren(node, all);
   const list = plansIn(all, node.id);
   const trail = node.path.slice(0, -1).flatMap((id) => {
@@ -176,14 +185,16 @@ export function PlanPage() {
                 Read {unit.toLowerCase()} {next} · {formatDay(plan.days[next - 1]!)}
               </Button>
             )}
-            {status?.kind === 'finished' && <p>Plan complete. Well done!</p>}
+            {status?.kind === 'finished' && <CompletedPlanActions plan={plan} />}
             {status?.kind === 'waiting' && (
               <p>Your next lesson opens {new Date(status.unlocks).toLocaleDateString()}.</p>
             )}
-            <div>
-              <small>Miss a day and simply carry on.</small>
-              <button onClick={() => setStopping(true)}>Stop plan</button>
-            </div>
+            {status?.kind !== 'finished' && (
+              <div>
+                <small>Miss a day and simply carry on.</small>
+                <button onClick={() => setStopping(true)}>Stop plan</button>
+              </div>
+            )}
           </section>
         </>
       ) : (

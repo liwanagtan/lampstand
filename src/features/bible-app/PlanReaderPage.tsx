@@ -66,10 +66,6 @@ export function PlanReaderPage() {
   const size = useReader((s) => s.size);
 
   useEffect(() => {
-    top.current?.closest('[data-scroll]')?.scrollTo({ top: 0 });
-  }, [planId, n]);
-
-  useEffect(() => {
     const root = top.current?.closest('[data-scroll]');
     if (!root) return;
     const update = () => {

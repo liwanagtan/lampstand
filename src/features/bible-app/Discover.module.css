@@ -771,7 +771,7 @@
     font-size: 15px;
     font-weight: 800;
   }
-  .mobileProgress span,
+  .mobileProgress > div > span,
   .mobileProgress small {
     font-size: 12px;
     color: var(--color-text-muted);

@@ -54,6 +54,7 @@
 .verse blockquote {
   margin: 0;
   font-family: var(--font-display);
+  font-style: italic;
   font-size: 20px;
   line-height: 1.5;
 }
@@ -87,7 +88,7 @@
 .body {
   display: flex;
   flex-direction: column;
-  gap: var(--space-3);
+  gap: 1.25em;
   margin-top: var(--space-5, 20px);
   font-family: var(--font-display);
   font-size: 18px;
@@ -113,4 +114,40 @@
   .body {
     font-size: 16px;
   }
+}
+
+.readingPage {
+  width: min(100%, 680px);
+  margin: 0 auto;
+  padding: 24px 24px max(40px, env(safe-area-inset-bottom));
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 24px;
+}
+.back {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  gap: 8px;
+  min-height: 44px;
+  color: var(--color-text);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+}
+.readingTitle {
+  margin-top: 10px;
+  font-size: 26px;
+  line-height: 1.25;
+  outline: none;
+}
+.readingPage .body {
+  margin-top: 0;
+  font-size: 18px;
+  line-height: 1.8;
+}
+.readingPage .note {
+  line-height: 1.6;
+  margin-top: 0;
 }

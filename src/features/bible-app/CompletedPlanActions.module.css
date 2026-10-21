@@ -1,0 +1,9 @@
+.completed {
+  display: grid;
+  gap: 14px;
+}
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}

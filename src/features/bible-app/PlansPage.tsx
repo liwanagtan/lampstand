@@ -17,7 +17,7 @@ import {
 import { FilterChip } from './FilterChip';
 import { plansGreeting } from './greetings';
 import { CategoryChip, CategoryTile, PlanCard } from './PlanCards';
-import { currentDay, usePlanProgress, usePlans, type Plan } from './plans';
+import { isPlanFinished, usePlanProgress, usePlans, type Plan } from './plans';
 import styles from './Discover.module.css';
 
 const PACES: { value: PaceFilter; label: string }[] = [
@@ -44,7 +44,7 @@ export function PlansPage() {
   const all = plans ?? [];
   const completed = all.filter((p) => {
     const record = byId.get(p.id);
-    return record && currentDay(p, record).kind === 'finished';
+    return record && isPlanFinished(p, record);
   });
   const completedIds = new Set(completed.map((p) => p.id));
   const isActive = (p: Plan) => byId.has(p.id) && !completedIds.has(p.id);

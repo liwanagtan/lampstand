@@ -10,11 +10,11 @@ import {
   formatDay,
   isLessons,
   readingMinutes,
-  startPlan,
   stopPlan,
   type Plan,
 } from './plans';
 import styles from './Daily.module.css';
+import { CompletedPlanActions } from './CompletedPlanActions';
 
 const dateFormat = new Intl.DateTimeFormat(undefined, {
   weekday: 'long',
@@ -142,18 +142,7 @@ export function ActivePlan({
           </p>
         </>
       )}
-      {status.kind === 'finished' && (
-        <div className={styles.row}>
-          <p className={styles.done}>
-            <Check size={16} aria-hidden /> Plan complete. Well done!
-          </p>
-          {!compact && (
-            <Button className={styles.push} onClick={() => void startPlan(plan.id)}>
-              Start again
-            </Button>
-          )}
-        </div>
-      )}
+      {status.kind === 'finished' && <CompletedPlanActions plan={plan} />}
       <Dialog
         open={stopping}
         onOpenChange={setStopping}

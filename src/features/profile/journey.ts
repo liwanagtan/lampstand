@@ -1,6 +1,7 @@
 // Profile and Journey (docs/PRD-ADDENDUM-GROW.md, milestone 20): the greeting and the summary.
 import type { JournalEntryRecord, MarkRecord, PlanProgressRecord } from '@/db/types';
 import type { Plan } from '@/schema/plan';
+import { isPlanFinished } from '@/features/bible-app/plans';
 
 const VISIT_KEY = 'lampstand.lastVisit';
 const DAY = 24 * 60 * 60 * 1000;
@@ -74,7 +75,7 @@ export function journeyStats(input: {
     for (const t of Object.values(pr.doneAt ?? {})) days.add(dayKey(t));
     const plan = byId.get(pr.planId);
     if (!plan) continue;
-    if (plan.days.every((_, i) => pr.done.includes(i + 1))) {
+    if (isPlanFinished(plan, pr)) {
       const at = Math.max(pr.updatedAt, ...Object.values(pr.doneAt ?? {}));
       finished.push({ plan, progress: pr, finishedAt: at });
     } else going.push({ plan, progress: pr });

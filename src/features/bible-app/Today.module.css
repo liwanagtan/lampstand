@@ -418,16 +418,6 @@
   color: var(--color-text-muted);
   margin-top: 4px;
 }
-@media (max-width: 640px) {
-  .page[data-evening] .verseSlot,
-  .page[data-evening] .plansSlot,
-  .page[data-evening] .reflectSlot {
-    display: none;
-  }
-  .page[data-evening] .cols {
-    grid-template-areas: 'week' 'classic';
-  }
-}
 
 /* Desktop reference 1: each column flows independently, without shared card rows. */
 @media (min-width: 641px) {

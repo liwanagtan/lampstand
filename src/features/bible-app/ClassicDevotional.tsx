@@ -1,12 +1,16 @@
 import { useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { useIsPhone } from '@/app/useIsPhone';
+import { paths } from '@/app/paths';
 import { BookOpen, Sunrise, Sunset } from 'lucide-react';
 import { Button, Sheet, cx } from '@/design-system/components';
 import { fromOsis } from '@/features/bible/ref';
 import { usePassage } from '@/slides/usePassage';
-import { halfOfDay, useMorningEvening, type ClassicReading } from './morningEvening';
+import { dayKey, halfOfDay, useMorningEvening, type ClassicReading } from './morningEvening';
 import { useReader } from './readerStore';
 import { useOpenInReader } from './useOpenInReader';
 import styles from './ClassicDevotional.module.css';
+import { devotionalParagraphs } from './devotionalParagraphs';
 
 const dateFormat = new Intl.DateTimeFormat(undefined, { month: 'long', day: 'numeric' });
 
@@ -15,6 +19,9 @@ const dateFormat = new Intl.DateTimeFormat(undefined, { month: 'long', day: 'num
  * translation; his words stay as he wrote them, King James quotations included.
  */
 export function ClassicDevotional({ now }: { now: Date }) {
+  const phone = useIsPhone();
+  const navigate = useNavigate();
+  const location = useLocation();
   const day = useMorningEvening(now);
   const [half, setHalf] = useState(halfOfDay(now));
   const [open, setOpen] = useState(false);
@@ -49,7 +56,16 @@ export function ClassicDevotional({ now }: { now: Date }) {
           <KeyVerse reading={reading} />
           <p className={styles.preview}>{reading.body[0]}</p>
           <div className={styles.row}>
-            <Button icon={<BookOpen size={16} />} onClick={() => setOpen(true)}>
+            <Button
+              icon={<BookOpen size={16} />}
+              onClick={() =>
+                phone
+                  ? navigate(paths.devotional(dayKey(now), half), {
+                      state: { fromToday: location.key },
+                    })
+                  : setOpen(true)
+              }
+            >
               Read the whole reading
             </Button>
           </div>
@@ -70,7 +86,7 @@ export function ClassicDevotional({ now }: { now: Date }) {
 }
 
 /** His key verse in the reader's translation (his own quotation if it can't be found). */
-function KeyVerse({ reading, large = false }: { reading: ClassicReading; large?: boolean }) {
+export function KeyVerse({ reading, large = false }: { reading: ClassicReading; large?: boolean }) {
   const translation = useReader((s) => s.translation);
   const { passage } = usePassage(reading.ref, translation);
   const text = passage?.verses
@@ -79,7 +95,7 @@ function KeyVerse({ reading, large = false }: { reading: ClassicReading; large?:
     .join(' ');
   return (
     <figure className={cx(styles.verse, large && styles.verseLarge)}>
-      <blockquote>“{text || reading.quote}”</blockquote>
+      <blockquote>{text || reading.quote}</blockquote>
       <figcaption>
         {reading.reference}
         {text ? <span className={styles.code}>{translation}</span> : null}
@@ -117,7 +133,7 @@ function ClassicSheet({
     >
       <KeyVerse reading={reading} large />
       <div className={styles.body}>
-        {reading.body.map((p, i) => (
+        {devotionalParagraphs(reading.body).map((p, i) => (
           <p key={i}>{p}</p>
         ))}
       </div>

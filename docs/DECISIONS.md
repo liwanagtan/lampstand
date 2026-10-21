@@ -179,3 +179,23 @@ Completing or skipping onboarding saves the profile and opens Today. A chosen pl
 ### 2026-10-21 — Setup companion and preview
 
 Use the celebrating FlameCompanion from day completion on the setup screen, rather than the book logo. Keep the screen visible for at least three seconds, including for reduced-motion users (the companion respects reduced motion). Reveal three short previews of Today at one-second intervals, with plain status copy and no simulated percentage.
+
+
+### 2026-10-21 — UX phase 1: consistent reading and completion
+
+Owner authorized the phased UX review recommendations, with a review stop after each phase. Phase 1 supersedes the mobile evening reference’s hidden verse/plans/reflection: keep these available after completion and show the most recently completed reading in the evening acknowledgement. Use one every-reading-complete predicate for Today, Plans, categories and Journey. Completed plans leave resume queues. On desktop and mobile, Revisit readings preserves completion, while Start again confirms that progress/dates reset and journal/marks remain. No phase 2 work begins until owner review.
+
+
+### 2026-10-21 — Full-page classic devotional on phones
+
+Owner requested more room for long-form reading during phase 1 review. The classic devotional action now opens a dedicated phone reading page with the selected date and morning/evening reading in its URL. Hide phone navigation during focused reading; retain Back to Today and the Bible context action. Larger screens retain the existing sheet. Phase 2 remains pending owner review.
+
+
+### 2026-10-21 — Return to the previous reading position
+
+Restore the app’s main scrolling pane by browser history entry on Back/Forward, allowing delayed content to load before restoring. New navigation starts at the top. The devotional return button goes back to the original Today history entry when opened from Today; direct links fall back to Today. Replace the small return links with a bordered 48px top button and a primary bottom button. This remains part of phase 1 review.
+
+
+### 2026-10-21 — Devotional reading refinements
+
+Following owner review, remove the top Back to Today action and retain the bottom return button with scroll restoration. Feature the devotional key verse in italics without adding outer quotation marks; preserve Scripture punctuation. Split long source paragraphs at sentence boundaries for readability in the page and sheet, with text-preservation checks across all 732 readings.

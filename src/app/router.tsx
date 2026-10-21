@@ -23,6 +23,13 @@ export const routes: RouteObject[] = [
         children: [
           { index: true, element: <HomeRoute /> },
           {
+            path: 'devotional/:date/:half',
+            lazy: lazyPage(
+              () => import('@/features/bible-app/ClassicDevotionalPage'),
+              'ClassicDevotionalPage',
+            ),
+          },
+          {
             path: 'bible',
             lazy: lazyPage(() => import('@/features/bible-app/BibleReaderPage'), 'BibleReaderPage'),
           },

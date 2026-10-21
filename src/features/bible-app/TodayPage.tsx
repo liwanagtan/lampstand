@@ -28,7 +28,7 @@ import { useSettings } from '@/features/settings/settingsStore';
 import { usePassage } from '@/slides/usePassage';
 import { localDate, localDayNumber, verseOfTheDay } from './dailyVerses';
 import { entryHasContent, entryPreview, useReflection } from './journal';
-import { formatDay, usePlanProgress, usePlans } from './plans';
+import { formatDay, isPlanFinished, usePlanProgress, usePlans } from './plans';
 import { ActivePlan } from './ActivePlan';
 import { useReader } from './readerStore';
 import { ContextPanel, ReflectPanel } from './TodayPanels';
@@ -71,9 +71,14 @@ export function TodayPage() {
     ?.flatMap((p) =>
       Object.entries(p.doneAt ?? {})
         .filter(([, t]) => localDate(new Date(t)) === date)
-        .map(([day]) => ({ plan: plans?.find((x) => x.id === p.planId), day: Number(day) })),
+        .map(([day, timestamp]) => ({
+          plan: plans?.find((x) => x.id === p.planId),
+          day: Number(day),
+          timestamp,
+        })),
     )
-    .find((p) => p.plan);
+    .filter((p) => p.plan)
+    .sort((a, b) => b.timestamp - a.timestamp)[0];
   const evening = phone && now.getHours() >= 17 && Boolean(finishedToday);
 
   return (
@@ -385,7 +390,7 @@ function TodayPlans() {
   if (!progress || !plans) return <section className={styles.card} aria-label="Reading plans" />;
   const active = progress.flatMap((p) => {
     const plan = plans.find((x) => x.id === p.planId);
-    return plan ? [{ plan, p }] : [];
+    return plan && !isPlanFinished(plan, p) ? [{ plan, p }] : [];
   });
   if (active.length === 0) {
     return (

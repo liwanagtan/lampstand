@@ -14,6 +14,7 @@ import { isOnboarded } from './onboarding';
 import { paths } from './paths';
 import { haptic } from './haptics';
 import { NavIcon } from './NavIcon';
+import { usePageScrollRestoration } from './usePageScrollRestoration';
 import styles from './AppShell.module.css';
 import sun from './TodaySun.module.css';
 
@@ -24,13 +25,15 @@ import sun from './TodaySun.module.css';
  */
 export function AppShell() {
   useApplyDocumentTheme();
+  usePageScrollRestoration();
   const features = useSettings((s) => s.features);
   const presenting = useControl((s) => s.presenting);
   const nav = visibleNav(features);
   const tabs = phoneTabs(features);
   const welcome = !isOnboarded();
   const { pathname } = useLocation();
-  const focusedReading = /^\/plans\/[^/]+\/\d+$/.test(pathname);
+  const focusedReading =
+    /^\/plans\/[^/]+\/\d+$/.test(pathname) || pathname.startsWith('/devotional/');
   const atmosphere = atmosphereFor(pathname);
   noteVisit();
   useReminders();

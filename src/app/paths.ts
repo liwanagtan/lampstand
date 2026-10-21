@@ -2,6 +2,7 @@
 
 export const paths = {
   today: '/',
+  devotional: (date: string, half: 'morning' | 'evening') => `/devotional/${date}/${half}`,
   bible: '/bible',
   plans: '/plans',
   planDay: (planId: string, day: number) => `/plans/${planId}/${day}`,

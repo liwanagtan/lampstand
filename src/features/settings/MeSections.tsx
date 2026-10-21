@@ -27,7 +27,9 @@ export function YouSection() {
   const profile = useSettings((s) => s.profile);
   const set = useSettings((s) => s.set);
   const [name, setName] = useState(profile.name);
+  const [journeyOpen, setJourneyOpen] = useState(false);
   const stats = useJourneyStats();
+  const selectedJourneys = faithJourneys(profile.faithJourney);
   return (
     <Section
       profile
@@ -48,28 +50,51 @@ export function YouSection() {
           className={styles.grow}
         />
       </div>
-      <fieldset className={styles.faithChoices}>
-        <legend>Your faith journey</legend>
-        <p>Choose all that describe you today. This is optional.</p>
-        {FAITH_JOURNEYS.map((option) => (
-          <label key={option.value}>
-            <input
-              type="checkbox"
-              checked={faithJourneys(profile.faithJourney).includes(option.value)}
-              onChange={(event) => {
-                const selected = faithJourneys(profile.faithJourney);
-                void set('profile', {
-                  ...profile,
-                  faithJourney: event.target.checked
-                    ? [...selected, option.value]
-                    : selected.filter((value) => value !== option.value),
-                });
-              }}
-            />
-            <span>{option.label}</span>
-          </label>
-        ))}
-      </fieldset>
+      <div className={styles.faithSummary}>
+        <div>
+          <strong>Your faith journey</strong>
+          <p>
+            {selectedJourneys.length
+              ? FAITH_JOURNEYS.filter((option) => selectedJourneys.includes(option.value))
+                  .map((option) => option.label)
+                  .join(' · ')
+              : 'Choose what describes you today.'}
+          </p>
+        </div>
+        <button
+          type="button"
+          className={styles.customize}
+          aria-expanded={journeyOpen}
+          aria-controls="faith-journey-choices"
+          onClick={() => setJourneyOpen((open) => !open)}
+        >
+          Customize
+          <ChevronDown size={14} className={cx(journeyOpen && styles.flip)} aria-hidden />
+        </button>
+      </div>
+      {journeyOpen && (
+        <fieldset id="faith-journey-choices" className={styles.faithChoices}>
+          <legend className={styles.visuallyHidden}>Your faith journey</legend>
+          <p>Choose all that describe you today. This is optional.</p>
+          {FAITH_JOURNEYS.map((option) => (
+            <label key={option.value}>
+              <input
+                type="checkbox"
+                checked={selectedJourneys.includes(option.value)}
+                onChange={(event) => {
+                  void set('profile', {
+                    ...profile,
+                    faithJourney: event.target.checked
+                      ? [...selectedJourneys, option.value]
+                      : selectedJourneys.filter((value) => value !== option.value),
+                  });
+                }}
+              />
+              <span>{option.label}</span>
+            </label>
+          ))}
+        </fieldset>
+      )}
       <div className={styles.colors} role="radiogroup" aria-label="Avatar colour">
         {AVATAR_COLORS.map(({ color, label }) => (
           <button

@@ -2,6 +2,7 @@ import { db } from '@/db/db';
 import { defaultVerseCounts, parseRef } from '@/features/bible/ref';
 import { parsePlanFile } from '@/schema/plan';
 import {
+  activePlanCount,
   builtinPlans,
   chapterChunks,
   currentDay,
@@ -23,6 +24,14 @@ const progress = (startedAt: Date, done: number[] = []) => ({
 });
 
 describe('built-in reading plans', () => {
+  it('counts only plans still in progress for pacing advice', () => {
+    const plans = [plan('gospels-40'), plan('nt-90'), plan('psalms-proverbs-30')];
+    const records = plans.map((item) => ({ ...progress(new Date()), planId: item.id }));
+    records[2]!.done = plans[2]!.days.map((_, index) => index + 1);
+    expect(activePlanCount(plans, records)).toBe(2);
+    expect(activePlanCount(plans, records, 'gospels-40')).toBe(1);
+  });
+
   it.each(['bible-year', 'nt-90', 'gospels-40', 'psalms-proverbs-30'])(
     '%s covers every chapter once, in order',
     (id) => {

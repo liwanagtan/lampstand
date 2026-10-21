@@ -16,6 +16,7 @@ import { CategoryChip, CategoryLinks, PlanCard } from './PlanCards';
 import { useCoverUrl } from './useCoverUrl';
 import {
   currentDay,
+  activePlanCount,
   isPlanFinished,
   stopPlan,
   formatDay,
@@ -115,11 +116,14 @@ export function PlanPage() {
   const { planId = '' } = useParams();
   const plan = usePlan(planId);
   const progress = usePlanProgressFor(planId);
+  const allPlans = usePlans();
+  const allProgress = usePlanProgress();
   const navigate = useNavigate();
   const cover = useCoverUrl(plan?.cover, 'full');
   const [removing, setRemoving] = useState(false);
   const [allDays, setAllDays] = useState(false);
   const [stopping, setStopping] = useState(false);
+  const [startAdviceOpen, setStartAdviceOpen] = useState(false);
 
   if (plan === undefined || progress === undefined) return <div className={styles.page} />;
   if (!plan) {
@@ -138,6 +142,8 @@ export function PlanPage() {
   const unit = isLessons(plan) ? 'Lesson' : 'Day';
   const status = progress ? currentDay(plan, progress) : null;
   const next = status?.kind === 'read' ? status.day : null;
+  const activeCount = activePlanCount(allPlans ?? [], allProgress ?? [], plan.id);
+  const begin = () => void startPlan(plan.id).then(() => navigate(paths.planDay(plan.id, 1)));
 
   return (
     <div className={styles.page} data-enter>
@@ -198,18 +204,28 @@ export function PlanPage() {
           </section>
         </>
       ) : (
-        <div className={styles.startRow}>
-          <Button
-            variant="primary"
-            icon={<Play size={16} />}
-            onClick={() => void startPlan(plan.id).then(() => navigate(paths.planDay(plan.id, 1)))}
-          >
-            Start plan
-          </Button>
-          {plan.source === 'imported' && (
-            <Button variant="ghost" onClick={() => setRemoving(true)}>
-              Remove plan
+        <div className={styles.startArea}>
+          <div className={styles.startRow}>
+            <Button
+              variant="primary"
+              icon={<Play size={16} />}
+              onClick={() => (activeCount >= 2 ? setStartAdviceOpen(true) : begin())}
+              disabled={allPlans === undefined || allProgress === undefined}
+            >
+              Start plan
             </Button>
+            {plan.source === 'imported' && (
+              <Button variant="ghost" onClick={() => setRemoving(true)}>
+                Remove plan
+              </Button>
+            )}
+          </div>
+          {allPlans && allProgress && activeCount < 2 && (
+            <p className={styles.startAdvice}>
+              {activeCount === 0
+                ? 'A steady start: choose one plan and build a rhythm. Two at most is plenty.'
+                : 'You already have a plan going. Add another only if you have room for it.'}
+            </p>
           )}
         </div>
       )}
@@ -266,6 +282,22 @@ export function PlanPage() {
         )}
       </section>
 
+      <Dialog
+        open={startAdviceOpen}
+        onOpenChange={setStartAdviceOpen}
+        title="Keep your reading manageable"
+        description={`You already have ${activeCount} plans in progress. We recommend focusing on one or two at a time so it is easier to keep going.`}
+        footer={
+          <>
+            <Button variant="ghost" onClick={() => navigate(paths.plans)}>
+              See my plans
+            </Button>
+            <Button variant="primary" onClick={begin}>
+              Start anyway
+            </Button>
+          </>
+        }
+      />
       <Dialog
         open={stopping}
         onOpenChange={setStopping}

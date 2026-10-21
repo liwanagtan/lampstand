@@ -272,9 +272,6 @@
   .main {
     padding-top: env(safe-area-inset-top);
   }
-  .tabbar {
-    padding-bottom: max(24px, env(safe-area-inset-bottom));
-  }
 }
 
 @media (max-width: 640px) {

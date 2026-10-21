@@ -31,6 +31,13 @@
   line-height: 1.55;
   color: var(--color-text-muted);
 }
+.paceAdvice {
+  max-width: 640px;
+  margin-top: var(--space-4);
+  color: var(--color-accent-text);
+  font-size: var(--text-14);
+  line-height: 1.5;
+}
 .section {
   margin-top: var(--space-10);
 }
@@ -141,6 +148,7 @@
   font-size: var(--text-15);
   font-weight: var(--weight-bold);
   text-decoration: none;
+  margin-top: var(--space-3);
 }
 .seeAll:hover {
   text-decoration: underline;
@@ -270,7 +278,7 @@
 .tile {
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
+  justify-content: flex-start;
   gap: 4px;
   min-height: 120px;
   padding: var(--space-5);
@@ -286,6 +294,13 @@
 }
 .tile:hover {
   border-color: var(--color-text);
+}
+@media (max-width: 640px) {
+  .tile {
+    min-height: 0;
+    align-self: start;
+    padding: 10px 16px;
+  }
 }
 .tileName {
   font-size: var(--text-18);
@@ -378,6 +393,18 @@
   flex-wrap: wrap;
   gap: var(--space-2);
   margin-bottom: var(--space-4);
+}
+.startArea {
+  margin-bottom: var(--space-4);
+}
+.startArea .startRow {
+  margin-bottom: 0;
+}
+.startAdvice {
+  margin-top: var(--space-2);
+  color: var(--color-text-muted);
+  font-size: var(--text-14);
+  line-height: 1.5;
 }
 .preview {
   display: flex;
@@ -960,7 +987,7 @@
   margin-top: 40px;
   padding: 28px;
   border-radius: 16px;
-  background: color-mix(in srgb, var(--color-accent) 7%, var(--color-bg));
+  background: var(--color-surface);
 }
 .suggestionHeader {
   margin-bottom: 0;

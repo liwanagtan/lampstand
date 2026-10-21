@@ -55,6 +55,8 @@ export function pickSelection(
 
 interface ReaderState extends ReaderPrefs {
   selection: Selection | null;
+  /** Navigation can focus a passage without opening the verse action bar. */
+  selectionActionsOpen: boolean;
   recent: { book: string; chapter: number }[];
   goTo: (book: string, chapter: number, select?: Selection | null) => void;
   setTranslation: (code: string) => void;
@@ -62,6 +64,7 @@ interface ReaderState extends ReaderPrefs {
   setSize: (size: number) => void;
   select: (verse: number, extend: boolean) => void;
   setSelection: (s: Selection | null) => void;
+  revealSelectionActions: () => void;
 }
 
 export const READER_SIZES = [16, 18, 20, 22, 24, 28, 32];
@@ -118,13 +121,14 @@ function recentChapters(): { book: string; chapter: number }[] {
 export const useReader = create<ReaderState>((set, get) => ({
   ...readPrefs(),
   selection: null,
+  selectionActionsOpen: false,
   recent: recentChapters(),
   goTo: (book, chapter, select = null) => {
     const recent = [
       { book, chapter },
       ...get().recent.filter((p) => p.book !== book || p.chapter !== chapter),
     ].slice(0, 6);
-    set({ book, chapter, selection: select, recent });
+    set({ book, chapter, selection: select, selectionActionsOpen: false, recent });
     try {
       localStorage.setItem('lampstand.recentChapters', JSON.stringify(recent));
     } catch {
@@ -144,8 +148,12 @@ export const useReader = create<ReaderState>((set, get) => ({
     set({ size });
     save(get());
   },
-  select: (verse, extend) => set({ selection: nextSelection(get().selection, verse, extend) }),
-  setSelection: (selection) => set({ selection }),
+  select: (verse, extend) => {
+    const selection = nextSelection(get().selection, verse, extend);
+    set({ selection, selectionActionsOpen: Boolean(selection) });
+  },
+  setSelection: (selection) => set({ selection, selectionActionsOpen: Boolean(selection) }),
+  revealSelectionActions: () => set({ selectionActionsOpen: true }),
 }));
 
 export function selectionRange(book: string, chapter: number, s: Selection): RefRange {

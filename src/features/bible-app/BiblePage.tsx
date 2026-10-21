@@ -85,10 +85,12 @@ export function BibleReader({ toolbar, selectionActions }: BiblePageSlots) {
     parallel,
     size,
     selection,
+    selectionActionsOpen,
     goTo,
     setTranslation,
     select,
     setSelection,
+    revealSelectionActions,
   } = useReader();
   const [picking, setPicking] = useState(false);
   const [reading, setReading] = useState(false);
@@ -274,6 +276,15 @@ export function BibleReader({ toolbar, selectionActions }: BiblePageSlots) {
                 selection={selection}
                 onSelect={(v, extend) => {
                   haptic('tap');
+                  if (
+                    selection &&
+                    !selectionActionsOpen &&
+                    v >= selection.start &&
+                    v <= selection.end
+                  ) {
+                    revealSelectionActions();
+                    return;
+                  }
                   select(v, extend);
                 }}
                 marks={marks}
@@ -299,7 +310,7 @@ export function BibleReader({ toolbar, selectionActions }: BiblePageSlots) {
         </div>
 
         {/* Phones: getting around, in thumb reach. The selection bar takes its place. */}
-        {!selection && (
+        {!selectionActionsOpen && (
           <nav className={styles.pill} data-quiet={quiet || undefined} aria-label="Chapter">
             <IconButton
               label="Previous chapter"
@@ -320,7 +331,7 @@ export function BibleReader({ toolbar, selectionActions }: BiblePageSlots) {
           </nav>
         )}
 
-        {range && selection && (
+        {range && selection && selectionActionsOpen && (
           <div className={styles.selectionBar} role="toolbar" aria-label="Selected verses">
             <span className={styles.selectionLabel}>
               {formatRef(range)}

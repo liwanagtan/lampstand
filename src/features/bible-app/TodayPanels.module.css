@@ -24,8 +24,15 @@
 .loading {
   color: var(--color-text-muted);
 }
-.push {
-  margin-left: auto;
+.continueInBible {
+  flex: 0 0 100%;
+  justify-content: center;
+}
+.chapterNavigation {
+  display: flex;
+  flex: 0 0 100%;
+  justify-content: space-between;
+  gap: var(--space-2);
 }
 .quote {
   margin: 0;
@@ -48,5 +55,9 @@
 @media (max-width: 640px) {
   .chapter {
     font-size: 17px;
+  }
+  .chapterNavigation > button {
+    padding-inline: 8px;
+    font-size: var(--text-13);
   }
 }

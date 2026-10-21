@@ -20,7 +20,7 @@ import { FilterChip } from './FilterChip';
 import { plansGreeting } from './greetings';
 import { planSuggestions } from './planSuggestions';
 import { CategoryChip, CategoryTile, PlanCard } from './PlanCards';
-import { isPlanFinished, usePlanProgress, usePlans, type Plan } from './plans';
+import { activePlanCount, isPlanFinished, usePlanProgress, usePlans, type Plan } from './plans';
 import styles from './Discover.module.css';
 
 const PACES: { value: PaceFilter; label: string }[] = [
@@ -53,6 +53,7 @@ export function PlansPage() {
   const completedIds = new Set(completed.map((p) => p.id));
   const isActive = (p: Plan) => byId.has(p.id) && !completedIds.has(p.id);
   const active = all.filter(isActive);
+  const activeCount = activePlanCount(all, progress ?? []);
   const searching = query.trim() !== '' || pace !== 'all' || audience !== 'all';
   const results = searching ? searchPlans(all, query, pace, audience) : [];
   const hello = plansGreeting(name, active.length);
@@ -67,6 +68,15 @@ export function PlansPage() {
           <p className={styles.lede}>{hello.line}</p>
         </div>
       </div>
+      {plans && progress && (
+        <p className={styles.paceAdvice}>
+          {activeCount === 0
+            ? 'Start with one plan. Add a second only if it fits your rhythm.'
+            : activeCount === 1
+              ? 'One plan is a good rhythm. Keep going before adding another.'
+              : `You have ${activeCount} plans going. Focus on these before starting another.`}
+        </p>
+      )}
 
       {active.length > 0 && (
         <section className={styles.section} aria-label="Your plans">
@@ -236,9 +246,6 @@ function GroupSection({
           <h3 className={styles.groupTitle}>{group.name}</h3>
           {group.description && <p className={styles.groupText}>{group.description}</p>}
         </div>
-        <Link to={paths.planCategory(group.id)} className={styles.seeAll}>
-          See all <ArrowRight size={14} aria-hidden />
-        </Link>
       </div>
       {group.id === 'feel' ? (
         <div className={styles.chips}>
@@ -259,6 +266,9 @@ function GroupSection({
           ))}
         </div>
       )}
+      <Link to={paths.planCategory(group.id)} className={styles.seeAll}>
+        See all <ArrowRight size={14} aria-hidden />
+      </Link>
     </div>
   );
 }

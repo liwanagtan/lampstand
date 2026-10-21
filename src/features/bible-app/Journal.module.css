@@ -299,6 +299,7 @@
 }
 .timeline {
   margin-top: var(--space-8);
+  min-width: 0;
 }
 .timeline .title {
   margin-top: 0;
@@ -312,11 +313,17 @@
   .bar {
     flex-direction: column;
     align-items: stretch;
+    min-width: 0;
   }
   .filters {
     gap: var(--space-2);
-    margin: 0 calc(var(--space-4) * -1);
-    padding: 2px var(--space-4);
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 2px 0;
+    overscroll-behavior-x: contain;
     border: 0;
     border-radius: 0;
     background: none;
@@ -338,6 +345,9 @@
   }
   .search {
     width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
   }
 }
 

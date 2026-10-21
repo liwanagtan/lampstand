@@ -461,6 +461,34 @@
   display: grid;
   gap: 8px;
 }
+.faithSummary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px 16px;
+  margin-top: var(--space-3);
+}
+.faithSummary strong {
+  font-size: var(--text-15);
+}
+.faithSummary p {
+  margin-top: 4px;
+  color: var(--color-text-muted);
+  font-size: var(--text-13);
+  line-height: 1.5;
+}
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
 .faithChoices legend {
   margin-bottom: 8px;
   font-weight: 700;

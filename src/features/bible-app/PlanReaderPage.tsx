@@ -11,7 +11,15 @@ import {
   NotebookPen,
   BookText,
 } from 'lucide-react';
-import { Button, EmptyState, IconButton, Select, Tooltip, cx } from '@/design-system/components';
+import {
+  Button,
+  Dialog,
+  EmptyState,
+  IconButton,
+  Select,
+  Tooltip,
+  cx,
+} from '@/design-system/components';
 import { useBible } from '@/features/bible/bibleStore';
 import { BOOK_BY_CODE } from '@/features/bible/books';
 import { formatRef, toOsis, type RefRange } from '@/features/bible/ref';
@@ -24,6 +32,7 @@ import { EntrySheet } from './JournalEntrySheet';
 import { useReducedMotion } from '@/features/settings/theme';
 import {
   chapterChunks,
+  activePlanCount,
   currentDay,
   formatDay,
   isLessons,
@@ -33,6 +42,8 @@ import {
   startPlan,
   usePlan,
   usePlanProgressFor,
+  usePlanProgress,
+  usePlans,
   type Plan,
 } from './plans';
 import { READER_SIZES, useReader } from './readerStore';
@@ -324,8 +335,12 @@ function FinishBlock({
 }) {
   const navigate = useNavigate();
   const progress = usePlanProgressFor(plan.id);
+  const plans = usePlans();
+  const allProgress = usePlanProgress();
+  const activeCount = activePlanCount(plans ?? [], allProgress ?? [], plan.id);
   const reduced = useReducedMotion();
   const [justFinished, setJustFinished] = useState(false);
+  const [paceAdviceOpen, setPaceAdviceOpen] = useState(false);
   const doneRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (!justFinished) return;
@@ -369,7 +384,8 @@ function FinishBlock({
         <Button
           variant="primary"
           icon={<Check size={18} />}
-          onClick={() => void finish()}
+          onClick={() => (!progress && activeCount >= 2 ? setPaceAdviceOpen(true) : void finish())}
+          disabled={plans === undefined || allProgress === undefined}
           className={styles.finishButton}
         >
           Finish {unit.toLowerCase()} {day}
@@ -377,6 +393,25 @@ function FinishBlock({
         <p className={styles.finishHint}>
           Mark this {unit.toLowerCase()} as read when you’re done.
         </p>
+        <Dialog
+          open={paceAdviceOpen}
+          onOpenChange={setPaceAdviceOpen}
+          title="Keep your reading manageable"
+          description={`Finishing this reading will add a new plan alongside the ${activeCount} you already have. We recommend focusing on one or two plans at a time.`}
+          footer={
+            <>
+              <Button variant="ghost" onClick={() => navigate(paths.plans)}>
+                See my plans
+              </Button>
+              <Button
+                variant="primary"
+                onClick={() => void finish().then(() => setPaceAdviceOpen(false))}
+              >
+                Add this plan anyway
+              </Button>
+            </>
+          }
+        />
       </div>
     );
   }

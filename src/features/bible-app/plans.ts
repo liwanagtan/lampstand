@@ -287,6 +287,19 @@ export function isPlanFinished(plan: Plan, progress: PlanProgressRecord): boolea
   return plan.days.every((_, i) => done.has(i + 1));
 }
 
+/** Count plans still in progress, excluding the plan someone is about to start. */
+export function activePlanCount(
+  plans: readonly Plan[],
+  progress: readonly PlanProgressRecord[],
+  exceptId?: string,
+): number {
+  const byId = new Map(plans.map((plan) => [plan.id, plan]));
+  return progress.filter((record) => {
+    const plan = byId.get(record.planId);
+    return record.planId !== exceptId && plan && !isPlanFinished(plan, record);
+  }).length;
+}
+
 /** What the reader should see for a plan right now. */
 export function currentDay(plan: Plan, progress: PlanProgressRecord, now = new Date()): DayStatus {
   const done = new Set(progress.done);

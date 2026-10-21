@@ -55,6 +55,17 @@ export function ContextPanel({
     home &&
     v >= range.start.verse &&
     v <= (range.end.chapter === place.chapter ? range.end.verse : 999);
+  const continueInBible = () => {
+    if (home) openInReader(range);
+    else
+      openInReader(
+        {
+          start: { ...place, verse: 1 },
+          end: { ...place, verse: 1 },
+        },
+        false,
+      );
+  };
 
   return (
     <Sheet
@@ -69,15 +80,27 @@ export function ContextPanel({
             label="Open in the reader"
             icon={<BookOpen size={16} />}
             size="sm"
-            onClick={() => openInReader(range)}
+            onClick={continueInBible}
           />
         </Tooltip>
       }
       footer={
         <>
-          <Button variant="ghost" icon={<ChevronLeft size={16} />} onClick={() => step(-1)}>
-            Previous chapter
+          <Button
+            icon={<BookOpen size={16} />}
+            onClick={continueInBible}
+            className={styles.continueInBible}
+          >
+            Continue in Bible
           </Button>
+          <div className={styles.chapterNavigation}>
+            <Button variant="ghost" icon={<ChevronLeft size={16} />} onClick={() => step(-1)}>
+              Previous chapter
+            </Button>
+            <Button variant="ghost" iconEnd={<ChevronRight size={16} />} onClick={() => step(1)}>
+              Next chapter
+            </Button>
+          </div>
           {!home && (
             <Button
               variant="ghost"
@@ -86,14 +109,6 @@ export function ContextPanel({
               Back to {formatRef(range)}
             </Button>
           )}
-          <Button
-            variant="ghost"
-            iconEnd={<ChevronRight size={16} />}
-            onClick={() => step(1)}
-            className={styles.push}
-          >
-            Next chapter
-          </Button>
         </>
       }
     >

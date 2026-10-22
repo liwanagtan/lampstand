@@ -38,6 +38,12 @@ export const routes: RouteObject[] = [
             lazy: lazyPage(() => import('@/features/bible-app/PlansPage'), 'PlansPage'),
           },
           {
+            path: 'salvation',
+            lazy: lazyPage(() => import('@/features/salvation/SalvationPage'), 'SalvationPage'),
+          },
+          { path: 'plans/good-news-personal-faith/:day', element: <Navigate to={paths.salvation} replace /> },
+          { path: 'plans/p/good-news-personal-faith', element: <Navigate to={paths.salvation} replace /> },
+          {
             path: 'plans/c/:categoryId',
             lazy: lazyPage(
               () => import('@/features/bible-app/PlanBrowsePages'),

@@ -6,7 +6,7 @@ for (const width of [360, 390, 640, 641, 768, 820, 1024, 1100, 1101, 1440]) {
     await page.setViewportSize({ width, height: 900 });
     for (const path of [
       '/plans',
-      '/plans/good-news-personal-faith/1',
+      '/salvation',
       '/profile/settings',
       '/screen',
     ]) {
@@ -36,13 +36,13 @@ test('study notes dock on wide screens and become a dialog on tablets', async ({
 });
 
 test('guided plan completion offers reflection and immediate next reading', async ({ page }) => {
-  await openApp(page, '/plans/p/good-news-personal-faith');
+  await openApp(page, '/plans/p/first-steps-in-faith');
   await page.getByRole('button', { name: 'Start plan', exact: true }).click();
   await page.getByRole('button', { name: 'Finish day 1', exact: true }).click();
   await expect(page.getByRole('button', { name: 'Read day 2 now' })).toBeVisible();
   await page.getByRole('button', { name: 'Reflect on today', exact: true }).click();
   await expect(page.getByRole('dialog').getByLabel('Title')).toHaveValue(
-    'The good news: trusting Jesus · Day 1',
+    'First steps in faith · Day 1',
   );
 });
 

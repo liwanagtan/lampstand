@@ -9,15 +9,17 @@ in reader-facing content. This guide records the owner's editorial direction.
 People have sinned and cannot save themselves by good behaviour, church attendance,
 family background, baptism, Bible reading, or religious achievement. Jesus Christ
 died for our sins, was buried, and rose again. Salvation is God's gift by grace
-through faith. Invite repentance toward God and personal trust in Jesus Christ as
-Saviour. Good works are fruit of salvation, never its purchase price.
+through faith. Invite repentance toward God and accepting Jesus Christ as Lord
+and Saviour through personal faith. Explain that this is a response to God's
+grace, not a formula or a good work that earns salvation. Good works are fruit
+of salvation, never its purchase price.
 
 Use Romans 3:9–26; Romans 5:6–11; Acts 20:17–21; Romans 10:8–13;
 1 Corinthians 15:1–8; Ephesians 2:1–10; and 1 John 5:9–13 as foundational readings.
 Explain the texts in context. Do not turn an isolated passage into a slogan.
 
 A suggested prayer can express repentance and faith; reciting words does not save.
-Do not declare a reader saved because they completed a plan, clicked a button,
+Do not declare a reader saved because they finished a reading or plan, clicked a button,
 repeated a prayer, or grew up in a Christian home. For explorers, prayers should
 allow questions rather than assume conversion. Explain assurance in relation to
 Christ and God's promises, not a feeling or app activity.
@@ -25,6 +27,13 @@ Christ and God's promises, not a feeling or app activity.
 Teach believer's baptism as obedience following personal faith. It identifies a
 believer with Christ and pictures His death, burial, and resurrection; water does
 not earn salvation. Encourage involvement in a Bible-teaching local church.
+
+The foundational Salvation reading lives in `src/features/salvation/reading.json`,
+outside the plan catalog. Its sections are one continuous resource at `/salvation`,
+introduced from New to faith and Today for people exploring or new to faith.
+Add future salvation material as reviewed sections there, with Scripture passages,
+clear explanation, questions, and optional prayer. Do not add plan progress,
+completion rewards, or a conversion button to this resource.
 
 ## Scope and tone
 

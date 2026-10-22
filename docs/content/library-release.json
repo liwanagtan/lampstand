@@ -4,13 +4,6 @@
   "authorship": "AI-authored original commentary; Scripture supplied by installed translations",
   "plans": [
     {
-      "id": "good-news-personal-faith",
-      "name": "The good news: trusting Jesus",
-      "level": "Exploring or new to faith",
-      "days": 4,
-      "categories": ["salvation", "who-is-jesus", "exploring-faith"]
-    },
-    {
       "id": "returning-to-the-word",
       "name": "Begin again with God",
       "level": "Returning to faith · Adults",
@@ -127,7 +120,16 @@
       "name": "Belonging, baptism, and church life",
       "level": "New believers · Ages 18+",
       "days": 4,
-      "categories": ["belonging", "first-steps", "salvation"]
+      "categories": ["belonging", "first-steps"]
+    }
+  ],
+  "foundations": [
+    {
+      "id": "salvation",
+      "title": "Understanding salvation",
+      "sections": 4,
+      "path": "/salvation",
+      "review": "Owner theological review pending"
     }
   ]
 }

@@ -1,0 +1,31 @@
+.page { max-width: 860px; margin: 0 auto; padding: 32px clamp(20px, 5vw, 64px) 96px; color: var(--text, #202b32); }
+.back { display: inline-flex; align-items: center; gap: 8px; color: inherit; text-decoration: none; margin-bottom: 36px; }
+.header { text-align: center; margin: 0 auto 64px; max-width: 700px; }
+.eyebrow, .sectionNumber { color: #9a6c16; text-transform: uppercase; letter-spacing: .12em; font-size: .75rem; font-weight: 750; }
+.header h1 { font-family: Fraunces, Georgia, serif; font-size: clamp(2.25rem, 6vw, 4rem); line-height: 1.1; margin: 14px 0 18px; }
+.header > p:not(.eyebrow) { font-size: 1.1rem; line-height: 1.65; color: #53616a; }
+.contents { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; margin-top: 28px; }
+.contents a { border: 1px solid #ded9cb; border-radius: 999px; padding: 8px 14px; color: inherit; text-decoration: none; font-size: .88rem; }
+.contents a:hover, .contents a:focus-visible { background: #fff3d8; }
+.section { scroll-margin-top: 32px; padding: 52px 0; border-top: 1px solid #e5e0d5; }
+.section h2 { font-family: Fraunces, Georgia, serif; font-size: clamp(1.8rem, 4vw, 2.6rem); margin: 10px 0 16px; }
+.note { font-size: 1.08rem; line-height: 1.65; color: #53616a; }
+.passages { margin: 28px 0; display: grid; gap: 20px; }
+.scripture { background: #fff; border: 1px solid #e8e1d3; border-radius: 20px; padding: clamp(20px, 4vw, 32px); }
+.scripture h3 { margin: 0 0 18px; font-size: 1rem; }
+.chapter + .chapter { margin-top: 24px; }
+.chapter h4 { color: #6b5b3d; margin: 0 0 10px; }
+.verses, .body, .prayer p { font-size: 1.08rem; line-height: 1.85; }
+.verses { margin: 0; }
+.verses sup { font-size: .68em; color: #9a6c16; margin-right: 4px; }
+.loading { color: #64717a; }
+.body p + p { margin-top: 20px; }
+.reflect, .prayer { margin-top: 28px; padding: 24px; background: #f7f2e8; border-radius: 18px; }
+.reflect h3, .prayer h3 { margin: 0 0 12px; font-size: 1rem; }
+.reflect ul { padding-left: 22px; margin: 0; line-height: 1.7; }
+.reflect li + li { margin-top: 8px; }
+.prayer { background: #fff; border: 1px solid #e8e1d3; }
+.prayer p { margin: 0; }
+.footer { border-top: 1px solid #e5e0d5; padding-top: 36px; line-height: 1.7; text-align: center; }
+.footer a { display: inline-flex; align-items: center; gap: 8px; margin-top: 14px; background: #f4b83f; color: #18212b; padding: 12px 20px; border-radius: 999px; text-decoration: none; font-weight: 700; }
+@media (max-width: 600px) { .page { padding-top: 20px; } .header { margin-bottom: 40px; } .section { padding: 40px 0; } }

@@ -5,7 +5,7 @@ import { WelcomePage } from './WelcomePage';
 import { useSettings } from '@/features/settings/settingsStore';
 import { ALL_FEATURES } from '@/app/features';
 
-it('selects the salvation plan by default for someone new to following Jesus', async () => {
+it('starts someone new to faith with the salvation reading instead of an automatic plan', async () => {
   vi.stubGlobal('matchMedia', () => ({
     matches: false,
     addEventListener: vi.fn(),
@@ -25,8 +25,9 @@ it('selects the salvation plan by default for someone new to following Jesus', a
     await user.click(screen.getByRole('checkbox', { name: /I’m new to following Jesus/ }));
     await user.click(screen.getByRole('button', { name: 'Continue' }));
     await user.click(screen.getByRole('button', { name: 'Continue' }));
-    expect(screen.getByRole('radio', { name: /The good news: trusting Jesus/ })).toBeChecked();
-    expect(screen.getByRole('radio', { name: /Just the verse of the day/ })).not.toBeChecked();
+    expect(screen.getByText(/Start with Understanding salvation on Today/)).toBeInTheDocument();
+    expect(screen.getByRole('radio', { name: /First steps in faith/ })).not.toBeChecked();
+    expect(screen.getByRole('radio', { name: /Just the verse of the day/ })).toBeChecked();
   } finally {
     vi.unstubAllGlobals();
   }

@@ -3,13 +3,13 @@ export const FAITH_JOURNEYS = [
     value: 'exploring',
     label: 'I’m exploring faith',
     description: 'I want to learn about Jesus and what Christians believe.',
-    plan: 'good-news-personal-faith',
+    plan: 'life-of-jesus-21-days',
   },
   {
     value: 'new',
     label: 'I’m new to following Jesus',
     description: 'I want help taking my first steps in faith.',
-    plan: 'good-news-personal-faith',
+    plan: 'first-steps-in-faith',
   },
   {
     value: 'returning',
@@ -50,10 +50,5 @@ export function suggestedPlanIds(value?: FaithJourneySelection): string[] {
     const plan = suggestedPlan(journey);
     return plan ? [plan] : [];
   });
-  if (journeys.includes('new') || journeys.includes('exploring')) {
-    primary.unshift('good-news-personal-faith');
-  }
-  // Start with the gospel, then offer a follow-on plan for daily growth.
-  if (journeys.includes('new')) primary.push('first-steps-in-faith');
   return [...new Set(primary)];
 }

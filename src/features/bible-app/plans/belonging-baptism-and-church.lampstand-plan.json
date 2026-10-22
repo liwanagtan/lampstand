@@ -5,7 +5,7 @@
   "name": "Belonging, baptism, and church life",
   "description": "Four readings for new adult believers on personal faith, believer’s baptism, learning in a local church, and serving as part of Christ’s people.",
   "pace": "daily",
-  "categories": ["belonging", "first-steps", "salvation"],
+  "categories": ["belonging", "first-steps"],
   "audience": "personal",
   "level": "New believers · Ages 18+",
   "cover": "waterfall",
@@ -16,21 +16,15 @@
       "note": "Notice the jailer’s question, the message about Jesus, and the response to that message.",
       "devotional": "A church community cannot believe on your behalf. Salvation comes by God’s grace through personal faith in Jesus Christ, not family membership or religious effort. In Acts, the message is spoken to the household; belonging should not be confused with automatically sharing someone else’s faith.\n\nExplain what you are relying on for salvation. If that is unclear, revisit the gospel pathway and discuss the passages with a trusted pastor. If you have trusted Christ, tell someone who can help you grow.",
       "prayer": "God, help me understand personal faith in Jesus. Lead me into a community where I can grow in Your word.",
-      "questions": [
-        "What answer is given to the jailer’s question?",
-        "What is the difference between belonging to a Christian household and personally trusting Christ?"
-      ]
+      "questions": ["What answer is given to the jailer’s question?", "What is the difference between belonging to a Christian household and personally trusting Christ?"]
     },
     {
       "title": "Baptism follows belief",
       "readings": ["Acts 8:26-39", "Romans 6:1-14"],
       "note": "Acts shows a response to the good news about Jesus; Romans connects baptism with Christ’s death and resurrection.",
-      "devotional": "Baptism is an act of obedience for someone who has personally trusted Christ. It publicly identifies the believer with Jesus and pictures His death, burial, and resurrection. The water does not remove sin or earn salvation; our rescue rests in Christ’s work received through faith.\n\nIf you have trusted Christ and have not been baptized as a believer, ask a local pastor about the next step. Bring questions openly. Avoid treating baptism as a graduation from learning or as something that replaces daily discipleship.",
+      "devotional": "Baptism is an act of obedience for someone who has repented and accepted Jesus Christ as Lord and Saviour. It publicly identifies the believer with Jesus and pictures His death, burial, and resurrection. The water does not remove sin or earn salvation; salvation rests in Christ’s work and is received through faith.\n\nIf you have trusted Christ and have not been baptized as a believer, ask a local pastor about the next step. Bring questions openly. Avoid treating baptism as a graduation from learning or as something that replaces daily discipleship.",
       "prayer": "Jesus, help me respond to Your grace with obedience. Give me understanding and courage to identify openly with You.",
-      "questions": [
-        "How does baptism point to what Jesus has done?",
-        "What question about baptism would you like to discuss with a pastor?"
-      ]
+      "questions": ["How does baptism point to what Jesus has done?", "What question about baptism would you like to discuss with a pastor?"]
     },
     {
       "title": "A church that learns together",
@@ -38,10 +32,7 @@
       "note": "Observe the practices of the early believers and the Bereans’ care in examining the Scriptures.",
       "devotional": "A church is more than an event to attend. Believers learn, pray, share, and care for one another. The Bereans also show that receiving teaching gladly can go with examining Scripture carefully. Trustworthy leadership should welcome sincere questions rather than demand unquestioning loyalty.\n\nLook for a local church that teaches the Bible and the gospel clearly, practices responsible care, and makes room for questions. Ask how new believers are supported. Take time to understand its teaching and community.",
       "prayer": "Father, lead me to a church where Your word is taught faithfully. Help me learn with discernment and love.",
-      "questions": [
-        "Which practices stand out in the early church?",
-        "What questions could help you learn about a local church responsibly?"
-      ]
+      "questions": ["Which practices stand out in the early church?", "What questions could help you learn about a local church responsibly?"]
     },
     {
       "title": "Contribute as you grow",
@@ -49,10 +40,7 @@
       "note": "Paul pictures believers as a body with different members, gifts, and responsibilities.",
       "devotional": "You do not need to be impressive to matter in a church. Believers contribute in different ways and depend on one another. Service should grow from grace and love rather than pressure to prove you belong. Learning to receive help matters alongside learning to give it.\n\nAsk about a suitable way to serve while continuing to learn. Begin with a manageable responsibility and appropriate guidance. Respect training and safeguarding requirements, especially in work involving children or vulnerable people.",
       "prayer": "Lord, help me grow patiently and serve with love. Show me how to give and receive care as part of Your people.",
-      "questions": [
-        "How does the picture of a body challenge competition or isolation?",
-        "What manageable next step could help you participate in church life?"
-      ]
+      "questions": ["How does the picture of a body challenge competition or isolation?", "What manageable next step could help you participate in church life?"]
     }
   ]
 }

@@ -491,3 +491,8 @@
   display: grid;
   gap: 16px;
 }
+.salvationInvitation { display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 22px 24px; border: 1px solid #e8d9b7; border-radius: 20px; background: #fff8e8; color: #26313a; text-decoration: none; margin: 20px 0; }
+.salvationInvitation > span { display: grid; gap: 6px; }
+.salvationInvitation small { font-size: .7rem; letter-spacing: .12em; font-weight: 800; color: #8c641b; }
+.salvationInvitation strong { font-family: Fraunces, Georgia, serif; font-size: 1.3rem; }
+.salvationInvitation span span { line-height: 1.45; color: #58636b; }

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { ArrowLeft, BookOpen, Clock, Play } from 'lucide-react';
+import { ArrowLeft, ArrowRight, BookOpen, Clock, Play } from 'lucide-react';
 import { Button, Dialog, EmptyState, cx } from '@/design-system/components';
 import { paths } from '@/app/paths';
 import { matchTopics } from '@/features/search/topics';
@@ -77,6 +77,16 @@ export function PlanCategoryPage() {
       </nav>
       <h1 className={styles.title}>{node.name}</h1>
       {node.description && <p className={styles.lede}>{node.description}</p>}
+      {node.id === 'new-to-faith' && (
+        <Link to={paths.salvation} className={styles.foundationBanner}>
+          <span>
+            <small>FAITH FOUNDATIONS · START HERE</small>
+            <strong>Understanding salvation</strong>
+            <span>Read the good news of Jesus Christ before choosing a reading plan.</span>
+          </span>
+          <ArrowRight size={22} aria-hidden />
+        </Link>
+      )}
       {children.length > 0 && (
         <div className={styles.chips} aria-label="Topics">
           {children.map((c) => (

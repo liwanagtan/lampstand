@@ -1,12 +1,12 @@
 # Lampstand library coverage — 21 October 2026
 
-Implemented: **48 plans** (44 authored plans and four generated reading schedules). This release adds **18 plans and 72 guided readings**. Existing plans are inventoried below; only First steps in faith received a salvation clarification in this release.
+Implemented: **47 plans** (43 authored plans and four generated reading schedules), plus a standalone, expandable **Understanding salvation** reading in Faith foundations. This release adds 17 plans with 68 guided plan readings and the four-section salvation reading. Existing plans are inventoried below; First steps in faith also received a salvation clarification.
 
 ## Audience coverage
 
 | Audience                          | New entry plan                                                     | Existing support                                           |
 | --------------------------------- | ------------------------------------------------------------------ | ---------------------------------------------------------- |
-| Exploring Christianity            | The good news: trusting Jesus; Meet Jesus in Mark                  | Honest questions; The life of Jesus in 21 days             |
+| Exploring Christianity            | Understanding salvation (Faith foundations); Meet Jesus in Mark   | Honest questions; The life of Jesus in 21 days             |
 | New believers                     | Belonging, baptism, and church life; Learning to pray honestly     | First steps in faith; Rhythms of grace                     |
 | Returning believers               | Begin again with God                                               | Hope and forgiveness collections                           |
 | Growing and experienced believers | James: faith in everyday action; Read the Bible with understanding | Bible-year schedules; ministry and service plans           |
@@ -29,7 +29,6 @@ Audience labels overlap. Men’s and women’s plans do not assume marriage or p
 
 | Plan                                | Intended reader                          | Readings |
 | ----------------------------------- | ---------------------------------------- | -------- |
-| The good news: trusting Jesus       | Exploring or new to faith                | 4        |
 | Begin again with God                | Returning to faith · Adults              | 4        |
 | Little steps with Jesus             | Ages 6–9 · With a trusted adult          | 4        |
 | Growing roots: faith and friendship | Ages 10–12                               | 4        |
@@ -48,7 +47,7 @@ Audience labels overlap. Men’s and women’s plans do not assume marriage or p
 | James: faith in everyday action     | Growing believers · Ages 18+             | 4        |
 | Belonging, baptism, and church life | New believers · Ages 18+                 | 4        |
 
-Each new plan includes contextual notes, two-paragraph reflections with a practical next step, two questions, and a prayer for every reading. Scripture remains references only and is supplied by the installed translation.
+Each new plan includes contextual notes, two-paragraph reflections with a practical next step, two questions, and a prayer for every reading. The standalone Salvation page presents its Bible passages inline from the installed translation, and its four sections can be expanded without adding plan days or completion controls.
 
 ## Existing authored inventory
 

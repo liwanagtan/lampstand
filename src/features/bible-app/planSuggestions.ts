@@ -15,8 +15,8 @@ const STARTER_REASONS: Record<string, string> = {
 };
 
 const REASONS: Record<FaithJourney, string> = {
-  exploring: 'An introduction to Jesus and personal faith.',
-  new: 'Understand salvation through repentance and personal faith in Jesus.',
+  exploring: 'Explore the life and teaching of Jesus after reading about salvation.',
+  new: 'Build a daily reading rhythm as you begin following Jesus.',
   returning: 'A gentle way back into reading God’s Word.',
   growing: 'Small habits for regular reading and prayer.',
   deepening: 'Help understanding Scripture and putting it into practice.',

@@ -38,6 +38,7 @@ import { FlameCompanion } from '@/design-system/FlameCompanion';
 import styles from './Today.module.css';
 import { useIsPhone } from '@/app/useIsPhone';
 import { paths } from '@/app/paths';
+import { faithJourneys } from '@/app/faithJourney';
 
 const longDate = new Intl.DateTimeFormat(undefined, {
   weekday: 'long',
@@ -64,6 +65,8 @@ export function TodayPage() {
   const reduced = useReducedMotion();
   const name = useSettings((s) => s.profile.name.trim().split(/\s+/)[0] ?? '');
   const classic = useSettings((s) => s.classicDevotional);
+  const faithJourney = useSettings((s) => s.profile.faithJourney);
+  const showSalvation = faithJourneys(faithJourney).some((value) => value === 'exploring' || value === 'new');
   const phone = useIsPhone();
   const progress = usePlanProgress();
   const plans = usePlans();
@@ -118,6 +121,7 @@ export function TodayPage() {
                 </span>
               </Link>
             )}
+            {showSalvation && <SalvationInvitation />}
             <div className={styles.weekSlot}>
               <WeekStrip now={now} />
             </div>
@@ -141,6 +145,7 @@ export function TodayPage() {
                 onContext={() => setPanel('context')}
                 onReflect={() => setPanel('reflect')}
               />
+              {showSalvation && <SalvationInvitation />}
               <TodayPlans />
               {classic && <ClassicDevotional now={now} />}
             </div>
@@ -167,6 +172,13 @@ export function TodayPage() {
       />
     </div>
   );
+}
+
+function SalvationInvitation() {
+  return <Link className={styles.salvationInvitation} to={paths.salvation}>
+    <span><small>FAITH FOUNDATIONS</small><strong>Understanding salvation</strong><span>Begin with the good news of Jesus Christ. Read at your own pace.</span></span>
+    <BookOpen size={22} aria-hidden />
+  </Link>;
 }
 
 /** Present / Stop Presenting for one verse. A session Today started ends when you leave Today. */

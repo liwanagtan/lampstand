@@ -4,8 +4,8 @@ import { planSuggestions } from './planSuggestions';
 const plans = builtinPlans();
 it('suggests a suitable first plan for each faith journey', () => {
   const expected = {
-    exploring: 'good-news-personal-faith',
-    new: 'good-news-personal-faith',
+    exploring: 'life-of-jesus-21-days',
+    new: 'first-steps-in-faith',
     returning: 'returning-to-the-word',
     growing: 'rhythms-of-grace',
     deepening: 'reading-with-understanding',
@@ -18,7 +18,7 @@ it('suggests a suitable first plan for each faith journey', () => {
   }
 });
 it('does not suggest started or completed plans again', () => {
-  const started = new Set(['good-news-personal-faith', 'gospels-40']);
+  const started = new Set(['life-of-jesus-21-days', 'gospels-40']);
   const result = planSuggestions(plans, started, 'exploring');
   expect(result.every(({ plan }) => !started.has(plan.id))).toBe(true);
 });
@@ -34,7 +34,7 @@ it('returns no suggestions when all candidates were started', () => {
 it('uses multiple journey answers before general starting points', () => {
   const result = planSuggestions(plans, new Set(), ['new', 'returning']);
   expect(result.slice(0, 2).map(({ plan }) => plan.id)).toEqual([
-    'good-news-personal-faith',
+    'first-steps-in-faith',
     'returning-to-the-word',
   ]);
 });

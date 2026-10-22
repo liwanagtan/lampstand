@@ -17,10 +17,9 @@ it('accepts older profiles and recommends from all selected journeys', () => {
   expect(faithJourneys('new')).toEqual(['new']);
   expect(faithJourneys(['new', 'returning', 'new'])).toEqual(['new', 'returning']);
   expect(suggestedPlanIds(['new', 'returning'])).toEqual([
-    'good-news-personal-faith',
-    'returning-to-the-word',
     'first-steps-in-faith',
+    'returning-to-the-word',
   ]);
-  expect(suggestedPlanIds(['returning', 'new'])[0]).toBe('good-news-personal-faith');
+  expect(suggestedPlanIds(['returning', 'new'])[0]).toBe('returning-to-the-word');
   expect(suggestedPlanIds([])).toEqual([]);
 });

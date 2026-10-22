@@ -5,6 +5,7 @@ export const paths = {
   devotional: (date: string, half: 'morning' | 'evening') => `/devotional/${date}/${half}`,
   bible: '/bible',
   plans: '/plans',
+  salvation: '/salvation',
   planDay: (planId: string, day: number) => `/plans/${planId}/${day}`,
   planPage: (planId: string) => `/plans/p/${planId}`,
   planCategory: (categoryId: string) => `/plans/c/${categoryId}`,

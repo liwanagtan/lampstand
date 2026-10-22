@@ -1074,3 +1074,10 @@
     gap: 12px;
   }
 }
+.foundationBanner { display: flex; align-items: center; justify-content: space-between; gap: 18px; padding: 20px 24px; margin: 24px 0 28px; border-radius: 18px; border: 1px solid #ead9b1; background: #fff8e9; color: #27313b; text-decoration: none; }
+.foundationBanner > span { display: grid; gap: 5px; }
+.foundationBanner small { color: #8b6218; font-size: .72rem; font-weight: 800; letter-spacing: .1em; }
+.foundationBanner strong { font-family: Fraunces, Georgia, serif; font-size: 1.3rem; }
+.foundationBanner span span { color: #58636b; line-height: 1.4; }
+.foundationBanner > svg { flex: none; }
+.foundationBanner:hover, .foundationBanner:focus-visible { border-color: #d7a844; background: #fff2d6; }

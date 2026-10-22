@@ -53,7 +53,8 @@ export function WelcomePage() {
   const [planTouched, setPlanTouched] = useState(false);
   const [journey, setJourney] = useState<FaithJourney[]>([]);
   const recommended = suggestedPlanIds(journey);
-  const selectedPlan = planTouched ? plan : (recommended[0] ?? null);
+  const salvationFirst = journey.includes('new') || journey.includes('exploring');
+  const selectedPlan = planTouched ? plan : (salvationFirst ? null : (recommended[0] ?? null));
   const starterIds = [...new Set([...recommended, ...STARTER_PLANS])].slice(0, 3);
 
   const steps: Step[] = ['name', 'uses', 'journey', 'translation', 'plan'];
@@ -267,7 +268,11 @@ export function WelcomePage() {
               <h1 tabIndex={-1} className={styles.title}>
                 Start a reading plan?
               </h1>
-              <p className={styles.lede}>Choose one for now, or start with the daily verse.</p>
+              <p className={styles.lede}>
+                {salvationFirst
+                  ? 'Start with Understanding salvation on Today. You can add a reading plan whenever you’re ready.'
+                  : 'Choose one for now, or start with the daily verse.'}
+              </p>
               <div className={styles.options} role="radiogroup" aria-label="Reading plan">
                 {builtinPlans()
                   .filter((p) => starterIds.includes(p.id))

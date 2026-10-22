@@ -30,9 +30,9 @@ test('mobile pages retain contextual back links and reading controls without the
   await openApp(page, '/plans/p/when-anxiety-rises');
   await page.getByRole('link', { name: 'Back to Plans', exact: true }).tap();
   await expect(page).toHaveURL(/\/plans$/);
-  await openApp(page, '/plans/good-news-personal-faith/1');
+  await openApp(page, '/plans/first-steps-in-faith/1');
   const controls = page.getByRole('group', { name: 'Plan reading controls' });
-  await expect(controls).toContainText('The good news: trusting Jesus');
+  await expect(controls).toContainText('First steps in faith');
   await controls.getByRole('button', { name: /Reading settings:/ }).tap();
   await expect(page.getByRole('dialog', { name: 'Reading', exact: true })).toBeVisible();
 });

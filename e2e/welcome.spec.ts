@@ -6,7 +6,14 @@ test.describe.configure({ timeout: 120_000 });
 
 async function startWelcome(page: Page) {
   await page.goto('/');
-  await expect(page.getByRole('heading', { name: 'Welcome to Lampstand' })).toBeVisible({
+  await expect(
+    page.getByRole('heading', { name: 'Grow in faith, one day at a time.' }),
+  ).toBeVisible({
+    timeout: 60_000,
+  });
+  await expect(page.getByLabel('What should we call you?')).toHaveCount(0);
+  await page.getByRole('button', { name: 'Continue in browser' }).click();
+  await expect(page.getByRole('heading', { name: 'Make Lampstand yours' })).toBeVisible({
     timeout: 60_000,
   });
   await expect(page).toHaveURL(/\/welcome$/);

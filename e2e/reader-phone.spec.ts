@@ -33,6 +33,10 @@ test('on a phone the reader is all thumbs: pill, Aa sheet, and the selection bar
   const selected = page.getByRole('toolbar', { name: 'Selected verses' });
   await expect(selected).toContainText('Bookmark');
   await expect(selected).toContainText('Note');
+  // Study notes, out of the hidden margin: the bar opens them for the selected verse.
+  await selected.getByRole('button', { name: 'Study notes on verse 1' }).tap();
+  await expect(page.getByRole('dialog')).toContainText('Adapted from Tyndale Open Study Notes');
+  await page.keyboard.press('Escape');
   await selected.getByRole('button', { name: 'Clear selection' }).tap();
   await expect(pill).toBeVisible();
 });

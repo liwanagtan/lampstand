@@ -645,7 +645,8 @@
   }
 }
 
-.mobileVerseNum {
+.mobileVerseNum,
+.mobileMarks {
   display: none;
 }
 @media (max-width: 640px) {
@@ -661,6 +662,13 @@
   }
   .verse + .verse {
     margin-top: 10px;
+  }
+  .mobileMarks {
+    display: inline-flex;
+    gap: 3px;
+    margin-right: 6px;
+    color: var(--color-accent-text);
+    vertical-align: 1px;
   }
   .mobileVerseNum {
     display: inline;

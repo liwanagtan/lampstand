@@ -41,6 +41,7 @@ import {
   setHighlight,
   toggleBookmark,
   useChapterMarks,
+  versesInChapter,
   type ChapterMarks,
 } from './marks';
 import { NoteDialog } from './NoteDialog';
@@ -213,8 +214,24 @@ export function BibleReader({ toolbar, selectionActions }: BiblePageSlots) {
   const bookmarked = Boolean(
     selection && marks.bookmarks.get(selection.start)?.some((m) => m.ref === rangeId),
   );
+  // The note on exactly this selection; for a single verse, a note that covers it. (On phones the
+  // margin, with its note icons, is hidden: the selection bar is the way into notes.)
   const existingNote = selection
-    ? marks.notes.get(selection.end)?.find((m) => m.ref === rangeId)
+    ? (marks.notes.get(selection.end)?.find((m) => m.ref === rangeId) ??
+      (selection.start === selection.end
+        ? [...marks.notes.values()].flat().find((m) => {
+            const r = fromOsis(m.ref);
+            if (!r) return false;
+            const { start, end } = versesInChapter(r, book, chapter);
+            return start <= selection.start && selection.start <= end;
+          })
+        : undefined))
+    : undefined;
+  const studyVerse = selection
+    ? Array.from(
+        { length: selection.end - selection.start + 1 },
+        (_, i) => selection.start + i,
+      ).find((v) => studyByVerse.has(v))
     : undefined;
 
   const onSearchGo = (r: RefRange, code?: string) => {
@@ -477,6 +494,16 @@ export function BibleReader({ toolbar, selectionActions }: BiblePageSlots) {
                   </Tooltip>
                 </>
               )}
+              {studyVerse !== undefined && (
+                <Tooltip content="Study notes">
+                  <BarButton
+                    label={`Study notes on verse ${studyVerse}`}
+                    text="Study"
+                    icon={<BookText size={18} />}
+                    onClick={() => setStudy(studyVerse)}
+                  />
+                </Tooltip>
+              )}
               <Tooltip content="Copy">
                 <BarButton
                   label="Copy"
@@ -669,6 +696,15 @@ function Verses({
             >
               <span className={cx(styles.text, v.missing && styles.missing)}>
                 <sup className={styles.mobileVerseNum}>{v.verse}</sup>
+                {(bookmarked || notes?.length || studyByVerse.has(v.verse)) && (
+                  // Phones: the margin is hidden, so small marks show what is here; tapping the
+                  // verse opens them in the selection bar.
+                  <span className={styles.mobileMarks} aria-hidden>
+                    {bookmarked && <Bookmark size={11} fill="currentColor" />}
+                    {notes?.length ? <StickyNote size={11} /> : null}
+                    {studyByVerse.has(v.verse) && <BookText size={11} />}
+                  </span>
+                )}
                 {v.missing ? (
                   'Not included in this translation.'
                 ) : color ? (

@@ -40,6 +40,18 @@ test.describe('on a phone', () => {
     await expect(page.locator('[data-verse="12"]')).toHaveAttribute('data-bracket', 'top');
     await expect(page.locator('[data-verse="18"]')).toHaveAttribute('data-bracket', 'bottom');
 
+    // A verse inside the noted range shows a small note mark, and its bar opens that note.
+    await page.locator('[data-verse="20"] button').last().tap();
+    await page.locator('[data-verse="20"] button').last().tap();
+    await expect(page.locator('[data-verse="18"] [class*="mobileMarks"]')).toBeVisible();
+    await page.locator('[data-verse="15"] button').last().tap();
+    await bar.getByRole('button', { name: 'Edit note' }).tap();
+    await expect(page.getByRole('dialog').getByRole('textbox')).toHaveValue(
+      'Earthly and heavenly things.',
+    );
+    await page.keyboard.press('Escape');
+    await bar.getByRole('button', { name: 'Clear selection' }).tap();
+
     // Tapping the lone selected verse clears it.
     await page.locator('[data-verse="20"] button').last().tap();
     await expect(bar).toContainText('John 3:20');

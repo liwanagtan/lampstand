@@ -55,12 +55,20 @@ function ReadLayout({ verses, marks, selection, onSelect }: PassageProps) {
               data-verse={v.verse}
               data-color={color}
             >
-              <button
-                type="button"
+              {/* A span, not a <button>: buttons lay out as one box, so verses could not
+                  share a line and the text would stop flowing as a paragraph. */}
+              <span
+                role="button"
+                tabIndex={0}
                 className={styles.inlineButton}
                 data-no-press
                 aria-pressed={Boolean(selected)}
                 onClick={(e) => onSelect(v.verse, e.shiftKey)}
+                onKeyDown={(e) => {
+                  if (e.key !== 'Enter' && e.key !== ' ') return;
+                  e.preventDefault();
+                  onSelect(v.verse, e.shiftKey);
+                }}
               >
                 <sup className={styles.inlineNum}>{v.verse}</sup>
                 {color ? (
@@ -85,7 +93,7 @@ function ReadLayout({ verses, marks, selection, onSelect }: PassageProps) {
                     ))}
                   </span>
                 )}
-              </button>{' '}
+              </span>{' '}
             </span>
           );
         })}

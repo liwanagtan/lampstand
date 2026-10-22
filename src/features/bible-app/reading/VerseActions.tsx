@@ -1,6 +1,6 @@
 import type { ComponentProps, ReactNode } from 'react';
 import { BookText, Bookmark, Copy, Eraser, NotebookPen, X } from 'lucide-react';
-import { IconButton, Tooltip, toast } from '@/design-system/components';
+import { IconButton, Tooltip, cx, toast } from '@/design-system/components';
 import type { MarkRecord } from '@/db/types';
 import {
   formatRef,
@@ -36,6 +36,7 @@ export function VerseActions({
   extra,
   onNote,
   onClose,
+  pinned = false,
 }: {
   range: RefRange;
   /** The selected verses in the range's first chapter (what marks are keyed by). */
@@ -50,6 +51,8 @@ export function VerseActions({
   /** Add or edit the note on this selection (the page owns the note dialog). */
   onNote: (target: { range: RefRange; note: MarkRecord | null }) => void;
   onClose: () => void;
+  /** Pinned to the screen rather than the reader's pane (plan readings scroll the whole page). */
+  pinned?: boolean;
 }) {
   const marksOn = useSettings((s) => s.features.marks);
   const { book, chapter } = range.start;
@@ -82,7 +85,11 @@ export function VerseActions({
 
   return (
     <>
-      <div className={styles.selectionBar} role="toolbar" aria-label="Selected verses">
+      <div
+        className={cx(styles.selectionBar, pinned && styles.pinned)}
+        role="toolbar"
+        aria-label="Selected verses"
+      >
         <span className={styles.selectionLabel}>
           {formatRef(range)}
           {verseTotal > 1 && <span className={styles.selectionCount}> · {verseTotal} verses</span>}

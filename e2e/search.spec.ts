@@ -31,7 +31,7 @@ test.describe('on a phone', () => {
       .getByRole('button', { name: /John 3:16/ })
       .tap();
     await expect(page.getByRole('heading', { name: 'John 3' })).toBeVisible();
-    await expect(page.locator('[data-verse="16"] button[aria-pressed]')).toHaveAttribute(
+    await expect(page.locator('[data-verse="16"] [aria-pressed]')).toHaveAttribute(
       'aria-pressed',
       'true',
     );
@@ -88,7 +88,7 @@ test('laptops keep Screen in the top bar, with search right there', async ({ pag
   await page.getByLabel('Search Lampstand').fill('jn 3 16');
   await page.keyboard.press('Enter');
   await expect(page.getByRole('heading', { name: 'John 3' })).toBeVisible();
-  await expect(page.locator('[data-verse="16"] button[aria-pressed]')).toHaveAttribute(
+  await expect(page.locator('[data-verse="16"] [aria-pressed]')).toHaveAttribute(
     'aria-pressed',
     'true',
   );

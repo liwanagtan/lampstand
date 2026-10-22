@@ -22,7 +22,7 @@ export async function importSample(page: Page) {
 
 /** A verse reached by search is marked; tapping it opens the selection actions. */
 export async function openVerseActions(page: Page, verse: number) {
-  const button = page.locator(`[data-verse="${verse}"] button[aria-pressed]`);
+  const button = page.locator(`[data-verse="${verse}"] [aria-pressed]`);
   await expect(button).toHaveAttribute('aria-pressed', 'true');
   await button.click();
   await expect(page.getByRole('toolbar', { name: 'Selected verses' })).toBeVisible();

@@ -22,10 +22,10 @@ import {
 } from '@/design-system/components';
 import { useBible } from '@/features/bible/bibleStore';
 import { BOOK_BY_CODE } from '@/features/bible/books';
-import { formatRef, toOsis, type RefRange } from '@/features/bible/ref';
+import { formatRef, fromOsis, toOsis, type RefRange } from '@/features/bible/ref';
 import { useSettings } from '@/features/settings/settingsStore';
 import { StudyNotesSheet } from './StudyNotesSheet';
-import { notesForRange, useStudyNotes } from './studyNotes';
+import { notesByVerse, notesForRange, useStudyNotes } from './studyNotes';
 import { localDate } from './dailyVerses';
 import { newEntryId, usePlanReflection, type EntryDraft } from './journal';
 import { EntrySheet } from './JournalEntrySheet';
@@ -47,12 +47,15 @@ import {
   usePlans,
   type Plan,
 } from './plans';
-import { READER_SIZES, useReader } from './readerStore';
+import { READER_SIZES, nextSelection, useReader, type Selection } from './readerStore';
 import { useChapter } from './useChapter';
 import styles from './PlanReader.module.css';
 import { paths } from '@/app/paths';
 import { haptic } from '@/app/haptics';
-import { MarkedVerseText } from './MarkedVerse';
+import { Passage } from './reading/Passage';
+import { VerseActions } from './reading/VerseActions';
+import { NoteDialog } from './NoteDialog';
+import type { MarkRecord } from '@/db/types';
 import { ReadingSettings } from './ReadingSettings';
 import { TranslationChip } from './TranslationChip';
 import { useVisibleMarks } from './marks';
@@ -78,6 +81,25 @@ export function PlanReaderPage() {
   const [position, setPosition] = useState('');
   // The whole day — note, scripture, devotional, questions, prayer — follows the text size.
   const size = useReader((s) => s.size);
+  // Verses tapped in one of the day's chapters, and the note being written on them.
+  const [selected, setSelected] = useState<VerseSelection | null>(null);
+  const [noteFor, setNoteFor] = useState<{ range: RefRange; note: MarkRecord | null } | null>(null);
+  useEffect(() => {
+    if (!selected) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && !noteFor) setSelected(null);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [selected, noteFor]);
+  const selectIn = (book: string, chapter: number) => (verse: number, extend: boolean) => {
+    haptic('tap');
+    setSelected((prev) => {
+      const here = prev && prev.book === book && prev.chapter === chapter ? prev.selection : null;
+      const next = nextSelection(here, verse, extend);
+      return next ? { book, chapter, selection: next } : null;
+    });
+  };
 
   useEffect(() => {
     if (plan?.days[n - 1] && !progress?.done.includes(n)) rememberPlanDay(planId, n);
@@ -189,7 +211,18 @@ export function PlanReaderPage() {
       {day.readings.map((r, i) => (
         <section key={i} className={styles.reading} aria-label={formatRef(r)}>
           {chapterChunks(r).map((c) => (
-            <ChapterBlock key={`${c.book}.${c.chapter}`} {...c} />
+            <ChapterBlock
+              key={`${c.book}.${c.chapter}`}
+              {...c}
+              selection={
+                selected?.book === c.book && selected.chapter === c.chapter
+                  ? selected.selection
+                  : null
+              }
+              onSelect={selectIn(c.book, c.chapter)}
+              onClearSelection={() => setSelected(null)}
+              onNote={setNoteFor}
+            />
           ))}
           <ReadingNotes range={r} />
         </section>
@@ -230,6 +263,7 @@ export function PlanReaderPage() {
         </Button>
       </div>
       <EntrySheet target={reflect} onClose={() => setReflect(null)} />
+      <NoteDialog target={noteFor} onClose={() => setNoteFor(null)} />
 
       <FinishBlock
         plan={plan}
@@ -285,26 +319,65 @@ function ReaderOptions() {
   );
 }
 
+interface VerseSelection {
+  book: string;
+  chapter: number;
+  selection: Selection;
+}
+
 function ChapterBlock({
   book,
   chapter,
   from,
   to,
+  selection,
+  onSelect,
+  onClearSelection,
+  onNote,
 }: {
   book: string;
   chapter: number;
   from: number;
   to: number;
+  selection: Selection | null;
+  onSelect: (verse: number, extend: boolean) => void;
+  onClearSelection: () => void;
+  onNote: (target: { range: RefRange; note: MarkRecord | null }) => void;
 }) {
   const translation = useReader((s) => s.translation);
   const size = useReader((s) => s.size);
   const passage = useChapter(translation, book, chapter);
   const marks = useVisibleMarks(book, chapter);
+  const studyOn = useSettings((s) => s.studyNotes);
+  const bookNotes = useStudyNotes(studyOn ? book : null);
+  const studyByVerse = useMemo(() => notesByVerse(bookNotes, chapter), [bookNotes, chapter]);
+  const [study, setStudy] = useState<number | null>(null);
   const b = BOOK_BY_CODE.get(book)!;
   const whole = from === 1 && passage && to >= passage.verses.length;
   const heading = whole
     ? `${b.refName} ${chapter}`
     : formatRef({ start: { book, chapter, verse: from }, end: { book, chapter, verse: to } });
+  const verses = passage?.verses.filter((v) => v.verse >= from && v.verse <= to) ?? [];
+  const range: RefRange | null = selection
+    ? {
+        start: { book, chapter, verse: selection.start },
+        end: { book, chapter, verse: selection.end },
+      }
+    : null;
+  const studyVerse = selection
+    ? Array.from(
+        { length: selection.end - selection.start + 1 },
+        (_, i) => selection.start + i,
+      ).find((v) => studyByVerse.has(v))
+    : undefined;
+  const copyText = () => {
+    if (!range || !passage) return null;
+    const text = verses
+      .filter((v) => v.verse >= range.start.verse && v.verse <= range.end.verse && !v.missing)
+      .map((v) => v.text)
+      .join(' ');
+    return `${formatRef(range)} (${translation})\n${text}${passage.copyright ? `\n\n${passage.copyright}` : ''}`;
+  };
   return (
     <div
       data-reading-chapter={heading}
@@ -314,21 +387,44 @@ function ChapterBlock({
       <h2 className={styles.chapterTitle}>{heading}</h2>
       {passage ? (
         <>
-          <p className={styles.text}>
-            {passage.verses
-              .filter((v) => v.verse >= from && v.verse <= to && !v.missing)
-              .map((v) => (
-                <span key={v.osis} className={styles.verse}>
-                  <sup className={styles.num}>{v.verse}</sup>
-                  <MarkedVerseText verse={v} marks={marks} />{' '}
-                </span>
-              ))}
-          </p>
+          <Passage
+            layout="read"
+            verses={verses}
+            marks={marks}
+            selection={selection}
+            onSelect={onSelect}
+            onOpenNote={(note) => {
+              const r = fromOsis(note.ref);
+              if (r) onNote({ range: r, note });
+            }}
+            studyByVerse={studyByVerse}
+            onOpenStudy={setStudy}
+          />
           {passage.copyright && <small>{passage.copyright}</small>}
         </>
       ) : (
         <p className={styles.loading}>Loading…</p>
       )}
+      {range && selection && (
+        <VerseActions
+          pinned
+          range={range}
+          selection={selection}
+          marks={marks}
+          copyText={copyText}
+          studyVerse={studyVerse}
+          onStudy={setStudy}
+          onNote={onNote}
+          onClose={onClearSelection}
+        />
+      )}
+      <StudyNotesSheet
+        open={study !== null}
+        onOpenChange={(o) => !o && setStudy(null)}
+        eyebrow="Study notes"
+        title={`${b.refName} ${chapter}:${study ?? ''}`}
+        notes={study !== null ? studyByVerse.get(study) : undefined}
+      />
     </div>
   );
 }

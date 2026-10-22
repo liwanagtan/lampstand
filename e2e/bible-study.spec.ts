@@ -59,7 +59,7 @@ test('highlight, bookmark and note a passage, then find them on the Notes page',
   // Open goes back to the reader at that verse.
   await list.getByRole('button', { name: 'Open Romans 8:28' }).click();
   await expect(page.getByRole('heading', { name: 'Romans 8' })).toBeVisible();
-  await expect(page.locator('[data-verse="28"] button[aria-pressed]')).toHaveAttribute(
+  await expect(page.locator('[data-verse="28"] [aria-pressed]')).toHaveAttribute(
     'aria-pressed',
     'true',
   );

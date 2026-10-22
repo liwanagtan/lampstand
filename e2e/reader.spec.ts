@@ -8,14 +8,14 @@ test.describe('Bible reader', () => {
     await page.keyboard.press('Enter');
     await expect(page.getByRole('heading', { name: 'John 3' })).toBeVisible();
     // The verse is marked; tapping it opens its actions.
-    const verse = page.locator('[data-verse="16"] button[aria-pressed]');
+    const verse = page.locator('[data-verse="16"] [aria-pressed]');
     await expect(verse).toHaveAttribute('aria-pressed', 'true');
     const bar = page.getByRole('toolbar', { name: 'Selected verses' });
     await expect(bar).toBeHidden();
     await verse.click();
     await expect(bar).toContainText('John 3:16');
     // Shift-click extends the selection.
-    await page.locator('[data-verse="18"] button[aria-pressed]').click({ modifiers: ['Shift'] });
+    await page.locator('[data-verse="18"] [aria-pressed]').click({ modifiers: ['Shift'] });
     await expect(bar).toContainText('John 3:16–18');
     await page.keyboard.press('Escape');
     await expect(bar).toBeHidden();

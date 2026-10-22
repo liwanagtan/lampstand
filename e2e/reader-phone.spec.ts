@@ -28,7 +28,7 @@ test('on a phone the reader is all thumbs: pill, Aa sheet, and the selection bar
   await page.keyboard.press('Escape');
 
   // Selecting verses swaps the pill for the selection bar, with named actions.
-  await page.locator('[data-verse="1"] button').last().tap();
+  await page.locator('[data-verse="1"] [aria-pressed]').tap();
   await expect(pill).toBeHidden();
   const selected = page.getByRole('toolbar', { name: 'Selected verses' });
   await expect(selected).toContainText('Bookmark');

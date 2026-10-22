@@ -168,3 +168,8 @@
     transform: translateY(8px);
   }
 }
+
+.pinned {
+  position: fixed;
+  z-index: 40;
+}

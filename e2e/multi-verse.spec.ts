@@ -21,8 +21,8 @@ test.describe('on a phone', () => {
     await picker.getByRole('button', { name: '3', exact: true }).tap();
     await expect(page.getByRole('heading', { name: 'John 3' })).toBeVisible();
 
-    await page.locator('[data-verse="12"] button').last().tap();
-    await page.locator('[data-verse="18"] button').last().tap();
+    await page.locator('[data-verse="12"] [aria-pressed]').tap();
+    await page.locator('[data-verse="18"] [aria-pressed]').tap();
     const bar = page.getByRole('toolbar', { name: 'Selected verses' });
     await expect(bar).toContainText('John 3:12–18 · 7 verses');
 
@@ -41,10 +41,10 @@ test.describe('on a phone', () => {
     await expect(page.locator('[data-verse="18"]')).toHaveAttribute('data-bracket', 'bottom');
 
     // A verse inside the noted range shows a small note mark, and its bar opens that note.
-    await page.locator('[data-verse="20"] button').last().tap();
-    await page.locator('[data-verse="20"] button').last().tap();
+    await page.locator('[data-verse="20"] [aria-pressed]').tap();
+    await page.locator('[data-verse="20"] [aria-pressed]').tap();
     await expect(page.locator('[data-verse="18"] [class*="mobileMarks"]')).toBeVisible();
-    await page.locator('[data-verse="15"] button').last().tap();
+    await page.locator('[data-verse="15"] [aria-pressed]').tap();
     await bar.getByRole('button', { name: 'Edit note' }).tap();
     await expect(page.getByRole('dialog').getByRole('textbox')).toHaveValue(
       'Earthly and heavenly things.',
@@ -53,9 +53,9 @@ test.describe('on a phone', () => {
     await bar.getByRole('button', { name: 'Clear selection' }).tap();
 
     // Tapping the lone selected verse clears it.
-    await page.locator('[data-verse="20"] button').last().tap();
+    await page.locator('[data-verse="20"] [aria-pressed]').tap();
     await expect(bar).toContainText('John 3:20');
-    await page.locator('[data-verse="20"] button').last().tap();
+    await page.locator('[data-verse="20"] [aria-pressed]').tap();
     await expect(bar).toBeHidden();
   });
 });

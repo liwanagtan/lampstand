@@ -54,14 +54,14 @@ test('translation suffix, cycling and next verse', async ({ page }) => {
   await expect(output.getByTestId('output')).toContainText('John 3:16 · WEB');
   await expect(output.getByTestId('output')).toContainText('only born Son');
 
-  await page.keyboard.press('t'); // WEB → ASV
-  await expect(output.getByTestId('output')).toContainText('John 3:16 · ASV');
-  await expect(page.getByText('Switched to ASV')).toBeVisible();
+  await page.keyboard.press('t'); // WEB → BSB
+  await expect(output.getByTestId('output')).toContainText('John 3:16 · BSB');
+  await expect(page.getByText('Switched to BSB')).toBeVisible();
 
   await page.keyboard.press('Alt+ArrowRight');
-  await expect(output.getByTestId('output')).toContainText('John 3:17 · ASV');
+  await expect(output.getByTestId('output')).toContainText('John 3:17 · BSB');
   await page.keyboard.press('Alt+ArrowLeft');
-  await expect(output.getByTestId('output')).toContainText('John 3:16 · ASV');
+  await expect(output.getByTestId('output')).toContainText('John 3:16 · BSB');
 
   // History is no longer a tab; the queue marks what is on screen.
   await expect(page.getByRole('tab', { name: /History/ })).toHaveCount(0);

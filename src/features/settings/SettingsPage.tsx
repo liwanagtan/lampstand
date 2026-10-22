@@ -56,7 +56,7 @@ export function SettingsPage() {
             <button className={styles.detailRow} onClick={() => setDetail('translations')}>
               <span>
                 <strong>Translations</strong>
-                <small>Six public domain translations built in</small>
+                <small>Three offline translations, plus NLT when connected</small>
               </span>
               <ChevronRight size={18} aria-hidden />
             </button>
@@ -279,7 +279,7 @@ function TranslationsSection() {
   return (
     <Section
       title="Translations"
-      description="Six public domain translations are built in, including the modern Berean Standard Bible. If your church has permission to use another translation, import it as a Lampstand translation file."
+      description="BSB, KJV and WEB are built in for offline reading. NLT is licensed through API.Bible and needs a connection to refresh cached chapters."
     >
       <div
         className={styles.tableScroll}

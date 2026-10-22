@@ -64,6 +64,12 @@ export function ReadingSettings({
             ]}
           />
         )}
+        {(translation === 'NLT' || parallel === 'NLT') && (
+          <p>
+            NLT is licensed through API.Bible. Cached chapters need an internet refresh every 14
+            days.
+          </p>
+        )}
         <div className={styles.size}>
           <span className={styles.label} id="text-size-label">
             Text size

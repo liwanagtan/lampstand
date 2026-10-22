@@ -5,6 +5,22 @@
   padding: var(--space-8);
   background: var(--color-bg);
 }
+.updateOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  padding: var(--space-8);
+  background: var(--color-bg);
+  text-align: center;
+}
+.updateActions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-2);
+}
 .card {
   display: flex;
   flex-direction: column;

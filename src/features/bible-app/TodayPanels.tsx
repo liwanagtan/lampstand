@@ -114,18 +114,21 @@ export function ContextPanel({
     >
       <div ref={body} className={styles.chapter}>
         {passage ? (
-          passage.verses
-            .filter((v) => !v.missing)
-            .map((v) => (
-              <p
-                key={v.osis}
-                data-verse={v.verse}
-                className={cx(styles.verse, inRange(v.verse) && styles.marked)}
-              >
-                <sup className={styles.num}>{v.verse}</sup>
-                <MarkedVerseText verse={v} marks={marks} />
-              </p>
-            ))
+          <>
+            {passage.verses
+              .filter((v) => !v.missing)
+              .map((v) => (
+                <p
+                  key={v.osis}
+                  data-verse={v.verse}
+                  className={cx(styles.verse, inRange(v.verse) && styles.marked)}
+                >
+                  <sup className={styles.num}>{v.verse}</sup>
+                  <MarkedVerseText verse={v} marks={marks} />
+                </p>
+              ))}
+            {passage.copyright && <small>{passage.copyright}</small>}
+          </>
         ) : (
           <p className={styles.loading}>Loading…</p>
         )}

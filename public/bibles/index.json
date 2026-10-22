@@ -24,30 +24,6 @@
       "hash": "75b80cbb185d49e9",
       "bytes": 4105621,
       "verses": 31103
-    },
-    {
-      "code": "ASV",
-      "name": "American Standard Version (1901)",
-      "file": "asv.json",
-      "hash": "50106eae01221368",
-      "bytes": 4219439,
-      "verses": 31102
-    },
-    {
-      "code": "YLT",
-      "name": "Young's Literal Translation",
-      "file": "ylt.json",
-      "hash": "5dce852e47940a96",
-      "bytes": 4235683,
-      "verses": 31102
-    },
-    {
-      "code": "DBY",
-      "name": "Darby Translation",
-      "file": "dby.json",
-      "hash": "3f543126c126e630",
-      "bytes": 4161457,
-      "verses": 31102
     }
   ]
 }

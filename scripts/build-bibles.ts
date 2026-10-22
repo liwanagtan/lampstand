@@ -124,38 +124,6 @@ const SOURCES: Source[] = [
     source: 'eBible.org (engwebp)',
     load: () => loadEbibleVpl('engwebp'),
   },
-  {
-    code: 'ASV',
-    name: 'American Standard Version (1901)',
-    license: 'Public domain',
-    source: 'scrollmapper/bible_databases (ASV.json)',
-    load: () => loadScrollmapper('ASV.json'),
-    clean: (t) => tidy(t.replace(/\[(Selah)\]?/g, '$1')),
-  },
-  {
-    code: 'YLT',
-    name: "Young's Literal Translation",
-    license: 'Public domain',
-    source: 'scrollmapper/bible_databases (YLT.json)',
-    load: () => loadScrollmapper('YLT.json'),
-    // The source marks opening quotes with a backtick.
-    clean: (t) => tidy(t.replace(/`/g, '‘').replace(/'/g, '’').replace(/--/g, '—')),
-  },
-  {
-    code: 'DBY',
-    name: 'Darby Translation',
-    license: 'Public domain',
-    source: 'scrollmapper/bible_databases (Darby.json)',
-    load: () => loadScrollmapper('Darby.json'),
-    // The source drops the space before "God" and marks supplied words with [ ] and *.
-    clean: (t) =>
-      tidy(
-        t
-          .replace(/[[\]*]/g, '')
-          .replace(/([a-z])(God)/g, '$1 $2')
-          .replace(/\s+([,;:.!?])/g, '$1'),
-      ),
-  },
 ];
 
 export interface BibleManifest {

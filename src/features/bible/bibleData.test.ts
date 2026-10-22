@@ -6,7 +6,7 @@ import { BOOKS } from './books';
 import { defaultVerseCounts } from './ref';
 import { buildIndex, searchIndex } from './searchCore';
 
-const CODES = ['kjv', 'web', 'asv', 'ylt', 'dby'] as const;
+const CODES = ['bsb', 'kjv', 'web'] as const;
 const files = Object.fromEntries(
   CODES.map((c) => [
     c,
@@ -42,8 +42,7 @@ describe.each(CODES)('%s', (code) => {
 
   it('has clean text', () => {
     const all = file.books.flatMap((b) => b.chapters.flat());
-    // ASV keeps its textual brackets (e.g. John 7:53–8:11).
-    const bad = code === 'asv' ? /<|>|\{|\}|`|\b[a-z]+God\b/ : /<|>|\{|\}|`|\[|\]|\b[a-z]+God\b/;
+    const bad = /<|>|\{|\}|`|\[|\]|\b[a-z]+God\b/;
     expect(all.filter((t) => bad.test(t)).slice(0, 3)).toEqual([]);
     expect(all.filter((t) => t.trim() === '').length).toBeLessThan(20);
   });

@@ -2,6 +2,7 @@ import type MiniSearch from 'minisearch';
 import { db } from '@/db/db';
 import { buildIndex, searchIndex, type SearchDoc, type SearchHit } from './searchCore';
 import type { SearchRequest } from './search.worker';
+import { searchNlt } from './nlt';
 
 type Pending = { resolve: (hits: SearchHit[]) => void; reject: (err: Error) => void };
 
@@ -71,11 +72,13 @@ function send(req: Req): Promise<SearchHit[]> {
 
 /** Search verse text in one translation. The index is built on first use and cached. */
 export function searchVerses(code: string, query: string, limit = 30): Promise<SearchHit[]> {
+  if (code === 'NLT') return searchNlt(query, limit);
   return send({ type: 'search', code, query, limit });
 }
 
 /** Build the index ahead of time (e.g. when the control screen opens). */
 export function warmSearch(code: string): Promise<unknown> {
+  if (code === 'NLT') return Promise.resolve();
   return send({ type: 'warm', code });
 }
 

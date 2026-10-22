@@ -85,8 +85,14 @@ function readPrefs(): ReaderPrefs {
     return {
       book,
       chapter: typeof v.chapter === 'number' && v.chapter > 0 ? v.chapter : DEFAULTS.chapter,
-      translation: typeof v.translation === 'string' ? v.translation : DEFAULTS.translation,
-      parallel: typeof v.parallel === 'string' ? v.parallel : null,
+      translation:
+        typeof v.translation === 'string' && !['ASV', 'YLT', 'DBY'].includes(v.translation)
+          ? v.translation
+          : DEFAULTS.translation,
+      parallel:
+        typeof v.parallel === 'string' && !['ASV', 'YLT', 'DBY'].includes(v.parallel)
+          ? v.parallel
+          : null,
       size: READER_SIZES.includes(v.size ?? 0) ? v.size! : DEFAULTS.size,
     };
   } catch {

@@ -4,6 +4,7 @@ import { paths } from '@/app/paths';
 import { ActivePlan } from '@/features/bible-app/ActivePlan';
 import { currentDay } from '@/features/bible-app/plans';
 import { JourneyTimeline } from '@/features/bible-app/JourneyTimeline';
+import { DuplicatesReview } from '@/features/account/DuplicatesReview';
 import { useSettings } from '@/features/settings/settingsStore';
 import { useJourneyStats } from './useJourneyStats';
 import styles from './Profile.module.css';
@@ -27,6 +28,7 @@ export function JourneyPage() {
       <a href="#your-journal" className={styles.journalShortcut}>
         Open your journal <ChevronRight size={16} aria-hidden />
       </a>
+      <DuplicatesReview />
       {!empty && (
         <section aria-label="Your journey so far">
           <dl className={styles.summary}>

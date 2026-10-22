@@ -67,6 +67,20 @@ export function captureLocalReading(): LocalReadingBackup {
   return result;
 }
 
+/** Read legacy guest positions while an account is active, without changing the active reader. */
+export function captureGuestReading(): LocalReadingBackup {
+  const result: LocalReadingBackup = {};
+  try {
+    for (const key of KEYS) {
+      const raw = localStorage.getItem(key);
+      if (raw && valid(key, raw)) result[key] = raw;
+    }
+  } catch {
+    // IndexedDB import can still proceed.
+  }
+  return result;
+}
+
 /** Current positions take precedence; importing a backup fills positions missing on this device. */
 export function restoreLocalReading(value: unknown): number {
   if (!value || typeof value !== 'object' || Array.isArray(value)) return 0;

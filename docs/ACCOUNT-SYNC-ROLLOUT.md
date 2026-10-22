@@ -1,6 +1,6 @@
 # Accounts, sync, and usage insights
 
-Status: Phase 1 backup work and Phase 2 Google account setup are implemented on the staging branch. Google Auth is in Testing mode; only listed test users can sign in. Personal progress sync, guest import, and analytics remain later phases. No personal records are uploaded yet.
+Status: Phases 1–3 are implemented on the staging branch (backups, Google account entry with separate local profiles, and guest import by choice). Google Auth is in Testing mode; only listed test users can sign in. Cross-device sync and usage insights remain. No personal records are uploaded yet.
 
 ## Product decision
 

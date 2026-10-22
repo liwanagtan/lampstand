@@ -4,6 +4,7 @@ import { Toaster, TooltipProvider } from '@/design-system/components';
 import { BibleGate } from '@/features/bible/BibleGate';
 import { AccountLanding } from '@/features/welcome/AccountLanding';
 import { useAccount } from '@/features/account/accountStore';
+import { AccountGate } from '@/features/account/AccountGate';
 import { hasPassedInstallLanding, markInstallLandingPassed } from './entry';
 import { isOnboarded } from './onboarding';
 import { router } from './router';
@@ -14,10 +15,7 @@ export function App() {
   const updateReady = useSyncExternalStore(subscribeToAppUpdate, isAppUpdateReady);
   const accountStatus = useAccount((s) => s.status);
   const [showInstallLanding, setShowInstallLanding] = useState(
-    () =>
-      !isOnboarded() &&
-      !hasPassedInstallLanding() &&
-      window.location.pathname !== '/privacy',
+    () => !isOnboarded() && !hasPassedInstallLanding() && window.location.pathname !== '/privacy',
   );
 
   const continueInBrowser = () => {
@@ -30,9 +28,11 @@ export function App() {
       {accountStatus === 'loading' ? null : showInstallLanding && accountStatus === 'guest' ? (
         <AccountLanding onContinueGuest={continueInBrowser} />
       ) : (
-        <BibleGate>
-          <RouterProvider router={router} />
-        </BibleGate>
+        <AccountGate>
+          <BibleGate>
+            <RouterProvider router={router} />
+          </BibleGate>
+        </AccountGate>
       )}
       <Toaster />
       {updateReady && <UpdateScreen />}

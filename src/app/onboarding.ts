@@ -2,7 +2,7 @@
 // paint can decide, without waiting for the database.
 const KEY = 'lampstand.onboarded';
 let accountId: string | null = null;
-const key = () => accountId ? `${KEY}.${accountId}` : KEY;
+const key = () => (accountId ? `${KEY}.${accountId}` : KEY);
 
 export function selectOnboardingAccount(userId: string | null): void {
   accountId = userId;
@@ -31,5 +31,14 @@ export function onboardedAt(): number | null {
     return Number.isFinite(v) && v > 1 ? v : null;
   } catch {
     return null;
+  }
+}
+
+/** Whether this device's guest profile finished onboarding (its data can come into an account). */
+export function wasGuestOnboarded(): boolean {
+  try {
+    return localStorage.getItem(KEY) !== null;
+  } catch {
+    return false;
   }
 }

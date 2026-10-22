@@ -229,3 +229,7 @@ Owner explicitly requested multi-select faith journey, superseding the earlier s
 ### 2026-10-21 — Final reviewed UI refinements
 
 Suggestions use a softly tinted section with all corners rounded and no left border. Bible sits in the middle of the full phone navigation (Today, Plans, Bible, Search, Profile). Hide Finish setup later on translation and plan steps; label the final action Complete setup. Welcome’s form does not flex-shrink, preserving 48px bottom clearance at all widths. Screen library/import, presentation controls and Bible console use the light interface palette; slide content and live output retain their designed appearance.
+
+### 2026-10-23 — Accounts Phase 3: guest import by choice
+
+After sign-in, a device with guest data asks once to bring it into the account (Bring it in / Not now); Settings › Account keeps the option. Plan days from both sides are combined; highlights and bookmarks keep the most recent choice; a journal entry or note that differs is kept twice (`guest:` copy) and reviewed in Journey (keep one, the other, or both). The guest profile is never changed, a failed import says so and can be retried, and a finished guest setup carries over so the account opens on Today.

@@ -19,7 +19,9 @@ registerServiceWorker();
 
 const root = createRoot(document.getElementById('root')!);
 
-useAccount.getState().init()
+useAccount
+  .getState()
+  .init()
   .catch((err: unknown) => console.error('Failed to load account session', err))
   .then(() => {
     const userId = useAccount.getState().user?.id ?? null;

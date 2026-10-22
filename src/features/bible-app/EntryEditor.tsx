@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { Input, Textarea, Toggle } from '@/design-system/components';
 import type { JournalEntryRecord } from '@/db/types';
 import { JOURNAL_MAX, PROMPTS, TITLE_MAX, saveEntry, type EntryDraft } from './journal';
+import { useAccount } from '@/features/account/accountStore';
 import styles from './EntryEditor.module.css';
 
 const SAVE_DELAY = 600;
@@ -28,6 +29,7 @@ export function EntryEditor({
   autoFocus,
   verse,
 }: EntryEditorProps) {
+  const signedIn = useAccount((s) => s.status === 'signed-in');
   const [draft, setDraft] = useState<EntryDraft>(() => ({
     id: entry.id,
     date: entry.date,
@@ -139,7 +141,9 @@ export function EntryEditor({
           />
         ))}
       <p className={styles.storageNote}>
-        Your writing stays on this device. To keep a copy, export a backup in Profile → Settings.
+        {signedIn
+          ? 'Your writing is private to your account and syncs to your other devices.'
+          : 'Your writing stays on this device. To keep a copy, export a backup in Profile → Settings.'}
       </p>
       <p className={styles.saved} role="status" aria-live="polite">
         {status === 'saving' ? 'Saving…' : status === 'saved' ? 'Saved' : ' '}

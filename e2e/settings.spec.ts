@@ -9,12 +9,10 @@ test('settings: defaults, appearance, reduce motion, translations, backup', asyn
   await openApp(page, '/settings');
   await page.screenshot({ path: 'test-results/settings.png', fullPage: true });
 
-  // Appearance and reduce motion persist.
-  await page
-    .getByRole('radiogroup', { name: 'App appearance' })
-    .getByRole('radio', { name: 'Dark' })
-    .click();
-  await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
+  // Light mode only for now; reduce motion persists.
+  await expect(
+    page.getByRole('radiogroup', { name: 'App appearance' }).getByRole('radio', { name: 'Dark' }),
+  ).toBeDisabled();
   await page.getByText('Reduce motion', { exact: true }).click();
   await expect(page.locator('html')).toHaveAttribute('data-reduce-motion', 'true');
 
@@ -25,14 +23,14 @@ test('settings: defaults, appearance, reduce motion, translations, backup', asyn
   await page.waitForTimeout(300);
 
   await page.reload();
-  await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
   await expect(page.locator('html')).toHaveAttribute('data-reduce-motion', 'true');
   await expect(page.getByLabel('Default verse overlay')).toContainText('Side panel');
 
   // Built-in translations are listed and can't be removed.
   const rows = page.getByRole('table').getByRole('row');
-  await expect(rows).toHaveCount(7);
-  await expect(page.getByRole('cell', { name: 'Built in' })).toHaveCount(6);
+  await expect(rows).toHaveCount(4); // Header, then BSB, KJV and WEB
+  await expect(page.getByRole('cell', { name: 'Built in' })).toHaveCount(3);
 
   // Import a translation, then remove it.
   await page.getByLabel('Choose a translation file').setInputFiles({
@@ -51,9 +49,9 @@ test('settings: defaults, appearance, reduce motion, translations, backup', asyn
     ),
   });
   await expect(page.getByText('Added Test Translation (TST)')).toBeVisible();
-  await expect(rows).toHaveCount(8);
+  await expect(rows).toHaveCount(5);
   await page.getByRole('row', { name: /TST/ }).getByRole('button', { name: 'Remove' }).click();
-  await expect(rows).toHaveCount(7);
+  await expect(rows).toHaveCount(4);
 
   // Export a backup.
   const download = page.waitForEvent('download');

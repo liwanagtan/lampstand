@@ -25,14 +25,14 @@ test('a daily reminder goes out at your reading time, and can go in your calenda
   await openApp(page, '/profile/settings');
   const notes = () => page.evaluate(() => (window as unknown as { __notes: string[] }).__notes);
 
-  await page.getByRole('switch', { name: 'Remind me to read' }).click();
+  await page.getByRole('switch', { name: 'Morning reminder' }).click();
   await expect.poll(notes).toContain('Reminders are on');
-  await expect(page.getByLabel('Reading time')).toHaveValue('07:00');
+  await expect(page.getByLabel('Morning time')).toHaveValue('07:00');
 
   await page.clock.fastForward('03:00');
   await expect.poll(notes).toContain('Time for today’s reading');
 
   const download = page.waitForEvent('download');
-  await page.getByRole('button', { name: 'Add to my calendar' }).click();
-  expect((await download).suggestedFilename()).toBe('lampstand-reading-reminder.ics');
+  await page.getByRole('button', { name: 'Add reminder to calendar' }).click();
+  expect((await download).suggestedFilename()).toBe('lampstand-reminders.ics');
 });

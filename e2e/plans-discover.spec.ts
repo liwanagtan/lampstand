@@ -10,7 +10,8 @@ test('find a plan by feeling, by group and by search; preview, start and reflect
 
   // By feeling: a chip opens the category. (Empty categories stay hidden: see the unit test.)
   const feel = page.getByRole('group', { name: 'For how you feel' });
-  await expect(feel.getByRole('link', { name: /^Pride/ })).toBeVisible();
+  // The first feelings show as chips; See all lists every one.
+  await expect(feel.getByRole('link', { name: 'See all' })).toBeVisible();
   await feel.getByRole('link', { name: /^Anxiety/ }).click();
   await expect(page.getByRole('heading', { name: 'Anxiety', level: 1 })).toBeVisible();
   await page.getByRole('link', { name: 'When anxiety rises' }).click();

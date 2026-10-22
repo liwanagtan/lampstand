@@ -22,7 +22,7 @@ test('on a phone the reader is all thumbs: pill, Aa sheet, and the selection bar
   await expect(bar.getByRole('button', { name: 'John 1', exact: true })).toBeVisible();
 
   // Aa: translation and text size in a bottom sheet.
-  await bar.getByRole('button', { name: 'Reading settings' }).tap();
+  await bar.getByRole('button', { name: 'Reading settings', exact: true }).tap();
   const sheet = page.getByRole('dialog', { name: 'Reading' });
   await sheet.getByRole('button', { name: 'Larger text' }).tap();
   await page.keyboard.press('Escape');
@@ -43,12 +43,12 @@ test('on a phone a parallel translation reads beneath each verse, and plans use 
   await page.setViewportSize({ width: 390, height: 844 });
   await openApp(page, '/bible');
   await page.getByRole('button', { name: 'Reading settings', exact: true }).tap();
-  await page.getByLabel('Parallel translation').tap();
+  await page.getByLabel('Side by side').tap(); // "Parallel translation" on larger screens
   await page.getByRole('option', { name: /WEB/ }).tap();
   await page.keyboard.press('Escape');
   const verse = page.locator('[data-verse="1"]');
   const [first, second] = await Promise.all([
-    verse.locator('span').first().boundingBox(),
+    verse.locator('button[aria-pressed] > span').first().boundingBox(),
     verse.locator('[data-code="WEB"]').boundingBox(),
   ]);
   expect(second!.y).toBeGreaterThan(first!.y + first!.height - 2);
@@ -60,7 +60,7 @@ test('on a phone a parallel translation reads beneath each verse, and plans use 
     .getByRole('button', { name: /Reading settings:/ })
     .tap();
   const sheet = page.getByRole('dialog', { name: 'Reading' });
-  await expect(sheet.getByLabel('Parallel translation')).toHaveCount(0);
+  await expect(sheet.getByLabel('Side by side')).toHaveCount(0);
   await sheet.getByRole('button', { name: 'Larger text' }).tap();
 });
 

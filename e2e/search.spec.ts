@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { openApp } from './helpers';
+import { openApp, openVerseActions } from './helpers';
 
 test.describe('on a phone', () => {
   test.use({ hasTouch: true });
@@ -12,10 +12,11 @@ test.describe('on a phone', () => {
     await openApp(page, '/search');
     await page.getByRole('searchbox', { name: 'Search' }).fill('rom 8 28');
     await page.getByRole('region', { name: 'Passage' }).getByRole('button').tap();
+    await openVerseActions(page, 28);
     await page.getByRole('button', { name: 'Add a note' }).tap();
     await page.getByRole('dialog').getByRole('textbox').fill('Even the hard days.');
     await page.getByRole('button', { name: 'Save note' }).tap();
-    await expect(page.getByRole('button', { name: /Note on Romans 8:28/ })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Edit note' })).toBeVisible();
 
     const tabs = page.getByRole('navigation', { name: 'Main' });
     await tabs.getByRole('link', { name: 'Search' }).tap();
@@ -30,7 +31,10 @@ test.describe('on a phone', () => {
       .getByRole('button', { name: /John 3:16/ })
       .tap();
     await expect(page.getByRole('heading', { name: 'John 3' })).toBeVisible();
-    await expect(page.getByRole('toolbar', { name: 'Selected verses' })).toContainText('John 3:16');
+    await expect(page.locator('[data-verse="16"] button[aria-pressed]')).toHaveAttribute(
+      'aria-pressed',
+      'true',
+    );
 
     // A feeling finds plans and verses.
     await tabs.getByRole('link', { name: 'Search' }).tap();
@@ -45,7 +49,7 @@ test.describe('on a phone', () => {
 
     // Your own words come back too.
     await page.getByRole('searchbox', { name: 'Search' }).fill('hard days');
-    const mine = page.getByRole('region', { name: 'Your journey' });
+    const mine = page.getByRole('region', { name: 'Saved reflections and verses' });
     await mine.getByRole('button', { name: /Note · Romans 8:28/ }).tap();
     await expect(page.getByRole('dialog').getByRole('textbox')).toHaveValue('Even the hard days.');
     await page.keyboard.press('Escape');
@@ -84,6 +88,9 @@ test('laptops keep Screen in the top bar, with search right there', async ({ pag
   await page.getByLabel('Search Lampstand').fill('jn 3 16');
   await page.keyboard.press('Enter');
   await expect(page.getByRole('heading', { name: 'John 3' })).toBeVisible();
-  await expect(page.getByRole('toolbar', { name: 'Selected verses' })).toContainText('John 3:16');
+  await expect(page.locator('[data-verse="16"] button[aria-pressed]')).toHaveAttribute(
+    'aria-pressed',
+    'true',
+  );
   await expect(page.getByLabel('Search the Bible')).toHaveCount(0);
 });

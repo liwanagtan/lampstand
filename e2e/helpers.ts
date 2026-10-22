@@ -19,3 +19,11 @@ export async function importSample(page: Page) {
   await page.getByRole('button', { name: 'Save to library' }).click();
   await expect(page.getByRole('heading', { name: 'Screen', exact: true, level: 1 })).toBeVisible();
 }
+
+/** A verse reached by search is marked; tapping it opens the selection actions. */
+export async function openVerseActions(page: Page, verse: number) {
+  const button = page.locator(`[data-verse="${verse}"] button[aria-pressed]`);
+  await expect(button).toHaveAttribute('aria-pressed', 'true');
+  await button.click();
+  await expect(page.getByRole('toolbar', { name: 'Selected verses' })).toBeVisible();
+}

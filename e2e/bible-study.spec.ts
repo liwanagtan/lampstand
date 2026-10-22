@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { openApp } from './helpers';
+import { openApp, openVerseActions } from './helpers';
 
 test('highlight, bookmark and note a passage, then find them on the Notes page', async ({
   page,
@@ -8,6 +8,7 @@ test('highlight, bookmark and note a passage, then find them on the Notes page',
   await openApp(page, '/bible');
   await page.getByLabel('Search Lampstand').fill('rom 8 28');
   await page.keyboard.press('Enter');
+  await openVerseActions(page, 28);
 
   await page.getByRole('button', { name: 'Highlight yellow' }).click();
   await expect(page.locator('[data-verse="28"] mark')).toHaveAttribute('data-color', 'yellow');
@@ -58,5 +59,8 @@ test('highlight, bookmark and note a passage, then find them on the Notes page',
   // Open goes back to the reader at that verse.
   await list.getByRole('button', { name: 'Open Romans 8:28' }).click();
   await expect(page.getByRole('heading', { name: 'Romans 8' })).toBeVisible();
-  await expect(page.getByRole('toolbar', { name: 'Selected verses' })).toContainText('Romans 8:28');
+  await expect(page.locator('[data-verse="28"] button[aria-pressed]')).toHaveAttribute(
+    'aria-pressed',
+    'true',
+  );
 });

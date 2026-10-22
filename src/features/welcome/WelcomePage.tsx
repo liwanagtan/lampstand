@@ -54,7 +54,7 @@ export function WelcomePage() {
   const [journey, setJourney] = useState<FaithJourney[]>([]);
   const recommended = suggestedPlanIds(journey);
   const salvationFirst = journey.includes('new') || journey.includes('exploring');
-  const selectedPlan = planTouched ? plan : (salvationFirst ? null : (recommended[0] ?? null));
+  const selectedPlan = planTouched ? plan : salvationFirst ? null : (recommended[0] ?? null);
   const starterIds = [...new Set([...recommended, ...STARTER_PLANS])].slice(0, 3);
 
   const steps: Step[] = ['name', 'uses', 'journey', 'translation', 'plan'];
@@ -150,9 +150,9 @@ export function WelcomePage() {
                 <AnimatedLampMark size={150} title="Lampstand" />
               </div>
               <h1 tabIndex={-1} className={styles.title}>
-                Welcome to Lampstand
+                Make Lampstand yours
               </h1>
-              <p className={styles.lede}>Grow in faith, one day at a time.</p>
+              <p className={styles.lede}>Let’s start with your name.</p>
               <div className={styles.nameField}>
                 <Input
                   label="What should we call you?"
@@ -173,7 +173,9 @@ export function WelcomePage() {
               <h1 tabIndex={-1} className={styles.title}>
                 What brings you to Lampstand?
               </h1>
-              <p className={styles.lede}>Choose what you’d like to do. You can pick more than one.</p>
+              <p className={styles.lede}>
+                Choose what you’d like to do. You can pick more than one.
+              </p>
               <div className={styles.uses} role="group" aria-label="What brings you to Lampstand?">
                 {USE_CASES.map((u) => {
                   const on = uses.has(u.id);
@@ -191,11 +193,13 @@ export function WelcomePage() {
                       <span className={styles.useText}>
                         <span className={styles.useTitle}>{u.title}</span>
                         <span className={styles.useBody}>
-                          {{
-                            grow: 'Daily verse, plans and journal',
-                            study: 'Read, search and save notes',
-                            teach: 'Present Scripture and slides',
-                          }[u.id]}
+                          {
+                            {
+                              grow: 'Daily verse, plans and journal',
+                              study: 'Read, search and save notes',
+                              teach: 'Present Scripture and slides',
+                            }[u.id]
+                          }
                         </span>
                       </span>
                     </label>

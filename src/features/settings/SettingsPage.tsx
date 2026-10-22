@@ -17,6 +17,7 @@ import { ReadingSection, TipsSection } from './MeSections';
 import { RemindersSection } from '@/features/reminders/RemindersSection';
 import { Section } from './Section';
 import { InstallSection } from './InstallSection';
+import { AccountSection } from '@/features/account/AccountSection';
 import { LAMPSTAND_PLANS, OPEN_CONTENT } from './credits';
 import styles from './SettingsPage.module.css';
 
@@ -34,6 +35,7 @@ export function SettingsPage() {
   const [detail, setDetail] = useState<'translations' | 'credits' | null>(null);
   return (
     <div className={styles.sections}>
+      <AccountSection />
       <ReadingSection />
       <RemindersSection />
       <InstallSection />

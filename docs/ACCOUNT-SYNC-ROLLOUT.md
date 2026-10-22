@@ -1,6 +1,6 @@
 # Accounts, sync, and usage insights
 
-Status: Phase 1 design for owner review. No account service, analytics collection, or cloud upload is enabled by this document.
+Status: Phase 1 backup work and Phase 2 Google account setup are implemented on the staging branch. Google Auth is in Testing mode; only listed test users can sign in. Personal progress sync, guest import, and analytics remain later phases. No personal records are uploaded yet.
 
 ## Product decision
 

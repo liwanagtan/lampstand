@@ -1,6 +1,7 @@
 // Bible reader state (Bible app): where you are, how it looks, what is selected.
 import { create } from 'zustand';
 import { BOOK_BY_CODE } from '@/features/bible/books';
+import { accountStorageKey } from '@/features/account/storage';
 import type { RefRange } from '@/features/bible/ref';
 
 const PREFS_KEY = 'lampstand.reader';
@@ -80,7 +81,7 @@ const DEFAULTS: ReaderPrefs = {
 
 function readPrefs(): ReaderPrefs {
   try {
-    const raw = localStorage.getItem(PREFS_KEY);
+    const raw = localStorage.getItem(accountStorageKey(PREFS_KEY));
     const v = raw ? (JSON.parse(raw) as Partial<ReaderPrefs>) : {};
     const book = v.book && BOOK_BY_CODE.has(v.book) ? v.book : DEFAULTS.book;
     return {
@@ -104,7 +105,7 @@ function readPrefs(): ReaderPrefs {
 function save(s: ReaderPrefs) {
   try {
     const { book, chapter, translation, parallel, size } = s;
-    localStorage.setItem(PREFS_KEY, JSON.stringify({ book, chapter, translation, parallel, size }));
+    localStorage.setItem(accountStorageKey(PREFS_KEY), JSON.stringify({ book, chapter, translation, parallel, size }));
   } catch {
     // Remembering the reading position is a convenience only.
   }
@@ -112,7 +113,7 @@ function save(s: ReaderPrefs) {
 
 function recentChapters(): { book: string; chapter: number }[] {
   try {
-    const value: unknown = JSON.parse(localStorage.getItem('lampstand.recentChapters') ?? '[]');
+    const value: unknown = JSON.parse(localStorage.getItem(accountStorageKey('lampstand.recentChapters')) ?? '[]');
     return Array.isArray(value)
       ? value
           .filter(
@@ -138,7 +139,7 @@ export const useReader = create<ReaderState>((set, get) => ({
     ].slice(0, 6);
     set({ book, chapter, selection: select, selectionActionsOpen: false, recent });
     try {
-      localStorage.setItem('lampstand.recentChapters', JSON.stringify(recent));
+      localStorage.setItem(accountStorageKey('lampstand.recentChapters'), JSON.stringify(recent));
     } catch {
       /* Reading remains available if storage is full. */
     }

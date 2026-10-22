@@ -6,6 +6,11 @@ import { App } from '@/app/App';
 import { useSettings } from '@/features/settings/settingsStore';
 import { registerServiceWorker } from '@/app/pwa';
 import { listenForInstall } from '@/app/install';
+import { useAccount } from '@/features/account/accountStore';
+import { selectAccountDatabase } from '@/db/db';
+import { selectOnboardingAccount } from '@/app/onboarding';
+import { selectAccountStorage } from '@/features/account/storage';
+import { useReader } from '@/features/bible-app/readerStore';
 
 applyTokens();
 listenForInstall();
@@ -13,9 +18,16 @@ registerServiceWorker();
 
 const root = createRoot(document.getElementById('root')!);
 
-useSettings
-  .getState()
-  .load()
+useAccount.getState().init()
+  .catch((err: unknown) => console.error('Failed to load account session', err))
+  .then(() => {
+    const userId = useAccount.getState().user?.id ?? null;
+    selectAccountDatabase(userId);
+    selectOnboardingAccount(userId);
+    selectAccountStorage(userId);
+    useReader.getState().reloadFromStorage();
+    return useSettings.getState().load();
+  })
   .catch((err: unknown) => console.error('Failed to load settings', err))
   .finally(() => {
     root.render(

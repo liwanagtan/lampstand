@@ -1,4 +1,5 @@
 import { useReader } from '@/features/bible-app/readerStore';
+import { accountStorageKey } from '@/features/account/storage';
 
 const KEYS = [
   'lampstand.reader',
@@ -57,7 +58,7 @@ export function captureLocalReading(): LocalReadingBackup {
   const result: LocalReadingBackup = {};
   try {
     for (const key of KEYS) {
-      const raw = localStorage.getItem(key);
+      const raw = localStorage.getItem(accountStorageKey(key));
       if (raw && valid(key, raw)) result[key] = raw;
     }
   } catch {
@@ -74,9 +75,9 @@ export function restoreLocalReading(value: unknown): number {
   try {
     for (const key of KEYS) {
       const raw = data[key];
-      if (typeof raw !== 'string' || !valid(key, raw) || localStorage.getItem(key) !== null)
+      if (typeof raw !== 'string' || !valid(key, raw) || localStorage.getItem(accountStorageKey(key)) !== null)
         continue;
-      localStorage.setItem(key, raw);
+      localStorage.setItem(accountStorageKey(key), raw);
       restored++;
     }
     if (restored) useReader.getState().reloadFromStorage();

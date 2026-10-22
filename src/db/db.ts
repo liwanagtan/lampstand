@@ -95,7 +95,15 @@ export function journalToEntry(j: JournalRecord): JournalEntryRecord {
   };
 }
 
-export const db = new LampstandDB();
+export let db = new LampstandDB();
+
+/** Keep each signed-in person's private offline records apart from the guest database. */
+export function selectAccountDatabase(userId: string | null): void {
+  const name = userId ? `${DB_NAME}-account-${userId}` : DB_NAME;
+  if (db.name === name) return;
+  db.close();
+  db = new LampstandDB(name);
+}
 
 /** Ask Chrome not to evict our data (PRD §10 offline). */
 export async function requestPersistentStorage(): Promise<boolean> {

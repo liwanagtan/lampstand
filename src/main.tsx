@@ -12,6 +12,8 @@ import { publishActiveDatabase } from '@/db/activeProfile';
 import { selectOnboardingAccount } from '@/app/onboarding';
 import { selectAccountStorage } from '@/features/account/storage';
 import { useReader } from '@/features/bible-app/readerStore';
+import { startSync, useSync } from '@/features/account/syncStore';
+import { isOnboarded } from '@/app/onboarding';
 
 applyTokens();
 listenForInstall();
@@ -31,7 +33,15 @@ useAccount
     markProfileOpened(userId);
     void publishActiveDatabase(db.name);
     useReader.getState().reloadFromStorage();
-    return useSettings.getState().load();
+    return useSettings
+      .getState()
+      .load()
+      .then(() => {
+        if (!userId) return;
+        startSync(userId);
+        // A device this account has not set up loads the account first (AccountGate).
+        if (isOnboarded()) void useSync.getState().syncNow();
+      });
   })
   .catch((err: unknown) => console.error('Failed to load settings', err))
   .finally(() => {

@@ -15,6 +15,7 @@ describe('LampstandDB', () => {
         'plans',
         'presentations',
         'settings',
+        'syncBase',
         'translations',
         'verses',
       ].sort(),

@@ -213,3 +213,14 @@ export async function restoreBackup(file: File): Promise<RestoreSummary> {
 export function backupFileName(now = new Date()): string {
   return `lampstand-backup-${now.toISOString().slice(0, 10)}.json`;
 }
+
+/** Saves a backup file through the browser's download. */
+export async function downloadBackup(): Promise<void> {
+  const blob = await createBackup();
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = backupFileName();
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(url), 2000);
+}

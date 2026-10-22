@@ -6,9 +6,7 @@ test.describe.configure({ timeout: 120_000 });
 
 async function startWelcome(page: Page) {
   await page.goto('/');
-  await expect(
-    page.getByRole('heading', { name: 'Your faith journey, saved.' }),
-  ).toBeVisible({
+  await expect(page.getByRole('heading', { name: 'Your faith journey, saved.' })).toBeVisible({
     timeout: 60_000,
   });
   await expect(page.getByLabel('What should we call you?')).toHaveCount(0);

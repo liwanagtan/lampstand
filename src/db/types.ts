@@ -187,3 +187,12 @@ export interface JournalRecord {
   createdAt: number;
   updatedAt: number;
 }
+
+/** Account sync: the hash of a record as last agreed with the server, or the pull cursor. */
+export interface SyncBaseRecord {
+  /** "kind/id", or "@cursor". */
+  key: string;
+  hash?: string;
+  /** For "@cursor": the newest server change time seen (ISO). */
+  at?: string;
+}

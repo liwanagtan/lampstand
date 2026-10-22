@@ -2,6 +2,8 @@ import { create } from 'zustand';
 import { isAuthRetryableFetchError, type User } from '@supabase/supabase-js';
 import { accountClient } from './client';
 import { reloadApp } from './reload';
+import { removeAccountCopy } from './storage';
+import { stopSync } from './syncStore';
 
 type Status = 'loading' | 'guest' | 'signed-in';
 
@@ -14,6 +16,8 @@ interface AccountState {
   init: () => Promise<void>;
   signInWithGoogle: () => Promise<void>;
   signOut: () => Promise<void>;
+  /** Deletes the account and its synced records; optionally this device's copy too. */
+  deleteAccount: (removeDeviceCopy: boolean) => Promise<void>;
 }
 
 // The last signed-in account, so an offline start opens that person's profile, not the guest one.
@@ -116,5 +120,22 @@ export const useAccount = create<AccountState>((set) => ({
       forgetUser();
       window.location.assign('/');
     }
+  },
+  deleteAccount: async (removeDeviceCopy) => {
+    const client = accountClient;
+    const userId = useAccount.getState().user?.id;
+    if (!client || !userId) return;
+    set({ error: null });
+    stopSync();
+    const { error } = await client.rpc('delete_my_account');
+    if (error) {
+      set({ error: 'Your account could not be deleted. Check your connection and try again.' });
+      throw error;
+    }
+    if (removeDeviceCopy) await removeAccountCopy(userId);
+    forgetUser();
+    // The login no longer exists on the server; only this browser's session is left to clear.
+    await client.auth.signOut({ scope: 'local' }).catch(() => undefined);
+    window.location.assign('/');
   },
 }));

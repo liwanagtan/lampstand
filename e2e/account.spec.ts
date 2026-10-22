@@ -1,49 +1,8 @@
-import { readFileSync } from 'node:fs';
-import { expect, test, type Page } from '@playwright/test';
+import { expect, test } from '@playwright/test';
+import { host, signIn } from './account';
 import { openApp } from './helpers';
 
-// A stored session stands in for Google sign-in; requests to Supabase are cut so the fake
-// token is never checked (the app treats that like being offline).
-function supabaseHost(): string | null {
-  try {
-    const env = readFileSync('.env.local', 'utf8');
-    const url = /^VITE_SUPABASE_URL=(.+)$/m.exec(env)?.[1]?.trim();
-    return url ? new URL(url).hostname : null;
-  } catch {
-    return null;
-  }
-}
-const host = supabaseHost();
 test.skip(!host, 'Supabase is not configured for this build');
-
-const USER = { id: '00000000-0000-4000-8000-000000000001', email: 'reader@example.com' };
-
-async function signIn(page: Page) {
-  await page.route(`https://${host}/**`, (route) => route.abort());
-  await page.evaluate(
-    ({ key, user }) => {
-      const now = Math.floor(Date.now() / 1000);
-      localStorage.setItem(
-        key,
-        JSON.stringify({
-          access_token: 'test',
-          refresh_token: 'test',
-          token_type: 'bearer',
-          expires_in: 3600,
-          expires_at: now + 3600,
-          user: {
-            ...user,
-            aud: 'authenticated',
-            app_metadata: {},
-            user_metadata: {},
-            created_at: '',
-          },
-        }),
-      );
-    },
-    { key: `sb-${host!.split('.')[0]}-auth-token`, user: USER },
-  );
-}
 
 test('a guest brings their journal into the account they sign in to', async ({ page }) => {
   await openApp(page);

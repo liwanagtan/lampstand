@@ -1,6 +1,6 @@
 # Accounts, sync, and usage insights
 
-Status: Phases 1–3 are implemented on the staging branch (backups, Google account entry with separate local profiles, and guest import by choice). Google Auth is in Testing mode; only listed test users can sign in. Cross-device sync and usage insights remain. No personal records are uploaded yet.
+Status: Phases 1–4 are implemented on the staging branch: backups, Google account entry with separate local profiles, guest import by choice, and cross-device sync with account deletion. Before sync is used, apply `supabase/account-sync.sql` to the staging project and run `supabase/rls-check.sql`. Google Auth is in Testing mode; only listed test users can sign in. Usage insights remain.
 
 ## Product decision
 

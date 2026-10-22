@@ -9,6 +9,7 @@ import type {
   PlanProgressRecord,
   PresentationRecord,
   SettingRecord,
+  SyncBaseRecord,
   TranslationRecord,
   VerseRecord,
 } from './types';
@@ -28,6 +29,7 @@ export class LampstandDB extends Dexie {
   journal!: EntityTable<JournalRecord, 'date'>;
   planDefs!: EntityTable<PlanDefRecord, 'id'>;
   entries!: EntityTable<JournalEntryRecord, 'id'>;
+  syncBase!: EntityTable<SyncBaseRecord, 'key'>;
 
   constructor(name = DB_NAME) {
     super(name);
@@ -70,6 +72,8 @@ export class LampstandDB extends Dexie {
     this.version(6).stores({
       entries: 'id, date, kind, updatedAt, [planId+planDay], [chapterBook+chapterNumber]',
     });
+    // Account sync: what each record looked like when last synced (src/features/account/sync.ts).
+    this.version(7).stores({ syncBase: 'key' });
     // Every write (reader, backups) keeps the chapter list in step with the ref.
     this.marks.hook('creating', (_key, m) => {
       m.chapters = markChapters(m.ref);

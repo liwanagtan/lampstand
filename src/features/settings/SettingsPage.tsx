@@ -11,7 +11,7 @@ import { loadBackgrounds, type BackgroundEntry } from '@/features/library/backgr
 import { useAsset } from '@/slides/useAsset';
 import { OVERLAY_MODES, TEMPLATE_IDS, type OverlayMode, type UiMode } from '@/schema/common';
 import { getTemplate } from '@/templates/templates';
-import { backupFileName, createBackup, restoreBackup } from './backup';
+import { downloadBackup, restoreBackup } from './backup';
 import { useSettings } from './settingsStore';
 import { ReadingSection, TipsSection } from './MeSections';
 import { RemindersSection } from '@/features/reminders/RemindersSection';
@@ -369,13 +369,7 @@ function DataSection({ embedded = false }: { embedded?: boolean }) {
   const onExport = async () => {
     setExporting(true);
     try {
-      const blob = await createBackup();
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = backupFileName();
-      a.click();
-      setTimeout(() => URL.revokeObjectURL(url), 2000);
+      await downloadBackup();
       toast({
         title: 'Backup saved',
         description:

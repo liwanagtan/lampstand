@@ -6,9 +6,21 @@ const TAG = 'lampstand-reminder';
 const pad = (n) => String(n).padStart(2, '0');
 const localDate = (d) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
 
-function openDb() {
+// The page names the profile it opened (src/db/activeProfile.ts); remind from that one.
+async function activeDbName() {
+  try {
+    const res = await caches.match('/__lampstand/active-db', { cacheName: 'lampstand-profile' });
+    const name = res && (await res.text());
+    return name && /^lampstand(-account-[\w-]+)?$/.test(name) ? name : 'lampstand';
+  } catch {
+    return 'lampstand';
+  }
+}
+
+async function openDb() {
+  const name = await activeDbName();
   return new Promise((resolve, reject) => {
-    const req = indexedDB.open('lampstand');
+    const req = indexedDB.open(name);
     req.onsuccess = () => resolve(req.result);
     req.onerror = () => reject(req.error);
   });

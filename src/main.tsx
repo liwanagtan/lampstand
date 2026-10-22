@@ -6,8 +6,9 @@ import { App } from '@/app/App';
 import { useSettings } from '@/features/settings/settingsStore';
 import { registerServiceWorker } from '@/app/pwa';
 import { listenForInstall } from '@/app/install';
-import { useAccount } from '@/features/account/accountStore';
-import { selectAccountDatabase } from '@/db/db';
+import { markProfileOpened, useAccount } from '@/features/account/accountStore';
+import { db, selectAccountDatabase } from '@/db/db';
+import { publishActiveDatabase } from '@/db/activeProfile';
 import { selectOnboardingAccount } from '@/app/onboarding';
 import { selectAccountStorage } from '@/features/account/storage';
 import { useReader } from '@/features/bible-app/readerStore';
@@ -25,6 +26,8 @@ useAccount.getState().init()
     selectAccountDatabase(userId);
     selectOnboardingAccount(userId);
     selectAccountStorage(userId);
+    markProfileOpened(userId);
+    void publishActiveDatabase(db.name);
     useReader.getState().reloadFromStorage();
     return useSettings.getState().load();
   })

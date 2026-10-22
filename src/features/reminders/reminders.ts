@@ -46,32 +46,51 @@ export function formatTime(time: string): string {
 
 const pad = (n: number) => String(n).padStart(2, '0');
 
-/** A daily calendar event at your reading time, with an alert, for any phone's calendar. */
-export function reminderIcs(time: string, url: string, now = new Date()): string {
-  const [h = 7, m = 0] = time.split(':').map(Number);
+/** Daily calendar events with alerts, bundled into one file. */
+export function remindersIcs(
+  choices: readonly { time: string; kind: 'morning' | 'reading' }[],
+  url: string,
+  now = new Date(),
+): string {
   const day = `${now.getFullYear()}${pad(now.getMonth() + 1)}${pad(now.getDate())}`;
   const stamp = new Date().toISOString().replace(/[-:]/g, '').replace(/\.\d+/, '');
+  const events = choices.flatMap(({ time, kind }) => {
+    const [h = 7, m = 0] = time.split(':').map(Number);
+    return [
+      'BEGIN:VEVENT',
+      `UID:lampstand-${kind}-${day}@lampstand`,
+      `DTSTAMP:${stamp}`,
+      // Floating local time: the reminder follows you across time zones.
+      `DTSTART:${day}T${pad(h)}${pad(m)}00`,
+      'DURATION:PT10M',
+      'RRULE:FREQ=DAILY',
+      `SUMMARY:${kind === 'morning' ? 'Morning reading' : 'Reading time'} — Lampstand`,
+      `DESCRIPTION:A few quiet minutes in the Word. Open Lampstand: ${url}`,
+      `URL:${url}`,
+      'BEGIN:VALARM',
+      'ACTION:DISPLAY',
+      'DESCRIPTION:Time for today’s reading',
+      'TRIGGER:PT0M',
+      'END:VALARM',
+      'END:VEVENT',
+    ];
+  });
   return [
     'BEGIN:VCALENDAR',
     'VERSION:2.0',
     'PRODID:-//Lampstand//Reading reminder//EN',
-    'BEGIN:VEVENT',
-    `UID:lampstand-reading-${day}@lampstand`,
-    `DTSTAMP:${stamp}`,
-    // Floating local time: the reminder follows you across time zones.
-    `DTSTART:${day}T${pad(h)}${pad(m)}00`,
-    'DURATION:PT10M',
-    'RRULE:FREQ=DAILY',
-    'SUMMARY:Daily reading — Lampstand',
-    `DESCRIPTION:A few quiet minutes in the Word. Open Lampstand: ${url}`,
-    `URL:${url}`,
-    'BEGIN:VALARM',
-    'ACTION:DISPLAY',
-    'DESCRIPTION:Time for today’s reading',
-    'TRIGGER:PT0M',
-    'END:VALARM',
-    'END:VEVENT',
+    ...events,
     'END:VCALENDAR',
     '',
   ].join('\r\n');
+}
+
+/** One daily calendar event, kept for existing callers. */
+export function reminderIcs(
+  time: string,
+  url: string,
+  now = new Date(),
+  kind: 'morning' | 'reading' = 'reading',
+): string {
+  return remindersIcs([{ time, kind }], url, now);
 }

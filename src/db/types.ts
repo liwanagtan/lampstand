@@ -88,6 +88,8 @@ export interface RemindersState {
   time: string;
   /** The local date (YYYY-MM-DD) a reminder last went out, so it fires once a day. */
   lastNotified: string | null;
+  /** Optional second reminder for a chosen reading time. Missing in older saved settings. */
+  reading?: { enabled: boolean; time: string; lastNotified: string | null };
 }
 
 export interface TipsState {

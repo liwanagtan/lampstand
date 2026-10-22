@@ -2,7 +2,13 @@ import { useState } from 'react';
 import { BookOpen, Trash2 } from 'lucide-react';
 import { Button, IconButton, Input, Sheet, Tooltip, cx, toast } from '@/design-system/components';
 import type { JournalEntryRecord } from '@/db/types';
-import { formatRef, fromOsis, parseRefDetailed, toOsis } from '@/features/bible/ref';
+import {
+  formatRef,
+  fromOsis,
+  parseRefDetailed,
+  toOsis,
+  verseCountInRange,
+} from '@/features/bible/ref';
 import { usePassage } from '@/slides/usePassage';
 import { EntryEditor } from './EntryEditor';
 import { deleteEntry, useEntry, type EntryDraft } from './journal';
@@ -128,17 +134,21 @@ function EntryForm({ entry }: { entry: JournalEntryRecord | EntryDraft }) {
 function VersePreview({ osis }: { osis: string }) {
   const translation = useReader((s) => s.translation);
   const open = useOpenInReader();
-  const { passage } = usePassage(osis, translation);
   const range = fromOsis(osis);
+  const excerpt = range ? verseCountInRange(range) > 5 : false;
+  const { passage } = usePassage(
+    excerpt && range ? toOsis({ start: range.start, end: range.start }) : osis,
+    translation,
+  );
   const text = passage?.verses
     .filter((v) => !v.missing)
     .map((v) => v.text)
     .join(' ');
   return (
     <blockquote className={cx(styles.quote)}>
-      <span className={styles.quoteText}>{text ?? ' '}</span>
+      <span className={styles.quoteText}>{text ? `${text}${excerpt ? '…' : ''}` : ' '}</span>
       <footer>
-        {passage?.reference ?? (range ? formatRef(range) : '')} · {translation}
+        {range ? formatRef(range) : (passage?.reference ?? '')} · {translation}
         {range && (
           <Button size="sm" variant="ghost" onClick={() => open(range)} className={styles.push}>
             Open in reader

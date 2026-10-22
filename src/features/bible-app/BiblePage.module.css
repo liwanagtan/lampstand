@@ -56,6 +56,11 @@
   max-width: 44em;
   margin: 0 auto;
 }
+.chapterReflect {
+  display: flex;
+  justify-content: center;
+  margin-top: var(--space-4);
+}
 .parallel {
   max-width: 82em;
 }

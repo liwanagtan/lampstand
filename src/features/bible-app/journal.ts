@@ -34,6 +34,9 @@ export const entryHasContent = (
       Object.values(e.answers ?? {}).some((a) => a.trim())),
   );
 
+const entryHasWriting = (e: Pick<JournalEntryRecord, 'body' | 'answers'>) =>
+  Boolean(e.body.trim() || Object.values(e.answers ?? {}).some((answer) => answer.trim()));
+
 /** First line of an entry, for lists. */
 export function entryPreview(e: JournalEntryRecord): string {
   const parts = [e.body, ...PROMPTS.map((p) => e.answers?.[p.id] ?? '')];
@@ -58,7 +61,8 @@ export async function saveEntry(draft: EntryDraft): Promise<void> {
   };
   await db.transaction('rw', db.entries, async () => {
     const prev = await db.entries.get(draft.id);
-    if (!entryHasContent(clean)) {
+    // A prefilled passage title is context, not a written response.
+    if (!(clean.kind === 'reflection' ? entryHasWriting(clean) : entryHasContent(clean))) {
       if (prev) await db.entries.delete(draft.id);
       return;
     }
@@ -86,6 +90,40 @@ export function useEntries(): JournalEntryRecord[] | undefined {
 
 export function useEntry(id: string | null): JournalEntryRecord | null | undefined {
   return useLiveQuery(async () => (id ? ((await db.entries.get(id)) ?? null) : null), [id]);
+}
+
+/** A saved response to one plan reading, independent of the reading's completion state. */
+export function usePlanReflection(
+  planId: string,
+  planDay: number,
+): JournalEntryRecord | null | undefined {
+  return useLiveQuery(async () => {
+    if (!planId || !Number.isInteger(planDay) || planDay < 1) return null;
+    const entries = await db.entries.where('[planId+planDay]').equals([planId, planDay]).toArray();
+    return (
+      entries
+        .filter((entry) => entry.kind === 'reflection')
+        .sort((a, b) => b.updatedAt - a.updatedAt)[0] ?? null
+    );
+  }, [planId, planDay]);
+}
+
+/** Most recent reflection for a Bible chapter (outside a plan). */
+export function useChapterReflection(
+  book: string,
+  chapter: number,
+): JournalEntryRecord | null | undefined {
+  return useLiveQuery(async () => {
+    const entries = await db.entries
+      .where('[chapterBook+chapterNumber]')
+      .equals([book, chapter])
+      .toArray();
+    return (
+      entries
+        .filter((entry) => entry.kind === 'reflection')
+        .sort((a, b) => b.updatedAt - a.updatedAt)[0] ?? null
+    );
+  }, [book, chapter]);
 }
 
 /** Today's reflection on the verse of the day, if one was written. */

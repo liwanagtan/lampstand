@@ -163,6 +163,12 @@ export interface JournalEntryRecord {
   kind: 'reflection' | 'journal';
   /** Canonical verse or range the entry is about, e.g. PSA.46.10. */
   ref?: string;
+  /** The plan reading that prompted this entry, if any. */
+  planId?: string;
+  planDay?: number;
+  /** A standalone Bible chapter that prompted this entry, if any. */
+  chapterBook?: string;
+  chapterNumber?: number;
   title?: string;
   body: string;
   /** Answers to the guided prompts, by prompt id. */

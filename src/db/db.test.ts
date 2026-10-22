@@ -32,6 +32,39 @@ describe('LampstandDB', () => {
     expect(await db.verses.where('code').equals('WEB').count()).toBe(1);
     db.close();
   });
+
+  it('indexes reflections by their plan reading and Bible chapter', async () => {
+    const db = new LampstandDB('test-reflection-indexes');
+    await db.entries.bulkPut([
+      {
+        id: 'plan',
+        date: '2026-10-22',
+        kind: 'reflection',
+        body: 'A thought',
+        planId: 'gospels-40',
+        planDay: 2,
+        createdAt: 1,
+        updatedAt: 1,
+      },
+      {
+        id: 'chapter',
+        date: '2026-10-22',
+        kind: 'reflection',
+        body: 'Another thought',
+        chapterBook: 'JHN',
+        chapterNumber: 1,
+        createdAt: 1,
+        updatedAt: 1,
+      },
+    ]);
+    expect((await db.entries.where('[planId+planDay]').equals(['gospels-40', 2]).first())?.id).toBe(
+      'plan',
+    );
+    expect(
+      (await db.entries.where('[chapterBook+chapterNumber]').equals(['JHN', 1]).first())?.id,
+    ).toBe('chapter');
+    db.close();
+  });
 });
 
 it('moves version-2 journal days into entries', async () => {

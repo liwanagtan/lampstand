@@ -696,13 +696,13 @@ function Verses({
             >
               <span className={cx(styles.text, v.missing && styles.missing)}>
                 <sup className={styles.mobileVerseNum}>{v.verse}</sup>
-                {(bookmarked || notes?.length || studyByVerse.has(v.verse)) && (
-                  // Phones: the margin is hidden, so small marks show what is here; tapping the
-                  // verse opens them in the selection bar.
+                {(bookmarked || notes?.length) && (
+                  // Phones: the margin is hidden, so small marks show your own bookmarks and notes;
+                  // tapping the verse opens them. (Study notes are on most verses: marking each
+                  // would crowd the text, so the selection bar offers them instead.)
                   <span className={styles.mobileMarks} aria-hidden>
                     {bookmarked && <Bookmark size={11} fill="currentColor" />}
                     {notes?.length ? <StickyNote size={11} /> : null}
-                    {studyByVerse.has(v.verse) && <BookText size={11} />}
                   </span>
                 )}
                 {v.missing ? (

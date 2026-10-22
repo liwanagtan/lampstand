@@ -377,7 +377,7 @@ function DataSection({ embedded = false }: { embedded?: boolean }) {
       toast({
         title: 'Backup saved',
         description:
-          'Includes your journal, notes, highlights, bookmarks, plan progress, preferences and presentations.',
+          'Includes your journal, notes, highlights, bookmarks, plan progress, reading positions, preferences and presentations.',
         tone: 'success',
       });
     } finally {
@@ -431,9 +431,10 @@ function DataSection({ embedded = false }: { embedded?: boolean }) {
         {usage && <span className={cx(styles.muted, styles.usage)}>{usage}</span>}
       </div>
       <p className={styles.small}>
-        Your backup includes journal entries, notes, highlights, bookmarks, plan progress,
-        preferences and presentations. Keep a copy before changing devices. Import merges saved
-        content without deleting existing items.
+        Your backup includes journal entries, notes, highlights, bookmarks, plan progress, reading
+        positions, preferences and presentations. Keep a copy before changing devices. Import merges
+        saved content, restores backed-up preferences and fills missing reading positions without
+        deleting existing entries.
       </p>
     </div>
   );

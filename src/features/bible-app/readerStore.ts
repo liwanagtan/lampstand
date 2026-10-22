@@ -58,6 +58,7 @@ interface ReaderState extends ReaderPrefs {
   /** Navigation can focus a passage without opening the verse action bar. */
   selectionActionsOpen: boolean;
   recent: { book: string; chapter: number }[];
+  reloadFromStorage: () => void;
   goTo: (book: string, chapter: number, select?: Selection | null) => void;
   setTranslation: (code: string) => void;
   setParallel: (code: string | null) => void;
@@ -129,6 +130,7 @@ export const useReader = create<ReaderState>((set, get) => ({
   selection: null,
   selectionActionsOpen: false,
   recent: recentChapters(),
+  reloadFromStorage: () => set({ ...readPrefs(), recent: recentChapters() }),
   goTo: (book, chapter, select = null) => {
     const recent = [
       { book, chapter },

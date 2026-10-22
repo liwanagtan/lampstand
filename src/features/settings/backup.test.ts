@@ -4,6 +4,28 @@ import sample from '../../../tests/fixtures/sample-sermon.lampstand.json';
 import { validatePresentation } from '@/schema/validate';
 import { createPresentation } from '@/features/library/presentations';
 import { createBackup, restoreBackup } from './backup';
+import { useSettings } from './settingsStore';
+import {
+  biblePosition,
+  recentPlanDay,
+  rememberBiblePosition,
+  rememberPlanDay,
+} from '@/features/bible-app/readingResume';
+
+const saved = new Map<string, string>();
+vi.stubGlobal('localStorage', {
+  getItem: (key: string) => saved.get(key) ?? null,
+  setItem: (key: string, value: string) => {
+    saved.set(key, value);
+  },
+  removeItem: (key: string) => {
+    saved.delete(key);
+  },
+  clear: () => {
+    saved.clear();
+  },
+});
+beforeEach(() => saved.clear());
 
 it('backs up presentations and assets and restores them into an empty library', async () => {
   const r = validatePresentation(sample);
@@ -108,4 +130,36 @@ it('rejects files that are not backups', async () => {
     'not a Lampstand backup',
   );
   await expect(restoreBackup(new File(['nope'], 'x.json'))).rejects.toThrow("isn't a valid backup");
+});
+
+it('restores profile settings and reading positions from a backup', async () => {
+  await db.settings.put({ key: 'profile', value: { name: 'Ana', faithJourney: ['new'] } });
+  rememberPlanDay('gospels-40', 3);
+  rememberBiblePosition('JHN', 3, 428);
+  const text = await (await createBackup()).text();
+
+  await db.settings.clear();
+  localStorage.clear();
+  await useSettings.getState().load();
+  await restoreBackup(new File([text], 'backup.json'));
+
+  expect(useSettings.getState().profile).toMatchObject({ name: 'Ana', faithJourney: ['new'] });
+  expect(recentPlanDay()).toEqual({ planId: 'gospels-40', day: 3 });
+  expect(biblePosition('JHN', 3)).toBe(428);
+});
+
+it('keeps current reading positions and ignores unknown backup settings', async () => {
+  rememberPlanDay('current', 2);
+  const backup = {
+    format: 'lampstand-backup',
+    version: 1,
+    exportedAt: '2026-10-23T00:00:00Z',
+    presentations: [],
+    assets: [],
+    settings: [{ key: 'unknown', value: 'bad' }],
+    reading: { 'lampstand.recentPlanDay.v1': JSON.stringify({ planId: 'older', day: 1 }) },
+  };
+  await restoreBackup(new File([JSON.stringify(backup)], 'backup.json'));
+  expect(recentPlanDay()).toEqual({ planId: 'current', day: 2 });
+  expect(await db.settings.get('unknown' as never)).toBeUndefined();
 });

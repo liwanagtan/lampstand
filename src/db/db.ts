@@ -66,6 +66,10 @@ export class LampstandDB extends Dexie {
             m.chapters = markChapters(m.ref);
           });
       });
+    // Find a private reflection for the reading that prompted it without scanning the journal.
+    this.version(6).stores({
+      entries: 'id, date, kind, updatedAt, [planId+planDay], [chapterBook+chapterNumber]',
+    });
     // Every write (reader, backups) keeps the chapter list in step with the ref.
     this.marks.hook('creating', (_key, m) => {
       m.chapters = markChapters(m.ref);

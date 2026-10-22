@@ -88,6 +88,8 @@ export interface RemindersState {
   time: string;
   /** The local date (YYYY-MM-DD) a reminder last went out, so it fires once a day. */
   lastNotified: string | null;
+  /** Optional second reminder for a chosen reading time. Missing in older saved settings. */
+  reading?: { enabled: boolean; time: string; lastNotified: string | null };
 }
 
 export interface TipsState {
@@ -139,6 +141,10 @@ export interface PlanProgressRecord {
   done: number[];
   /** When each day was finished (epoch ms), for the week view. Missing on older records. */
   doneAt?: Record<number, number>;
+  /** Optional personal reading rhythm; the plan's published pace remains unchanged. */
+  rhythm?: 'open' | 'daily' | 'every-few-days' | 'weekly';
+  rhythmChangedAt?: number;
+  pausedAt?: number;
   updatedAt: number;
 }
 
@@ -157,6 +163,12 @@ export interface JournalEntryRecord {
   kind: 'reflection' | 'journal';
   /** Canonical verse or range the entry is about, e.g. PSA.46.10. */
   ref?: string;
+  /** The plan reading that prompted this entry, if any. */
+  planId?: string;
+  planDay?: number;
+  /** A standalone Bible chapter that prompted this entry, if any. */
+  chapterBook?: string;
+  chapterNumber?: number;
   title?: string;
   body: string;
   /** Answers to the guided prompts, by prompt id. */

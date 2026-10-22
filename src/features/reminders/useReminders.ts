@@ -15,32 +15,44 @@ export function useReminders(): void {
   const entries = useEntries();
 
   useEffect(() => {
-    void setBackgroundCheck(reminders.enabled);
-  }, [reminders.enabled]);
+    void setBackgroundCheck(reminders.enabled || Boolean(reminders.reading?.enabled));
+  }, [reminders.enabled, reminders.reading?.enabled]);
 
   useEffect(() => {
-    if (!reminders.enabled || !plans || !progress || !entries) return;
-    const due = nextReminderAt(reminders.time, new Date(), reminders.lastNotified);
-    if (due === null) return;
-    const id = window.setTimeout(() => {
-      const now = new Date();
-      const today = localDate(now);
-      const { set, reminders: r } = useSettings.getState();
-      void set('reminders', { ...r, lastNotified: today });
-      if (readToday(progress, entries, today)) return;
-      // Name the reading that's up next in the plan you touched most recently.
-      let next: { plan: string; label: string } | null = null;
-      for (const pr of [...progress].sort((a, b) => b.updatedAt - a.updatedAt)) {
-        const plan = plans.find((p) => p.id === pr.planId);
-        const status = plan && currentDay(plan, pr, now);
-        if (plan && status?.kind === 'read') {
-          next = { plan: plan.name, label: `${isLessons(plan) ? 'Lesson' : 'Day'} ${status.day}` };
-          break;
+    if (!plans || !progress || !entries) return;
+    const schedule = (kind: 'morning' | 'reading') => {
+      const choice = kind === 'morning' ? reminders : reminders.reading;
+      if (!choice?.enabled) return null;
+      const due = nextReminderAt(choice.time, new Date(), choice.lastNotified);
+      if (due === null) return null;
+      return window.setTimeout(() => {
+        const now = new Date();
+        const today = localDate(now);
+        const { set, reminders: r } = useSettings.getState();
+        if (kind === 'morning') void set('reminders', { ...r, lastNotified: today });
+        else void set('reminders', { ...r, reading: { ...r.reading!, lastNotified: today } });
+        if (readToday(progress, entries, today)) return;
+        // Name the reading that's up next in the plan you touched most recently.
+        let next: { plan: string; label: string } | null = null;
+        for (const pr of [...progress].sort((a, b) => b.updatedAt - a.updatedAt)) {
+          const plan = plans.find((p) => p.id === pr.planId);
+          const status = plan && currentDay(plan, pr, now);
+          if (plan && status?.kind === 'read') {
+            next = {
+              plan: plan.name,
+              label: `${isLessons(plan) ? 'Lesson' : 'Day'} ${status.day}`,
+            };
+            break;
+          }
         }
-      }
-      const msg = reminderMessage(next, formatRef(verseOfTheDay(now).range));
-      void showReminder(msg.title, msg.body);
-    }, due - Date.now());
-    return () => window.clearTimeout(id);
+        const msg = reminderMessage(next, formatRef(verseOfTheDay(now).range));
+        void showReminder(msg.title, msg.body, `lampstand-${kind}-reminder`);
+      }, due - Date.now());
+    };
+    const ids = [schedule('morning'), schedule('reading')];
+    return () =>
+      ids.forEach((id) => {
+        if (id !== null) window.clearTimeout(id);
+      });
   }, [reminders, plans, progress, entries]);
 }

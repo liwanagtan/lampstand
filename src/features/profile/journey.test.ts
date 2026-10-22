@@ -64,4 +64,10 @@ describe('journey summary', () => {
     expect(journeyLine(s)).toBe('Your reading, reflections and marks, all in one place.');
     expect(s.since).toBeNull();
   });
+
+  it('names paused plans separately from plans in progress', () => {
+    const paused = { ...progress('a', [1], { 1: oct(4) }), pausedAt: oct(5) };
+    const stats = journeyStats({ plans: [plan('a', 2)], progress: [paused], entries: [], marks: [], now });
+    expect(journeyLine(stats)).toBe('1 plan paused · 1 day read this month');
+  });
 });

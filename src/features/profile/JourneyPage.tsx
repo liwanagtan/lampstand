@@ -65,9 +65,11 @@ export function JourneyPage() {
                       <strong>{plan.name}</strong>
                       <small>
                         {progress.done.length} of {plan.days.length} ·{' '}
-                        {currentDay(plan, progress).kind === 'read'
-                          ? 'Next reading ready'
-                          : 'Reading in progress'}
+                        {progress.pausedAt
+                          ? 'Paused · progress saved'
+                          : currentDay(plan, progress).kind === 'read'
+                            ? 'Next reading ready'
+                            : 'Reading in progress'}
                       </small>
                     </span>
                     <ChevronRight size={18} aria-hidden />

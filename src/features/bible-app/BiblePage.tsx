@@ -1,4 +1,5 @@
 import { useWideLayout } from '@/app/useWideLayout';
+import { useNavigate } from 'react-router-dom';
 import {
   useEffect,
   useLayoutEffect,
@@ -21,7 +22,7 @@ import {
   StickyNote,
   X,
 } from 'lucide-react';
-import { Button, IconButton, Tooltip, cx, toast } from '@/design-system/components';
+import { Button, Dialog, IconButton, Tooltip, cx, toast } from '@/design-system/components';
 import { BOOKS, BOOK_BY_CODE, BOOK_INDEX } from '@/features/bible/books';
 import {
   defaultVerseCounts,
@@ -52,6 +53,10 @@ import { noteTipEvent } from '@/features/tips/tipStore';
 import { useSettings } from '@/features/settings/settingsStore';
 import { selectionRange, useReader, type Selection } from './readerStore';
 import { chapterCount, useChapter } from './useChapter';
+import { biblePosition, rememberBiblePosition } from './readingResume';
+import { useChapterReflection } from './journal';
+import { ReflectionMoment } from './ReflectionMoment';
+import { paths } from '@/app/paths';
 import styles from './BiblePage.module.css';
 
 export interface BiblePageSlots {
@@ -78,6 +83,7 @@ function stepChapter(
 
 /** The Bible reader: navigate, search, read in one or two translations, select verses. */
 export function BibleReader({ toolbar, selectionActions }: BiblePageSlots) {
+  const navigate = useNavigate();
   const {
     book,
     chapter,
@@ -94,6 +100,7 @@ export function BibleReader({ toolbar, selectionActions }: BiblePageSlots) {
   } = useReader();
   const [picking, setPicking] = useState(false);
   const [reading, setReading] = useState(false);
+  const [reflecting, setReflecting] = useState(false);
   const [study, setStudy] = useState<number | 'intro' | null>(null);
   const wide = useWideLayout();
   const [noteFor, setNoteFor] = useState<{ range: RefRange; note: MarkRecord | null } | null>(null);
@@ -110,13 +117,28 @@ export function BibleReader({ toolbar, selectionActions }: BiblePageSlots) {
   // The toolbar quiets while you read down the page and returns when you scroll back up.
   const [quiet, setQuiet] = useState(false);
   const lastTop = useRef(0);
+  const restoringPosition = useRef(true);
+  const restoredChapter = useRef('');
+  const savePositionTimer = useRef<number | null>(null);
   const onScroll = () => {
     const top = body.current?.scrollTop ?? 0;
     if (top < 120 || top < lastTop.current - 4) setQuiet(false);
     else if (top > lastTop.current + 4) setQuiet(true);
     lastTop.current = top;
+    if (restoringPosition.current) return;
+    if (savePositionTimer.current !== null) window.clearTimeout(savePositionTimer.current);
+    savePositionTimer.current = window.setTimeout(() => {
+      rememberBiblePosition(book, chapter, top);
+      savePositionTimer.current = null;
+    }, 200);
   };
   const bookName = BOOK_BY_CODE.get(book)?.name ?? book;
+  const savedReflection = useChapterReflection(book, chapter);
+  const lastVerse = defaultVerseCounts(book)?.[chapter - 1] ?? 1;
+  const chapterRef = toOsis({
+    start: { book, chapter, verse: 1 },
+    end: { book, chapter, verse: lastVerse },
+  });
   const single = chapterCount(translation, book) === 1;
   const place = single ? bookName : `${bookName} ${chapter}`;
   const readingButton = <TranslationChip onClick={() => setReading(true)} />;
@@ -141,10 +163,42 @@ export function BibleReader({ toolbar, selectionActions }: BiblePageSlots) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [primary?.osis, selection?.start]);
 
+  useLayoutEffect(() => {
+    restoringPosition.current = true;
+    restoredChapter.current = '';
+    if (!selection) body.current?.scrollTo({ top: 0, behavior: 'instant' });
+    return () => {
+      if (savePositionTimer.current !== null) window.clearTimeout(savePositionTimer.current);
+      savePositionTimer.current = null;
+      if (!restoringPosition.current) rememberBiblePosition(book, chapter, lastTop.current);
+    };
+    // A new chapter starts at its own saved position once its verses have loaded.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [book, chapter]);
+
+  useLayoutEffect(() => {
+    if (!primary) return;
+    const key = `${book}.${chapter}`;
+    if (restoredChapter.current === key) return;
+    restoredChapter.current = key;
+    if (!selection)
+      body.current?.scrollTo({ top: biblePosition(book, chapter), behavior: 'instant' });
+    lastTop.current = body.current?.scrollTop ?? 0;
+    restoringPosition.current = false;
+  }, [primary, book, chapter, selection]);
+
+  useEffect(() => {
+    const flush = () => {
+      if (!restoringPosition.current)
+        rememberBiblePosition(book, chapter, body.current?.scrollTop ?? lastTop.current);
+    };
+    window.addEventListener('pagehide', flush);
+    return () => window.removeEventListener('pagehide', flush);
+  }, [book, chapter]);
+
   // A new chapter starts at the top unless a verse was chosen.
   const firstChapter = useRef(true);
   useEffect(() => {
-    if (!useReader.getState().selection) body.current?.scrollTo({ top: 0 });
     // Moving on to another chapter is a natural moment for a reading tip.
     if (firstChapter.current) firstChapter.current = false;
     else void noteTipEvent('chapter-read');
@@ -296,9 +350,9 @@ export function BibleReader({ toolbar, selectionActions }: BiblePageSlots) {
                   studyByVerse={studyByVerse}
                   onOpenStudy={(verse) => setStudy(verse)}
                 />
-              {(primary.copyright || second?.copyright) && (
-                <p className={styles.loading}>{primary.copyright || second?.copyright}</p>
-              )}
+                {(primary.copyright || second?.copyright) && (
+                  <p className={styles.loading}>{primary.copyright || second?.copyright}</p>
+                )}
               </>
             ) : (
               <p className={styles.loading}>Loading…</p>
@@ -311,6 +365,17 @@ export function BibleReader({ toolbar, selectionActions }: BiblePageSlots) {
                 Next chapter
               </Button>
             </nav>
+            {primary && (
+              <div className={styles.chapterReflect}>
+                <Button
+                  variant="secondary"
+                  icon={<NotebookPen size={16} />}
+                  onClick={() => setReflecting(true)}
+                >
+                  Reflect on this chapter
+                </Button>
+              </div>
+            )}
           </article>
         </div>
 
@@ -459,6 +524,27 @@ export function BibleReader({ toolbar, selectionActions }: BiblePageSlots) {
         onPickBookmark={marksOn ? (r) => onSearchGo(r) : undefined}
       />
       <ReadingSettings open={reading} onOpenChange={setReading} />
+      <Dialog
+        open={reflecting}
+        onOpenChange={setReflecting}
+        title="After reading"
+        description={`${place} · Reflection is optional and private.`}
+        size="lg"
+      >
+        <ReflectionMoment
+          plain
+          question="What stands out to you in this passage?"
+          reference={chapterRef}
+          title={place}
+          chapter={{ book, number: chapter }}
+          saved={savedReflection}
+          onReturn={() => setReflecting(false)}
+          onFinish={() => {
+            setReflecting(false);
+            navigate(paths.today);
+          }}
+        />
+      </Dialog>
     </div>
   );
 }

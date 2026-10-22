@@ -15,6 +15,7 @@ import {
 } from './plans';
 import styles from './Daily.module.css';
 import { CompletedPlanActions } from './CompletedPlanActions';
+import { PlanPacingControls } from './PlanPacingControls';
 
 const dateFormat = new Intl.DateTimeFormat(undefined, {
   weekday: 'long',
@@ -27,14 +28,23 @@ export function ActivePlan({
   plan,
   progress,
   compact = false,
+  resumeDay,
 }: {
   plan: Plan;
   progress: PlanProgressRecord;
   compact?: boolean;
+  resumeDay?: number;
 }) {
   const navigate = useNavigate();
   const [stopping, setStopping] = useState(false);
-  const status = currentDay(plan, progress);
+  const next = currentDay(plan, progress);
+  const status =
+    next.kind === 'read' &&
+    resumeDay &&
+    plan.days[resumeDay - 1] &&
+    !progress.done.includes(resumeDay)
+      ? { kind: 'read' as const, day: resumeDay }
+      : next;
   const total = plan.days.length;
   const pct = Math.round((progress.done.length / total) * 100);
   const unit = isLessons(plan) ? 'Lesson' : 'Day';
@@ -42,7 +52,7 @@ export function ActivePlan({
 
   return (
     <section
-      className={cx(styles.card, compact ? styles.compact : styles.hero)}
+      className={cx(styles.card, compact ? styles.compact : styles.hero, progress.pausedAt && styles.paused)}
       aria-label={plan.name}
     >
       <div className={styles.cardHead}>
@@ -103,7 +113,7 @@ export function ActivePlan({
       {status.kind === 'read' && day && (
         <>
           <p className={styles.upNext}>
-            {currentLabel(plan)} · {unit} {status.day}
+            {currentLabel(plan, progress)} · {unit} {status.day}
           </p>
           <p className={styles.reading}>{day.title ?? formatDay(day)}</p>
           <p className={styles.readingMeta}>
@@ -118,7 +128,7 @@ export function ActivePlan({
               icon={<BookOpen size={16} />}
               onClick={() => navigate(paths.planDay(plan.id, status.day))}
             >
-              Read {unit.toLowerCase()} {status.day}
+              {resumeDay === status.day ? 'Continue' : 'Read'} {unit.toLowerCase()} {status.day}
             </Button>
             {!compact && (
               <Button
@@ -142,7 +152,9 @@ export function ActivePlan({
           </p>
         </>
       )}
+      {status.kind === 'paused' && <p className={styles.muted}>Paused. Your finished readings are saved; resume whenever you are ready.</p>}
       {status.kind === 'finished' && <CompletedPlanActions plan={plan} />}
+      {status.kind !== 'finished' && <PlanPacingControls plan={plan} progress={progress} compact={compact} />}
       <Dialog
         open={stopping}
         onOpenChange={setStopping}

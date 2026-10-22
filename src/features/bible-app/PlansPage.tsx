@@ -52,7 +52,8 @@ export function PlansPage() {
   });
   const completedIds = new Set(completed.map((p) => p.id));
   const isActive = (p: Plan) => byId.has(p.id) && !completedIds.has(p.id);
-  const active = all.filter(isActive);
+  const active = all.filter((p) => isActive(p) && !byId.get(p.id)?.pausedAt);
+  const paused = all.filter((p) => isActive(p) && Boolean(byId.get(p.id)?.pausedAt));
   const activeCount = activePlanCount(all, progress ?? []);
   const searching = query.trim() !== '' || pace !== 'all' || audience !== 'all';
   const results = searching ? searchPlans(all, query, pace, audience) : [];
@@ -85,6 +86,16 @@ export function PlansPage() {
             {active.map((plan) => (
               <ActivePlan key={plan.id} plan={plan} progress={byId.get(plan.id)!} />
             ))}
+          </div>
+        </section>
+      )}
+
+      {paused.length > 0 && (
+        <section className={styles.section} aria-label="Paused plans">
+          <h2 className={`${styles.activeHeading} ${styles.pausedHeading}`}>Paused plans</h2>
+          <p className={styles.groupText}>Your progress is here whenever you want to return.</p>
+          <div className={styles.activeGrid}>
+            {paused.map((plan) => <ActivePlan key={plan.id} plan={plan} progress={byId.get(plan.id)!} />)}
           </div>
         </section>
       )}

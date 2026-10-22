@@ -1,5 +1,5 @@
 import type { JournalEntryRecord, PlanProgressRecord } from '@/db/types';
-import { nextReminderAt, readToday, reminderIcs, reminderMessage } from './reminders';
+import { nextReminderAt, readToday, reminderIcs, reminderMessage, remindersIcs } from './reminders';
 
 const at = (s: string) => new Date(s);
 
@@ -40,5 +40,27 @@ describe('reading reminders', () => {
     expect(ics).toContain('RRULE:FREQ=DAILY');
     expect(ics).toContain('BEGIN:VALARM');
     expect(ics.split('\r\n')[0]).toBe('BEGIN:VCALENDAR');
+    const morning = reminderIcs(
+      '07:30',
+      'https://lampstand.app/',
+      at('2026-10-18T09:00'),
+      'morning',
+    );
+    expect(morning).toContain('UID:lampstand-morning-20261018@lampstand');
+    expect(ics).toContain('UID:lampstand-reading-20261018@lampstand');
+  });
+
+  it('puts both selected reminders in one calendar file', () => {
+    const ics = remindersIcs(
+      [
+        { kind: 'morning', time: '07:00' },
+        { kind: 'reading', time: '19:00' },
+      ],
+      'https://lampstand.app/',
+      at('2026-10-18T09:00'),
+    );
+    expect(ics.match(/BEGIN:VEVENT/g)).toHaveLength(2);
+    expect(ics).toContain('DTSTART:20261018T070000');
+    expect(ics).toContain('DTSTART:20261018T190000');
   });
 });

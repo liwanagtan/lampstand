@@ -42,27 +42,46 @@ async function maybeRemind() {
   const settings = await getAll(db, 'settings');
   const row = settings.find((r) => r.key === 'reminders');
   const r = row && row.value;
-  if (!r || !r.enabled) return;
+  if (!r) return;
   const now = new Date();
   const today = localDate(now);
-  if (r.lastNotified === today) return;
-  const [h, m] = String(r.time || '07:00').split(':').map(Number);
-  if (now.getHours() * 60 + now.getMinutes() < h * 60 + m) return;
+  const due = [
+    { kind: 'morning', value: r },
+    { kind: 'reading', value: r.reading },
+  ].filter(({ value }) => {
+    if (!value?.enabled || value.lastNotified === today) return false;
+    const [h, m] = String(value.time || '07:00')
+      .split(':')
+      .map(Number);
+    return (
+      Number.isInteger(h) &&
+      Number.isInteger(m) &&
+      now.getHours() * 60 + now.getMinutes() >= h * 60 + m
+    );
+  });
+  if (!due.length) return;
   const plans = await getAll(db, 'plans');
   const entries = await getAll(db, 'entries');
   const readPlan = plans.some((p) =>
     Object.values(p.doneAt || {}).some((t) => localDate(new Date(t)) === today),
   );
   const wrote = entries.some((e) => e.date === today);
-  await put(db, 'settings', { key: 'reminders', value: { ...r, lastNotified: today } });
+  const updated = { ...r };
+  for (const { kind } of due) {
+    if (kind === 'morning') updated.lastNotified = today;
+    else updated.reading = { ...r.reading, lastNotified: today };
+  }
+  await put(db, 'settings', { key: 'reminders', value: updated });
   if (readPlan || wrote) return;
-  await self.registration.showNotification('Time for today’s reading', {
-    body: 'A few quiet minutes in the Word.',
-    tag: TAG,
-    icon: '/icons/icon-192.png',
-    badge: '/icons/icon-192.png',
-    data: { url: '/' },
-  });
+  for (const { kind } of due) {
+    await self.registration.showNotification('Time for today’s reading', {
+      body: 'A few quiet minutes in the Word.',
+      tag: `lampstand-${kind}-reminder`,
+      icon: '/icons/icon-192.png',
+      badge: '/icons/icon-192.png',
+      data: { url: '/' },
+    });
+  }
 }
 
 self.addEventListener('periodicsync', (event) => {

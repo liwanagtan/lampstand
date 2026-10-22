@@ -13,11 +13,11 @@ export async function askPermission(): Promise<NotificationPermission | 'unsuppo
   return Notification.requestPermission();
 }
 
-export async function showReminder(title: string, body: string): Promise<void> {
+export async function showReminder(title: string, body: string, tag = REMINDER_TAG): Promise<void> {
   if (!notificationsSupported() || Notification.permission !== 'granted') return;
   const options: NotificationOptions = {
     body,
-    tag: REMINDER_TAG,
+    tag,
     icon: '/icons/icon-192.png',
     badge: '/icons/icon-192.png',
     data: { url: '/' },

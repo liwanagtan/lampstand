@@ -33,6 +33,10 @@ export function EntryEditor({
     date: entry.date,
     kind: entry.kind,
     ref: entry.ref,
+    planId: entry.planId,
+    planDay: entry.planDay,
+    chapterBook: entry.chapterBook,
+    chapterNumber: entry.chapterNumber,
     title: entry.title,
     body: entry.body,
     answers: entry.answers,
@@ -53,6 +57,18 @@ export function EntryEditor({
 
   // Save what's left when the editor closes.
   useEffect(() => () => flush(), []);
+  useEffect(() => {
+    const saveBeforeLeaving = () => flush();
+    const saveWhenHidden = () => {
+      if (document.visibilityState === 'hidden') flush();
+    };
+    window.addEventListener('pagehide', saveBeforeLeaving);
+    document.addEventListener('visibilitychange', saveWhenHidden);
+    return () => {
+      window.removeEventListener('pagehide', saveBeforeLeaving);
+      document.removeEventListener('visibilitychange', saveWhenHidden);
+    };
+  }, []);
 
   const change = (patch: Partial<EntryDraft>) => {
     const next = {

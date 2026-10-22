@@ -27,8 +27,9 @@ import { useSettings } from '@/features/settings/settingsStore';
 import { StudyNotesSheet } from './StudyNotesSheet';
 import { notesForRange, useStudyNotes } from './studyNotes';
 import { localDate } from './dailyVerses';
-import { newEntryId, type EntryDraft } from './journal';
+import { newEntryId, usePlanReflection, type EntryDraft } from './journal';
 import { EntrySheet } from './JournalEntrySheet';
+import { ReflectionMoment } from './ReflectionMoment';
 import { useReducedMotion } from '@/features/settings/theme';
 import {
   chapterChunks,
@@ -55,6 +56,7 @@ import { MarkedVerseText } from './MarkedVerse';
 import { ReadingSettings } from './ReadingSettings';
 import { TranslationChip } from './TranslationChip';
 import { useVisibleMarks } from './marks';
+import { rememberPlanDay } from './readingResume';
 
 const dateFormat = new Intl.DateTimeFormat(undefined, {
   weekday: 'long',
@@ -67,6 +69,7 @@ export function PlanReaderPage() {
   const { planId = '', day: dayParam = '' } = useParams();
   const plan = usePlan(planId);
   const progress = usePlanProgressFor(planId);
+  const savedReflection = usePlanReflection(planId, Number(dayParam));
   const n = Number(dayParam);
   const navigate = useNavigate();
   const top = useRef<HTMLDivElement>(null);
@@ -75,6 +78,10 @@ export function PlanReaderPage() {
   const [position, setPosition] = useState('');
   // The whole day — note, scripture, devotional, questions, prayer — follows the text size.
   const size = useReader((s) => s.size);
+
+  useEffect(() => {
+    if (plan?.days[n - 1] && !progress?.done.includes(n)) rememberPlanDay(planId, n);
+  }, [plan, progress, planId, n]);
 
   useEffect(() => {
     const root = top.current?.closest('[data-scroll]');
@@ -116,15 +123,19 @@ export function PlanReaderPage() {
   const done = Boolean(progress?.done.includes(n));
   const openReflection = () =>
     setReflect({
-      id: newEntryId(),
-      draft: {
-        id: '',
-        date: localDate(),
-        kind: 'reflection',
-        ref: toOsis(day.readings[0]!),
-        title: `${plan.name} · ${isLessons(plan) ? 'Lesson' : 'Day'} ${n}`,
-        body: '',
-      },
+      id: savedReflection?.id ?? newEntryId(),
+      ...(!savedReflection && {
+        draft: {
+          id: '',
+          date: localDate(),
+          kind: 'reflection',
+          ref: toOsis(day.readings[0]!),
+          title: `${plan.name} · ${isLessons(plan) ? 'Lesson' : 'Day'} ${n}`,
+          body: '',
+          planId: plan.id,
+          planDay: n,
+        },
+      }),
     });
 
   return (
@@ -227,6 +238,7 @@ export function PlanReaderPage() {
         unit={unit}
         onReflect={openReflection}
         position={position}
+        onReturn={() => top.current?.scrollIntoView({ block: 'start' })}
       />
     </div>
   );
@@ -328,6 +340,7 @@ function FinishBlock({
   unit,
   onReflect,
   position,
+  onReturn,
 }: {
   position: string;
   plan: Plan;
@@ -335,6 +348,7 @@ function FinishBlock({
   done: boolean;
   unit: 'Day' | 'Lesson';
   onReflect: () => void;
+  onReturn: () => void;
 }) {
   const navigate = useNavigate();
   const progress = usePlanProgressFor(plan.id);
@@ -343,6 +357,7 @@ function FinishBlock({
   const activeCount = activePlanCount(plans ?? [], allProgress ?? [], plan.id);
   const reduced = useReducedMotion();
   const [justFinished, setJustFinished] = useState(false);
+  const savedReflection = usePlanReflection(plan.id, day);
   const [paceAdviceOpen, setPaceAdviceOpen] = useState(false);
   const doneRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -459,22 +474,23 @@ function FinishBlock({
           {count} of {plan.days.length} readings finished
         </div>
       )}
-      <div className={styles.doneActions}>
-        <Button icon={<NotebookPen size={16} />} onClick={onReflect}>
-          Reflect on today
-        </Button>
-        {next && (
-          <Button
-            variant="gold"
-            className="laptop-only"
-            iconEnd={<ArrowRight size={16} />}
-            onClick={() => navigate(paths.planDay(plan.id, next))}
-          >
-            Read {unit.toLowerCase()} {next} now
-          </Button>
-        )}
-        <Button onClick={() => navigate(paths.today)}>Back to Today</Button>
-        {justFinished && (
+      {justFinished && (
+        <>
+          <ReflectionMoment
+            question={
+              plan.days[day - 1]?.questions?.[0] ?? 'What stands out to you in this passage?'
+            }
+            prayer={plan.days[day - 1]?.prayer}
+            reference={toOsis(plan.days[day - 1]!.readings[0]!)}
+            title={`${plan.name} · ${unit} ${day}`}
+            source={{ planId: plan.id, planDay: day }}
+            saved={savedReflection}
+            onFinish={() => navigate(paths.today)}
+            onReturn={() => {
+              setJustFinished(false);
+              onReturn();
+            }}
+          />
           <Button
             variant="ghost"
             className={styles.undo}
@@ -482,8 +498,26 @@ function FinishBlock({
           >
             Undo
           </Button>
-        )}
-      </div>
+        </>
+      )}
+      {!justFinished && (
+        <div className={styles.doneActions}>
+          <Button icon={<NotebookPen size={16} />} onClick={onReflect}>
+            Reflect on today
+          </Button>
+          {next && (
+            <Button
+              variant="gold"
+              className="laptop-only"
+              iconEnd={<ArrowRight size={16} />}
+              onClick={() => navigate(paths.planDay(plan.id, next))}
+            >
+              Read {unit.toLowerCase()} {next} now
+            </Button>
+          )}
+          <Button onClick={() => navigate(paths.today)}>Back to Today</Button>
+        </div>
+      )}
     </motion.div>
   );
 }

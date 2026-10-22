@@ -1,5 +1,6 @@
 /* Scripture as you read it: Read (paragraphs) and Study (a verse per row, with a margin). */
 .verses {
+  max-width: 36.5em;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -19,8 +20,32 @@
 }
 .selected,
 .selected:hover {
+  --sel-line: var(--color-text);
   background: color-mix(in srgb, var(--color-accent) 16%, transparent);
-  box-shadow: inset 0 0 0 1.5px var(--color-text);
+  box-shadow: inset 0 0 0 1.5px var(--sel-line);
+}
+/* Selected neighbours join into one box: no lines or rounding between them. */
+.selected[data-sel-next] {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  box-shadow:
+    inset 1.5px 0 0 var(--sel-line),
+    inset -1.5px 0 0 var(--sel-line),
+    inset 0 1.5px 0 var(--sel-line);
+}
+.selected[data-sel-prev] {
+  margin-top: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  box-shadow:
+    inset 1.5px 0 0 var(--sel-line),
+    inset -1.5px 0 0 var(--sel-line),
+    inset 0 -1.5px 0 var(--sel-line);
+}
+.selected[data-sel-prev][data-sel-next] {
+  box-shadow:
+    inset 1.5px 0 0 var(--sel-line),
+    inset -1.5px 0 0 var(--sel-line);
 }
 .verseButton {
   display: block;
@@ -179,18 +204,24 @@
   display: none;
 }
 @media (max-width: 640px) {
+  /* The selection box gets room around the words; the negative margin keeps the text itself
+     aligned with the page. */
   .verse {
     display: block;
+    margin-inline: -0.55em;
   }
   .margin {
     display: none;
   }
   .verseButton {
-    padding: 0;
+    padding: 0.3em 0.55em;
     line-height: 1.7;
   }
   .verse + .verse {
-    margin-top: 10px;
+    margin-top: 2px;
+  }
+  .selected[data-sel-prev] {
+    margin-top: 0;
   }
   .mobileMarks {
     display: inline-flex;
@@ -211,6 +242,8 @@
 
 /* Read: the text as it was written, in paragraphs; each verse still a tap target. */
 .prose {
+  /* About 65 characters a line at any text size: comfortable reading on wide screens. */
+  max-width: 34em;
   margin: 0;
   font-family: var(--font-display);
   line-height: 1.8;
@@ -239,8 +272,9 @@
   border-radius: 0.2em;
 }
 .inlineSelected {
-  background: color-mix(in srgb, var(--color-accent) 22%, transparent);
-  box-shadow: 0 0.12em 0 0 var(--color-text);
+  /* The tint reaches a little past the letters (a spread shadow), without moving the text. */
+  background: color-mix(in srgb, var(--color-accent) 24%, transparent);
+  box-shadow: 0 0 0 0.16em color-mix(in srgb, var(--color-accent) 24%, transparent);
 }
 .inlineNum {
   margin-right: 0.2em;
@@ -271,4 +305,8 @@
   .inlineSelected:hover {
     background: color-mix(in srgb, var(--color-accent) 22%, transparent);
   }
+}
+
+.verses.parallel {
+  max-width: none;
 }

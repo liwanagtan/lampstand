@@ -18,11 +18,9 @@ test('highlight, bookmark and note a passage, then find them on the Notes page',
   await page.getByRole('button', { name: 'Add a note' }).click();
   await page.getByRole('dialog').getByRole('textbox').fill('Even the hard days.');
   await page.getByRole('button', { name: 'Save note' }).click();
-  await expect(
-    page.getByRole('button', { name: /Note on Romans 8:28: Even the hard days/ }),
-  ).toBeVisible();
-
-  await page.getByRole('button', { name: /Note on Romans 8:28/ }).click();
+  // Read layout: a small note mark after the verse; the verse's bar opens the note.
+  await expect(page.getByRole('img', { name: 'Note: Even the hard days.' })).toBeVisible();
+  await page.getByRole('button', { name: 'Edit note' }).click();
   await expect(page.getByRole('dialog').getByRole('textbox')).toHaveValue('Even the hard days.');
   await page.keyboard.press('Escape');
 

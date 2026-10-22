@@ -22,7 +22,7 @@ test('on a phone the reader is all thumbs: pill, Aa sheet, and the selection bar
   await expect(bar.getByRole('button', { name: 'John 1', exact: true })).toBeVisible();
 
   // Aa: translation and text size in a bottom sheet.
-  await bar.getByRole('button', { name: 'Reading settings', exact: true }).tap();
+  await bar.getByRole('button', { name: /^Reading settings/ }).tap();
   const sheet = page.getByRole('dialog', { name: 'Reading' });
   await sheet.getByRole('button', { name: 'Larger text' }).tap();
   await page.keyboard.press('Escape');
@@ -37,6 +37,7 @@ test('on a phone the reader is all thumbs: pill, Aa sheet, and the selection bar
   await selected.getByRole('button', { name: 'Study notes on verse 1' }).tap();
   await expect(page.getByRole('dialog')).toContainText('Adapted from Tyndale Open Study Notes');
   await page.keyboard.press('Escape');
+  await expect(page.getByRole('dialog')).toBeHidden();
   await selected.getByRole('button', { name: 'Clear selection' }).tap();
   await expect(pill).toBeVisible();
 });
@@ -46,7 +47,12 @@ test('on a phone a parallel translation reads beneath each verse, and plans use 
 }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await openApp(page, '/bible');
-  await page.getByRole('button', { name: 'Reading settings', exact: true }).tap();
+  await page
+    .getByRole('button', { name: /^Reading settings/ })
+    .filter({ visible: true })
+    .tap();
+  // Side by side is part of the Study layout.
+  await page.getByRole('radio', { name: /^Study/ }).tap();
   await page.getByLabel('Side by side').tap(); // "Parallel translation" on larger screens
   await page.getByRole('option', { name: /WEB/ }).tap();
   await page.keyboard.press('Escape');

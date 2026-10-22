@@ -17,7 +17,8 @@ export function ReadingSettings({
   /** Offer a second translation beside the first (the Bible reader does; plans don't). */
   parallel?: boolean;
 }) {
-  const { translation, parallel, size, setTranslation, setParallel, setSize } = useReader();
+  const { translation, parallel, size, layout, setTranslation, setParallel, setSize, setLayout } =
+    useReader();
   const translations = useBible((s) => s.translations);
   const options = translations.map((t) => ({ value: t.code, label: `${t.code} — ${t.name}` }));
   const i = READER_SIZES.indexOf(size);
@@ -27,6 +28,26 @@ export function ReadingSettings({
   return (
     <Sheet open={open} onOpenChange={onOpenChange} title="Reading">
       <div className={styles.form}>
+        <div className={styles.layouts} role="radiogroup" aria-label="Layout">
+          {(
+            [
+              ['read', 'Read', 'Paragraphs, as written'],
+              ['study', 'Study', 'A verse per line, with notes'],
+            ] as const
+          ).map(([value, name, hint]) => (
+            <button
+              key={value}
+              type="button"
+              role="radio"
+              aria-checked={layout === value}
+              className={styles.layout}
+              onClick={() => setLayout(value)}
+            >
+              <strong>{name}</strong>
+              <span>{hint}</span>
+            </button>
+          ))}
+        </div>
         {phone ? (
           <section className={styles.translations}>
             <div className={styles.translationHead}>
@@ -53,7 +74,7 @@ export function ReadingSettings({
             options={options}
           />
         )}
-        {showParallel && (
+        {showParallel && layout === 'study' && (
           <Select
             label={phone ? 'Side by side' : 'Parallel translation'}
             value={parallel ?? 'none'}
@@ -81,8 +102,15 @@ export function ReadingSettings({
               disabled={i <= 0}
               onClick={() => setSize(READER_SIZES[Math.max(0, i - 1)]!)}
             />
-            <span className={styles.sample} style={{ fontSize: size }} aria-live="polite">
-              {phone ? `${size} px` : 'Aa'}
+            <span className={styles.scale} aria-hidden>
+              {READER_SIZES.map((step, k) => (
+                <span key={step} data-on={k <= i || undefined} style={{ fontSize: 10 + k * 2 }}>
+                  A
+                </span>
+              ))}
+            </span>
+            <span className="visually-hidden" aria-live="polite">
+              Size {i + 1} of {READER_SIZES.length}
             </span>
             <IconButton
               label="Larger text"

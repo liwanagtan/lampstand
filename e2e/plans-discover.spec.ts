@@ -93,7 +93,16 @@ test('in a plan day, every part follows the text size', async ({ page }) => {
   const note = 'p[class*="note"]';
   const chapter = 'section[aria-label^="Philippians"] div[class*="chapter"]';
   const before = [await size(note), await size(chapter)];
-  await page.getByRole('button', { name: 'Larger text' }).click();
+  // The one reading control opens the Reading sheet with the size scale.
+  await page
+    .getByRole('button', { name: /^Reading settings/ })
+    .filter({ visible: true })
+    .click();
+  await page
+    .getByRole('dialog', { name: 'Reading' })
+    .getByRole('button', { name: 'Larger text' })
+    .click();
+  await page.keyboard.press('Escape');
   await expect.poll(() => size(chapter)).toBeGreaterThan(before[1]!);
   expect(await size(note)).toBeGreaterThan(before[0]!);
 });

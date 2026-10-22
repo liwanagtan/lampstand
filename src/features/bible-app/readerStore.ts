@@ -6,13 +6,17 @@ import type { RefRange } from '@/features/bible/ref';
 
 const PREFS_KEY = 'lampstand.reader';
 
+/** Read: paragraphs, as the text was written. Study: a verse per row, with a margin. */
+export type ReadingLayout = 'read' | 'study';
+
 export interface ReaderPrefs {
   book: string;
   chapter: number;
   translation: string;
-  /** Second translation shown side by side, or null. */
+  /** Second translation shown side by side (Study layout only), or null. */
   parallel: string | null;
   size: number;
+  layout: ReadingLayout;
 }
 
 export interface Selection {
@@ -64,6 +68,7 @@ interface ReaderState extends ReaderPrefs {
   setTranslation: (code: string) => void;
   setParallel: (code: string | null) => void;
   setSize: (size: number) => void;
+  setLayout: (layout: ReadingLayout) => void;
   select: (verse: number, extend: boolean) => void;
   setSelection: (s: Selection | null) => void;
   revealSelectionActions: () => void;
@@ -77,6 +82,7 @@ const DEFAULTS: ReaderPrefs = {
   translation: 'NLT',
   parallel: null,
   size: 20,
+  layout: 'read',
 };
 
 function readPrefs(): ReaderPrefs {
@@ -96,6 +102,7 @@ function readPrefs(): ReaderPrefs {
           ? v.parallel
           : null,
       size: READER_SIZES.includes(v.size ?? 0) ? v.size! : DEFAULTS.size,
+      layout: v.layout === 'study' ? 'study' : 'read',
     };
   } catch {
     return DEFAULTS;
@@ -104,8 +111,11 @@ function readPrefs(): ReaderPrefs {
 
 function save(s: ReaderPrefs) {
   try {
-    const { book, chapter, translation, parallel, size } = s;
-    localStorage.setItem(accountStorageKey(PREFS_KEY), JSON.stringify({ book, chapter, translation, parallel, size }));
+    const { book, chapter, translation, parallel, size, layout } = s;
+    localStorage.setItem(
+      accountStorageKey(PREFS_KEY),
+      JSON.stringify({ book, chapter, translation, parallel, size, layout }),
+    );
   } catch {
     // Remembering the reading position is a convenience only.
   }
@@ -113,7 +123,9 @@ function save(s: ReaderPrefs) {
 
 function recentChapters(): { book: string; chapter: number }[] {
   try {
-    const value: unknown = JSON.parse(localStorage.getItem(accountStorageKey('lampstand.recentChapters')) ?? '[]');
+    const value: unknown = JSON.parse(
+      localStorage.getItem(accountStorageKey('lampstand.recentChapters')) ?? '[]',
+    );
     return Array.isArray(value)
       ? value
           .filter(
@@ -155,6 +167,10 @@ export const useReader = create<ReaderState>((set, get) => ({
   },
   setSize: (size) => {
     set({ size });
+    save(get());
+  },
+  setLayout: (layout) => {
+    set({ layout });
     save(get());
   },
   select: (verse, extend) => {

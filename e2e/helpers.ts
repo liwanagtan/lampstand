@@ -27,3 +27,14 @@ export async function openVerseActions(page: Page, verse: number) {
   await button.click();
   await expect(page.getByRole('toolbar', { name: 'Selected verses' })).toBeVisible();
 }
+
+/** Switches the reader's layout in the Reading sheet (Read is the default). */
+export async function chooseLayout(page: Page, layout: 'Read' | 'Study') {
+  await page
+    .getByRole('button', { name: /^Reading settings/ })
+    .filter({ visible: true })
+    .first()
+    .click();
+  await page.getByRole('radio', { name: new RegExp(`^${layout}`) }).click();
+  await page.keyboard.press('Escape');
+}

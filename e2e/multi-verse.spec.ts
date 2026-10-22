@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { openApp, openVerseActions } from './helpers';
+import { chooseLayout, openApp, openVerseActions } from './helpers';
 
 test.describe('on a phone', () => {
   test.use({ hasTouch: true });
@@ -20,6 +20,8 @@ test.describe('on a phone', () => {
     );
     await picker.getByRole('button', { name: '3', exact: true }).tap();
     await expect(page.getByRole('heading', { name: 'John 3' })).toBeVisible();
+    // Bands and note brackets are drawn in the Study layout.
+    await chooseLayout(page, 'Study');
 
     await page.locator('[data-verse="12"] [aria-pressed]').tap();
     await page.locator('[data-verse="18"] [aria-pressed]').tap();
@@ -49,7 +51,8 @@ test.describe('on a phone', () => {
     await expect(page.getByRole('dialog').getByRole('textbox')).toHaveValue(
       'Earthly and heavenly things.',
     );
-    await page.keyboard.press('Escape');
+    await page.getByRole('dialog').getByRole('button', { name: 'Close' }).tap();
+    await expect(page.getByRole('dialog')).toBeHidden();
     await bar.getByRole('button', { name: 'Clear selection' }).tap();
 
     // Tapping the lone selected verse clears it.
@@ -62,6 +65,7 @@ test.describe('on a phone', () => {
 
 test('a note typed across chapters shows in both chapters', async ({ page }) => {
   await openApp(page, '/bible');
+  await chooseLayout(page, 'Study');
   await page.getByLabel('Search Lampstand').fill('jn 3:34-4:2');
   await page.keyboard.press('Enter');
   await openVerseActions(page, 34);

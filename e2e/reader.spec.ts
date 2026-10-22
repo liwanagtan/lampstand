@@ -46,7 +46,12 @@ test.describe('Bible reader', () => {
     await expect(page.getByRole('heading', { name: 'Romans 8' })).toBeVisible();
     await page.keyboard.press('ArrowRight');
     await expect(page.getByRole('heading', { name: 'Romans 9' })).toBeVisible();
-    await page.getByRole('button', { name: 'Reading settings' }).click();
+    // Side by side is part of the Study layout.
+    await page
+      .getByRole('button', { name: /^Reading settings/ })
+      .filter({ visible: true })
+      .click();
+    await page.getByRole('radio', { name: /^Study/ }).click();
     await page.getByLabel('Parallel translation').click();
     await page.getByRole('option', { name: /WEB/ }).click();
     await expect(page.locator('[data-verse="1"]')).toContainText('I tell the truth in Christ');
@@ -65,7 +70,12 @@ test('study notes: about the book, notes beside verses, links into the reader', 
   await page.getByRole('button', { name: 'About John' }).click();
   await expect(panel).toContainText('The Gospel of John');
   await expect(panel).toContainText('Adapted from Tyndale Open Study Notes');
-  await page.getByRole('button', { name: /Study notes on verse 1$/ }).click();
+  // A verse's study notes are in its bar (Read layout; Study adds a mark in the margin).
+  await page.locator('[data-verse="1"] [aria-pressed]').click();
+  await page
+    .getByRole('toolbar', { name: 'Selected verses' })
+    .getByRole('button', { name: 'Study notes on verse 1' })
+    .click();
   const sheet = panel;
   await expect(sheet).toContainText('logos');
   await sheet.getByRole('link', { name: 'Gen 1:1' }).first().click();

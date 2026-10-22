@@ -53,7 +53,8 @@
   padding: var(--space-8) var(--space-6) 120px;
 }
 .page {
-  max-width: 44em;
+  /* As wide as the text column (Passage caps it at about 65 characters), so it sits centred. */
+  max-width: calc(var(--reader-size, 20px) * 36.5);
   margin: 0 auto;
 }
 .chapterReflect {
@@ -244,19 +245,6 @@
     align-items: center;
     gap: 8px;
     flex: none;
-  }
-  .mobileAa {
-    display: grid;
-    place-items: center;
-    width: 44px;
-    height: 44px;
-    border: 1px solid var(--color-border);
-    border-radius: 999px;
-    background: var(--color-surface);
-    color: var(--color-text);
-    font-family: var(--font-display);
-    font-size: 17px;
-    cursor: pointer;
   }
   .body {
     padding: 0 24px 120px;

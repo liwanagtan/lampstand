@@ -11,16 +11,7 @@ import {
   NotebookPen,
   BookText,
 } from 'lucide-react';
-import {
-  Button,
-  Dialog,
-  EmptyState,
-  IconButton,
-  Select,
-  Tooltip,
-  cx,
-} from '@/design-system/components';
-import { useBible } from '@/features/bible/bibleStore';
+import { Button, Dialog, EmptyState, cx } from '@/design-system/components';
 import { BOOK_BY_CODE } from '@/features/bible/books';
 import { formatRef, fromOsis, toOsis, type RefRange } from '@/features/bible/ref';
 import { useSettings } from '@/features/settings/settingsStore';
@@ -47,7 +38,7 @@ import {
   usePlans,
   type Plan,
 } from './plans';
-import { READER_SIZES, nextSelection, useReader, type Selection } from './readerStore';
+import { nextSelection, useReader, type Selection } from './readerStore';
 import { useChapter } from './useChapter';
 import styles from './PlanReader.module.css';
 import { paths } from '@/app/paths';
@@ -202,7 +193,9 @@ export function PlanReaderPage() {
             <Clock size={14} aria-hidden /> About {readingMinutes(day)} min
           </span>
         </p>
-        <ReaderOptions />
+        <div className={cx(styles.options, 'laptop-only')}>
+          <TranslationChip onClick={() => setReading(true)} parallel={false} />
+        </div>
         <ReadingSettings open={reading} onOpenChange={setReading} parallel={false} />
       </header>
 
@@ -278,47 +271,6 @@ export function PlanReaderPage() {
   );
 }
 
-function ReaderOptions() {
-  const translation = useReader((s) => s.translation);
-  const size = useReader((s) => s.size);
-  const translations = useBible((s) => s.translations);
-  const i = READER_SIZES.indexOf(size);
-  return (
-    <div className={cx(styles.options, 'laptop-only')}>
-      <Select
-        label="Translation"
-        hideLabel
-        aria-label="Translation"
-        size="sm"
-        value={translation}
-        onChange={(v) => useReader.getState().setTranslation(v)}
-        options={translations.map((t) => ({ value: t.code, label: `${t.code} — ${t.name}` }))}
-        className={styles.select}
-      />
-      <Tooltip content="Smaller text">
-        <IconButton
-          label="Smaller text"
-          size="sm"
-          icon={<span className={styles.aSmall}>A−</span>}
-          disabled={i <= 0}
-          onClick={() => useReader.getState().setSize(READER_SIZES[Math.max(0, i - 1)]!)}
-        />
-      </Tooltip>
-      <Tooltip content="Larger text">
-        <IconButton
-          label="Larger text"
-          size="sm"
-          icon={<span className={styles.aLarge}>A+</span>}
-          disabled={i >= READER_SIZES.length - 1}
-          onClick={() =>
-            useReader.getState().setSize(READER_SIZES[Math.min(READER_SIZES.length - 1, i + 1)]!)
-          }
-        />
-      </Tooltip>
-    </div>
-  );
-}
-
 interface VerseSelection {
   book: string;
   chapter: number;
@@ -346,6 +298,7 @@ function ChapterBlock({
 }) {
   const translation = useReader((s) => s.translation);
   const size = useReader((s) => s.size);
+  const layout = useReader((s) => s.layout);
   const passage = useChapter(translation, book, chapter);
   const marks = useVisibleMarks(book, chapter);
   const studyOn = useSettings((s) => s.studyNotes);
@@ -388,7 +341,7 @@ function ChapterBlock({
       {passage ? (
         <>
           <Passage
-            layout="read"
+            layout={layout}
             verses={verses}
             marks={marks}
             selection={selection}

@@ -71,8 +71,9 @@ export function BibleReader({ toolbar, selectionActions }: BiblePageSlots) {
     book,
     chapter,
     translation,
-    parallel,
+    parallel: parallelPref,
     size,
+    layout,
     selection,
     selectionActionsOpen,
     goTo,
@@ -97,6 +98,8 @@ export function BibleReader({ toolbar, selectionActions }: BiblePageSlots) {
   const bookNotes = useStudyNotes(studyOn ? book : null);
   const studyByVerse = useMemo(() => notesByVerse(bookNotes, chapter), [bookNotes, chapter]);
   const primary = useChapter(translation, book, chapter);
+  // Side by side is a Study layout: two translations interleaved in paragraphs read poorly.
+  const parallel = layout === 'study' ? parallelPref : null;
   const second = useChapter(parallel, book, chapter);
   const body = useRef<HTMLDivElement>(null);
   // The toolbar quiets while you read down the page and returns when you scroll back up.
@@ -231,17 +234,7 @@ export function BibleReader({ toolbar, selectionActions }: BiblePageSlots) {
             {place}
             <ChevronDown size={20} aria-hidden />
           </button>
-          <div className={styles.mobileReadingActions}>
-            {readingButton}
-            <button
-              type="button"
-              className={styles.mobileAa}
-              aria-label="Reading settings"
-              onClick={() => setReading(true)}
-            >
-              Aa
-            </button>
-          </div>
+          <div className={styles.mobileReadingActions}>{readingButton}</div>
         </header>
         <div className={styles.toolbar} data-quiet={quiet || undefined}>
           <div className={styles.nav}>
@@ -303,7 +296,7 @@ export function BibleReader({ toolbar, selectionActions }: BiblePageSlots) {
             {primary ? (
               <>
                 <Passage
-                  layout="study"
+                  layout={layout}
                   verses={primary.verses}
                   second={second}
                   selection={selection}

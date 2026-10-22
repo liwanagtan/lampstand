@@ -5,11 +5,11 @@ import type { MarkRecord } from '@/db/types';
 import type { Passage as PassageText, PassageVerse } from '@/features/bible/passage';
 import { formatRef, fromOsis } from '@/features/bible/ref';
 import type { ChapterMarks } from '../marks';
-import type { Selection } from '../readerStore';
+import type { ReadingLayout, Selection } from '../readerStore';
 import type { StudyNote } from '../studyNotes';
 import styles from './Passage.module.css';
 
-export type ReadingLayout = 'read' | 'study';
+export type { ReadingLayout };
 
 export interface PassageProps {
   /** Read: the text as paragraphs, numbers inline. Study: a verse per row, with a margin. */
@@ -146,6 +146,8 @@ function StudyLayout({
             data-join-prev={joinPrev || undefined}
             data-join-next={joinNext || undefined}
             data-bracket={bracket}
+            data-sel-prev={(selected && selection && v.verse > selection.start) || undefined}
+            data-sel-next={(selected && selection && v.verse < selection.end) || undefined}
           >
             <div className={styles.margin}>
               <span className={styles.num}>{v.verse}</span>

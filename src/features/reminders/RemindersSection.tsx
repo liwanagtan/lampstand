@@ -81,12 +81,12 @@ export function RemindersSection() {
         <Toggle
           checked={reading.enabled}
           onChange={(on) => void turn('reading', on)}
-          label="Reading time reminder"
+          label="Evening reminder"
           description={`Daily at ${formatTime(reading.time)}`}
         />
         <div className={styles.controls}>
           <Input
-            label="Reading time"
+            label="Evening time"
             type="time"
             value={reading.time}
             onChange={(e) =>

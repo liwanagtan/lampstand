@@ -62,5 +62,6 @@ describe('reading reminders', () => {
     expect(ics.match(/BEGIN:VEVENT/g)).toHaveLength(2);
     expect(ics).toContain('DTSTART:20261018T070000');
     expect(ics).toContain('DTSTART:20261018T190000');
+    expect(ics).toContain('SUMMARY:Evening reading — Lampstand');
   });
 });

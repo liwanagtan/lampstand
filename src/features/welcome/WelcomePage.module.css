@@ -160,7 +160,8 @@
   font-size: 16px;
   font-weight: 700;
 }
-.useBody {
+.useBody,
+.optionDescription {
   color: var(--color-text-muted);
   font-size: 13px;
   line-height: 1.4;
@@ -215,14 +216,15 @@
 .setup .title { font-size: clamp(24px, 4vw, 30px); }
 .setupExpectations {
   display: grid;
+  justify-items: start;
   gap: 14px;
-  width: 100%;
-  margin-top: 8px;
+  width: fit-content;
+  max-width: 100%;
+  margin: 8px auto 0;
 }
 .setupExpectation {
   display: flex;
   align-items: center;
-  justify-content: center;
   gap: 12px;
   font-size: 14px;
   line-height: 1.5;

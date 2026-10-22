@@ -10,11 +10,13 @@ Cloudflare Workers remains the host for the Vite PWA. Use Supabase Auth for Goog
 
 ## First-run flow
 
-1. Replace the current install-first landing with a short account choice: **Your faith journey, saved**; **Continue with Google**; **Continue without an account**. Explain that Google keeps progress across devices and guest progress stays on this device until linked.
-2. After either choice, new users answer the current Welcome questions. A returning signed-in user goes to Today once account data has loaded. Keep a loading and retry state so a slow sync never looks like an empty new profile.
-3. Show PWA installation awareness after the account choice, without blocking setup. Installed and browser visits use the same account and OAuth return flow. Test iOS installed PWA, Android Chrome, and desktop Chrome separately.
-4. An existing local guest who signs in sees an import summary and confirms bringing local data into the account. If an account already contains data, preview overlap and preserve both sides until reconciliation succeeds. Do not silently upload or erase private data.
-5. Settings shows the email/provider, sync status, last successful sync, export, sign-out, and account deletion. Sign-out hides the prior account's downloaded private records from a later user of that device without silently deleting them.
+Revised 2026-10-23 (owner): start first, save later.
+
+1. The landing has one job: **Get started**, with a quiet **I have an account** (Google) for returning readers.
+2. Welcome asks at most three things: name (taken from Google when signed in), what brings you here, and where to start. A returning signed-in reader on a new device goes to Today once account data has loaded, with retry when offline.
+3. After a guest's first finished reading or written entry, Today offers once to keep the journey on every device. Choosing Google there is the choice to import, so guest data comes in without a second question; "Not now" is final, and Settings › Account keeps the option.
+4. A guest who signs in from the landing or Settings sees the import summary and chooses. Account data is never overwritten: differing entries and notes are kept twice for review.
+5. Settings shows the email, sync status, last sync, export, sign-out and account deletion. Sign-out hides the account's records from a later guest on that device without deleting them.
 
 ## Data boundary
 

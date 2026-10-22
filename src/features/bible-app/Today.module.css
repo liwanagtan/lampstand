@@ -278,6 +278,13 @@
   text-decoration: none;
 }
 .continueButton:hover { opacity: .88; }
+.continueHide {
+  flex: none;
+  margin-left: -8px;
+}
+@media (pointer: coarse) {
+  .continueHide { min-width: 44px; min-height: 44px; }
+}
 /* Take five minutes: the warm card, with the flame companion. */
 .reflect {
   background: var(--color-accent-tint);

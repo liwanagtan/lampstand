@@ -16,6 +16,7 @@ const LABELS: Record<string, string> = {
   welcome_started: 'Welcome started',
   google_chosen: 'Chose Google',
   guest_chosen: 'Chose guest',
+  save_offer_shown: 'Offered to save',
   welcome_completed: 'Welcome completed',
   guest_import_started: 'Guest import started',
   guest_import_completed: 'Guest import completed',

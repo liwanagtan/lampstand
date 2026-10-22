@@ -10,6 +10,7 @@ import {
   MonitorStop,
   NotebookPen,
   Sparkles,
+  X,
 } from 'lucide-react';
 import { Button, IconButton, Tooltip, cx, toast } from '@/design-system/components';
 import { db } from '@/db/db';
@@ -42,6 +43,8 @@ import { paths } from '@/app/paths';
 import { faithJourneys } from '@/app/faithJourney';
 import { biblePosition, recentPlanDay } from './readingResume';
 import { track } from '@/features/insights/insights';
+import { SaveOffer } from '@/features/account/SaveOffer';
+import { accountStorageKey } from '@/features/account/storage';
 
 const longDate = new Intl.DateTimeFormat(undefined, {
   weekday: 'long',
@@ -162,6 +165,7 @@ export function TodayPage() {
         )}
       </div>
 
+      <SaveOffer />
       <ContextPanel
         key={panel === 'context' ? 'open' : 'closed'}
         range={range}
@@ -409,6 +413,28 @@ function WeekStrip({ now }: { now: Date }) {
   );
 }
 
+const RESUME_HIDDEN_KEY = 'lampstand.resumeHidden';
+
+/** The chapter whose Continue reading bar was closed; it returns for the next chapter read. */
+function useHiddenResume(): [string | null, (place: string) => void] {
+  const [hidden, setHidden] = useState(() => {
+    try {
+      return localStorage.getItem(accountStorageKey(RESUME_HIDDEN_KEY));
+    } catch {
+      return null;
+    }
+  });
+  const hide = (place: string) => {
+    setHidden(place);
+    try {
+      localStorage.setItem(accountStorageKey(RESUME_HIDDEN_KEY), place);
+    } catch {
+      // Hidden for this visit only.
+    }
+  };
+  return [hidden, hide];
+}
+
 function TodayPlans() {
   const plans = usePlans();
   const progress = usePlanProgress();
@@ -417,6 +443,8 @@ function TodayPlans() {
   const chapter = useReader((s) => s.chapter);
   const translation = useReader((s) => s.translation);
   const hasReadBible = useReader((s) => s.recent.length > 0) || biblePosition(book, chapter) > 0;
+  const [hiddenResume, hideResume] = useHiddenResume();
+  const place = `${book}.${chapter}`;
   if (!progress || !plans) return <section className={styles.card} aria-label="Reading plans" />;
   const active = progress
     .flatMap((p) => {
@@ -440,10 +468,12 @@ function TodayPlans() {
       return Number(bReady) - Number(aReady) || b.p.updatedAt - a.p.updatedAt;
     });
   if (active.length === 0) {
+    // Only resume something real: a plan, or a chapter actually read. No placeholder John 1.
+    if (!hasReadBible || hiddenResume === place) return null;
     return (
       <section className={styles.continueReading} aria-label="Continue reading">
         <div className={styles.continueContent}>
-          <h2>{hasReadBible ? 'Continue reading' : 'Start reading'}</h2>
+          <h2>Continue reading</h2>
           <p className={styles.continuePlace}>
             {BOOK_BY_CODE.get(book)?.refName ?? book} {chapter} <span>· {translation}</span>
           </p>
@@ -451,10 +481,17 @@ function TodayPlans() {
         <Link
           className={styles.continueButton}
           to={paths.bible}
-          onClick={() => hasReadBible && track('reading_resumed')}
+          onClick={() => track('reading_resumed')}
         >
-          {hasReadBible ? 'Continue' : 'Open Bible'}
+          Continue
         </Link>
+        <IconButton
+          label="Hide"
+          icon={<X size={16} />}
+          size="sm"
+          className={styles.continueHide}
+          onClick={() => hideResume(place)}
+        />
       </section>
     );
   }

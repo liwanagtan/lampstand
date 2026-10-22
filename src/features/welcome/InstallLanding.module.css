@@ -8,6 +8,10 @@
   color: var(--color-text);
   color-scheme: dark;
 }
+.page:not(:has(> .top)) {
+  /* No top bar: the content alone, centred in the screen. */
+  grid-template-rows: minmax(0, 1fr);
+}
 .top {
   display: flex;
   align-items: center;
@@ -24,6 +28,19 @@
   margin: auto;
   padding: 24px 24px calc(40px + env(safe-area-inset-bottom));
   text-align: center;
+}
+.title {
+  max-width: 14ch;
+  margin: 8px 0 12px;
+  font-size: clamp(30px, 6vw, 40px);
+  line-height: 1.12;
+  letter-spacing: -0.035em;
+}
+.choices {
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+  width: 100%;
 }
 .copy {
   display: grid;

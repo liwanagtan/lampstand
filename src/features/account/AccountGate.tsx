@@ -8,14 +8,32 @@ import landing from '@/features/welcome/InstallLanding.module.css';
 import { useAccount } from './accountStore';
 import { useSync } from './syncStore';
 import { GuestImportDialog } from './GuestImportDialog';
-import { guestDataCount, guestImportPreview, type GuestImportSummary } from './guestImport';
-import { decideGuestImport, guestImportDecided } from './guestImportChoice';
+import {
+  guestDataCount,
+  guestImportPreview,
+  importGuestData,
+  type GuestImportSummary,
+} from './guestImport';
+import { decideGuestImport, guestImportDecided, takeImportAfterSignIn } from './guestImportChoice';
 
 const palette = Object.fromEntries(
   Object.entries(colors.dark).map(([token, value]) => [`--color-${token}`, value]),
 ) as CSSProperties;
 
 type Opening = 'checking' | 'failed' | 'done';
+
+/** Imports guest data when the guest asked for it by signing in (SaveOffer). */
+async function bringGuestIfAsked(userId: string): Promise<boolean> {
+  if (guestImportDecided(userId) || !takeImportAfterSignIn()) return false;
+  try {
+    if (guestDataCount(await guestImportPreview()) === 0) return false;
+    await importGuestData();
+    decideGuestImport(userId, 'imported');
+    return true;
+  } catch {
+    return false; // The usual choice dialog follows, and nothing was removed.
+  }
+}
 
 /**
  * After sign-in: on a device this account has not set up, first loads the account (so a
@@ -35,23 +53,27 @@ export function AccountGate({ children }: { children: ReactNode }) {
     void useSync
       .getState()
       .syncNow()
-      .then((result) => {
+      .then(async (result) => {
         if (!live) return;
         if (!result) return setOpening('failed');
+        // A guest who signed in to keep their journey brings it in before anything shows.
+        if (userId && (await bringGuestIfAsked(userId))) return window.location.assign('/');
         if (useSettings.getState().profile.name.trim()) markOnboarded();
         setOpening('done');
       });
     return () => {
       live = false;
     };
-  }, [opening]);
+  }, [opening, userId]);
 
   useEffect(() => {
     if (!userId || opening !== 'done' || guestImportDecided(userId)) return;
     let live = true;
-    guestImportPreview()
-      .then((s) => live && guestDataCount(s) > 0 && setSummary(s))
-      .catch(() => undefined);
+    void (async () => {
+      if (await bringGuestIfAsked(userId)) return window.location.assign('/');
+      const found = await guestImportPreview();
+      if (live && guestDataCount(found) > 0) setSummary(found);
+    })().catch(() => undefined);
     return () => {
       live = false;
     };

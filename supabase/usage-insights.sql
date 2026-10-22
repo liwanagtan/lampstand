@@ -7,17 +7,21 @@
 
 create table if not exists public.usage_events (
   id bigint generated always as identity primary key,
-  name text not null check (name in (
-    'welcome_started', 'google_chosen', 'guest_chosen', 'welcome_completed',
-    'guest_import_started', 'guest_import_completed', 'guest_import_failed',
-    'plan_started', 'plan_day_completed', 'reading_resumed', 'chapter_read',
-    'sync_failed', 'sync_recovered', 'account_deleted'
-  )),
+  name text not null,
   -- A random code made on the device; never linked to a name, email or account.
   device uuid not null,
   occurred_on date not null check (occurred_on between current_date - 2 and current_date + 1),
   created_at timestamptz not null default now()
 );
+-- The events the app sends (src/features/insights/insights.ts). Replaced on each run so a new
+-- event can be added by running this file again.
+alter table public.usage_events drop constraint if exists usage_events_name_check;
+alter table public.usage_events add constraint usage_events_name_check check (name in (
+    'welcome_started', 'google_chosen', 'guest_chosen', 'save_offer_shown', 'welcome_completed',
+    'guest_import_started', 'guest_import_completed', 'guest_import_failed',
+    'plan_started', 'plan_day_completed', 'reading_resumed', 'chapter_read',
+    'sync_failed', 'sync_recovered', 'account_deleted'
+));
 create index if not exists usage_events_day_idx on public.usage_events (occurred_on, name);
 
 alter table public.usage_events enable row level security;

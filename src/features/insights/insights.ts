@@ -9,6 +9,7 @@ export type InsightEvent =
   | 'welcome_started'
   | 'google_chosen'
   | 'guest_chosen'
+  | 'save_offer_shown'
   | 'welcome_completed'
   | 'guest_import_started'
   | 'guest_import_completed'

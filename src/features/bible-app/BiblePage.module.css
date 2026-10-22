@@ -83,97 +83,11 @@
   letter-spacing: 0.08em;
   color: var(--color-accent-text);
 }
-.verses {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-.verse {
-  position: relative;
-  display: grid;
-  grid-template-columns: 2.2em minmax(0, 1fr);
-  border-radius: var(--radius-sm);
-  transition: background-color var(--dur-quick) var(--ease-quick);
-}
-.verse + .verse {
-  margin-top: 2px;
-}
-.verse:hover {
-  background: color-mix(in srgb, var(--color-surface-raised) 70%, transparent);
-}
-.selected,
-.selected:hover {
-  background: color-mix(in srgb, var(--color-accent) 16%, transparent);
-  box-shadow: inset 0 0 0 1.5px var(--color-text);
-}
-.verseButton {
-  display: block;
-  width: 100%;
-  min-width: 0;
-  padding: 0.3em 0.5em 0.3em 0.4em;
-  border: 0;
-  border-radius: var(--radius-sm);
-  background: transparent;
-  color: var(--color-text);
-  font: inherit;
-  line-height: 1.7;
-  text-align: left;
-  cursor: pointer;
-}
 .columnsHead > :first-child {
   grid-column: 2;
 }
 .columnsHead > :last-child {
   grid-column: 4;
-}
-.parallel .verseButton {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 2em minmax(0, 1fr);
-}
-.parallel .secondText {
-  grid-column: 3;
-}
-.margin {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  padding-top: 0.55em;
-}
-.num {
-  font-size: 0.62em;
-  font-weight: var(--weight-semibold);
-  line-height: 1.6;
-  color: var(--color-accent-text);
-  font-variant-numeric: tabular-nums;
-}
-.noteMark {
-  display: grid;
-  place-items: center;
-  width: 22px;
-  height: 22px;
-  padding: 0;
-  border: 0;
-  border-radius: 4px;
-  background: transparent;
-  color: var(--color-accent-text);
-  cursor: pointer;
-}
-.studyMark {
-  display: grid;
-  place-items: center;
-  width: 22px;
-  height: 22px;
-  padding: 0;
-  border: 0;
-  border-radius: 4px;
-  background: transparent;
-  color: color-mix(in srgb, var(--color-text-muted) 80%, transparent);
-  cursor: pointer;
-}
-.studyMark:hover {
-  background: color-mix(in srgb, var(--color-accent) 18%, transparent);
-  color: var(--color-accent-text);
 }
 .aboutBook {
   min-height: 44px;
@@ -196,26 +110,9 @@
   color: var(--color-text);
 }
 @media (pointer: coarse) {
-  .studyMark {
-    width: 32px;
-    height: 32px;
-  }
   .aboutBook {
     padding: 8px 14px;
   }
-}
-.noteMark:hover {
-  background: color-mix(in srgb, var(--color-accent) 18%, transparent);
-}
-.text {
-  font-family: var(--font-display);
-}
-.secondText {
-  color: color-mix(in srgb, var(--color-text) 82%, var(--color-text-muted));
-}
-.missing {
-  font-style: italic;
-  color: var(--color-text-muted);
 }
 .loading {
   color: var(--color-text-muted);
@@ -227,52 +124,6 @@
   padding-top: 1em;
   border-top: 1px solid var(--color-border);
   font-size: var(--text-14);
-}
-.selectionBar {
-  position: absolute;
-  left: 50%;
-  bottom: var(--space-6);
-  z-index: 10;
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-  translate: -50% 0;
-  padding: var(--space-2) var(--space-2) var(--space-2) var(--space-5);
-  border: 0;
-  border-radius: 999px;
-  /* Verse actions (design system): an ink bar on laptops, a white sheet on phones. */
-  background: var(--color-hero);
-  color: var(--color-hero-text);
-  box-shadow: var(--elevation-2);
-  animation: barIn var(--dur-state) var(--ease-sheet);
-}
-.swatches {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-.swatch {
-  width: 28px;
-  height: 28px;
-  border: 2px solid transparent;
-  border-radius: 50%;
-  background: var(--hl);
-  cursor: pointer;
-  transition: transform var(--dur-quick) var(--ease-quick);
-}
-.swatch:hover {
-  transform: scale(1.12);
-}
-.swatch[aria-pressed='true'] {
-  box-shadow:
-    0 0 0 2px var(--color-hero),
-    0 0 0 4px var(--color-hero-text);
-}
-.barDivider {
-  width: 1px;
-  height: 22px;
-  margin: 0 var(--space-1);
-  background: rgb(245 242 234 / 0.2);
 }
 /* The design system's five highlight colours: gold, sage, sky, rose, lilac. */
 [data-color='yellow'] {
@@ -290,131 +141,14 @@
 [data-color='purple'] {
   --hl: #b9a3ee;
 }
-/* Highlights: one band behind the verse; neighbours in the same colour join up. */
-.verse[data-band] .verseButton {
-  background: color-mix(in srgb, var(--hl) 35%, transparent);
-}
-.verse[data-join-prev] {
-  margin-top: 0;
-}
-.verse[data-join-prev] .verseButton {
-  border-top-left-radius: 0;
-  border-top-right-radius: 0;
-}
-.verse[data-join-next] .verseButton {
-  border-bottom-left-radius: 0;
-  border-bottom-right-radius: 0;
-}
-.hlText {
-  background: none;
-  color: inherit;
-}
-
-/* A note over several verses: a thin bracket in the margin beside the verses it covers. */
-.verse[data-bracket]::before {
-  content: '';
-  position: absolute;
-  top: -2px;
-  bottom: 0;
-  left: calc(2.2em - 0.45em);
-  width: 0.3em;
-  border-left: 2px solid color-mix(in srgb, var(--color-accent) 70%, transparent);
-  pointer-events: none;
-}
-.verse[data-bracket~='top']::before {
-  top: 0.55em;
-  border-top: 2px solid color-mix(in srgb, var(--color-accent) 70%, transparent);
-  border-top-left-radius: 3px;
-}
-.verse[data-bracket~='bottom']::before {
-  bottom: 0.55em;
-  border-bottom: 2px solid color-mix(in srgb, var(--color-accent) 70%, transparent);
-  border-bottom-left-radius: 3px;
-}
-.selectionCount {
-  font-weight: var(--weight-regular, 400);
-  color: var(--color-hero-text-muted);
-}
-.hl {
-  padding: 0.04em 0.12em;
-  border-radius: 0.2em;
-  background: color-mix(in srgb, var(--hl) 35%, transparent);
-  color: inherit;
-  box-decoration-break: clone;
-  -webkit-box-decoration-break: clone;
-}
-.selectionLabel {
-  margin-right: var(--space-2);
-  white-space: nowrap;
-  font-weight: var(--weight-extrabold);
-}
-.side {
-  min-width: 0;
-  min-height: 0;
-  overflow-y: auto;
-  border-left: 1px solid var(--color-border);
-  background: var(--color-surface);
-}
-@keyframes barIn {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-}
-
-/* Narrow reader (e.g. beside the TV panel on a small laptop): the toolbar may wrap. */
 @container (max-width: 860px) {
   .toolbar {
     flex-wrap: wrap;
   }
 }
-.bookmarkMark {
-  color: var(--color-accent-text);
-}
-.selectionBar .bookmarkMark,
-.selectionBar :global(button) {
-  color: var(--color-hero-text);
-}
-.selectionBar :global(button):hover:not(:disabled) {
-  background: rgb(245 242 234 / 0.1);
-}
-
-/* Selection actions: icons on laptops. */
-.barActions {
-  display: flex;
-  align-items: center;
-  gap: 2px;
-}
-.barButton {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 2px;
-  width: 40px;
-  height: 40px;
-  padding: 0;
-  border: 0;
-  border-radius: 999px;
-  background: transparent;
-  color: var(--color-hero-text);
-  font: inherit;
-  cursor: pointer;
-}
-.barButton:hover {
-  background: rgb(245 242 234 / 0.1);
-}
-.barButton[aria-pressed='true'] {
-  color: var(--color-accent);
-}
-.barText {
-  display: none;
-}
 .pill {
   display: none;
 }
-
-/* Phones: no toolbar — the place and Aa are in the top bar, getting around is a pill in
-   thumb reach, and the selection bar is built for thumbs. */
 @media (max-width: 640px) {
   .toolbar {
     display: none;
@@ -472,117 +206,12 @@
     font-weight: var(--weight-bold);
     white-space: nowrap;
   }
-  .selectionBar {
-    right: var(--space-2);
-    bottom: var(--space-2);
-    left: var(--space-2);
-    flex-wrap: wrap;
-    gap: var(--space-3);
-    padding: var(--space-4);
-    translate: none;
-    border-radius: var(--radius-xl);
-    background: var(--color-surface);
-    color: var(--color-text);
-    box-shadow: var(--elevation-3);
-  }
-  .selectionBar .bookmarkMark,
-  .selectionBar :global(button) {
-    color: var(--color-text);
-  }
-  .selectionCount {
-    color: var(--color-text-muted);
-  }
-  .swatch[aria-pressed='true'] {
-    box-shadow:
-      0 0 0 3px var(--color-surface),
-      0 0 0 5px var(--color-text);
-  }
-  .selectionLabel {
-    flex: 1 1 0;
-    min-width: 0;
-    margin: 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  .clear {
-    order: 1;
-  }
-  .swatches {
-    order: 2;
-    flex: 1 1 100%;
-    justify-content: space-between;
-  }
-  .swatch {
-    width: 44px;
-    height: 44px;
-  }
-  .barDivider {
-    display: none;
-  }
-  .barActions {
-    order: 3;
-    flex: 1 1 100%;
-    gap: var(--space-2);
-  }
-  .barButton {
-    flex: 1;
-    flex-direction: column;
-    width: auto;
-    min-width: 0;
-    height: 64px;
-    border-radius: var(--radius-md);
-    background: var(--color-surface-sunk);
-    color: var(--color-text);
-  }
-  .barButton:hover {
-    background: var(--color-surface-sunk);
-  }
-  .barButton[aria-pressed='true'] {
-    color: var(--color-accent-text);
-  }
-  .barText {
-    display: block;
-    font-size: 13px;
-    font-weight: var(--weight-bold);
-  }
 }
-/* Phones: a tapped verse shows the selection, not a leftover hover. */
-@media (hover: none) and (max-width: 640px) {
-  .verse:hover {
-    background: transparent;
-  }
-  .selected:hover {
-    background: color-mix(in srgb, var(--color-accent) 16%, transparent);
-  }
-  .swatch:hover {
-    transform: none;
-  }
-}
-
-/* Phones: a second translation reads beneath each verse, not squeezed beside it. */
 @media (max-width: 640px) {
-  .parallel .verseButton {
-    display: block;
-  }
-  .parallel .secondText {
-    display: block;
-    margin-top: 0.35em;
-    font-size: 0.88em;
-  }
-  .parallel .secondText::before {
-    content: attr(data-code);
-    margin-right: 0.5em;
-    font-family: var(--font-ui);
-    font-size: 0.68em;
-    font-weight: var(--weight-semibold);
-    letter-spacing: 0.06em;
-    color: var(--color-accent-text);
-  }
   .columnsHead {
     display: none;
   }
 }
-
 .mobileHeader {
   display: none;
 }
@@ -644,40 +273,7 @@
     font-size: 13px;
   }
 }
-
-.mobileVerseNum,
-.mobileMarks {
-  display: none;
-}
 @media (max-width: 640px) {
-  .verse {
-    display: block;
-  }
-  .margin {
-    display: none;
-  }
-  .verseButton {
-    padding: 0;
-    line-height: 1.7;
-  }
-  .verse + .verse {
-    margin-top: 10px;
-  }
-  .mobileMarks {
-    display: inline-flex;
-    gap: 3px;
-    margin-right: 6px;
-    color: var(--color-accent-text);
-    vertical-align: 1px;
-  }
-  .mobileVerseNum {
-    display: inline;
-    font-family: var(--font-ui);
-    font-size: 11px;
-    font-weight: 700;
-    margin-right: 7px;
-    color: var(--color-accent-text);
-  }
   .chapterFoot {
     display: none;
   }

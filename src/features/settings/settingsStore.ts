@@ -21,8 +21,8 @@ export const useSettings = create<SettingsState>((setState) => ({
       }
     }
     if (['ASV', 'YLT', 'DBY'].includes(loaded.defaultTranslation ?? '')) {
-      loaded.defaultTranslation = 'BSB';
-      await db.settings.put({ key: 'defaultTranslation', value: 'BSB' });
+      loaded.defaultTranslation = 'KJV';
+      await db.settings.put({ key: 'defaultTranslation', value: 'KJV' });
     }
     setState({ ...loaded, uiMode: 'light', loaded: true });
   },

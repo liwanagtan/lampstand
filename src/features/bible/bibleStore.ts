@@ -33,7 +33,7 @@ interface BibleState {
   remove: (code: string) => Promise<void>;
 }
 
-const ORDER = ['BSB', 'NLT', 'KJV', 'WEB'];
+const ORDER = ['NLT', 'KJV', 'BSB', 'WEB'];
 const RETIRED = new Set(['ASV', 'YLT', 'DBY']);
 const sortTranslations = (list: TranslationRecord[]) =>
   list
@@ -62,9 +62,14 @@ export const useBible = create<BibleState>((set, get) => ({
 
   refresh: async () => {
     const translations = sortTranslations(await db.translations.toArray());
+    if (!translations.some((t) => t.code === 'NLT')) {
+      if (useSettings.getState().defaultTranslation === 'NLT')
+        await useSettings.getState().set('defaultTranslation', 'KJV');
+      if (useReader.getState().translation === 'NLT') useReader.getState().setTranslation('KJV');
+    }
     if (RETIRED.has(useSettings.getState().defaultTranslation))
-      await useSettings.getState().set('defaultTranslation', 'BSB');
-    if (RETIRED.has(useReader.getState().translation)) useReader.getState().setTranslation('BSB');
+      await useSettings.getState().set('defaultTranslation', 'KJV');
+    if (RETIRED.has(useReader.getState().translation)) useReader.getState().setTranslation('KJV');
     if (useReader.getState().parallel && RETIRED.has(useReader.getState().parallel!))
       useReader.getState().setParallel(null);
     set({ translations });

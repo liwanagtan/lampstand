@@ -420,7 +420,7 @@ function TodayPlans() {
   const active = progress
     .flatMap((p) => {
       const plan = plans.find((x) => x.id === p.planId);
-      return plan && !isPlanFinished(plan, p) ? [{ plan, p }] : [];
+      return plan && !p.pausedAt && !isPlanFinished(plan, p) ? [{ plan, p }] : [];
     })
     .sort((a, b) => {
       const aRecent =

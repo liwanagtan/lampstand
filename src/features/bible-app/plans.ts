@@ -272,6 +272,7 @@ export type DayStatus =
   | { kind: 'read'; day: number }
   /** Weekly plan: this week's lesson is done; the next one unlocks on `unlocks`. */
   | { kind: 'waiting'; day: number; next: number; unlocks: Date }
+  | { kind: 'paused' }
   /** Every day is done. */
   | { kind: 'finished' };
 
@@ -295,7 +296,7 @@ export function activePlanCount(
   const byId = new Map(plans.map((plan) => [plan.id, plan]));
   return progress.filter((record) => {
     const plan = byId.get(record.planId);
-    return record.planId !== exceptId && plan && !isPlanFinished(plan, record);
+    return record.planId !== exceptId && plan && !record.pausedAt && !isPlanFinished(plan, record);
   }).length;
 }
 
@@ -304,17 +305,16 @@ export function currentDay(plan: Plan, progress: PlanProgressRecord, now = new D
   const done = new Set(progress.done);
   const total = plan.days.length;
   if (isPlanFinished(plan, progress)) return { kind: 'finished' };
-  if (plan.pace === 'daily') {
+  if (progress.pausedAt) return { kind: 'paused' };
+  if (plan.pace === 'daily' || progress.rhythm) {
     for (let d = 1; d <= total; d++) if (!done.has(d)) return { kind: 'read', day: d };
     return { kind: 'finished' };
   }
   if (plan.pace === 'monthly') return monthlyDay(plan, progress, now, done);
   const startWeek = sundayOnOrBefore(localDayNumber(new Date(progress.startedAt)));
   const week = Math.floor((localDayNumber(now) - startWeek) / 7);
-  const lesson = Math.min(total, week + 1);
-  if (!done.has(lesson)) return { kind: 'read', day: lesson };
-  // This week's lesson is done: earlier missed lessons can still be read now.
-  for (let d = 1; d < lesson; d++) if (!done.has(d)) return { kind: 'read', day: d };
+  const lesson = Math.min(total, Math.max(1, week + 1));
+  for (let d = 1; d <= lesson; d++) if (!done.has(d)) return { kind: 'read', day: d };
   if (lesson >= total) return { kind: 'finished' };
   const unlocksDay = startWeek + (week + 1) * 7;
   const unlocks = new Date(unlocksDay * 86_400_000);
@@ -324,6 +324,47 @@ export function currentDay(plan: Plan, progress: PlanProgressRecord, now = new D
     next: lesson + 1,
     unlocks: new Date(unlocks.getUTCFullYear(), unlocks.getUTCMonth(), unlocks.getUTCDate()),
   };
+}
+
+export type PlanRhythm = NonNullable<PlanProgressRecord['rhythm']>;
+
+/** A personal target, never a lock: an overdue reading is simply ready today. */
+export function nextReadingDate(
+  progress: PlanProgressRecord,
+  rhythm: PlanRhythm = progress.rhythm ?? 'open',
+  now = new Date(),
+): Date | null {
+  const interval = { open: 0, daily: 1, 'every-few-days': 3, weekly: 7 }[rhythm];
+  if (!interval) return null;
+  const latestDone = Math.max(0, ...Object.values(progress.doneAt ?? {}));
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  if (!latestDone || latestDone <= (progress.rhythmChangedAt ?? progress.startedAt)) return today;
+  const anchorDate = new Date(latestDone);
+  const target = new Date(anchorDate.getFullYear(), anchorDate.getMonth(), anchorDate.getDate() + interval);
+  return target > today ? target : today;
+}
+
+export async function setPlanRhythm(planId: string, rhythm: PlanRhythm | null): Promise<void> {
+  await db.transaction('rw', db.plans, async () => {
+    const progress = await db.plans.get(planId);
+    if (!progress || progress.rhythm === (rhythm ?? undefined)) return;
+    const now = Date.now();
+    await db.plans.put({ ...progress, rhythm: rhythm ?? undefined, rhythmChangedAt: now, updatedAt: now });
+  });
+}
+
+export async function setPlanPaused(planId: string, paused: boolean): Promise<void> {
+  await db.transaction('rw', db.plans, async () => {
+    const progress = await db.plans.get(planId);
+    if (!progress || Boolean(progress.pausedAt) === paused) return;
+    const now = Date.now();
+    await db.plans.put({
+      ...progress,
+      pausedAt: paused ? now : undefined,
+      rhythmChangedAt: paused ? progress.rhythmChangedAt : now,
+      updatedAt: now,
+    });
+  });
 }
 
 /** Monthly lessons: a new one each calendar month, counted from the month the plan started. */
@@ -337,8 +378,7 @@ function monthlyDay(
   const start = new Date(progress.startedAt);
   const months = (now.getFullYear() - start.getFullYear()) * 12 + now.getMonth() - start.getMonth();
   const lesson = Math.min(total, Math.max(1, months + 1));
-  if (!done.has(lesson)) return { kind: 'read', day: lesson };
-  for (let d = 1; d < lesson; d++) if (!done.has(d)) return { kind: 'read', day: d };
+  for (let d = 1; d <= lesson; d++) if (!done.has(d)) return { kind: 'read', day: d };
   if (lesson >= total) return { kind: 'finished' };
   return {
     kind: 'waiting',
@@ -350,7 +390,7 @@ function monthlyDay(
 
 /** The day after `day` that can be read straight away (daily plans), or null. */
 export function readableNext(plan: Plan, progress: PlanProgressRecord, day: number): number | null {
-  if (plan.pace !== 'daily') return null;
+  if (plan.pace !== 'daily' && !progress.rhythm) return null;
   const done = new Set(progress.done);
   for (let d = day + 1; d <= plan.days.length; d++) if (!done.has(d)) return d;
   return null;
@@ -401,7 +441,8 @@ export function usePlanProgressFor(planId: string): PlanProgressRecord | null | 
 export const isLessons = (plan: Plan) => plan.pace !== 'daily';
 
 /** "This week's lesson", "This month's lesson" or "Up next". */
-export function currentLabel(plan: Plan): string {
+export function currentLabel(plan: Plan, progress?: PlanProgressRecord): string {
+  if (progress?.rhythm) return 'Up next';
   if (plan.pace === 'weekly') return "This week's lesson";
   if (plan.pace === 'monthly') return "This month's lesson";
   return 'Up next';

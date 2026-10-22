@@ -139,6 +139,10 @@ export interface PlanProgressRecord {
   done: number[];
   /** When each day was finished (epoch ms), for the week view. Missing on older records. */
   doneAt?: Record<number, number>;
+  /** Optional personal reading rhythm; the plan's published pace remains unchanged. */
+  rhythm?: 'open' | 'daily' | 'every-few-days' | 'weekly';
+  rhythmChangedAt?: number;
+  pausedAt?: number;
   updatedAt: number;
 }
 

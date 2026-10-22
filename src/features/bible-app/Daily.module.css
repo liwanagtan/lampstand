@@ -201,6 +201,28 @@
   background: rgb(245 242 234 / 0.1);
   color: var(--color-hero-text);
 }
+.pacingControls { display: grid; gap: 8px; margin-top: 4px; }
+.pacingHint { font-size: 13px; line-height: 1.4; color: var(--color-text-muted); }
+.hero .pacingHint { color: var(--color-hero-text-muted); }
+.pacingActions { display: flex; flex-wrap: wrap; gap: 8px; }
+.pacingActions button { min-height: 36px; padding-inline: 10px; font-size: 13px; }
+.hero .pacingActions button { color: var(--color-hero-text-muted); }
+.paused { padding-block: 20px; background: var(--color-surface); color: var(--color-text); }
+.paused .cardMeta, .paused .muted, .paused .pacingHint { color: var(--color-text-muted); }
+.paused .progress { background: var(--color-surface-sunk); }
+.paused .pacingActions button { color: var(--color-text-muted); }
+.pacingChoices { display: grid; gap: 8px; }
+.pacingChoice { display: flex; gap: 12px; align-items: flex-start; padding: 12px; border: 1px solid var(--color-border); border-radius: 12px; cursor: pointer; }
+.pacingChoice:has(input:checked) { border-color: var(--color-accent); background: var(--color-accent-tint); }
+.pacingChoice input { margin-top: 3px; accent-color: var(--color-accent-text); }
+.pacingChoice span { display: grid; gap: 3px; }
+.pacingChoice strong { font-size: 14px; }
+.pacingChoice small { font-size: 12px; line-height: 1.4; color: var(--color-text-muted); }
+.pacingPreview { margin-top: 12px; font-size: 13px; line-height: 1.5; color: var(--color-text-muted); }
+@media (max-width: 640px) {
+  .paused.card { background: var(--color-surface); color: var(--color-text); }
+  .paused .mobilePlanMeta { color: var(--color-text-muted); }
+}
 .done {
   display: inline-flex;
   align-items: center;

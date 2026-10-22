@@ -10,6 +10,7 @@ import { useReader } from './readerStore';
 import { useOpenInReader } from './useOpenInReader';
 import { categoryById } from '@/schema/planCatalog';
 import { ActivePlan } from './ActivePlan';
+import { PlanPacingControls } from './PlanPacingControls';
 import { CompletedPlanActions } from './CompletedPlanActions';
 import { planMeta, plansIn, visibleChildren } from './discover';
 import { CategoryChip, CategoryLinks, PlanCard } from './PlanCards';
@@ -205,9 +206,11 @@ export function PlanPage() {
             {status?.kind === 'waiting' && (
               <p>Your next lesson opens {new Date(status.unlocks).toLocaleDateString()}.</p>
             )}
+            {status?.kind === 'paused' && <p>Paused. Your finished readings are saved.</p>}
+            {status?.kind !== 'finished' && <PlanPacingControls plan={plan} progress={progress} />}
             {status?.kind !== 'finished' && (
               <div>
-                <small>Miss a day and simply carry on.</small>
+                <small>{progress.pausedAt ? 'Resume whenever you’re ready.' : 'Miss a day and simply carry on.'}</small>
                 <button onClick={() => setStopping(true)}>Stop plan</button>
               </div>
             )}
@@ -247,7 +250,7 @@ export function PlanPage() {
         </p>
       )}
 
-      <section className={cx(styles.preview, 'laptop-only')} aria-label="First reading">
+      {!progress && <section className={cx(styles.preview, 'laptop-only')} aria-label="First reading">
         <p className={styles.eyebrow}>{unit} 1</p>
         <h2 className={styles.previewTitle}>{first.title ?? formatDay(first)}</h2>
         <p className={styles.planMeta}>
@@ -262,7 +265,7 @@ export function PlanPage() {
         >
           Read {unit.toLowerCase()} 1
         </Button>
-      </section>
+      </section>}
 
       <section className={styles.mobileDays} aria-label="Plan readings">
         <h2>

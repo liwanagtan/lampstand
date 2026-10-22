@@ -102,7 +102,10 @@ export function journeyStats(input: {
 /** "2 plans going · 5 days read this month", or a gentle line when there's nothing yet. */
 export function journeyLine(s: JourneyStats): string {
   const parts: string[] = [];
-  if (s.going.length) parts.push(`${s.going.length} plan${s.going.length === 1 ? '' : 's'} going`);
+  const active = s.going.filter(({ progress }) => !progress.pausedAt).length;
+  const paused = s.going.length - active;
+  if (active) parts.push(`${active} plan${active === 1 ? '' : 's'} going`);
+  if (paused) parts.push(`${paused} plan${paused === 1 ? '' : 's'} paused`);
   if (s.daysThisMonth)
     parts.push(`${s.daysThisMonth} day${s.daysThisMonth === 1 ? '' : 's'} read this month`);
   return parts.length

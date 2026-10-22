@@ -52,7 +52,7 @@ it('backs up Bible marks, plan progress and journal entries', async () => {
     createdAt: 1,
     updatedAt: 1,
   });
-  await db.plans.put({ planId: 'gospels-40', startedAt: 1, done: [1, 2], updatedAt: 2 });
+  await db.plans.put({ planId: 'gospels-40', startedAt: 1, done: [1, 2], rhythm: 'weekly', pausedAt: 4, updatedAt: 5 });
   await db.entries.put({
     id: 'e-1',
     date: '2026-10-16',
@@ -65,7 +65,7 @@ it('backs up Bible marks, plan progress and journal entries', async () => {
   await Promise.all([db.marks.clear(), db.plans.clear(), db.entries.clear()]);
   const summary = await restoreBackup(new File([text], 'b.json'));
   expect(summary.study).toBe(3);
-  expect((await db.plans.get('gospels-40'))?.done).toEqual([1, 2]);
+  expect(await db.plans.get('gospels-40')).toMatchObject({ done: [1, 2], rhythm: 'weekly', pausedAt: 4 });
   expect((await db.entries.get('e-1'))?.body).toBe('Thanks');
 });
 

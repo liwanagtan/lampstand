@@ -712,6 +712,7 @@
   .activeHeading {
     display: none;
   }
+  .pausedHeading { display: block; }
   .searchBox {
     display: flex;
   }

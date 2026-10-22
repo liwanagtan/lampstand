@@ -11,7 +11,10 @@ import {
   importPlan,
   readingMinutes,
   removePlan,
+  nextReadingDate,
   setDayRead,
+  setPlanPaused,
+  setPlanRhythm,
   startPlan,
 } from './plans';
 
@@ -119,7 +122,7 @@ describe('which day to read', () => {
       expect(waiting.unlocks.getDay()).toBe(0);
       expect(waiting.unlocks.getDate()).toBe(18);
     }
-    // Next Sunday, lesson 2 is up; a missed lesson is offered after this week's.
+    // Next Sunday, lesson 2 is up; an older unread lesson still comes first.
     expect(currentDay(p, progress(start, [1]), new Date(2026, 9, 18))).toEqual({
       kind: 'read',
       day: 2,
@@ -128,6 +131,7 @@ describe('which day to read', () => {
       kind: 'read',
       day: 1,
     });
+    expect(currentDay(p, progress(start), new Date(2026, 9, 26))).toEqual({ kind: 'read', day: 1 });
   });
 
   it('marks days read', async () => {
@@ -137,6 +141,48 @@ describe('which day to read', () => {
     await setDayRead('gospels-40', 2, true);
     await setDayRead('gospels-40', 2, false);
     expect((await db.plans.get('gospels-40'))!.done).toEqual([1]);
+  });
+
+  it('pauses without losing completed days, then resumes at the next unread day', async () => {
+    await db.plans.clear();
+    await startPlan('gospels-40');
+    await setDayRead('gospels-40', 1, true);
+    await setPlanPaused('gospels-40', true);
+    const paused = (await db.plans.get('gospels-40'))!;
+    expect(currentDay(plan('gospels-40'), paused).kind).toBe('paused');
+    expect(activePlanCount([plan('gospels-40')], [paused])).toBe(0);
+    await setPlanPaused('gospels-40', false);
+    const resumed = (await db.plans.get('gospels-40'))!;
+    expect(resumed.done).toEqual([1]);
+    expect(resumed.doneAt?.[1]).toBe(paused.doneAt?.[1]);
+    expect(currentDay(plan('gospels-40'), resumed)).toEqual({ kind: 'read', day: 2 });
+  });
+
+  it('changes an authored weekly plan to a personal rhythm without resetting progress', async () => {
+    await db.plans.clear();
+    await startPlan('parables-8-weeks');
+    await setDayRead('parables-8-weeks', 1, true);
+    await setPlanRhythm('parables-8-weeks', 'every-few-days');
+    const changed = (await db.plans.get('parables-8-weeks'))!;
+    expect(changed.done).toEqual([1]);
+    expect(changed.rhythm).toBe('every-few-days');
+    expect(currentDay(plan('parables-8-weeks'), changed)).toEqual({ kind: 'read', day: 2 });
+    await setPlanRhythm('parables-8-weeks', null);
+    const original = (await db.plans.get('parables-8-weeks'))!;
+    expect(original.rhythm).toBeUndefined();
+    expect(original.done).toEqual([1]);
+    expect(currentDay(plan('parables-8-weeks'), original).kind).toBe('waiting');
+  });
+
+  it('suggests dates by local calendar day without creating an overdue backlog', () => {
+    const p = { ...progress(new Date(2026, 9, 22)), doneAt: { 1: new Date(2026, 9, 22, 22).getTime() } };
+    expect(nextReadingDate(p, 'every-few-days', new Date(2026, 9, 23))?.getDate()).toBe(25);
+    expect(nextReadingDate(p, 'every-few-days', new Date(2026, 9, 30))?.getDate()).toBe(30);
+    const changedToday = { ...p, rhythmChangedAt: new Date(2026, 9, 23, 9).getTime() };
+    expect(nextReadingDate(changedToday, 'every-few-days', new Date(2026, 9, 23, 10))?.getDate()).toBe(23);
+    const monthEnd = { ...p, doneAt: { 1: new Date(2026, 9, 31, 23).getTime() } };
+    expect(nextReadingDate(monthEnd, 'every-few-days', new Date(2026, 10, 1))?.getMonth()).toBe(10);
+    expect(nextReadingDate(monthEnd, 'every-few-days', new Date(2026, 10, 1))?.getDate()).toBe(3);
   });
 });
 
@@ -164,6 +210,10 @@ describe('monthly lessons', () => {
     expect(currentDay(r.plan, progress(start, [1]), new Date(2026, 10, 2))).toEqual({
       kind: 'read',
       day: 2,
+    });
+    expect(currentDay(r.plan, progress(start), new Date(2026, 11, 2))).toEqual({
+      kind: 'read',
+      day: 1,
     });
   });
 });

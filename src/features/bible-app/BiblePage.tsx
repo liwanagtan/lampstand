@@ -52,6 +52,7 @@ import { noteTipEvent } from '@/features/tips/tipStore';
 import { useSettings } from '@/features/settings/settingsStore';
 import { selectionRange, useReader, type Selection } from './readerStore';
 import { chapterCount, useChapter } from './useChapter';
+import { biblePosition, rememberBiblePosition } from './readingResume';
 import styles from './BiblePage.module.css';
 
 export interface BiblePageSlots {
@@ -110,11 +111,20 @@ export function BibleReader({ toolbar, selectionActions }: BiblePageSlots) {
   // The toolbar quiets while you read down the page and returns when you scroll back up.
   const [quiet, setQuiet] = useState(false);
   const lastTop = useRef(0);
+  const restoringPosition = useRef(true);
+  const restoredChapter = useRef('');
+  const savePositionTimer = useRef<number | null>(null);
   const onScroll = () => {
     const top = body.current?.scrollTop ?? 0;
     if (top < 120 || top < lastTop.current - 4) setQuiet(false);
     else if (top > lastTop.current + 4) setQuiet(true);
     lastTop.current = top;
+    if (restoringPosition.current) return;
+    if (savePositionTimer.current !== null) window.clearTimeout(savePositionTimer.current);
+    savePositionTimer.current = window.setTimeout(() => {
+      rememberBiblePosition(book, chapter, top);
+      savePositionTimer.current = null;
+    }, 200);
   };
   const bookName = BOOK_BY_CODE.get(book)?.name ?? book;
   const single = chapterCount(translation, book) === 1;
@@ -141,10 +151,42 @@ export function BibleReader({ toolbar, selectionActions }: BiblePageSlots) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [primary?.osis, selection?.start]);
 
+  useLayoutEffect(() => {
+    restoringPosition.current = true;
+    restoredChapter.current = '';
+    if (!selection) body.current?.scrollTo({ top: 0, behavior: 'instant' });
+    return () => {
+      if (savePositionTimer.current !== null) window.clearTimeout(savePositionTimer.current);
+      savePositionTimer.current = null;
+      if (!restoringPosition.current) rememberBiblePosition(book, chapter, lastTop.current);
+    };
+    // A new chapter starts at its own saved position once its verses have loaded.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [book, chapter]);
+
+  useLayoutEffect(() => {
+    if (!primary) return;
+    const key = `${book}.${chapter}`;
+    if (restoredChapter.current === key) return;
+    restoredChapter.current = key;
+    if (!selection)
+      body.current?.scrollTo({ top: biblePosition(book, chapter), behavior: 'instant' });
+    lastTop.current = body.current?.scrollTop ?? 0;
+    restoringPosition.current = false;
+  }, [primary, book, chapter, selection]);
+
+  useEffect(() => {
+    const flush = () => {
+      if (!restoringPosition.current)
+        rememberBiblePosition(book, chapter, body.current?.scrollTop ?? lastTop.current);
+    };
+    window.addEventListener('pagehide', flush);
+    return () => window.removeEventListener('pagehide', flush);
+  }, [book, chapter]);
+
   // A new chapter starts at the top unless a verse was chosen.
   const firstChapter = useRef(true);
   useEffect(() => {
-    if (!useReader.getState().selection) body.current?.scrollTo({ top: 0 });
     // Moving on to another chapter is a natural moment for a reading tip.
     if (firstChapter.current) firstChapter.current = false;
     else void noteTipEvent('chapter-read');
@@ -296,9 +338,9 @@ export function BibleReader({ toolbar, selectionActions }: BiblePageSlots) {
                   studyByVerse={studyByVerse}
                   onOpenStudy={(verse) => setStudy(verse)}
                 />
-              {(primary.copyright || second?.copyright) && (
-                <p className={styles.loading}>{primary.copyright || second?.copyright}</p>
-              )}
+                {(primary.copyright || second?.copyright) && (
+                  <p className={styles.loading}>{primary.copyright || second?.copyright}</p>
+                )}
               </>
             ) : (
               <p className={styles.loading}>Loading…</p>

@@ -55,6 +55,7 @@ import { MarkedVerseText } from './MarkedVerse';
 import { ReadingSettings } from './ReadingSettings';
 import { TranslationChip } from './TranslationChip';
 import { useVisibleMarks } from './marks';
+import { rememberPlanDay } from './readingResume';
 
 const dateFormat = new Intl.DateTimeFormat(undefined, {
   weekday: 'long',
@@ -75,6 +76,10 @@ export function PlanReaderPage() {
   const [position, setPosition] = useState('');
   // The whole day — note, scripture, devotional, questions, prayer — follows the text size.
   const size = useReader((s) => s.size);
+
+  useEffect(() => {
+    if (plan?.days[n - 1] && !progress?.done.includes(n)) rememberPlanDay(planId, n);
+  }, [plan, progress, planId, n]);
 
   useEffect(() => {
     const root = top.current?.closest('[data-scroll]');

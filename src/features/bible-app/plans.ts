@@ -14,6 +14,7 @@ import { parsePlanFile, type Plan, type PlanDay } from '@/schema/plan';
 import { localDayNumber } from './dailyVerses';
 import returning from './plans/returning-to-the-word.lampstand-plan.json';
 import understanding from './plans/reading-with-understanding.lampstand-plan.json';
+import { clearPlanResume } from './readingResume';
 // Every bundled plan file in ./plans is a built-in plan.
 const BUNDLED = {
   ...import.meta.glob<unknown>('./plans/*.lampstand-plan.json', { eager: true, import: 'default' }),
@@ -356,12 +357,14 @@ export function readableNext(plan: Plan, progress: PlanProgressRecord, day: numb
 }
 
 export async function startPlan(planId: string): Promise<void> {
+  clearPlanResume(planId);
   const now = Date.now();
   await db.plans.put({ planId, startedAt: now, done: [], updatedAt: now });
 }
 
 export async function stopPlan(planId: string): Promise<void> {
   await db.plans.delete(planId);
+  clearPlanResume(planId);
 }
 
 export async function setDayRead(planId: string, day: number, read: boolean): Promise<void> {

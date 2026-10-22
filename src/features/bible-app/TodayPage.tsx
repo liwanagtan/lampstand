@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { useLiveQuery } from 'dexie-react-hooks';
 import {
@@ -17,6 +17,7 @@ import { BOOK_BY_CODE } from '@/features/bible/books';
 import { formatRef, toOsis } from '@/features/bible/ref';
 import {
   addBundledBackground,
+  backgroundUrl,
   loadBackgrounds,
   type BackgroundEntry,
 } from '@/features/library/backgrounds';
@@ -39,6 +40,7 @@ import styles from './Today.module.css';
 import { useIsPhone } from '@/app/useIsPhone';
 import { paths } from '@/app/paths';
 import { faithJourneys } from '@/app/faithJourney';
+import { biblePosition, recentPlanDay } from './readingResume';
 
 const longDate = new Intl.DateTimeFormat(undefined, {
   weekday: 'long',
@@ -154,7 +156,6 @@ export function TodayPage() {
             <aside className={styles.aside} aria-label="Your daily reading">
               <WeekStrip now={now} />
               <ReflectionCard date={date} onReflect={() => setPanel('reflect')} />
-              <ResumeReading />
             </aside>
           </>
         )}
@@ -296,6 +297,7 @@ function VerseHero({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.05 }}
     >
+      {daily && <img className={styles.heroPhoto} src={backgroundUrl(daily.file)} alt="" />}
       <div className={styles.heroBody}>
         <p className={styles.heroEyebrow}>
           <Sparkles size={14} aria-hidden /> Verse of the day
@@ -407,9 +409,13 @@ function WeekStrip({ now }: { now: Date }) {
 }
 
 function TodayPlans() {
-  const navigate = useNavigate();
   const plans = usePlans();
   const progress = usePlanProgress();
+  const recent = recentPlanDay();
+  const book = useReader((s) => s.book);
+  const chapter = useReader((s) => s.chapter);
+  const translation = useReader((s) => s.translation);
+  const hasReadBible = useReader((s) => s.recent.length > 0) || biblePosition(book, chapter) > 0;
   if (!progress || !plans) return <section className={styles.card} aria-label="Reading plans" />;
   const active = progress
     .flatMap((p) => {
@@ -417,23 +423,29 @@ function TodayPlans() {
       return plan && !isPlanFinished(plan, p) ? [{ plan, p }] : [];
     })
     .sort((a, b) => {
+      const aRecent =
+        recent?.planId === a.plan.id &&
+        Boolean(a.plan.days[recent.day - 1]) &&
+        !a.p.done.includes(recent.day) &&
+        currentDay(a.plan, a.p).kind === 'read';
+      const bRecent =
+        recent?.planId === b.plan.id &&
+        Boolean(b.plan.days[recent.day - 1]) &&
+        !b.p.done.includes(recent.day) &&
+        currentDay(b.plan, b.p).kind === 'read';
+      if (aRecent !== bRecent) return Number(bRecent) - Number(aRecent);
       const aReady = currentDay(a.plan, a.p).kind === 'read';
       const bReady = currentDay(b.plan, b.p).kind === 'read';
       return Number(bReady) - Number(aReady) || b.p.updatedAt - a.p.updatedAt;
     });
   if (active.length === 0) {
     return (
-      <section className={styles.card} aria-label="Reading plans">
-        <h2 className={styles.cardTitle}>Start a reading plan</h2>
-        <p className={styles.muted}>
-          A little every day goes a long way. From a month of Psalms to weekly Sunday-school
-          lessons.
-        </p>
-        <div className={styles.row}>
-          <Button variant="primary" onClick={() => navigate(paths.plans)}>
-            Choose a plan
-          </Button>
+      <section className={styles.continueReading} aria-label="Continue reading">
+        <div className={styles.continueContent}>
+          <h2>{hasReadBible ? 'Continue reading' : 'Start reading'}</h2>
+          <p className={styles.continuePlace}>{BOOK_BY_CODE.get(book)?.refName ?? book} {chapter} <span>· {translation}</span></p>
         </div>
+        <Link className={styles.continueButton} to={paths.bible}>{hasReadBible ? 'Continue' : 'Open Bible'}</Link>
       </section>
     );
   }
@@ -445,7 +457,12 @@ function TodayPlans() {
             ? 'Continue your reading'
             : 'Your reading plan'}
         </h2>
-        <ActivePlan plan={active[0]!.plan} progress={active[0]!.p} compact />
+        <ActivePlan
+          plan={active[0]!.plan}
+          progress={active[0]!.p}
+          compact
+          resumeDay={recent?.planId === active[0]!.plan.id ? recent.day : undefined}
+        />
       </section>
       {active.length > 1 && (
         <details className={styles.otherPlans}>
@@ -493,28 +510,6 @@ function ReflectionCard({ date, onReflect }: { date: string; onReflect: () => vo
           </Button>
         </div>
       </div>
-    </section>
-  );
-}
-
-/** Desktop Today: resume the actual saved chapter and open the journal in Journey. */
-function ResumeReading() {
-  const book = useReader((s) => s.book);
-  const chapter = useReader((s) => s.chapter);
-  const translation = useReader((s) => s.translation);
-  return (
-    <section className={styles.resume} aria-label="Pick up where you left off">
-      <h2 className={styles.date}>Pick up where you left off</h2>
-      <Link to={paths.bible}>
-        <strong>
-          {BOOK_BY_CODE.get(book)?.refName ?? book} {chapter}
-        </strong>
-        <span>Bible · {translation}</span>
-      </Link>
-      <Link to={paths.profile}>
-        <strong>Your journal</strong>
-        <span>Journey</span>
-      </Link>
     </section>
   );
 }

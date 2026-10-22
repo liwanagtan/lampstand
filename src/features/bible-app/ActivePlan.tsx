@@ -27,14 +27,23 @@ export function ActivePlan({
   plan,
   progress,
   compact = false,
+  resumeDay,
 }: {
   plan: Plan;
   progress: PlanProgressRecord;
   compact?: boolean;
+  resumeDay?: number;
 }) {
   const navigate = useNavigate();
   const [stopping, setStopping] = useState(false);
-  const status = currentDay(plan, progress);
+  const next = currentDay(plan, progress);
+  const status =
+    next.kind === 'read' &&
+    resumeDay &&
+    plan.days[resumeDay - 1] &&
+    !progress.done.includes(resumeDay)
+      ? { kind: 'read' as const, day: resumeDay }
+      : next;
   const total = plan.days.length;
   const pct = Math.round((progress.done.length / total) * 100);
   const unit = isLessons(plan) ? 'Lesson' : 'Day';
@@ -118,7 +127,7 @@ export function ActivePlan({
               icon={<BookOpen size={16} />}
               onClick={() => navigate(paths.planDay(plan.id, status.day))}
             >
-              Read {unit.toLowerCase()} {status.day}
+              {resumeDay === status.day ? 'Continue' : 'Read'} {unit.toLowerCase()} {status.day}
             </Button>
             {!compact && (
               <Button

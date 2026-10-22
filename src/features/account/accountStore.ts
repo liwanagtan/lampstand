@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { isAuthRetryableFetchError, type User } from '@supabase/supabase-js';
 import { accountClient } from './client';
+import { flushInsights, track } from '@/features/insights/insights';
 import { reloadApp } from './reload';
 import { removeAccountCopy } from './storage';
 import { stopSync } from './syncStore';
@@ -106,6 +107,7 @@ export const useAccount = create<AccountState>((set) => ({
       return;
     }
     set({ error: null });
+    track('google_chosen');
     const { error } = await accountClient.auth.signInWithOAuth({
       provider: 'google',
       options: { redirectTo: `${window.location.origin}/` },
@@ -132,6 +134,8 @@ export const useAccount = create<AccountState>((set) => ({
       set({ error: 'Your account could not be deleted. Check your connection and try again.' });
       throw error;
     }
+    track('account_deleted');
+    await flushInsights();
     if (removeDeviceCopy) await removeAccountCopy(userId);
     forgetUser();
     // The login no longer exists on the server; only this browser's session is left to clear.

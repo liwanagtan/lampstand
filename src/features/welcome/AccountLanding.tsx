@@ -4,6 +4,7 @@ import { AnimatedLampMark, LampLockup } from '@/design-system/LampMark';
 import { colors } from '@/design-system/tokens';
 import { useAccount } from '@/features/account/accountStore';
 import { accountsConfigured } from '@/features/account/client';
+import { track } from '@/features/insights/insights';
 import styles from './InstallLanding.module.css';
 
 const palette = Object.fromEntries(
@@ -26,8 +27,7 @@ export function AccountLanding({ onContinueGuest }: { onContinueGuest: () => voi
           <p className={styles.eyebrow}>Welcome to Lampstand</p>
           <h1>Your faith journey, saved.</h1>
           <p className={styles.lede}>
-            Continue with Google to create or open your Lampstand account. Cross-device progress is
-            being prepared.
+            Continue with Google to keep your plans, journal and notes on every device you use.
           </p>
         </div>
         <Button
@@ -41,11 +41,24 @@ export function AccountLanding({ onContinueGuest }: { onContinueGuest: () => voi
         {!accountsConfigured && (
           <p className={styles.note}>Google sign-in is being prepared for this preview.</p>
         )}
-        {error && <p className={styles.guidance} role="alert">{error}</p>}
-        <Button variant="ghost" className={styles.continue} onClick={onContinueGuest}>
+        {error && (
+          <p className={styles.guidance} role="alert">
+            {error}
+          </p>
+        )}
+        <Button
+          variant="ghost"
+          className={styles.continue}
+          onClick={() => {
+            track('guest_chosen');
+            onContinueGuest();
+          }}
+        >
           Continue without an account
         </Button>
-        <p className={styles.note}>Guest progress stays on this device until you link an account.</p>
+        <p className={styles.note}>
+          Guest progress stays on this device until you link an account.
+        </p>
       </main>
     </div>
   );

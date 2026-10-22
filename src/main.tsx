@@ -14,10 +14,12 @@ import { selectAccountStorage } from '@/features/account/storage';
 import { useReader } from '@/features/bible-app/readerStore';
 import { startSync, useSync } from '@/features/account/syncStore';
 import { isOnboarded } from '@/app/onboarding';
+import { startInsights } from '@/features/insights/insights';
 
 applyTokens();
 listenForInstall();
 registerServiceWorker();
+startInsights();
 
 const root = createRoot(document.getElementById('root')!);
 

@@ -1,6 +1,6 @@
 # Accounts, sync, and usage insights
 
-Status: Phases 1–4 are implemented on the staging branch: backups, Google account entry with separate local profiles, guest import by choice, and cross-device sync with account deletion. Before sync is used, apply `supabase/account-sync.sql` to the staging project and run `supabase/rls-check.sql`. Google Auth is in Testing mode; only listed test users can sign in. Usage insights remain.
+Status: Phases 1–5 are implemented on the staging branch: backups, Google account entry with separate local profiles, guest import by choice, cross-device sync with account deletion, and anonymous usage insights. To turn them on in staging, run `supabase/account-sync.sql`, then `supabase/rls-check.sql`, then `supabase/usage-insights.sql` (and add maintainer emails to `usage_admins`). Google Auth is in Testing mode; only listed test users can sign in. Release to `main` waits for owner approval.
 
 ## Product decision
 
@@ -42,6 +42,8 @@ Backups remain available even after cloud sync. Phase 1 repairs the existing res
 ## Usage insights
 
 Keep traffic analytics separate from user progress. Cloudflare Web Analytics can provide page visits and performance. First-party product events should answer onboarding and reliability questions only. Proposed events: `welcome_started`, `google_chosen`, `guest_chosen`, `welcome_completed`, `guest_import_started/completed/failed`, `plan_started`, `plan_day_completed`, `reading_resumed`, `sync_failed/recovered`, `account_deleted`. Define an active user as a person with a qualifying reading or plan event on a day; report daily/weekly active users and retention by anonymous cohort. A pseudonymous guest ID may be linked on conversion only after clear notice.
+
+Owner decisions (2026-10-23): insights are on by default with a switch in Settings › Privacy; events carry only name, a random device code and the local date; automated browsers and tests are never counted. Journal text is not end-to-end encrypted in the first release, and the privacy page says so.
 
 Do not put name, email, journal text, prayer text, search terms, Bible text, verse references, or full URLs into event payloads. Aggregate counts for reporting; retain raw events only briefly (proposed 30 days) and document the actual period before enabling collection. Keep analytics optional to revise independently from account storage. The current PRD's “no analytics in V1” rule is superseded only when the owner approves this later release and its privacy copy.
 

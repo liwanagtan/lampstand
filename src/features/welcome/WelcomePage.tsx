@@ -16,6 +16,7 @@ import { useSettings } from '@/features/settings/settingsStore';
 import { useApplyDocumentTheme, useReducedMotion } from '@/features/settings/theme';
 import styles from './WelcomePage.module.css';
 import { colors } from '@/design-system/tokens';
+import { track } from '@/features/insights/insights';
 
 // Welcome has its own dark palette; the rest of the app remains light.
 const welcomePalette = Object.fromEntries(
@@ -43,6 +44,7 @@ export function WelcomePage() {
   const [setupError, setSetupError] = useState('');
   const [step, setStep] = useState<Step>('name');
   const [name, setName] = useState('');
+  useEffect(() => track('welcome_started'), []);
   useEffect(() => {
     main.current?.scrollTo?.({ top: 0 });
     main.current?.querySelector('h1')?.focus({ preventScroll: true });
@@ -90,6 +92,7 @@ export function WelcomePage() {
       const remaining = SETUP_DURATION_MS - (Date.now() - started);
       if (remaining > 0) await new Promise((resolve) => setTimeout(resolve, remaining));
       markOnboarded();
+      track('welcome_completed');
       navigate(paths.today, { replace: true });
     } catch {
       setSetupError('We couldn’t finish setting things up. Please try again.');

@@ -57,6 +57,7 @@ import { biblePosition, rememberBiblePosition } from './readingResume';
 import { useChapterReflection } from './journal';
 import { ReflectionMoment } from './ReflectionMoment';
 import { paths } from '@/app/paths';
+import { track } from '@/features/insights/insights';
 import styles from './BiblePage.module.css';
 
 export interface BiblePageSlots {
@@ -98,6 +99,8 @@ export function BibleReader({ toolbar, selectionActions }: BiblePageSlots) {
     setSelection,
     revealSelectionActions,
   } = useReader();
+  // Counted once a day (anonymous usage insights).
+  useEffect(() => track('chapter_read'), [book, chapter]);
   const [picking, setPicking] = useState(false);
   const [reading, setReading] = useState(false);
   const [reflecting, setReflecting] = useState(false);

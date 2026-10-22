@@ -32,6 +32,7 @@ export function safeBackupSetting(value: unknown): SettingRecord | null {
     case 'reduceMotion':
     case 'classicDevotional':
     case 'studyNotes':
+    case 'insights':
       safe = typeof v === 'boolean';
       break;
     case 'logoAssetId':

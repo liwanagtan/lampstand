@@ -18,6 +18,7 @@ import { RemindersSection } from '@/features/reminders/RemindersSection';
 import { Section } from './Section';
 import { InstallSection } from './InstallSection';
 import { AccountSection } from '@/features/account/AccountSection';
+import { PrivacySection } from '@/features/insights/PrivacySection';
 import { LAMPSTAND_PLANS, OPEN_CONTENT } from './credits';
 import styles from './SettingsPage.module.css';
 
@@ -52,6 +53,7 @@ export function SettingsPage() {
         </div>
       )}
       <TipsSection />
+      <PrivacySection />
       {phone ? (
         <>
           <Section title="Translations and data">

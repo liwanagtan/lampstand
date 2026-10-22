@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Button, Dialog } from '@/design-system/components';
+import { track } from '@/features/insights/insights';
 import { importGuestData, type GuestImportSummary } from './guestImport';
 
 const plural = (n: number, one: string, many: string) => `${n} ${n === 1 ? one : many}`;
@@ -23,9 +24,13 @@ export function GuestImportDialog({
   const bring = async () => {
     setImporting(true);
     setFailed(false);
+    track('guest_import_started');
     try {
-      onImported(await importGuestData());
+      const changed = await importGuestData();
+      track('guest_import_completed');
+      onImported(changed);
     } catch {
+      track('guest_import_failed');
       setFailed(true);
     } finally {
       setImporting(false);

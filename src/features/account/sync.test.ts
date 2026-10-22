@@ -79,7 +79,10 @@ it('brings a returning person’s records and choices to a new device', async ()
     updatedAt: 1,
   });
   await db.settings.put({ key: 'profile', value: { name: 'Grace' } });
-  await db.settings.put({ key: 'reminders', value: { enabled: true, time: '06:00', lastNotified: null } });
+  await db.settings.put({
+    key: 'reminders',
+    value: { enabled: true, time: '06:00', lastNotified: null },
+  });
   localStorage.setItem(
     `lampstand.reader.account.sync-${run}-a`,
     JSON.stringify({ book: 'PSA', chapter: 23, translation: 'BSB', parallel: null, size: 18 }),
@@ -96,10 +99,12 @@ it('brings a returning person’s records and choices to a new device', async ()
   expect((await db.settings.get('profile'))?.value).toEqual({ name: 'Grace' });
   // Reminder times belong to each device.
   expect(await db.settings.get('reminders')).toBeUndefined();
-  expect(JSON.parse(localStorage.getItem(`lampstand.reader.account.sync-${run}-b`)!)).toMatchObject({
-    book: 'PSA',
-    chapter: 23,
-  });
+  expect(JSON.parse(localStorage.getItem(`lampstand.reader.account.sync-${run}-b`)!)).toMatchObject(
+    {
+      book: 'PSA',
+      chapter: 23,
+    },
+  );
   expect((await sync()).pushed).toBe(0);
 });
 

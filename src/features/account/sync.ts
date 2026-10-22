@@ -51,6 +51,7 @@ export const SYNCED_SETTINGS: readonly SettingKey[] = [
   'reduceMotion',
   'classicDevotional',
   'studyNotes',
+  'insights',
   'defaultTheme',
   'defaultOverlayMode',
 ];

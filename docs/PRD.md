@@ -624,7 +624,7 @@ Reliability during a live service outranks every feature; when in doubt, choose 
 
 - Imported JSON is data only; no HTML or scripts from files are ever executed or rendered as HTML.
 - Text fields render as plain text (escape everything).
-- No analytics, telemetry or tracking in V1.
+- No analytics, telemetry or tracking in V1. Superseded 2026-10-23 by owner approval: anonymous usage counts, on by default with an off switch (docs/ACCOUNT-SYNC-ROLLOUT.md, Usage insights).
 
 ### Quality
 

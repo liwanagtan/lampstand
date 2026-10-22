@@ -5,6 +5,7 @@ import { isAuthRetryableFetchError } from '@supabase/supabase-js';
 import { db } from '@/db/db';
 import { useSettings } from '@/features/settings/settingsStore';
 import { useReader } from '@/features/bible-app/readerStore';
+import { track } from '@/features/insights/insights';
 import { accountClient } from './client';
 import { supabaseRemote } from './supabaseRemote';
 import { isApplyingRemote, syncOnce, type SyncRemote, type SyncResult } from './sync';
@@ -26,6 +27,7 @@ let lastKey = '';
 let timer: ReturnType<typeof setTimeout> | undefined;
 let running: Promise<SyncResult | null> | null = null;
 let again = false;
+let failing = false;
 
 function readLast(): number | null {
   try {
@@ -73,12 +75,18 @@ export const useSync = create<SyncState>((set) => ({
         } catch {
           // Shown for this visit only.
         }
+        if (failing) track('sync_recovered');
+        failing = false;
         set({ status: 'idle', lastSyncedAt: at, error: null });
         if (result.settingsChanged) await useSettings.getState().load();
         if (result.readingChanged) useReader.getState().reloadFromStorage();
         return result;
       } catch (err) {
-        set(describe(err));
+        const next = describe(err);
+        // Offline is expected; only real failures count, once until sync works again.
+        if (next.status === 'error' && !failing) track('sync_failed');
+        if (next.status === 'error') failing = true;
+        set(next);
         return null;
       } finally {
         running = null;

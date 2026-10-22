@@ -41,6 +41,7 @@ import { useIsPhone } from '@/app/useIsPhone';
 import { paths } from '@/app/paths';
 import { faithJourneys } from '@/app/faithJourney';
 import { biblePosition, recentPlanDay } from './readingResume';
+import { track } from '@/features/insights/insights';
 
 const longDate = new Intl.DateTimeFormat(undefined, {
   weekday: 'long',
@@ -443,9 +444,17 @@ function TodayPlans() {
       <section className={styles.continueReading} aria-label="Continue reading">
         <div className={styles.continueContent}>
           <h2>{hasReadBible ? 'Continue reading' : 'Start reading'}</h2>
-          <p className={styles.continuePlace}>{BOOK_BY_CODE.get(book)?.refName ?? book} {chapter} <span>· {translation}</span></p>
+          <p className={styles.continuePlace}>
+            {BOOK_BY_CODE.get(book)?.refName ?? book} {chapter} <span>· {translation}</span>
+          </p>
         </div>
-        <Link className={styles.continueButton} to={paths.bible}>{hasReadBible ? 'Continue' : 'Open Bible'}</Link>
+        <Link
+          className={styles.continueButton}
+          to={paths.bible}
+          onClick={() => hasReadBible && track('reading_resumed')}
+        >
+          {hasReadBible ? 'Continue' : 'Open Bible'}
+        </Link>
       </section>
     );
   }

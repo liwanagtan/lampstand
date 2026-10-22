@@ -80,6 +80,8 @@ export interface Settings {
   classicDevotional: boolean;
   /** Tyndale study notes in the reader and plan days. */
   studyNotes: boolean;
+  /** Send anonymous usage counts (src/features/insights/insights.ts). */
+  insights: boolean;
 }
 
 export interface RemindersState {

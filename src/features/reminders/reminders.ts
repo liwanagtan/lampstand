@@ -64,7 +64,7 @@ export function remindersIcs(
       `DTSTART:${day}T${pad(h)}${pad(m)}00`,
       'DURATION:PT10M',
       'RRULE:FREQ=DAILY',
-      `SUMMARY:${kind === 'morning' ? 'Morning reading' : 'Reading time'} — Lampstand`,
+      `SUMMARY:${kind === 'morning' ? 'Morning reading' : 'Evening reading'} — Lampstand`,
       `DESCRIPTION:A few quiet minutes in the Word. Open Lampstand: ${url}`,
       `URL:${url}`,
       'BEGIN:VALARM',

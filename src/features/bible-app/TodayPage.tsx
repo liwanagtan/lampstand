@@ -66,7 +66,9 @@ export function TodayPage() {
   const name = useSettings((s) => s.profile.name.trim().split(/\s+/)[0] ?? '');
   const classic = useSettings((s) => s.classicDevotional);
   const faithJourney = useSettings((s) => s.profile.faithJourney);
-  const showSalvation = faithJourneys(faithJourney).some((value) => value === 'exploring' || value === 'new');
+  const showSalvation = faithJourneys(faithJourney).some(
+    (value) => value === 'exploring' || value === 'new',
+  );
   const phone = useIsPhone();
   const progress = usePlanProgress();
   const plans = usePlans();
@@ -175,10 +177,16 @@ export function TodayPage() {
 }
 
 function SalvationInvitation() {
-  return <Link className={styles.salvationInvitation} to={paths.salvation}>
-    <span><small>FAITH FOUNDATIONS</small><strong>Understanding salvation</strong><span>Begin with the good news of Jesus Christ. Read at your own pace.</span></span>
-    <BookOpen size={22} aria-hidden />
-  </Link>;
+  return (
+    <Link className={styles.salvationInvitation} to={paths.salvation}>
+      <span>
+        <small>FAITH FOUNDATIONS</small>
+        <strong>Understanding salvation</strong>
+        <span>Begin with the good news of Jesus Christ. Read at your own pace.</span>
+      </span>
+      <BookOpen size={22} aria-hidden />
+    </Link>
+  );
 }
 
 /** Present / Stop Presenting for one verse. A session Today started ends when you leave Today. */
@@ -271,7 +279,9 @@ function VerseHero({
 
   const copy = async () => {
     try {
-      await navigator.clipboard.writeText(`“${text ?? ''}”\n— ${label} (${translation})`);
+      await navigator.clipboard.writeText(
+        `“${text ?? ''}”\n— ${label} (${translation})${passage?.copyright ? `\n\n${passage.copyright}` : ''}`,
+      );
       toast({ title: 'Copied the verse of the day', tone: 'success' });
     } catch {
       toast({ title: "Couldn't copy to the clipboard.", tone: 'warning' });
@@ -294,6 +304,7 @@ function VerseHero({
         <p className={styles.heroRef}>
           {label} <span>{translation}</span>
         </p>
+        {passage?.copyright && <small>{passage.copyright}</small>}
         <div className={styles.heroActions}>
           <Button icon={<BookOpen size={16} />} onClick={onContext} className={styles.heroButton}>
             Read in context

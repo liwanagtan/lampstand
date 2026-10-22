@@ -50,7 +50,7 @@ function PreparingScreen() {
             </h1>
             <p className={styles.text}>
               {preparing
-                ? `${progress.name}. This happens once; after this, Lampstand works fully offline.`
+                ? `${progress.name}. Built-in translations will be available offline.`
                 : ' '}
             </p>
             <div

@@ -4,6 +4,9 @@ import type { TranslationRecord } from '@/db/types';
 import { TranslationFileSchema, type TranslationFile } from '@/schema/translation';
 import { installTranslation, removeTranslation } from './install';
 import { clearPassageCache } from './passage';
+import { installNltMetadata } from './nlt';
+import { useSettings } from '@/features/settings/settingsStore';
+import { useReader } from '@/features/bible-app/readerStore';
 
 export interface BibleManifest {
   version: number;
@@ -30,14 +33,17 @@ interface BibleState {
   remove: (code: string) => Promise<void>;
 }
 
-const ORDER = ['BSB', 'KJV', 'WEB', 'ASV', 'YLT', 'DBY'];
+const ORDER = ['BSB', 'NLT', 'KJV', 'WEB'];
+const RETIRED = new Set(['ASV', 'YLT', 'DBY']);
 const sortTranslations = (list: TranslationRecord[]) =>
-  [...list].sort((a, b) => {
-    const ia = ORDER.indexOf(a.code);
-    const ib = ORDER.indexOf(b.code);
-    if (ia !== -1 || ib !== -1) return (ia === -1 ? 99 : ia) - (ib === -1 ? 99 : ib);
-    return a.code.localeCompare(b.code);
-  });
+  list
+    .filter((t) => !RETIRED.has(t.code))
+    .sort((a, b) => {
+      const ia = ORDER.indexOf(a.code);
+      const ib = ORDER.indexOf(b.code);
+      if (ia !== -1 || ib !== -1) return (ia === -1 ? 99 : ia) - (ib === -1 ? 99 : ib);
+      return a.code.localeCompare(b.code);
+    });
 
 const BASE = import.meta.env.BASE_URL ?? '/';
 
@@ -56,6 +62,11 @@ export const useBible = create<BibleState>((set, get) => ({
 
   refresh: async () => {
     const translations = sortTranslations(await db.translations.toArray());
+    if (RETIRED.has(useSettings.getState().defaultTranslation))
+      await useSettings.getState().set('defaultTranslation', 'BSB');
+    if (RETIRED.has(useReader.getState().translation)) useReader.getState().setTranslation('BSB');
+    if (useReader.getState().parallel && RETIRED.has(useReader.getState().parallel!))
+      useReader.getState().setParallel(null);
     set({ translations });
   },
 
@@ -92,6 +103,7 @@ export const useBible = create<BibleState>((set, get) => ({
           clearPassageCache();
           set({ progress: { done: todo.length, total: todo.length, name: '', fraction: 1 } });
         }
+        await installNltMetadata(db);
         await get().refresh();
         set({ status: 'ready', error: undefined });
       } catch (err) {
@@ -120,6 +132,8 @@ export const useBible = create<BibleState>((set, get) => ({
         `This isn't a valid Lampstand translation file: ${first?.message ?? 'unknown problem'}`,
       );
     }
+    if (RETIRED.has(parsed.data.code))
+      throw new Error(`${parsed.data.code} is no longer available in Lampstand.`);
     const existing = get().translations.find((t) => t.code === parsed.data.code);
     if (existing?.bundled)
       throw new Error(`${parsed.data.code} is built in and can't be replaced.`);

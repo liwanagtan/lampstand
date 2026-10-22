@@ -2,6 +2,7 @@ import type { LampstandDB } from '@/db/db';
 import type { TranslationRecord } from '@/db/types';
 import { formatRef, toOsis, versesInRange, type RefRange } from './ref';
 import { verseCountsFor } from './versification';
+import { ensureNltChapters, NLT_CODE } from './nlt';
 
 export interface PassageVerse {
   osis: string;
@@ -18,6 +19,7 @@ export interface Passage {
   reference: string;
   translation: string;
   verses: PassageVerse[];
+  copyright?: string;
 }
 
 const MAX_CACHE = 200;
@@ -34,14 +36,15 @@ export async function getPassage(
 ): Promise<Passage> {
   const osis = toOsis(range);
   const key = `${t.code}|${osis}`;
-  const hit = cache.get(key);
+  const counts = verseCountsFor(t);
+  const ids = versesInRange(range, counts);
+  const copyright = t.code === NLT_CODE ? await ensureNltChapters(db, ids) : undefined;
+  const hit = t.code === NLT_CODE ? undefined : cache.get(key);
   if (hit) {
     cache.delete(key);
     cache.set(key, hit);
     return hit;
   }
-  const counts = verseCountsFor(t);
-  const ids = versesInRange(range, counts);
   const rows = await db.verses.bulkGet(ids.map((id) => [t.code, id] as [string, string]));
   const verses = ids.map((id, i) => {
     const [, c, v] = id.split('.');
@@ -54,8 +57,11 @@ export async function getPassage(
     reference: formatRef(range, counts),
     translation: t.code,
     verses,
+    copyright,
   };
-  cache.set(key, passage);
-  if (cache.size > MAX_CACHE) cache.delete(cache.keys().next().value!);
+  if (t.code !== NLT_CODE) {
+    cache.set(key, passage);
+    if (cache.size > MAX_CACHE) cache.delete(cache.keys().next().value!);
+  }
   return passage;
 }

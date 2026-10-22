@@ -20,6 +20,10 @@ export const useSettings = create<SettingsState>((setState) => ({
         (loaded as Record<string, unknown>)[row.key] = row.value;
       }
     }
+    if (['ASV', 'YLT', 'DBY'].includes(loaded.defaultTranslation ?? '')) {
+      loaded.defaultTranslation = 'BSB';
+      await db.settings.put({ key: 'defaultTranslation', value: 'BSB' });
+    }
     setState({ ...loaded, uiMode: 'light', loaded: true });
   },
   set: async (key, value) => {

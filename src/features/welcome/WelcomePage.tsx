@@ -260,7 +260,10 @@ export function WelcomePage() {
                     onClick={() => setTranslation(t.code)}
                   >
                     <span className={styles.optionCode}>{t.code}</span>
-                    <span>{t.name}</span>
+                    <span>
+                      {t.name}
+                      {t.code === 'NLT' ? ' · Internet needed' : ''}
+                    </span>
                   </button>
                 ))}
               </div>

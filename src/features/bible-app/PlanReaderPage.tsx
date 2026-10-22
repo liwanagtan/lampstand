@@ -301,16 +301,19 @@ function ChapterBlock({
     >
       <h2 className={styles.chapterTitle}>{heading}</h2>
       {passage ? (
-        <p className={styles.text}>
-          {passage.verses
-            .filter((v) => v.verse >= from && v.verse <= to && !v.missing)
-            .map((v) => (
-              <span key={v.osis} className={styles.verse}>
-                <sup className={styles.num}>{v.verse}</sup>
-                <MarkedVerseText verse={v} marks={marks} />{' '}
-              </span>
-            ))}
-        </p>
+        <>
+          <p className={styles.text}>
+            {passage.verses
+              .filter((v) => v.verse >= from && v.verse <= to && !v.missing)
+              .map((v) => (
+                <span key={v.osis} className={styles.verse}>
+                  <sup className={styles.num}>{v.verse}</sup>
+                  <MarkedVerseText verse={v} marks={marks} />{' '}
+                </span>
+              ))}
+          </p>
+          {passage.copyright && <small>{passage.copyright}</small>}
+        </>
       ) : (
         <p className={styles.loading}>Loading…</p>
       )}

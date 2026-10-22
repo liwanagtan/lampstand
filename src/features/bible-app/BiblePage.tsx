@@ -183,7 +183,7 @@ export function BibleReader({ toolbar, selectionActions }: BiblePageSlots) {
     const verses = primary.verses.filter(
       (v) => v.verse >= range.start.verse && v.verse <= range.end.verse && !v.missing,
     );
-    const text = `${formatRef(range)} (${translation})\n${verses.map((v) => v.text).join(' ')}`;
+    const text = `${formatRef(range)} (${translation})\n${verses.map((v) => v.text).join(' ')}${primary.copyright ? `\n\n${primary.copyright}` : ''}`;
     try {
       await navigator.clipboard.writeText(text);
       toast({ title: `Copied ${formatRef(range)}`, tone: 'success' });
@@ -270,31 +270,36 @@ export function BibleReader({ toolbar, selectionActions }: BiblePageSlots) {
               )}
             </header>
             {primary ? (
-              <Verses
-                primary={primary}
-                second={second}
-                selection={selection}
-                onSelect={(v, extend) => {
-                  haptic('tap');
-                  if (
-                    selection &&
-                    !selectionActionsOpen &&
-                    v >= selection.start &&
-                    v <= selection.end
-                  ) {
-                    revealSelectionActions();
-                    return;
-                  }
-                  select(v, extend);
-                }}
-                marks={marks}
-                onOpenNote={(note) => {
-                  const r = fromOsis(note.ref);
-                  if (r) setNoteFor({ range: r, note });
-                }}
-                studyByVerse={studyByVerse}
-                onOpenStudy={(verse) => setStudy(verse)}
-              />
+              <>
+                <Verses
+                  primary={primary}
+                  second={second}
+                  selection={selection}
+                  onSelect={(v, extend) => {
+                    haptic('tap');
+                    if (
+                      selection &&
+                      !selectionActionsOpen &&
+                      v >= selection.start &&
+                      v <= selection.end
+                    ) {
+                      revealSelectionActions();
+                      return;
+                    }
+                    select(v, extend);
+                  }}
+                  marks={marks}
+                  onOpenNote={(note) => {
+                    const r = fromOsis(note.ref);
+                    if (r) setNoteFor({ range: r, note });
+                  }}
+                  studyByVerse={studyByVerse}
+                  onOpenStudy={(verse) => setStudy(verse)}
+                />
+              {(primary.copyright || second?.copyright) && (
+                <p className={styles.loading}>{primary.copyright || second?.copyright}</p>
+              )}
+              </>
             ) : (
               <p className={styles.loading}>Loading…</p>
             )}

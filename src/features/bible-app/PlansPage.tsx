@@ -76,16 +76,56 @@ export function PlansPage() {
         </p>
       )}
 
-      {active.length > 0 && (
-        <section className={styles.section} aria-label="Your plans">
-          <h2 className={styles.activeHeading}>Your plans</h2>
-          <div className={styles.activeGrid}>
-            {active.map((plan) => (
-              <ActivePlan key={plan.id} plan={plan} progress={byId.get(plan.id)!} />
-            ))}
-          </div>
-        </section>
-      )}
+      {/* Laptops: your plan and the suggestions sit side by side instead of one card stretching
+          across the page. */}
+      <div
+        className={styles.topRow}
+        data-split={(active.length > 0 && !searching && suggestions.length > 0) || undefined}
+      >
+        {active.length > 0 && (
+          <section className={styles.section} aria-label="Your plans">
+            <h2 className={styles.activeHeading}>Your plans</h2>
+            <div className={styles.activeGrid}>
+              {active.map((plan) => (
+                <ActivePlan key={plan.id} plan={plan} progress={byId.get(plan.id)!} />
+              ))}
+            </div>
+          </section>
+        )}
+
+        {!searching && suggestions.length > 0 && (
+          <section className={styles.suggestions} aria-labelledby="plan-suggestions-title">
+            <div className={styles.suggestionHeader}>
+              <div>
+                <h2 id="plan-suggestions-title" className={styles.groupTitle}>
+                  {faithJourneys(journey).length ? 'Suggested for you' : 'A place to start'}
+                </h2>
+                <p className={styles.groupText}>
+                  {faithJourneys(journey).length
+                    ? 'Chosen with your faith journey in mind.'
+                    : 'Start with Jesus’ life or a daily rhythm in the Psalms.'}
+                </p>
+              </div>
+            </div>
+            <ul className={styles.suggestionList}>
+              {suggestions.map(({ plan, reason }) => (
+                <li key={plan.id}>
+                  <Link to={paths.planPage(plan.id)} className={styles.suggestionLink}>
+                    <span>
+                      <span className={styles.suggestionName}>{plan.name}</span>
+                      <span className={styles.suggestionMeta}>{planMeta(plan)}</span>
+                      <span className={styles.suggestionReason}>{reason}</span>
+                    </span>
+                    <span className={styles.suggestionAction} aria-hidden>
+                      View plan <ArrowRight size={18} />
+                    </span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
+      </div>
 
       {paused.length > 0 && (
         <section className={styles.section} aria-label="Paused plans">
@@ -96,39 +136,6 @@ export function PlansPage() {
               <ActivePlan key={plan.id} plan={plan} progress={byId.get(plan.id)!} />
             ))}
           </div>
-        </section>
-      )}
-
-      {!searching && suggestions.length > 0 && (
-        <section className={styles.suggestions} aria-labelledby="plan-suggestions-title">
-          <div className={styles.suggestionHeader}>
-            <div>
-              <h2 id="plan-suggestions-title" className={styles.groupTitle}>
-                {faithJourneys(journey).length ? 'Suggested for you' : 'A place to start'}
-              </h2>
-              <p className={styles.groupText}>
-                {faithJourneys(journey).length
-                  ? 'Chosen with your faith journey in mind.'
-                  : 'Start with Jesus’ life or a daily rhythm in the Psalms.'}
-              </p>
-            </div>
-          </div>
-          <ul className={styles.suggestionList}>
-            {suggestions.map(({ plan, reason }) => (
-              <li key={plan.id}>
-                <Link to={paths.planPage(plan.id)} className={styles.suggestionLink}>
-                  <span>
-                    <span className={styles.suggestionName}>{plan.name}</span>
-                    <span className={styles.suggestionMeta}>{planMeta(plan)}</span>
-                    <span className={styles.suggestionReason}>{reason}</span>
-                  </span>
-                  <span className={styles.suggestionAction} aria-hidden>
-                    View plan <ArrowRight size={18} />
-                  </span>
-                </Link>
-              </li>
-            ))}
-          </ul>
         </section>
       )}
 

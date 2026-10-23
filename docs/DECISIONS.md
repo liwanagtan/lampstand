@@ -253,3 +253,7 @@ The Bible reader and plan readings share one `Passage` component and one selecti
 ### 2026-10-23 — A seven-step type scale, enforced
 
 App type uses seven sizes: 12 caption, 14 small and labels, 16 body, 20 subheading, 24 heading, 32 page title, 44 display (`fontSize` in `src/design-system/tokens.ts`, as `var(--text-N)`). The CSS had 85 different font-size values, about 190 in raw px; each moved to its nearest step, with ties rounding up for legibility (13 to 14, 15 to 16), and fluid `clamp()` headings keep their fluidity with endpoints on the scale. Scripture keeps following the reader's own size (em and `--reader-size`), and the TV output keeps its own scale. `npm run lint` now runs stylelint, which rejects raw px font sizes and size tokens off the scale (`stylelint.config.mjs`).
+
+### 2026-10-23 — Laptop layouts that use the width
+
+On laptops (1024px and up) Plans puts your plan beside the suggestions instead of one card stretching edge to edge; the plan page shows the list of days (previously phone-only) on the left with your progress, or how to start, on the right; tablets get the days list stacked. Screen's two ways in are compact rows, icon beside text, so the library below is in view.

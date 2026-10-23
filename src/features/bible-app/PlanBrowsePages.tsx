@@ -178,114 +178,118 @@ export function PlanPage() {
 
       <CategoryLinks ids={plan.categories} />
 
-      {progress ? (
-        <>
-          <div className="laptop-only">
-            <ActivePlan plan={plan} progress={progress} />
-          </div>
-          <section className={styles.mobileProgress} aria-label="Your progress">
-            <div>
-              <h2>Your progress</h2>
-              <span>
-                {progress.done.length} of {plan.days.length} {isLessons(plan) ? 'lessons' : 'days'}
-              </span>
+      {/* Laptops: the days on the left, your progress (or how to start) on the right. */}
+      <div className={styles.planBody}>
+        {progress ? (
+          <>
+            <div className="laptop-only">
+              <ActivePlan plan={plan} progress={progress} />
             </div>
-            <progress
-              max={plan.days.length}
-              value={progress.done.length}
-              aria-label="Plan progress"
-            />
-            {next && (
-              <Button variant="primary" onClick={() => navigate(paths.planDay(plan.id, next))}>
-                Read {unit.toLowerCase()} {next} · {formatDay(plan.days[next - 1]!)}
-              </Button>
-            )}
-            {status?.kind === 'finished' && <CompletedPlanActions plan={plan} />}
-            {status?.kind === 'waiting' && (
-              <p>Your next lesson opens {new Date(status.unlocks).toLocaleDateString()}.</p>
-            )}
-            {status?.kind === 'paused' && <p>Paused. Your finished readings are saved.</p>}
-            {status?.kind !== 'finished' && (
-              <div className={styles.planOptionsRow}>
-                <PlanPaceHint progress={progress} />
-                <PlanOptions plan={plan} progress={progress} />
+            <section className={styles.mobileProgress} aria-label="Your progress">
+              <div>
+                <h2>Your progress</h2>
+                <span>
+                  {progress.done.length} of {plan.days.length}{' '}
+                  {isLessons(plan) ? 'lessons' : 'days'}
+                </span>
               </div>
-            )}
-          </section>
-        </>
-      ) : (
-        <div className={styles.startArea}>
-          <div className={styles.startRow}>
-            <Button
-              variant="primary"
-              icon={<Play size={16} />}
-              onClick={() => (activeCount >= 2 ? setStartAdviceOpen(true) : begin())}
-              disabled={allPlans === undefined || allProgress === undefined}
-            >
-              Start plan
-            </Button>
-            {plan.source === 'imported' && (
-              <Button variant="ghost" onClick={() => setRemoving(true)}>
-                Remove plan
+              <progress
+                max={plan.days.length}
+                value={progress.done.length}
+                aria-label="Plan progress"
+              />
+              {next && (
+                <Button variant="primary" onClick={() => navigate(paths.planDay(plan.id, next))}>
+                  Read {unit.toLowerCase()} {next} · {formatDay(plan.days[next - 1]!)}
+                </Button>
+              )}
+              {status?.kind === 'finished' && <CompletedPlanActions plan={plan} />}
+              {status?.kind === 'waiting' && (
+                <p>Your next lesson opens {new Date(status.unlocks).toLocaleDateString()}.</p>
+              )}
+              {status?.kind === 'paused' && <p>Paused. Your finished readings are saved.</p>}
+              {status?.kind !== 'finished' && (
+                <div className={styles.planOptionsRow}>
+                  <PlanPaceHint progress={progress} />
+                  <PlanOptions plan={plan} progress={progress} />
+                </div>
+              )}
+            </section>
+          </>
+        ) : (
+          <div className={styles.startArea}>
+            <div className={styles.startRow}>
+              <Button
+                variant="primary"
+                icon={<Play size={16} />}
+                onClick={() => (activeCount >= 2 ? setStartAdviceOpen(true) : begin())}
+                disabled={allPlans === undefined || allProgress === undefined}
+              >
+                Start plan
               </Button>
-            )}
+              {plan.source === 'imported' && (
+                <Button variant="ghost" onClick={() => setRemoving(true)}>
+                  Remove plan
+                </Button>
+              )}
+            </div>
           </div>
-        </div>
-      )}
-
-      {plan.credits && (
-        <p className={styles.credits}>
-          From {plan.credits}
-          {plan.license ? ` · ${plan.license}` : ''}
-        </p>
-      )}
-
-      {!progress && (
-        <section className={cx(styles.preview, 'laptop-only')} aria-label="First reading">
-          <p className={styles.eyebrow}>{unit} 1</p>
-          <h2 className={styles.previewTitle}>{first.title ?? formatDay(first)}</h2>
-          <p className={styles.planMeta}>
-            {first.title && <span>{formatDay(first)} · </span>}
-            <Clock size={12} aria-hidden /> {readingMinutes(first)} min
-          </p>
-          {first.note && <p className={styles.previewNote}>{first.note}</p>}
-          <Button
-            variant="ghost"
-            icon={<BookOpen size={16} />}
-            onClick={() => navigate(paths.planDay(plan.id, 1))}
-          >
-            Read {unit.toLowerCase()} 1
-          </Button>
-        </section>
-      )}
-
-      <section className={styles.mobileDays} aria-label="Plan readings">
-        <h2>
-          Days <span>{plan.days.length} readings</span>
-        </h2>
-        {plan.days.slice(0, allDays ? undefined : 4).map((day, index) => (
-          <Link
-            key={index}
-            to={paths.planDay(plan.id, index + 1)}
-            className={styles.dayRow}
-            aria-label={`Read ${unit.toLowerCase()} ${index + 1}: ${day.title ?? formatDay(day)}`}
-          >
-            <span className={styles.dayNumber}>{index + 1}</span>
-            <span>
-              <strong>{day.title ?? formatDay(day)}</strong>
-              <small>
-                {readingMinutes(day)} min{progress?.done.includes(index + 1) ? ' · Finished' : ''}
-              </small>
-            </span>
-            <ArrowLeft size={18} className={styles.dayArrow} aria-hidden />
-          </Link>
-        ))}
-        {plan.days.length > 4 && !allDays && (
-          <Button variant="ghost" onClick={() => setAllDays(true)}>
-            Show all {plan.days.length} {isLessons(plan) ? 'lessons' : 'days'}
-          </Button>
         )}
-      </section>
+
+        {plan.credits && (
+          <p className={styles.credits}>
+            From {plan.credits}
+            {plan.license ? ` · ${plan.license}` : ''}
+          </p>
+        )}
+
+        {!progress && (
+          <section className={cx(styles.preview, 'laptop-only')} aria-label="First reading">
+            <p className={styles.eyebrow}>{unit} 1</p>
+            <h2 className={styles.previewTitle}>{first.title ?? formatDay(first)}</h2>
+            <p className={styles.planMeta}>
+              {first.title && <span>{formatDay(first)} · </span>}
+              <Clock size={12} aria-hidden /> {readingMinutes(first)} min
+            </p>
+            {first.note && <p className={styles.previewNote}>{first.note}</p>}
+            <Button
+              variant="ghost"
+              icon={<BookOpen size={16} />}
+              onClick={() => navigate(paths.planDay(plan.id, 1))}
+            >
+              Read {unit.toLowerCase()} 1
+            </Button>
+          </section>
+        )}
+
+        <section className={styles.mobileDays} aria-label="Plan readings">
+          <h2>
+            Days <span>{plan.days.length} readings</span>
+          </h2>
+          {plan.days.slice(0, allDays ? undefined : 4).map((day, index) => (
+            <Link
+              key={index}
+              to={paths.planDay(plan.id, index + 1)}
+              className={styles.dayRow}
+              aria-label={`Read ${unit.toLowerCase()} ${index + 1}: ${day.title ?? formatDay(day)}`}
+            >
+              <span className={styles.dayNumber}>{index + 1}</span>
+              <span>
+                <strong>{day.title ?? formatDay(day)}</strong>
+                <small>
+                  {readingMinutes(day)} min{progress?.done.includes(index + 1) ? ' · Finished' : ''}
+                </small>
+              </span>
+              <ArrowLeft size={18} className={styles.dayArrow} aria-hidden />
+            </Link>
+          ))}
+          {plan.days.length > 4 && !allDays && (
+            <Button variant="ghost" onClick={() => setAllDays(true)}>
+              Show all {plan.days.length} {isLessons(plan) ? 'lessons' : 'days'}
+            </Button>
+          )}
+        </section>
+      </div>
 
       <Dialog
         open={startAdviceOpen}

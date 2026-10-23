@@ -27,7 +27,8 @@ Google sign-in is hidden for now (`docs/DECISIONS.md`, 2026-10-23). To turn it b
 
 In rough order of value (from the review's "Still to do").
 
-- [x] Today: one "Go deeper" card; labelled Copy (done `3f4dba6`).
+- [x] Today: labelled Copy on the verse card (done `3f4dba6`). The "Go deeper" card was tried and reverted at the owner's request: Take five minutes and the Classic devotional stay separate, the devotional in its fuller form.
+- [ ] **Faith Foundations:** it shows only when the faith journey includes exploring or new to faith. The new Welcome asks one "where to start" question, so fewer people get it; decide whether to show it more widely.
 - [x] Day done: two choices and the next reading's title (done `3f4dba6`).
 - [ ] **Journey for new readers:** hide "0 Plans finished" and the month calendar until there is history; lead with the journal and one encouraging line.
 - [ ] **Settings › Reading:** text size still reads "20 px"; use the same growing-letters scale as the Reading sheet.

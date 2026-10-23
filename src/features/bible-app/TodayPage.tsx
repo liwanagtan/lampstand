@@ -15,7 +15,7 @@ import {
 import { Button, IconButton, cx, toast } from '@/design-system/components';
 import { db } from '@/db/db';
 import { BOOK_BY_CODE } from '@/features/bible/books';
-import { toOsis } from '@/features/bible/ref';
+import { formatRef, toOsis } from '@/features/bible/ref';
 import {
   addBundledBackground,
   backgroundUrl,
@@ -29,11 +29,14 @@ import { useReducedMotion } from '@/features/settings/theme';
 import { useSettings } from '@/features/settings/settingsStore';
 import { usePassage } from '@/slides/usePassage';
 import { localDate, localDayNumber, verseOfTheDay } from './dailyVerses';
+import { entryHasContent, entryPreview, useReflection } from './journal';
 import { currentDay, formatDay, isPlanFinished, usePlanProgress, usePlans } from './plans';
 import { ActivePlan } from './ActivePlan';
 import { useReader } from './readerStore';
 import { ContextPanel, ReflectPanel } from './TodayPanels';
 import { showOnTv } from './tvActions';
+import { FlameCompanion } from '@/design-system/FlameCompanion';
+import { ClassicDevotional } from './ClassicDevotional';
 import styles from './Today.module.css';
 import { useIsPhone } from '@/app/useIsPhone';
 import { paths } from '@/app/paths';
@@ -41,7 +44,6 @@ import { faithJourneys } from '@/app/faithJourney';
 import { biblePosition, recentPlanDay } from './readingResume';
 import { track } from '@/features/insights/insights';
 import { SaveOffer } from '@/features/account/SaveOffer';
-import { GoDeeper } from './GoDeeper';
 import { accountStorageKey } from '@/features/account/storage';
 
 const longDate = new Intl.DateTimeFormat(undefined, {
@@ -136,13 +138,13 @@ export function TodayPage() {
               <WeekStrip now={now} />
             </div>
             <div className={styles.reflectSlot}>
-              <GoDeeper
-                now={now}
-                date={date}
-                classic={classic}
-                onReflect={() => setPanel('reflect')}
-              />
+              <ReflectionCard date={date} onReflect={() => setPanel('reflect')} />
             </div>
+            {classic && (
+              <div className={styles.classicSlot}>
+                <ClassicDevotional now={now} />
+              </div>
+            )}
           </>
         ) : (
           <>
@@ -154,15 +156,11 @@ export function TodayPage() {
                 onReflect={() => setPanel('reflect')}
               />
               {showSalvation && <SalvationInvitation />}
+              {classic && <ClassicDevotional now={now} />}
             </div>
             <aside className={styles.aside} aria-label="Your daily reading">
               <WeekStrip now={now} />
-              <GoDeeper
-                now={now}
-                date={date}
-                classic={classic}
-                onReflect={() => setPanel('reflect')}
-              />
+              <ReflectionCard date={date} onReflect={() => setPanel('reflect')} />
             </aside>
           </>
         )}
@@ -528,3 +526,38 @@ function TodayPlans() {
   );
 }
 
+function ReflectionCard({ date, onReflect }: { date: string; onReflect: () => void }) {
+  const entry = useReflection(date);
+  const written = entryHasContent(entry);
+  const { range } = verseOfTheDay();
+  return (
+    <section className={cx(styles.card, styles.reflect)} aria-label="Reflection">
+      {!written && <FlameCompanion size={96} className={styles.companion} />}
+      <div className={styles.reflectBody}>
+        <h2 className={styles.cardTitle}>{written ? 'Your reflection' : 'Take five minutes'}</h2>
+        {written && entry ? (
+          <>
+            <p className={styles.preview}>“{entryPreview(entry)}”</p>
+            <p className={styles.done}>
+              <Check size={16} aria-hidden /> Saved to your journal
+            </p>
+          </>
+        ) : (
+          <p className={styles.muted}>
+            Sit with {formatRef(range)} for a moment. What is God saying to you? A few simple
+            questions can help.
+          </p>
+        )}
+        <div className={styles.row}>
+          <Button
+            variant={written ? 'secondary' : 'gold'}
+            icon={<NotebookPen size={16} />}
+            onClick={onReflect}
+          >
+            {written ? 'Keep writing' : 'Reflect'}
+          </Button>
+        </div>
+      </div>
+    </section>
+  );
+}

@@ -265,3 +265,7 @@ Today's reflection prompt and Spurgeon's Morning and Evening share one "Go deepe
 ### 2026-10-23 — Google sign-in hidden until the app is finished
 
 Accounts are switched off by default: `accountsConfigured` (src/features/account/client.ts) is true only with `VITE_ACCOUNTS=on` as well as the Supabase keys. While off, the landing offers only Get started, Settings has no Account section, the "Keep your journey" offer never shows, the privacy page leaves out the Google section, and any stored session is ignored so everyone uses the app as a guest. Anonymous usage counts keep working. The account, sync and Insights end-to-end tests skip until the switch is on. All the account code stays in place for later.
+
+### 2026-10-23 — Go deeper reverted
+
+The owner prefers Take five minutes and the Classic devotional as separate blocks, with the devotional's key verse, preview and Morning/Evening control on Today. The Go deeper card is removed; the labelled Copy button and the calmer day-done moment stay.

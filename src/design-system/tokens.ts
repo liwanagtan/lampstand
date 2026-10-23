@@ -85,6 +85,39 @@ export const colors = {
 export type ColorToken = keyof (typeof colors)['dark'];
 
 /**
+ * Fixed colours that don't change with light or dark: the brand's ink, cream and gold where a
+ * surface is always dark or always gold, the five highlight colours and the avatar colours.
+ * Exposed as --palette-*. Everything else uses the --color-* theme tokens; stylelint rejects
+ * hex colours in CSS (stylelint.config.mjs).
+ */
+export const palette = {
+  ink: '#0A0F1C',
+  'ink-raised': '#161C2B',
+  'ink-border': '#222A3B',
+  cream: '#F5F2EA',
+  'cream-muted': '#C9CDD6',
+  gold: '#F2B33D',
+  'gold-bright': '#FFCB69',
+  'gold-tint-dark': '#2A2416',
+  black: '#000000',
+  white: '#FFFFFF',
+  // The live preview outline on Screen.
+  'preview-blue': '#6FB3FF',
+  'preview-blue-text': '#CFE6FF',
+  // Highlights: gold, sage, sky, rose, lilac.
+  'mark-yellow': '#F2C25F',
+  'mark-green': '#9CCB9F',
+  'mark-blue': '#8FB8F2',
+  'mark-pink': '#EBA0BE',
+  'mark-purple': '#B9A3EE',
+  'avatar-sage': '#6FA67F',
+  'avatar-sky': '#5B9BD5',
+  'avatar-rose': '#D9779B',
+  'avatar-violet': '#9A7FD1',
+  'avatar-slate': '#7D8794',
+} as const;
+
+/**
  * The type scale: seven steps, each about 1.2× the last (docs/DECISIONS.md, 2026-10-23).
  * 12 caption · 14 small and labels · 16 body · 20 subheading · 24 heading · 32 page title ·
  * 44 display. Scripture follows the reader's own size (--reader-size) instead.
@@ -186,6 +219,7 @@ function cssVars(scheme: ColorScheme): string {
 
 function staticVars(): string {
   const out: string[] = [];
+  for (const [k, v] of Object.entries(palette)) out.push(`--palette-${k}: ${v};`);
   for (const [k, v] of Object.entries(fontSize)) out.push(`--text-${k}: ${v}px;`);
   for (const [k, v] of Object.entries(fontWeight)) out.push(`--weight-${k}: ${v};`);
   for (const [k, v] of Object.entries(space)) out.push(`--space-${k}: ${v}px;`);

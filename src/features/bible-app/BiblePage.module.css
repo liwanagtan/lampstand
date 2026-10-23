@@ -128,19 +128,19 @@
 }
 /* The design system's five highlight colours: gold, sage, sky, rose, lilac. */
 [data-color='yellow'] {
-  --hl: #f2c25f;
+  --hl: var(--palette-mark-yellow);
 }
 [data-color='green'] {
-  --hl: #9ccb9f;
+  --hl: var(--palette-mark-green);
 }
 [data-color='blue'] {
-  --hl: #8fb8f2;
+  --hl: var(--palette-mark-blue);
 }
 [data-color='pink'] {
-  --hl: #eba0be;
+  --hl: var(--palette-mark-pink);
 }
 [data-color='purple'] {
-  --hl: #b9a3ee;
+  --hl: var(--palette-mark-purple);
 }
 @container (max-width: 860px) {
   .toolbar {

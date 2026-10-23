@@ -72,12 +72,12 @@
 .install {
   width: min(100%, 280px);
   min-height: 52px;
-  background: #f2b33d;
-  color: #0a0f1c;
+  background: var(--palette-gold);
+  color: var(--palette-ink);
 }
 .install:hover:not(:disabled) {
-  background: #ffcb69;
-  color: #0a0f1c;
+  background: var(--palette-gold-bright);
+  color: var(--palette-ink);
 }
 .continue {
   min-height: 44px;

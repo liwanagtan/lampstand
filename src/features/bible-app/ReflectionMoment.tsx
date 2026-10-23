@@ -59,7 +59,7 @@ export function ReflectionMoment({
       <p className={styles.question}>{question}</p>
       {/* Two clear choices: write, or be done. Prayer and the passage stay a quiet tap away. */}
       <div className={styles.actions}>
-        <Button variant="primary" icon={<NotebookPen size={16} />} onClick={write}>
+        <Button variant="gold" icon={<NotebookPen size={16} />} onClick={write}>
           {saved ? 'Edit reflection' : 'Write a reflection'}
         </Button>
         <Button onClick={onFinish}>Done</Button>

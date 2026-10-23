@@ -12,7 +12,11 @@ import { markOnboarded } from '@/app/onboarding';
 import { builtinPlans, startPlan } from '@/features/bible-app/plans';
 import { useAccount } from '@/features/account/accountStore';
 import { useSettings } from '@/features/settings/settingsStore';
-import { useApplyDocumentTheme, useReducedMotion } from '@/features/settings/theme';
+import {
+  useApplyDocumentTheme,
+  useReducedMotion,
+  useStatusBarColor,
+} from '@/features/settings/theme';
 import styles from './WelcomePage.module.css';
 import { colors } from '@/design-system/tokens';
 import { track } from '@/features/insights/insights';
@@ -56,6 +60,7 @@ function googleFirstName(meta: Record<string, unknown> | undefined): string {
  */
 export function WelcomePage() {
   useApplyDocumentTheme();
+  useStatusBarColor(colors.dark.bg);
   const navigate = useNavigate();
   const reduced = useReducedMotion();
   const googleName = useAccount((s) => googleFirstName(s.user?.user_metadata));

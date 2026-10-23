@@ -19,6 +19,7 @@ export default defineConfig({
           localStorage: [
             { name: 'lampstand.onboarded', value: '1' },
             { name: 'lampstand.saveOffer.dismissed', value: '1' },
+            { name: 'lampstand.installOffer.dismissed', value: '1' },
           ],
         },
       ],

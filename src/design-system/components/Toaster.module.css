@@ -108,4 +108,18 @@
   .viewport {
     top: calc(env(safe-area-inset-top) + var(--space-2));
   }
+  /* Quiet notices sit just above the tab bar instead of over the page's header. */
+  .quiet {
+    top: auto;
+    bottom: calc(72px + env(safe-area-inset-bottom));
+  }
+  .quiet .toast {
+    animation-name: toastUp;
+  }
+}
+@keyframes toastUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
 }

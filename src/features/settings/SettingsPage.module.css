@@ -99,7 +99,7 @@
   aspect-ratio: 16 / 9;
   overflow: hidden;
   border-radius: var(--radius-md);
-  background: #000;
+  background: var(--palette-black);
 }
 .logoPreview img {
   max-width: 60%;
@@ -107,7 +107,7 @@
   object-fit: contain;
 }
 .logoMark {
-  color: #f5f2ea;
+  color: var(--palette-cream);
 }
 .table {
   min-width: 540px;

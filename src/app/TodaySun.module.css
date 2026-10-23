@@ -3,22 +3,22 @@
   --today-sun-background:
     radial-gradient(
       circle at var(--sun-x, calc(100% - 180px)) var(--sun-y, 110px),
-      var(--sun, #f2b33d) 0 44px,
+      var(--sun, var(--palette-gold)) 0 44px,
       transparent 45px
     ),
     radial-gradient(
       circle at var(--sun-x, calc(100% - 180px)) var(--sun-y, 110px),
-      var(--halo, #f2b33d29) 0 92px,
+      var(--halo, color-mix(in srgb, var(--palette-gold) 16%, transparent)) 0 92px,
       transparent 93px
     ),
     radial-gradient(
       circle at var(--sun-x, calc(100% - 180px)) var(--sun-y, 110px),
-      var(--halo, #f2b33d29) 0 160px,
+      var(--halo, color-mix(in srgb, var(--palette-gold) 16%, transparent)) 0 160px,
       transparent 161px
     ),
     radial-gradient(
       circle at var(--sun-x, calc(100% - 180px)) var(--sun-y, 110px),
-      var(--halo, #f2b33d29) 0 250px,
+      var(--halo, color-mix(in srgb, var(--palette-gold) 16%, transparent)) 0 250px,
       transparent 251px
     ),
     linear-gradient(var(--sky, var(--color-dawn)), var(--color-bg)) 0 0 / 100% 440px no-repeat,
@@ -29,22 +29,22 @@
     --today-sun-background:
       radial-gradient(
         circle at var(--sun-x, calc(100% - 70px)) var(--sun-y, 26px),
-        #f2b33d 0 36px,
+        var(--palette-gold) 0 36px,
         transparent 37px
       ),
       radial-gradient(
         circle at var(--sun-x, calc(100% - 70px)) var(--sun-y, 26px),
-        #f2b33d4d 0 70px,
+        color-mix(in srgb, var(--palette-gold) 30%, transparent) 0 70px,
         transparent 71px
       ),
       radial-gradient(
         circle at var(--sun-x, calc(100% - 70px)) var(--sun-y, 26px),
-        #f2b33d2e 0 120px,
+        color-mix(in srgb, var(--palette-gold) 18%, transparent) 0 120px,
         transparent 121px
       ),
       radial-gradient(
         circle at var(--sun-x, calc(100% - 70px)) var(--sun-y, 26px),
-        #f2b33d1f 0 190px,
+        color-mix(in srgb, var(--palette-gold) 12%, transparent) 0 190px,
         transparent 191px
       ),
       linear-gradient(var(--color-dawn), var(--color-bg)) 0 0 / 100% 376px no-repeat,

@@ -51,7 +51,7 @@
   width: 26px;
   height: 26px;
   border-radius: 50%;
-  background: #fff;
+  background: var(--palette-white);
   box-shadow: var(--elevation-1);
   transform: translateX(2px);
   transition:

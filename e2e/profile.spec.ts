@@ -55,8 +55,10 @@ test('an empty Journey has one welcome and one way to write', async ({ page }) =
     page.getByRole('dialog').getByRole('status').filter({ hasText: 'Saved' }),
   ).toBeVisible();
   await page.keyboard.press('Escape');
-  // Now the journal has an entry: New entry moves to its header, and the summary appears.
+  // Now the journal has an entry: New entry moves to its header, and one encouraging line
+  // stands in for the summary until there are a few days of reading.
   await expect(page.getByRole('button', { name: 'New entry' })).toHaveCount(1);
   await expect(page.getByRole('button', { name: 'Write your first entry' })).toHaveCount(0);
-  await expect(page.getByRole('region', { name: 'Your journey so far' })).toBeVisible();
+  await expect(page.getByText('You have read on one day. A good beginning.')).toBeVisible();
+  await expect(page.getByRole('region', { name: 'Your journey so far' })).toHaveCount(0);
 });

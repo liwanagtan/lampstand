@@ -13,17 +13,17 @@
   --avatar: var(--color-accent);
 }
 [data-avatar-color='sage'] {
-  --avatar: #6fa67f;
+  --avatar: var(--palette-avatar-sage);
 }
 [data-avatar-color='sky'] {
-  --avatar: #5b9bd5;
+  --avatar: var(--palette-avatar-sky);
 }
 [data-avatar-color='rose'] {
-  --avatar: #d9779b;
+  --avatar: var(--palette-avatar-rose);
 }
 [data-avatar-color='violet'] {
-  --avatar: #9a7fd1;
+  --avatar: var(--palette-avatar-violet);
 }
 [data-avatar-color='slate'] {
-  --avatar: #7d8794;
+  --avatar: var(--palette-avatar-slate);
 }

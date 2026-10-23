@@ -37,6 +37,7 @@ import { ContextPanel, ReflectPanel } from './TodayPanels';
 import { showOnTv } from './tvActions';
 import { FlameCompanion } from '@/design-system/FlameCompanion';
 import { ClassicDevotional } from './ClassicDevotional';
+import { InstallOffer } from './InstallOffer';
 import styles from './Today.module.css';
 import { useIsPhone } from '@/app/useIsPhone';
 import { paths } from '@/app/paths';
@@ -130,6 +131,7 @@ export function TodayPage() {
                 </span>
               </Link>
             )}
+            <InstallOffer />
             {showSalvation && <SalvationInvitation />}
             <div className={styles.weekSlot}>
               <WeekStrip now={now} />
@@ -514,7 +516,7 @@ function TodayPlans() {
           <summary>Other reading plans ({active.length - 1})</summary>
           <div className={styles.otherPlansList}>
             {active.slice(1).map(({ plan, p }) => (
-              <ActivePlan key={plan.id} plan={plan} progress={p} compact />
+              <ActivePlan key={plan.id} plan={plan} progress={p} compact quiet />
             ))}
           </div>
         </details>

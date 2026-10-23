@@ -112,7 +112,7 @@
   overflow: hidden;
   border-radius: var(--radius-md);
   border: 2px solid var(--color-border);
-  background: #000;
+  background: var(--palette-black);
 }
 .liveFrame {
   border-color: var(--color-live);
@@ -210,7 +210,7 @@
   padding: 1px 6px;
   border-radius: 4px;
   background: rgb(0 0 0 / 0.6);
-  color: #fff;
+  color: var(--palette-white);
   font-size: var(--text-12);
   font-variant-numeric: tabular-nums;
 }
@@ -370,7 +370,7 @@
   text-align: right;
 }
 .frozenFrame {
-  border-color: #6fb3ff;
+  border-color: var(--palette-preview-blue);
 }
 .frozenBadge {
   position: absolute;
@@ -383,7 +383,7 @@
   padding: 4px 10px;
   border-radius: 999px;
   background: rgb(10 20 40 / 0.82);
-  color: #cfe6ff;
+  color: var(--palette-preview-blue-text);
   font-size: var(--text-12);
   font-weight: var(--weight-semibold);
   letter-spacing: 0.08em;

@@ -2,6 +2,7 @@ import { useEffect, type CSSProperties } from 'react';
 import { Button } from '@/design-system/components';
 import { AnimatedLampMark } from '@/design-system/LampMark';
 import { colors } from '@/design-system/tokens';
+import { useStatusBarColor } from '@/features/settings/theme';
 import { useAccount } from '@/features/account/accountStore';
 import { useBible } from '@/features/bible/bibleStore';
 import { accountsConfigured } from '@/features/account/client';
@@ -20,6 +21,7 @@ const palette = Object.fromEntries(
 export function AccountLanding({ onContinueGuest }: { onContinueGuest: () => void }) {
   const signIn = useAccount((s) => s.signInWithGoogle);
   const error = useAccount((s) => s.error);
+  useStatusBarColor(colors.dark.bg);
   // Prepare the offline Bibles while the person decides, so Welcome opens without a wait.
   useEffect(() => void useBible.getState().init(), []);
 

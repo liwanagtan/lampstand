@@ -1,11 +1,50 @@
-.muted {
-  padding: var(--space-3) 0;
-  font-size: var(--text-14);
-  line-height: 1.5;
-  color: var(--color-text-muted);
+/* Live pane: what a click on a word does (Highlight or Words). */
+.liveTools {
+  display: flex;
+  flex: none;
+  gap: 2px;
+  padding: 2px;
+  border-radius: 999px;
+  background: var(--color-surface-sunk);
 }
-.bgPanel {
-  padding: var(--space-3) 0;
+.liveTool {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 28px;
+  padding: 0 var(--space-3);
+  border: 0;
+  border-radius: 999px;
+  background: none;
+  color: var(--color-text-muted);
+  font: inherit;
+  font-size: var(--text-12);
+  font-weight: var(--weight-semibold);
+  cursor: pointer;
+}
+.liveTool:hover {
+  color: var(--color-text);
+}
+.liveTool[aria-pressed='true'] {
+  background: var(--color-surface);
+  color: var(--color-text);
+  box-shadow: var(--elevation-1);
+}
+/*
+ * Word study notes for the teacher, under the dock: Live gives up some height for them, so its
+ * header (and Highlight / Words) stays in view.
+ */
+.withNotes {
+  width: min(calc(100cqw - 336px), calc((100cqh - 96px - var(--notes-height)) * 16 / 9));
+  --notes-height: 280px;
+}
+.notes {
+  overflow-y: auto;
+  min-height: 0;
+  height: calc(var(--notes-height) - var(--space-2));
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
 }
 
 /* Chapter picker */

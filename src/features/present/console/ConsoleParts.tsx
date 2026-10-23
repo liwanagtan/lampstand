@@ -2,7 +2,7 @@
 // dock, the output status chip and the disconnect banner. Same look, same keys everywhere.
 import { useEffect, useState, type ReactNode } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
-import { MonitorOff, Snowflake, X } from 'lucide-react';
+import { ImageIcon, MonitorOff, Snowflake, X } from 'lucide-react';
 import {
   Button,
   Chip,
@@ -23,10 +23,13 @@ import styles from '../PresentPage.module.css';
 export function LivePane({
   meta,
   frozen,
+  tools,
   children,
 }: {
   meta: ReactNode[];
   frozen: boolean;
+  /** Controls in the pane's header (the Bible console's Highlight and Words). */
+  tools?: ReactNode;
   children: ReactNode;
 }) {
   const beat = useControl((s) => s.liveBeat);
@@ -45,6 +48,7 @@ export function LivePane({
             </span>
           ))}
         </span>
+        {tools}
       </div>
       <motion.div
         key={beat}
@@ -82,6 +86,8 @@ export type DockProps = {
   onFreeze: () => void;
   onMode: (m: OverlayMode) => void;
   onClear: () => void;
+  /** The Bible console's picture behind the verses. */
+  onBackground?: () => void;
 };
 
 /** Screen and verse actions in a compact column under Preview (each shows its key). */
@@ -115,6 +121,15 @@ export function Dock(p: DockProps) {
           active={p.frozen}
           onClick={p.onFreeze}
         />
+        {p.onBackground && (
+          <DockButton
+            label="Background"
+            title="Background behind the verses"
+            keys="G"
+            icon={<ImageIcon size={16} />}
+            onClick={p.onBackground}
+          />
+        )}
       </DockGroup>
       <DockGroup label="Verse" className={styles.verseRow}>
         <OverlayModes mode={p.mode} onChange={p.onMode} />

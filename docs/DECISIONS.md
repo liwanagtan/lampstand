@@ -297,3 +297,7 @@ Word study (docs/WORD-STUDY.md) underlines words in the verse itself rather than
 ### 2026-10-23 — Word study on the TV
 
 In Show the Bible, a **Words** tab puts one word of the live passage on the TV for teaching. The TV switches to its own word layout (verse left, word card right) rather than squeezing a card over the verse overlay, so it reads from the back of a room in every overlay mode. The verse stays in the translation on screen and the word is picked out where it matches the BSB's wording. Hide and show (W) let a teacher ask the class first. A new passage puts the word away, so a stale word never sits beside the wrong verse.
+
+### 2026-10-23 — Show the Bible: act on Live, Chapter alone beside it
+
+At the owner's request the console's side panel is the chapter only (no Highlight, Words or Background tabs). Highlighting and word study happen by clicking words on the Live pane, which shows exactly what the TV shows. A Highlight / Words switch in Live's header decides what a click does, so one click never means two things and word study is never triggered by accident. Word links exist only for the BSB, so with another translation on the TV the notes offer to show the passage in the BSB. Background moved to the dock beside Blank and Logo, since it is a session setting, not a per-verse one.

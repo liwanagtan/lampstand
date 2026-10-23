@@ -141,6 +141,36 @@
 .emphasisOn {
   color: var(--t-accent);
 }
+/*
+ * Words on the console's Live pane (never on the TV): clickable even though overlays ignore the
+ * pointer, with a tap area that reaches into the line spacing. Canvas pixels: the pane is about
+ * a third of the TV's size.
+ */
+.liveWord {
+  position: relative;
+  border-radius: 8px;
+  pointer-events: auto;
+  cursor: pointer;
+  transition: background-color 150ms ease;
+}
+.liveWord::after {
+  content: '';
+  position: absolute;
+  inset: -14px -6px;
+}
+.liveWord:hover {
+  background: rgb(255 255 255 / 0.16);
+  box-shadow: 0 0 0 4px rgb(255 255 255 / 0.16);
+}
+.liveStudy {
+  text-decoration: underline dotted var(--t-accent);
+  text-decoration-thickness: 5px;
+  text-underline-offset: 0.2em;
+}
+.liveStudy[data-active] {
+  background: color-mix(in srgb, var(--t-accent) 32%, transparent);
+  text-decoration-style: solid;
+}
 .pageIndicator {
   position: absolute;
   right: var(--s-safe-x);

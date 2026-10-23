@@ -7,6 +7,8 @@ import {
   ChevronDown,
   ChevronLeft,
   ChevronRight,
+  Highlighter,
+  Languages,
   MonitorOff,
   MonitorPlay,
   Play,
@@ -21,7 +23,6 @@ import {
   IconButton,
   Menu,
   ShortcutHint,
-  Tabs,
   Tooltip,
   cx,
   toast,
@@ -50,12 +51,11 @@ import { startOutput } from '@/features/present/live/startOutput';
 import { useShortcuts } from '@/features/present/useShortcuts';
 import { useApplyDocumentTheme } from '@/features/settings/theme';
 import frame from '@/features/present/PresentPage.module.css';
-import { BackgroundControl, Highlighter } from './TvTools';
+import { LiveTextContext, type LiveTextTools } from '@/slides/liveTextTools';
+import { BackgroundControl } from './TvTools';
 import { WordStudyTools } from './WordStudyTools';
-import { toggleWord } from './wordOnTv';
+import { EMPHASIS_MAX, showWord, toggleWord, useWordsFor } from './wordOnTv';
 import styles from './BibleConsole.module.css';
-
-type Panel = 'chapter' | 'highlight' | 'words' | 'background';
 
 const label = (ref: string) => {
   const r = fromOsis(ref);
@@ -87,11 +87,32 @@ export function BibleConsolePage() {
   const presenting = useControl((s) => s.presenting);
   const pages = useControl((s) => s.overlayPageCount);
   const mode = useTv((s) => s.mode);
-  const [panel, setPanel] = useState<Panel>('chapter');
   const [exitOpen, setExitOpen] = useState(false);
+  const [backgroundOpen, setBackgroundOpen] = useState(false);
+  // What a click on a word of the Live pane does.
+  const [liveTool, setLiveTool] = useState<'highlight' | 'words'>('highlight');
   const { live } = snapshot;
   const overlay = live.overlay;
   const control = useControl.getState;
+
+  const wordsFor = useWordsFor(overlay?.ref ?? null, overlay?.translation ?? null);
+  const liveText: LiveTextTools = {
+    mode: liveTool,
+    onHighlight: (word) => {
+      const emphasis = control().live.overlay?.emphasis ?? [];
+      const key = word.toLowerCase();
+      const lit = emphasis.some((e) => e.toLowerCase() === key);
+      const next = lit ? emphasis.filter((e) => e.toLowerCase() !== key) : [...emphasis, word];
+      if (next.length > EMPHASIS_MAX) {
+        toast({ title: `Up to ${EMPHASIS_MAX} highlighted words at a time.`, tone: 'warning' });
+        return;
+      }
+      control().dispatch({ type: 'overlayEmphasis', emphasis: next });
+    },
+    wordsFor,
+    active: live.word ? { osis: live.word.verse, strong: live.word.strong } : null,
+    onWord: (osis, strong, text) => showWord({ strong, verse: osis, text }),
+  };
 
   const preview = selection ? toOsis(selectionRange(book, chapter, selection)) : null;
   const send = () => {
@@ -126,6 +147,7 @@ export function BibleConsolePage() {
       control().dispatch(control().live.word ? { type: 'hideWord' } : { type: 'clearOverlay' }),
     // W hides the word on the TV, or brings the last one back (ask the class first).
     w: toggleWord,
+    g: () => setBackgroundOpen(true),
     b: () => control().toggleScreen('blank'),
     l: () => control().toggleScreen('logo'),
     f: () => control().toggleFreeze(),
@@ -227,6 +249,8 @@ export function BibleConsolePage() {
                           ...live,
                           screen: 'content',
                           overlay: { ref: preview, translation, mode, page: 0 },
+                          // Preview is the next passage: no studied word.
+                          word: null,
                         },
                       }}
                       label={`Preview: ${label(preview)}`}
@@ -268,56 +292,48 @@ export function BibleConsolePage() {
                   />
                 </div>
               </div>
-              <section className={frame.sidePanel} aria-label="Chapter and tools">
-                <Tabs<Panel>
-                  fill
-                  label="Tools"
-                  value={panel}
-                  onChange={setPanel}
-                  items={[
-                    { value: 'chapter', label: 'Chapter', content: <ChapterPicker /> },
-                    {
-                      value: 'highlight',
-                      label: 'Highlight',
-                      content: overlay ? (
-                        <Highlighter key={`${overlay.ref}|${overlay.translation}`} />
-                      ) : (
-                        <p className={styles.muted}>
-                          Show a passage, then tap words to light them up on the TV.
-                        </p>
-                      ),
-                    },
-                    {
-                      value: 'words',
-                      label: 'Words',
-                      content: overlay ? (
-                        <FeatureBoundary name="Word study">
-                          <WordStudyTools key={`${overlay.ref}|${overlay.translation}`} />
-                        </FeatureBoundary>
-                      ) : (
-                        <p className={styles.muted}>
-                          Show a passage, then tap a word to study it with the class: the TV shows
-                          the Hebrew or Greek behind it and what it means.
-                        </p>
-                      ),
-                    },
-                    {
-                      value: 'background',
-                      label: 'Background',
-                      content: (
-                        <div className={styles.bgPanel}>
-                          <BackgroundControl />
-                        </div>
-                      ),
-                    },
-                  ]}
-                />
+              <section className={frame.sidePanel} aria-label="Chapter">
+                <ChapterPicker />
               </section>
             </div>
-            <div className={frame.wide}>
+            <div className={cx(frame.wide, liveTool === 'words' && overlay && styles.withNotes)}>
               <div className={cx(frame.stack, frame.liveStack)}>
-                <LivePane meta={liveMeta} frozen={Boolean(frozen)}>
-                  <LiveScreen snapshot={frozen ?? snapshot} label="Live output" />
+                <LivePane
+                  meta={liveMeta}
+                  frozen={Boolean(frozen)}
+                  tools={
+                    <div className={styles.liveTools} role="group" aria-label="Click words on Live">
+                      {(['highlight', 'words'] as const).map((t) => (
+                        <Tooltip
+                          key={t}
+                          content={
+                            t === 'highlight'
+                              ? 'Click words on Live to light them up on the TV'
+                              : 'Click an underlined word on Live to study it on the TV'
+                          }
+                        >
+                          <button
+                            type="button"
+                            className={styles.liveTool}
+                            aria-pressed={liveTool === t}
+                            onClick={() => setLiveTool(t)}
+                          >
+                            {t === 'highlight' ? (
+                              <Highlighter size={14} aria-hidden />
+                            ) : (
+                              <Languages size={14} aria-hidden />
+                            )}
+                            {t === 'highlight' ? 'Highlight' : 'Words'}
+                          </button>
+                        </Tooltip>
+                      ))}
+                    </div>
+                  }
+                >
+                  {/* Words are clickable on Live, but never while the TV is frozen. */}
+                  <LiveTextContext.Provider value={frozen || !overlay ? null : liveText}>
+                    <LiveScreen snapshot={frozen ?? snapshot} label="Live output" />
+                  </LiveTextContext.Provider>
                 </LivePane>
                 <Dock
                   sermon={false}
@@ -329,7 +345,15 @@ export function BibleConsolePage() {
                   onFreeze={() => control().toggleFreeze()}
                   onMode={(m) => useTv.getState().setMode(m)}
                   onClear={() => control().dispatch({ type: 'clearOverlay' })}
+                  onBackground={() => setBackgroundOpen(true)}
                 />
+                {liveTool === 'words' && overlay && (
+                  <FeatureBoundary name="Word study">
+                    <div className={styles.notes}>
+                      <WordStudyTools key={`${overlay.ref}|${overlay.translation}`} />
+                    </div>
+                  </FeatureBoundary>
+                )}
               </div>
             </div>
           </div>
@@ -339,6 +363,16 @@ export function BibleConsolePage() {
       <FeatureBoundary name="The passage queue">
         <PassageQueue preview={preview} translation={translation} />
       </FeatureBoundary>
+
+      <Dialog
+        open={backgroundOpen}
+        onOpenChange={setBackgroundOpen}
+        size="sm"
+        title="Background"
+        description="The picture behind the verses on the TV. A darker, simple picture keeps the words easy to read."
+      >
+        <BackgroundControl />
+      </Dialog>
 
       <Dialog
         open={exitOpen}

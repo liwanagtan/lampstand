@@ -1,11 +1,11 @@
-// Word study for the class (Screen › Show the Bible): tap a word of the live passage to put it,
-// with its Hebrew or Greek, on the TV; hide it to ask first, step through the words, and show
-// another verse that uses it.
+// Word study for the class (Screen › Show the Bible), under the Live pane: the word on the TV
+// for the teacher, hide it to ask first, step through the words, show another verse that uses
+// it. Words are picked on Live itself; "Words as a list" is the same for the keyboard.
 import { useMemo, useState } from 'react';
 import { ChevronLeft, ChevronRight, Eye, EyeOff, MonitorPlay } from 'lucide-react';
 import { Button, IconButton, Tooltip } from '@/design-system/components';
 import { BOOKS } from '@/features/bible/books';
-import { formatRef } from '@/features/bible/ref';
+import { formatRef, fromOsis } from '@/features/bible/ref';
 import { showOnTv } from '@/features/bible-app/tvActions';
 import {
   WORD_STUDY_CREDIT,
@@ -59,12 +59,35 @@ export function WordStudyTools() {
     if (next) show(next);
   };
 
+  if (overlay.translation !== WORD_STUDY_TRANSLATION) {
+    // Word links follow the BSB's wording: offer to show the passage in it.
+    return (
+      <section className={styles.section} aria-label="Word study">
+        <p className={styles.offer}>
+          Word study follows the Berean Standard Bible’s wording. The TV is showing{' '}
+          {overlay.translation}.
+        </p>
+        <Button
+          size="sm"
+          variant="primary"
+          onClick={() =>
+            useControl
+              .getState()
+              .dispatch({ type: 'overlayTranslation', translation: WORD_STUDY_TRANSLATION })
+          }
+        >
+          Show {formatRef(fromOsis(overlay.ref)!)} in BSB
+        </Button>
+      </section>
+    );
+  }
+
   return (
     <section className={styles.section} aria-label="Word study">
       <div className={styles.head}>
         <h2 className={styles.title}>Words</h2>
         <span className={styles.hint}>
-          {word ? 'On the TV now' : 'Tap a word to study it with the class'}
+          {word ? 'On the TV now' : 'Click an underlined word on Live'}
         </span>
       </div>
 
@@ -104,36 +127,35 @@ export function WordStudyTools() {
         </Tooltip>
       </div>
 
-      <div className={styles.verses}>
-        {verses.map((v) => {
-          const at = parseVerse(v.osis);
-          return (
-            <p key={v.osis} className={styles.verse}>
-              <sup className={styles.num}>{at.verse}</sup>
-              <WordRuns
-                text={v.text}
-                spans={verseWords(words, at.chapter, at.verse)}
-                active={word && word.verse === v.osis ? word.strong : null}
-                onPick={(strong) => {
-                  const span = verseWords(words, at.chapter, at.verse).find(
-                    (s) => s.strong === strong,
-                  )!;
-                  show({
-                    strong,
-                    verse: v.osis,
-                    text: v.text.slice(span.start, span.start + span.length),
-                  });
-                }}
-              />
-            </p>
-          );
-        })}
-        {overlay.translation !== WORD_STUDY_TRANSLATION && (
-          <p className={styles.note}>
-            Words from the Berean Standard Bible; the TV keeps {overlay.translation}.
-          </p>
-        )}
-      </div>
+      {/* The same words as on Live, for the keyboard. */}
+      <details className={styles.list}>
+        <summary>Words as a list</summary>
+        <div className={styles.verses}>
+          {verses.map((v) => {
+            const at = parseVerse(v.osis);
+            return (
+              <p key={v.osis} className={styles.verse}>
+                <sup className={styles.num}>{at.verse}</sup>
+                <WordRuns
+                  text={v.text}
+                  spans={verseWords(words, at.chapter, at.verse)}
+                  active={word && word.verse === v.osis ? word.strong : null}
+                  onPick={(strong) => {
+                    const span = verseWords(words, at.chapter, at.verse).find(
+                      (s) => s.strong === strong,
+                    )!;
+                    show({
+                      strong,
+                      verse: v.osis,
+                      text: v.text.slice(span.start, span.start + span.length),
+                    });
+                  }}
+                />
+              </p>
+            );
+          })}
+        </div>
+      </details>
 
       {shown && <Entry word={shown} translation={overlay.translation} />}
     </section>

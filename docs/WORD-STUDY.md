@@ -4,14 +4,19 @@ Reading the BSB, select a verse (or several) and their studyable words get dotte
 
 ## On the TV (Screen › Show the Bible)
 
-For lessons, Sunday school and lectures. Show a passage, open the **Words** tab beside Chapter and Highlight, and tap an underlined word. The TV changes to word study: the verse on the left in the translation on screen, with the word picked out, and on the right a card with the original word, how it sounds, Hebrew or Greek and part of speech, the gloss, two short senses and how many verses use it. The laptop shows the same entry with every verse that uses the word, each with **Show** to put it on the TV.
+For lessons, Sunday school and lectures. The console's side panel is the chapter alone; the tools act on the **Live** pane itself, which shows exactly what the TV shows. A switch in Live's header says what a click on a word does:
+
+- **Highlight** (the default): click words on Live to light them up on the TV; click again to turn one off (up to 12).
+- **Words**: the studyable words on Live get dotted underlines; click one and the TV changes to word study: the verse on the left in the translation on screen, with the word picked out, and on the right a card with the original word, how it sounds, Hebrew or Greek and part of speech, the gloss, two short senses and how many verses use it. Under the dock, notes for the teacher show the same entry with every verse that uses the word, each with **Show** to put it on the TV, and "Words as a list" for the keyboard. Word links follow the BSB's wording, so with another translation on the TV the notes offer **Show … in BSB** instead.
+
+Two modes, rather than one click doing both, so a click can't switch the TV to word study by accident. Clicks on Live are off while the output is frozen. **Background** is in the dock beside Blank and Logo (**G**).
 
 - **Hide word** (or **W**) takes the card away so the class can be asked first; **Show word again** (or **W**) brings it back.
 - **Previous** and **Next word** step through the passage's words.
 - **Esc** puts away the word first, then the verse. A new passage puts the word away too.
 - The word is part of the live state (`LiveState.word`), so a reopened output window shows it, and **Blank** and **Logo** cover it.
 
-The TV layout is `src/slides/WordStudyScreen.tsx`; the console tab is `src/features/bible-console/WordStudyTools.tsx`.
+The TV layout is `src/slides/WordStudyScreen.tsx`; clickable words on Live are `src/slides/LiveText.tsx` (only the console provides `LiveTextContext`, so the TV draws them plain); the teacher's notes are `src/features/bible-console/WordStudyTools.tsx`.
 
 ## Sources and licences
 

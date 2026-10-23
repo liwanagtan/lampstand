@@ -27,7 +27,9 @@ test('a background picture shows behind Bible verses on the TV', async ({ page }
   const tv = output.getByTestId('output');
   await expect(tv).toContainText(/The Lord is my shepherd/i);
 
-  await page.getByRole('tab', { name: 'Background' }).click();
+  // Background is in the dock, beside Blank and Logo.
+  const background = page.getByRole('button', { name: /^Background behind the verses/ });
+  await background.click();
   await page.getByRole('button', { name: 'Choose…' }).click();
   await page.getByRole('list', { name: 'Background library' }).getByRole('button').first().click();
   await expect(page.getByRole('button', { name: 'Remove background' })).toBeVisible();
@@ -35,7 +37,7 @@ test('a background picture shows behind Bible verses on the TV', async ({ page }
 
   // It is remembered for next time, and can be removed.
   await page.reload();
-  await page.getByRole('tab', { name: 'Background' }).click();
+  await page.keyboard.press('g');
   await page.getByRole('button', { name: 'Remove background' }).click();
   await expect(page.getByRole('button', { name: 'Choose…' })).toBeVisible();
 });

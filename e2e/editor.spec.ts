@@ -11,7 +11,8 @@ async function openEditor(page: Page) {
   await expect(page.getByRole('navigation', { name: 'Slides' })).toBeVisible();
 }
 
-const saved = (page: Page) => expect(page.getByText('Saved')).toBeVisible();
+// Two "Saved" labels can overlap while one fades out after quick saves.
+const saved = (page: Page) => expect(page.getByText('Saved').first()).toBeVisible();
 
 test('every edit persists after a reload', async ({ page }) => {
   await openEditor(page);

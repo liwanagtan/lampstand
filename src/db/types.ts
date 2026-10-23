@@ -80,7 +80,7 @@ export interface Settings {
   classicDevotional: boolean;
   /** The Understanding salvation card on Today. */
   faithFoundations: boolean;
-  /** Tyndale study notes in the reader and plan days. */
+  /** Tyndale study notes in the reader and plan days, and word study in the reader. */
   studyNotes: boolean;
   /** Send anonymous usage counts (src/features/insights/insights.ts). */
   insights: boolean;

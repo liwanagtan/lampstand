@@ -32,6 +32,13 @@ export const OPEN_CONTENT: readonly CreditSource[] = [
     url: 'https://tyndaleopenresources.com',
   },
   {
+    name: 'STEP Bible lexicons',
+    what: 'The Hebrew and Greek words, their meanings and parts of speech in word study, from the Translators Brief lexicons of Extended Strongs. Each entry is shortened to the word, a gloss and a few short senses. The Berean Standard Bible’s word tables (public domain) link the English words to them.',
+    by: 'STEP Bible, Tyndale House, Cambridge',
+    license: 'CC BY 4.0',
+    url: 'https://www.STEPBible.org',
+  },
+  {
     name: 'Open Bible Stories',
     what: 'The 50 stories in “The Bible in 50 stories” and “God’s big story”, with their comprehension questions. The original work by unfoldingWord is available from openbiblestories.org. Arranged as reading plans; pictures left out; story text unchanged.',
     by: 'unfoldingWord (stories and questions)',

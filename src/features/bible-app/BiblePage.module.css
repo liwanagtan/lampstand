@@ -266,3 +266,7 @@
     display: none;
   }
 }
+/* Word study docked below: the last verses of a chapter can still scroll up above it. */
+.body.bodyUnderPanel {
+  padding-bottom: 60vh;
+}

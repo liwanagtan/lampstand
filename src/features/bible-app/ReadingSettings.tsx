@@ -97,8 +97,8 @@ export function ReadingSettings({
             <Toggle
               checked={notes}
               onChange={(value) => void set('studyNotes', value)}
-              label="Study notes"
-              description="Tyndale notes beside the verses"
+              label="Study notes and word study"
+              description="Notes beside the verses, and the words behind them"
             />
           </>
         )}

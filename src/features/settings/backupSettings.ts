@@ -31,6 +31,7 @@ export function safeBackupSetting(value: unknown): SettingRecord | null {
       break;
     case 'reduceMotion':
     case 'classicDevotional':
+    case 'faithFoundations':
     case 'studyNotes':
     case 'insights':
       safe = typeof v === 'boolean';

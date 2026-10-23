@@ -32,7 +32,10 @@ const LIMIT = { verses: 4, plans: 3, journey: 3 };
 interface Item {
   key: string;
   group: string;
+  /** Shown once, beside the group's heading. */
   icon: ReactNode;
+  /** Only where one group mixes kinds (your journey), and on "See all". */
+  rowIcon?: ReactNode;
   title: string;
   detail?: ReactNode;
   go: () => void;
@@ -101,7 +104,8 @@ export function TopSearch() {
       items.push({
         key: i.key,
         group: 'Your journey',
-        icon: i.kind === 'reflection' ? <Sparkles size={15} /> : <NotebookPen size={15} />,
+        icon: <NotebookPen size={15} />,
+        rowIcon: i.kind === 'reflection' ? <Sparkles size={15} /> : <NotebookPen size={15} />,
         title: i.entry.title || (ref ? formatRef(ref) : 'Journal entry'),
         detail: entryPreview(i.entry),
         go: () => setEntry({ id: i.entry.id }),
@@ -111,7 +115,8 @@ export function TopSearch() {
       items.push({
         key: i.key,
         group: 'Your journey',
-        icon: <StickyNote size={15} />,
+        icon: <NotebookPen size={15} />,
+        rowIcon: <StickyNote size={15} />,
         title: `${i.kind === 'note' ? 'Note' : i.kind === 'highlight' ? 'Highlight' : 'Bookmark'} · ${formatRef(m.range)}`,
         detail: m.note?.text,
         go: () => (m.note ? setNote({ range: m.range, note: m.note }) : openInReader(m.range)),
@@ -147,7 +152,8 @@ export function TopSearch() {
       ? {
           key: 'all',
           group: '',
-          icon: <ArrowRight size={15} />,
+          icon: null,
+          rowIcon: <ArrowRight size={15} />,
           title: `See all results for “${text}”`,
           go: () => navigate(`${paths.search}?q=${encodeURIComponent(text)}`),
         }
@@ -217,7 +223,12 @@ export function TopSearch() {
           {all.map((it, i) => (
             <li key={it.key} role="presentation">
               {it.group && it.group !== all[i - 1]?.group && (
-                <p className={styles.group}>{it.group}</p>
+                <p className={styles.group}>
+                  <span className={styles.groupIcon} aria-hidden>
+                    {it.icon}
+                  </span>
+                  {it.group}
+                </p>
               )}
               <button
                 type="button"
@@ -233,9 +244,11 @@ export function TopSearch() {
                 onMouseMove={() => active !== i && setActive(i)}
                 onClick={() => pick(i)}
               >
-                <span className={styles.icon} aria-hidden>
-                  {it.icon}
-                </span>
+                {it.rowIcon && (
+                  <span className={styles.icon} aria-hidden>
+                    {it.rowIcon}
+                  </span>
+                )}
                 <span className={styles.text}>
                   <span className={styles.title}>{it.title}</span>
                   {it.detail && <span className={styles.detail}>{it.detail}</span>}

@@ -23,23 +23,34 @@ export function JourneyPage() {
   // Nothing yet: no zeros, just one welcome with a way to begin. The timeline stays mounted
   // either way, so an entry sheet opened from the welcome survives the first save.
   const empty = Boolean(stats && stats.since === null);
+  // The first few days: one encouraging line instead of zeros and a mostly blank month.
+  const early = Boolean(stats && !empty && stats.activityDays.length < 3 && !stats.finished.length);
   return (
     <>
       <a href="#your-journal" className={styles.journalShortcut}>
         Open your journal <ChevronRight size={16} aria-hidden />
       </a>
       <DuplicatesReview />
-      {!empty && (
+      {early && stats && (
+        <p className={styles.beginning}>
+          {stats.activityDays.length === 0
+            ? 'Your journey has begun. Each day you read shows here.'
+            : `You have read on ${stats.activityDays.length === 1 ? 'one day' : 'two days'}. A good beginning.`}
+        </p>
+      )}
+      {!empty && !early && (
         <section aria-label="Your journey so far">
           <dl className={styles.summary}>
             <Stat value={stats?.daysThisMonth} label="Days read this month" />
             {plansOn && <Stat value={stats?.going.length} label="Plans going" />}
-            {plansOn && <Stat value={stats?.finished.length} label="Plans finished" />}
+            {plansOn && Boolean(stats?.finished.length) && (
+              <Stat value={stats?.finished.length} label="Plans finished" />
+            )}
           </dl>
         </section>
       )}
 
-      {stats && !empty && <ReadingCalendar days={stats.activityDays} />}
+      {stats && !empty && !early && <ReadingCalendar days={stats.activityDays} />}
 
       {plansOn && stats && !empty && (
         <section className={styles.section} aria-label="Your plans">

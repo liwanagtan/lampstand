@@ -75,11 +75,9 @@
 }
 .monthTitle {
   margin-bottom: var(--space-3);
-  font-size: var(--text-12);
+  font-size: var(--text-16);
   font-weight: var(--weight-bold);
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--color-accent-text);
+  color: var(--color-text);
 }
 .list {
   display: flex;

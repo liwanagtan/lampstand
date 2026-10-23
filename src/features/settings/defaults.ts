@@ -15,6 +15,7 @@ export const DEFAULT_SETTINGS: Settings = {
   tips: { enabled: true, lastShownAt: null, seen: {} },
   reminders: { enabled: false, time: '07:00', lastNotified: null },
   classicDevotional: true,
+  faithFoundations: true,
   studyNotes: true,
   insights: true,
 };

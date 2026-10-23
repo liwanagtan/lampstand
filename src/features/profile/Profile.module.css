@@ -113,8 +113,15 @@
 /* Journey */
 .summary {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-auto-columns: minmax(0, 1fr);
+  grid-auto-flow: column;
   gap: var(--space-3);
+}
+/* Journey's first days: one line instead of a summary. */
+.beginning {
+  margin: 0 0 var(--space-4);
+  color: var(--color-text-muted);
+  font-size: var(--text-16);
 }
 .stat {
   display: flex;

@@ -78,6 +78,8 @@ export interface Settings {
   reminders: RemindersState;
   /** Spurgeon's Morning and Evening on Today. */
   classicDevotional: boolean;
+  /** The Understanding salvation card on Today. */
+  faithFoundations: boolean;
   /** Tyndale study notes in the reader and plan days. */
   studyNotes: boolean;
   /** Send anonymous usage counts (src/features/insights/insights.ts). */

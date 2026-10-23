@@ -43,11 +43,9 @@
 }
 .sectionTitle {
   margin-bottom: var(--space-4);
-  font-size: var(--text-12);
+  font-size: var(--text-20);
   font-weight: var(--weight-bold);
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--color-accent-text);
+  color: var(--color-text);
 }
 .activeGrid {
   display: grid;
@@ -702,11 +700,10 @@
 }
 
 .activeHeading {
-  margin-bottom: 16px;
-  font-size: var(--text-12);
-  font-weight: 700;
-  text-transform: uppercase;
-  color: var(--color-accent-text);
+  margin-bottom: var(--space-4);
+  font-size: var(--text-20);
+  font-weight: var(--weight-bold);
+  color: var(--color-text);
 }
 @media (max-width: 640px) {
   .activeHeading {

@@ -1,3 +1,4 @@
+import { useId } from 'react';
 import { Minus, Plus } from 'lucide-react';
 import { IconButton, Select, Sheet, Toggle } from '@/design-system/components';
 import { useIsPhone } from '@/app/useIsPhone';
@@ -17,11 +18,9 @@ export function ReadingSettings({
   /** Offer a second translation beside the first (the Bible reader does; plans don't). */
   parallel?: boolean;
 }) {
-  const { translation, parallel, size, layout, setTranslation, setParallel, setSize, setLayout } =
-    useReader();
+  const { translation, parallel, layout, setTranslation, setParallel, setLayout } = useReader();
   const translations = useBible((s) => s.translations);
   const options = translations.map((t) => ({ value: t.code, label: `${t.code} — ${t.name}` }));
-  const i = READER_SIZES.indexOf(size);
   const phone = useIsPhone();
   const notes = useSettings((s) => s.studyNotes);
   const set = useSettings((s) => s.set);
@@ -91,35 +90,7 @@ export function ReadingSettings({
             days.
           </p>
         )}
-        <div className={styles.size}>
-          <span className={styles.label} id="text-size-label">
-            Text size
-          </span>
-          <div className={styles.stepper} role="group" aria-labelledby="text-size-label">
-            <IconButton
-              label="Smaller text"
-              icon={<Minus size={18} />}
-              disabled={i <= 0}
-              onClick={() => setSize(READER_SIZES[Math.max(0, i - 1)]!)}
-            />
-            <span className={styles.scale} aria-hidden>
-              {READER_SIZES.map((step, k) => (
-                <span key={step} data-on={k <= i || undefined} style={{ fontSize: 10 + k * 2 }}>
-                  A
-                </span>
-              ))}
-            </span>
-            <span className="visually-hidden" aria-live="polite">
-              Size {i + 1} of {READER_SIZES.length}
-            </span>
-            <IconButton
-              label="Larger text"
-              icon={<Plus size={18} />}
-              disabled={i >= READER_SIZES.length - 1}
-              onClick={() => setSize(READER_SIZES[Math.min(READER_SIZES.length - 1, i + 1)]!)}
-            />
-          </div>
-        </div>
+        <TextSize />
         {phone && (
           <>
             <p className={styles.preview}>The Light shines in the darkness.</p>
@@ -133,5 +104,44 @@ export function ReadingSettings({
         )}
       </div>
     </Sheet>
+  );
+}
+
+/** Text size as a row of growing letters, with smaller and larger buttons. */
+export function TextSize() {
+  const size = useReader((s) => s.size);
+  const setSize = useReader((s) => s.setSize);
+  const i = READER_SIZES.indexOf(size);
+  const labelId = useId();
+  return (
+    <div className={styles.size}>
+      <span className={styles.label} id={labelId}>
+        Text size
+      </span>
+      <div className={styles.stepper} role="group" aria-labelledby={labelId}>
+        <IconButton
+          label="Smaller text"
+          icon={<Minus size={18} />}
+          disabled={i <= 0}
+          onClick={() => setSize(READER_SIZES[Math.max(0, i - 1)]!)}
+        />
+        <span className={styles.scale} aria-hidden>
+          {READER_SIZES.map((step, k) => (
+            <span key={step} data-on={k <= i || undefined} style={{ fontSize: 10 + k * 2 }}>
+              A
+            </span>
+          ))}
+        </span>
+        <span className="visually-hidden" aria-live="polite">
+          Size {i + 1} of {READER_SIZES.length}
+        </span>
+        <IconButton
+          label="Larger text"
+          icon={<Plus size={18} />}
+          disabled={i >= READER_SIZES.length - 1}
+          onClick={() => setSize(READER_SIZES[Math.min(READER_SIZES.length - 1, i + 1)]!)}
+        />
+      </div>
+    </div>
   );
 }

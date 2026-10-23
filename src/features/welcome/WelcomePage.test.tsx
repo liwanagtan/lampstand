@@ -34,7 +34,7 @@ it('starts someone new to faith with the salvation reading instead of a plan', a
     await user.click(screen.getByText('Grow daily'));
     await user.click(screen.getByRole('button', { name: 'Continue' }));
     const first = screen.getByRole('radio', { name: /Taking my first steps/ });
-    expect(first).toHaveTextContent('Understanding salvation, on Today');
+    expect(first).toHaveTextContent('The good news, one step at a time');
     expect(screen.getByRole('button', { name: 'Let’s begin' })).toBeDisabled();
     await user.click(first);
     await user.click(screen.getByRole('button', { name: 'Let’s begin' }));

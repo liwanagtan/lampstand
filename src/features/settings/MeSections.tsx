@@ -13,7 +13,8 @@ import {
   type UseCase,
 } from '@/app/features';
 import { useBible } from '@/features/bible/bibleStore';
-import { READER_SIZES, useReader } from '@/features/bible-app/readerStore';
+import { useReader } from '@/features/bible-app/readerStore';
+import { TextSize } from '@/features/bible-app/ReadingSettings';
 import { Avatar } from '@/features/profile/Avatar';
 import { AVATAR_COLORS } from '@/features/profile/avatarColors';
 import { useJourneyStats } from '@/features/profile/useJourneyStats';
@@ -225,7 +226,6 @@ export function ReadingSection() {
   const phone = useIsPhone();
   const translation = useReader((s) => s.translation);
   const parallel = useReader((s) => s.parallel);
-  const size = useReader((s) => s.size);
   const translations = useBible((b) => b.translations);
   const options = translations.map((t) => ({
     value: t.code,
@@ -233,6 +233,7 @@ export function ReadingSection() {
   }));
   const classic = useSettings((s) => s.classicDevotional);
   const studyNotes = useSettings((s) => s.studyNotes);
+  const foundations = useSettings((s) => s.faithFoundations);
   const set = useSettings((s) => s.set);
   return (
     <Section title="Reading" description="Used in the Bible, Today, Plans and Journal.">
@@ -252,12 +253,9 @@ export function ReadingSection() {
             ...options.filter((o) => o.value !== translation),
           ]}
         />
-        <Select
-          label="Text size"
-          value={String(size)}
-          onChange={(v) => useReader.getState().setSize(Number(v))}
-          options={READER_SIZES.map((n) => ({ value: String(n), label: `${n} px` }))}
-        />
+      </div>
+      <div className={styles.textSize}>
+        <TextSize />
       </div>
       <Toggle
         checked={classic}
@@ -267,6 +265,16 @@ export function ReadingSection() {
           phone
             ? 'Spurgeon’s Morning and Evening (1865)'
             : "Spurgeon's Morning and Evening (1865): a short reading each morning and evening."
+        }
+      />
+      <Toggle
+        checked={foundations}
+        onChange={(on) => void set('faithFoundations', on)}
+        label="Faith Foundations on Today"
+        description={
+          phone
+            ? 'A short guide to the good news of Jesus'
+            : 'Understanding salvation: a short guide to the good news of Jesus, read at your own pace.'
         }
       />
       <Toggle

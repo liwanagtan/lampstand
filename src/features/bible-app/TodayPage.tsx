@@ -40,7 +40,6 @@ import { ClassicDevotional } from './ClassicDevotional';
 import styles from './Today.module.css';
 import { useIsPhone } from '@/app/useIsPhone';
 import { paths } from '@/app/paths';
-import { faithJourneys } from '@/app/faithJourney';
 import { biblePosition, recentPlanDay } from './readingResume';
 import { track } from '@/features/insights/insights';
 import { SaveOffer } from '@/features/account/SaveOffer';
@@ -71,10 +70,8 @@ export function TodayPage() {
   const reduced = useReducedMotion();
   const name = useSettings((s) => s.profile.name.trim().split(/\s+/)[0] ?? '');
   const classic = useSettings((s) => s.classicDevotional);
-  const faithJourney = useSettings((s) => s.profile.faithJourney);
-  const showSalvation = faithJourneys(faithJourney).some(
-    (value) => value === 'exploring' || value === 'new',
-  );
+  // Shown to everyone; it can be turned off in Settings › Reading.
+  const showSalvation = useSettings((s) => s.faithFoundations);
   const phone = useIsPhone();
   const progress = usePlanProgress();
   const plans = usePlans();

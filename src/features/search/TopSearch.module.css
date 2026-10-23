@@ -62,12 +62,18 @@
   list-style: none;
 }
 .group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
   padding: var(--space-2) var(--space-2) 2px;
   font-size: var(--text-12);
   font-weight: var(--weight-semibold);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
   color: var(--color-text-muted);
+}
+.groupIcon {
+  display: inline-grid;
+  color: var(--color-accent-text);
 }
 .item {
   display: flex;

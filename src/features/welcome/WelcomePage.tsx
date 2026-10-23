@@ -34,6 +34,10 @@ const STARTS: readonly { journey: FaithJourney; title: string }[] = [
 ];
 // Someone exploring or new to faith begins with Understanding salvation on Today, not a plan.
 const SALVATION_FIRST: ReadonlySet<FaithJourney> = new Set(['exploring', 'new']);
+const SALVATION_DETAIL: Partial<Record<FaithJourney, string>> = {
+  exploring: 'Who Jesus is and why he came',
+  new: 'The good news, one step at a time',
+};
 const VERSE_ONLY = 'verse';
 // Long enough to meet the flame and see what is being prepared.
 const SETUP_DURATION_MS = 5000;
@@ -239,7 +243,7 @@ export function WelcomePage() {
                 {STARTS.flatMap(({ journey, title }) => {
                   const id = startPlanId(journey);
                   const detail = SALVATION_FIRST.has(journey)
-                    ? 'Understanding salvation, on Today'
+                    ? SALVATION_DETAIL[journey]
                     : id && plansById.get(id)!.name;
                   return detail
                     ? [

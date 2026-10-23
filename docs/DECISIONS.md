@@ -285,3 +285,7 @@ The owner prefers Take five minutes and the Classic devotional as separate block
 ### 2026-10-23 — Updates found while the app stays open
 
 The update screen ("A new Lampstand is ready") never appeared after a deploy because the browser only looks for a new service worker when a page loads, and an installed app is usually resumed rather than reloaded. Lampstand now asks for one when it comes back to the foreground (at most once a minute), when the connection returns, and every 30 minutes while open (`src/app/pwa.ts`). `e2e/app-update.spec.ts` changes the served worker after the app opens and expects the update screen.
+
+### 2026-10-23 — Go to: testament tabs on phones
+
+The phone Go to sheet shows Old Testament and New Testament as tabs, opening on the one you are reading in, instead of two collapsing sections; Bookmarks sits beside them as an icon tab so both testament names fit on one line. The tabs stay at the top while a long list (Psalms' 150 chapters) scrolls. Recently read stays above. Laptops keep both testaments side by side. The chapter you are in is ink again (a later style had washed it out).

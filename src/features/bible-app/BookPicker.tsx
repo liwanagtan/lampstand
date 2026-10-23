@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ArrowLeft, Bookmark, ChevronDown } from 'lucide-react';
+import { ArrowLeft, Bookmark } from 'lucide-react';
 import { useIsPhone } from '@/app/useIsPhone';
 import { useReader } from './readerStore';
 import { IconButton, Sheet, Tabs, cx } from '@/design-system/components';
@@ -34,7 +34,7 @@ export function BookPicker({
 }: BookPickerProps) {
   const phone = useIsPhone();
   const recent = useReader((s) => s.recent);
-  const [testament, setTestament] = useState<'OT' | 'NT'>(
+  const [tab, setTab] = useState<'OT' | 'NT' | 'bookmarks'>(
     () => BOOK_BY_CODE.get(current.book)?.testament ?? 'NT',
   );
   const [book, setBook] = useState<string | null>(null);
@@ -70,6 +70,54 @@ export function BookPicker({
       ))}
     </div>
   );
+  const bookmarks = onPickBookmark && (
+    <Bookmarks
+      onPick={(r) => {
+        onPickBookmark(r);
+        close(false);
+      }}
+    />
+  );
+  // Phones: the testaments are tabs (with Bookmarks beside them); a book opens its chapters
+  // in place.
+  const testamentBooks = (t: 'OT' | 'NT') => (
+    <ul className={styles.mobileBookList}>
+      {BOOKS.filter((b) => b.testament === t).map((b) => (
+        <li key={b.code}>
+          <button
+            className={styles.bookRow}
+            aria-expanded={(book ?? current.book) === b.code}
+            onClick={() => setBook(b.code)}
+          >
+            <span>{b.name}</span>
+            <small>{chapterCount(translation, b.code)}</small>
+          </button>
+          {(book ?? current.book) === b.code && (
+            <ul className={styles.chapters}>
+              {Array.from({ length: chapterCount(translation, b.code) }, (_, i) => i + 1).map(
+                (c) => (
+                  <li key={c}>
+                    <button
+                      className={cx(
+                        styles.chapter,
+                        b.code === current.book && c === current.chapter && styles.current,
+                      )}
+                      onClick={() => {
+                        onPick(b.code, c);
+                        close(false);
+                      }}
+                    >
+                      {c}
+                    </button>
+                  </li>
+                ),
+              )}
+            </ul>
+          )}
+        </li>
+      ))}
+    </ul>
+  );
   const mobileBooks = (
     <div className={styles.mobileBooks}>
       {recent.length > 0 && (
@@ -90,58 +138,29 @@ export function BookPicker({
           </div>
         </section>
       )}
-      {(['OT', 'NT'] as const).map((t) => (
-        <section key={t}>
-          <button
-            className={styles.testamentButton}
-            aria-expanded={testament === t}
-            onClick={() => setTestament(t)}
-          >
-            <strong>{t === 'OT' ? 'Old Testament' : 'New Testament'}</strong>
-            <span>{t === 'OT' ? '39' : '27'} books</span>
-            <ChevronDown size={18} aria-hidden />
-          </button>
-          {testament === t && (
-            <ul className={styles.mobileBookList}>
-              {BOOKS.filter((b) => b.testament === t).map((b) => (
-                <li key={b.code}>
-                  <button
-                    className={styles.bookRow}
-                    aria-expanded={(book ?? current.book) === b.code}
-                    onClick={() => setBook(b.code)}
-                  >
-                    <span>{b.name}</span>
-                    <small>{chapterCount(translation, b.code)}</small>
-                  </button>
-                  {(book ?? current.book) === b.code && (
-                    <ul className={styles.chapters}>
-                      {Array.from(
-                        { length: chapterCount(translation, b.code) },
-                        (_, i) => i + 1,
-                      ).map((c) => (
-                        <li key={c}>
-                          <button
-                            className={cx(
-                              styles.chapter,
-                              b.code === current.book && c === current.chapter && styles.current,
-                            )}
-                            onClick={() => {
-                              onPick(b.code, c);
-                              close(false);
-                            }}
-                          >
-                            {c}
-                          </button>
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                </li>
-              ))}
-            </ul>
-          )}
-        </section>
-      ))}
+      <Tabs
+        label="Go to"
+        value={tab}
+        onChange={setTab}
+        items={[
+          { value: 'OT', label: 'Old Testament', content: testamentBooks('OT') },
+          { value: 'NT', label: 'New Testament', content: testamentBooks('NT') },
+          ...(bookmarks
+            ? [
+                {
+                  value: 'bookmarks' as const,
+                  label: (
+                    <>
+                      <Bookmark size={16} aria-hidden />
+                      <span className="visually-hidden">Bookmarks</span>
+                    </>
+                  ),
+                  content: bookmarks,
+                },
+              ]
+            : []),
+        ]}
+      />
     </div>
   );
   return (
@@ -180,27 +199,16 @@ export function BookPicker({
             ))}
           </ul>
         </div>
-      ) : onPickBookmark ? (
+      ) : phone ? (
+        mobileBooks
+      ) : bookmarks ? (
         <Tabs
           label="Go to"
           items={[
-            { value: 'books', label: 'Books', content: phone ? mobileBooks : books },
-            {
-              value: 'bookmarks',
-              label: 'Bookmarks',
-              content: (
-                <Bookmarks
-                  onPick={(r) => {
-                    onPickBookmark(r);
-                    close(false);
-                  }}
-                />
-              ),
-            },
+            { value: 'books', label: 'Books', content: books },
+            { value: 'bookmarks', label: 'Bookmarks', content: bookmarks },
           ]}
         />
-      ) : phone ? (
-        mobileBooks
       ) : (
         books
       )}

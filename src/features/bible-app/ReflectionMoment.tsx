@@ -57,18 +57,12 @@ export function ReflectionMoment({
     <div className={cx(styles.moment, plain && styles.plain)}>
       <p className={styles.eyebrow}>A moment to reflect</p>
       <p className={styles.question}>{question}</p>
-      <p className={styles.optional}>You can respond in your own way, or simply continue.</p>
+      {/* Two clear choices: write, or be done. Prayer and the passage stay a quiet tap away. */}
       <div className={styles.actions}>
-        <Button icon={<NotebookPen size={16} />} onClick={write}>
+        <Button variant="primary" icon={<NotebookPen size={16} />} onClick={write}>
           {saved ? 'Edit reflection' : 'Write a reflection'}
         </Button>
-        <Button
-          variant="secondary"
-          icon={<Heart size={16} />}
-          onClick={() => setPraying((value) => !value)}
-        >
-          Pray
-        </Button>
+        <Button onClick={onFinish}>Done</Button>
       </div>
       {praying && (
         <p className={styles.prayer}>
@@ -76,11 +70,17 @@ export function ReflectionMoment({
         </p>
       )}
       <div className={styles.exitActions}>
-        <Button variant="ghost" icon={<BookOpen size={16} />} onClick={onReturn}>
-          Return to passage
+        <Button
+          variant="ghost"
+          size="sm"
+          icon={<Heart size={15} />}
+          aria-pressed={praying}
+          onClick={() => setPraying((value) => !value)}
+        >
+          Pray
         </Button>
-        <Button variant="ghost" onClick={onFinish}>
-          Finish for now
+        <Button variant="ghost" size="sm" icon={<BookOpen size={15} />} onClick={onReturn}>
+          Back to the passage
         </Button>
       </div>
       <EntrySheet target={writing} onClose={() => setWriting(null)} />

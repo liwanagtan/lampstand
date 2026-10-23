@@ -1,11 +1,13 @@
 import { useState } from 'react';
-import { Button, Dialog } from '@/design-system/components';
+import { MoreHorizontal } from 'lucide-react';
+import { Button, Dialog, IconButton, Menu } from '@/design-system/components';
 import type { PlanProgressRecord } from '@/db/types';
 import {
   currentDay,
   nextReadingDate,
   setPlanPaused,
   setPlanRhythm,
+  stopPlan,
   type Plan,
   type PlanRhythm,
 } from './plans';
@@ -25,73 +27,124 @@ const personalChoices: { value: PlanRhythm; label: string; detail: string }[] = 
 ];
 
 const dateFormat = new Intl.DateTimeFormat(undefined, {
-  weekday: 'long', month: 'short', day: 'numeric',
+  weekday: 'long',
+  month: 'short',
+  day: 'numeric',
 });
 
-export function PlanPacingControls({
-  plan,
-  progress,
-  compact = false,
-}: {
-  plan: Plan;
-  progress: PlanProgressRecord;
-  compact?: boolean;
-}) {
+/** The suggested next reading under your chosen pace, as one quiet line. */
+export function PlanPaceHint({ progress }: { progress: PlanProgressRecord }) {
+  const nextDate = nextReadingDate(progress);
+  if (progress.pausedAt || !nextDate) return null;
+  const rhythmName = personalChoices.find((choice) => choice.value === progress.rhythm)?.label;
+  return (
+    <p className={styles.pacingHint}>
+      {rhythmName ? `${rhythmName} · ` : ''}Next suggested: {dateFormat.format(nextDate)}
+    </p>
+  );
+}
+
+/**
+ * Plan options (⋯): adjust pace, pause or resume, stop. Kept in a menu so the reading stays the
+ * one clear action; a paused plan also shows Resume plainly.
+ */
+export function PlanOptions({ plan, progress }: { plan: Plan; progress: PlanProgressRecord }) {
   const initial: Choice = progress.rhythm ?? (plan.pace === 'daily' ? 'open' : 'plan');
+  const [stopping, setStopping] = useState(false);
   const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState<Choice>(initial);
   const [previewAt, setPreviewAt] = useState(0);
-  if (compact) return null;
 
   const paused = Boolean(progress.pausedAt);
-  const nextDate = nextReadingDate(progress);
-  const rhythmName = personalChoices.find((choice) => choice.value === progress.rhythm)?.label;
-  const selectedDate = selected === 'plan'
-    ? null
-    : nextReadingDate(
-        selected === initial ? progress : { ...progress, rhythmChangedAt: previewAt },
-        selected,
-        previewAt ? new Date(previewAt) : undefined,
-      );
-  const interval = selected === 'daily' ? 1 : selected === 'every-few-days' ? 3 : selected === 'weekly' ? 7 : 0;
-  const previewDates = selectedDate && interval
-    ? Array.from({ length: Math.min(3, plan.days.length - progress.done.length) }, (_, index) =>
-        dateFormat.format(new Date(selectedDate.getFullYear(), selectedDate.getMonth(), selectedDate.getDate() + interval * index)))
-    : [];
+  const selectedDate =
+    selected === 'plan'
+      ? null
+      : nextReadingDate(
+          selected === initial ? progress : { ...progress, rhythmChangedAt: previewAt },
+          selected,
+          previewAt ? new Date(previewAt) : undefined,
+        );
+  const interval =
+    selected === 'daily' ? 1 : selected === 'every-few-days' ? 3 : selected === 'weekly' ? 7 : 0;
+  const previewDates =
+    selectedDate && interval
+      ? Array.from({ length: Math.min(3, plan.days.length - progress.done.length) }, (_, index) =>
+          dateFormat.format(
+            new Date(
+              selectedDate.getFullYear(),
+              selectedDate.getMonth(),
+              selectedDate.getDate() + interval * index,
+            ),
+          ),
+        )
+      : [];
   const original = currentDay(plan, { ...progress, rhythm: undefined, pausedAt: undefined });
-  const choices = plan.pace === 'daily'
-    ? personalChoices
-    : [
-        {
-          value: 'plan' as const,
-          label: 'Keep the plan schedule',
-          detail: `Lessons open ${plan.pace === 'weekly' ? 'weekly' : 'monthly'} as written.`,
-        },
-        ...personalChoices,
-      ];
+  const choices =
+    plan.pace === 'daily'
+      ? personalChoices
+      : [
+          {
+            value: 'plan' as const,
+            label: 'Keep the plan schedule',
+            detail: `Lessons open ${plan.pace === 'weekly' ? 'weekly' : 'monthly'} as written.`,
+          },
+          ...personalChoices,
+        ];
+
+  const adjust = () => {
+    setSelected(progress.rhythm ?? (plan.pace === 'daily' ? 'open' : 'plan'));
+    setPreviewAt(Date.now());
+    setOpen(true);
+  };
 
   return (
-    <section className={styles.pacingControls} aria-label="Reading pace">
-      {!paused && nextDate && (
-        <p className={styles.pacingHint}>
-          {rhythmName} · Suggested next reading: {dateFormat.format(nextDate)}. You can read sooner.
-        </p>
+    <>
+      {paused && (
+        <Button variant="ghost" onClick={() => void setPlanPaused(progress.planId, false)}>
+          Resume plan
+        </Button>
       )}
-      <div className={styles.pacingActions}>
-        <Button
-          variant="ghost"
-          onClick={() => {
-            setSelected(progress.rhythm ?? (plan.pace === 'daily' ? 'open' : 'plan'));
-            setPreviewAt(Date.now());
-            setOpen(true);
-          }}
-        >
-          Adjust pace
-        </Button>
-        <Button variant="ghost" onClick={() => void setPlanPaused(progress.planId, !paused)}>
-          {paused ? 'Resume plan' : 'Pause plan'}
-        </Button>
-      </div>
+      <Menu
+        label={`${plan.name} options`}
+        trigger={
+          <IconButton
+            label="Plan options"
+            icon={<MoreHorizontal size={18} />}
+            className={styles.optionsButton}
+          />
+        }
+        items={[
+          { label: 'Adjust pace', onSelect: adjust },
+          {
+            label: paused ? 'Resume plan' : 'Pause plan',
+            onSelect: () => void setPlanPaused(progress.planId, !paused),
+          },
+          { label: 'Stop plan', onSelect: () => setStopping(true), separatorBefore: true },
+        ]}
+      />
+      <Dialog
+        open={stopping}
+        onOpenChange={setStopping}
+        size="sm"
+        title={`Stop ${plan.name}?`}
+        description="Your progress on this plan is removed. You can start it again any time."
+        footer={
+          <>
+            <Button variant="ghost" onClick={() => setStopping(false)}>
+              Keep going
+            </Button>
+            <Button
+              variant="primary"
+              onClick={() => {
+                setStopping(false);
+                void stopPlan(plan.id);
+              }}
+            >
+              Stop plan
+            </Button>
+          </>
+        }
+      />
       <Dialog
         open={open}
         onOpenChange={setOpen}
@@ -99,10 +152,16 @@ export function PlanPacingControls({
         description="This changes when unread readings are suggested. Finished readings and journal entries stay as they are."
         footer={
           <>
-            <Button variant="ghost" onClick={() => setOpen(false)}>Cancel</Button>
+            <Button variant="ghost" onClick={() => setOpen(false)}>
+              Cancel
+            </Button>
             <Button
               variant="primary"
-              onClick={() => void setPlanRhythm(progress.planId, selected === 'plan' ? null : selected).then(() => setOpen(false))}
+              onClick={() =>
+                void setPlanRhythm(progress.planId, selected === 'plan' ? null : selected).then(
+                  () => setOpen(false),
+                )
+              }
             >
               Save pace
             </Button>
@@ -119,7 +178,10 @@ export function PlanPacingControls({
                 checked={selected === choice.value}
                 onChange={() => setSelected(choice.value)}
               />
-              <span><strong>{choice.label}</strong><small>{choice.detail}</small></span>
+              <span>
+                <strong>{choice.label}</strong>
+                <small>{choice.detail}</small>
+              </span>
             </label>
           ))}
         </div>
@@ -133,6 +195,6 @@ export function PlanPacingControls({
               : 'No suggested dates. Your next unread reading is ready whenever you are.'}
         </p>
       </Dialog>
-    </section>
+    </>
   );
 }

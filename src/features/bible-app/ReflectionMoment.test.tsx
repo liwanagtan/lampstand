@@ -35,8 +35,8 @@ it('lets readers pray, return, or finish without writing an entry', async () => 
   expect(screen.getByText('What stands out to you?')).toBeVisible();
   await user.click(screen.getByRole('button', { name: 'Pray' }));
   expect(screen.getByText('Take a moment to speak to God about what you read.')).toBeVisible();
-  await user.click(screen.getByRole('button', { name: 'Return to passage' }));
-  await user.click(screen.getByRole('button', { name: 'Finish for now' }));
+  await user.click(screen.getByRole('button', { name: 'Back to the passage' }));
+  await user.click(screen.getByRole('button', { name: 'Done' }));
   expect(back).toHaveBeenCalledOnce();
   expect(finish).toHaveBeenCalledOnce();
   expect(await db.entries.count()).toBe(0);

@@ -44,7 +44,7 @@ describe('AppShell', () => {
     localStorage.removeItem('lampstand.onboarded');
     const router = renderAt('/');
     expect(
-      await screen.findByRole('heading', { name: 'Make Lampstand yours' }),
+      await screen.findByRole('heading', { name: 'What should we call you?' }),
     ).toBeInTheDocument();
     expect(router.state.location.pathname).toBe('/welcome');
   });

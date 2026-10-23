@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 
-test('first run prepares the six Bibles, then never again', async ({ page }) => {
+test('first run prepares the three offline Bibles, then never again', async ({ page }) => {
   test.setTimeout(90_000);
   const t0 = Date.now();
   await page.goto('/screen');
@@ -17,7 +17,7 @@ test('first run prepares the six Bibles, then never again', async ({ page }) => 
       r.onsuccess = () => res(r.result);
     });
   });
-  expect(count).toBe(6);
+  expect(count).toBe(3); // BSB, KJV and WEB; NLT is read online
   await page.reload();
   await expect(page.getByRole('heading', { name: 'Screen', exact: true, level: 1 })).toBeVisible({
     timeout: 3_000,

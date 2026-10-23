@@ -55,17 +55,17 @@
   margin: 0;
   font-family: var(--font-display);
   font-style: italic;
-  font-size: 20px;
+  font-size: var(--text-20);
   line-height: 1.5;
 }
 .verseLarge blockquote {
-  font-size: 22px;
+  font-size: var(--text-24);
 }
 .verse figcaption {
   display: flex;
   gap: var(--space-2);
   margin-top: var(--space-1);
-  font-size: var(--text-13);
+  font-size: var(--text-14);
   font-weight: var(--weight-semibold);
 }
 .code {
@@ -77,7 +77,7 @@
   overflow: hidden;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 3;
-  font-size: var(--text-15);
+  font-size: var(--text-16);
   line-height: 1.6;
   color: var(--color-text-muted);
 }
@@ -91,12 +91,12 @@
   gap: 1.25em;
   margin-top: var(--space-5, 20px);
   font-family: var(--font-display);
-  font-size: 18px;
+  font-size: var(--text-20);
   line-height: 1.7;
 }
 .note {
   margin-top: var(--space-5, 20px);
-  font-size: var(--text-13);
+  font-size: var(--text-14);
   color: var(--color-text-muted);
 }
 @media (pointer: coarse) {
@@ -106,13 +106,13 @@
 }
 @media (max-width: 640px) {
   .verse blockquote {
-    font-size: 17px;
+    font-size: var(--text-16);
   }
   .verseLarge blockquote {
-    font-size: 19px;
+    font-size: var(--text-20);
   }
   .body {
-    font-size: 16px;
+    font-size: var(--text-16);
   }
 }
 
@@ -133,18 +133,18 @@
   min-height: 44px;
   color: var(--color-text);
   text-decoration: none;
-  font-size: 14px;
+  font-size: var(--text-14);
   font-weight: 600;
 }
 .readingTitle {
   margin-top: 10px;
-  font-size: 26px;
+  font-size: var(--text-24);
   line-height: 1.25;
   outline: none;
 }
 .readingPage .body {
   margin-top: 0;
-  font-size: 18px;
+  font-size: var(--text-20);
   line-height: 1.8;
 }
 .readingPage .note {

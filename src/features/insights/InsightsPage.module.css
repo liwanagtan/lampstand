@@ -1,0 +1,117 @@
+.page {
+  max-width: 880px;
+  min-height: 100dvh;
+  margin: 0 auto;
+  padding: var(--space-8) 16px 96px;
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+.head {
+  display: grid;
+  gap: var(--space-3);
+  margin-bottom: var(--space-8);
+}
+.head h1 {
+  margin: var(--space-4) 0 0;
+  font-size: var(--text-24);
+  font-weight: var(--weight-extrabold);
+}
+.head p,
+.page section > p {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: var(--text-14);
+  line-height: 1.5;
+}
+.range {
+  display: flex;
+  gap: var(--space-2);
+}
+.range button {
+  min-height: 44px;
+  padding: 0 var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  background: var(--color-surface);
+  color: var(--color-text);
+  font: inherit;
+  font-size: var(--text-14);
+  cursor: pointer;
+}
+.range button[aria-checked='true'] {
+  border-color: var(--color-accent);
+  color: var(--color-accent-text);
+  font-weight: var(--weight-bold);
+}
+.notice {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+}
+.notice p {
+  margin: 0;
+}
+.tiles {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-3);
+  margin: 0 0 var(--space-8);
+}
+.tiles div {
+  padding: var(--space-4);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+}
+.tiles dt {
+  color: var(--color-text-muted);
+  font-size: var(--text-14);
+}
+.tiles dd {
+  margin: var(--space-1) 0 0;
+  font-size: var(--text-24);
+  font-weight: var(--weight-extrabold);
+  font-variant-numeric: tabular-nums;
+}
+.page section {
+  display: grid;
+  gap: var(--space-3);
+  margin-bottom: var(--space-8);
+}
+.page h2 {
+  margin: 0;
+  font-size: var(--text-20);
+  font-weight: var(--weight-bold);
+}
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--text-14);
+  font-variant-numeric: tabular-nums;
+}
+.table th,
+.table td {
+  padding: var(--space-2) var(--space-3);
+  border-bottom: 1px solid var(--color-border);
+  text-align: right;
+}
+.table th:first-child {
+  text-align: left;
+  font-weight: var(--weight-semibold);
+}
+.table thead th {
+  color: var(--color-text-muted);
+  font-size: var(--text-12);
+  font-weight: var(--weight-semibold);
+}
+@media (max-width: 767px) {
+  .tiles {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .table th,
+  .table td {
+    padding: var(--space-2);
+  }
+}

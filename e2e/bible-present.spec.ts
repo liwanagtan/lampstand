@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test';
-import { openApp } from './helpers';
+import { openApp, openVerseActions } from './helpers';
 
 test.describe.configure({ timeout: 120_000 });
 
@@ -9,6 +9,7 @@ test('the reader keeps to reading: no TV controls, even on a selection', async (
   await expect(page.getByRole('button', { name: /Start Presentation|Present/ })).toHaveCount(0);
   await page.getByLabel('Search Lampstand').fill('jn 3 16');
   await page.keyboard.press('Enter');
+  await openVerseActions(page, 16);
   const bar = page.getByRole('toolbar', { name: 'Selected verses' });
   await expect(bar).toContainText('John 3:16');
   await expect(bar.getByRole('button', { name: 'Show on screen' })).toHaveCount(0);
@@ -24,7 +25,7 @@ test('a background picture shows behind Bible verses on the TV', async ({ page }
   await page.getByRole('button', { name: 'Show on screen' }).click();
   const output = await popup;
   const tv = output.getByTestId('output');
-  await expect(tv).toContainText('The LORD is my shepherd');
+  await expect(tv).toContainText(/The Lord is my shepherd/i);
 
   await page.getByRole('tab', { name: 'Background' }).click();
   await page.getByRole('button', { name: 'Choose…' }).click();
@@ -44,6 +45,7 @@ test('marks added in the reader appear in the plan reader', async ({ page }) => 
   await openApp(page, '/bible');
   await page.getByLabel('Search Lampstand').fill('mt 1 1');
   await page.keyboard.press('Enter');
+  await openVerseActions(page, 1);
   await page.getByRole('button', { name: 'Highlight green' }).click();
   await page.getByRole('button', { name: 'Bookmark', exact: true }).click();
 
@@ -57,6 +59,6 @@ test('marks added in the reader appear in the plan reader', async ({ page }) => 
 
   await page.goto('/plans/gospels-40/1');
   const mark = page.locator('mark[data-color="green"]').first();
-  await expect(mark).toContainText('This is the record of the genealogy of Jesus Christ');
+  await expect(mark).toContainText(/generation of Jesus Christ/); // KJV, the default
   await expect(page.getByLabel('Bookmarked').first()).toBeVisible();
 });

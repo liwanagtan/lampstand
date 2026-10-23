@@ -85,7 +85,7 @@
   text-overflow: ellipsis;
 }
 .sub {
-  font-size: var(--text-13);
+  font-size: var(--text-14);
   color: var(--color-text-muted);
 }
 .empty {
@@ -142,7 +142,7 @@
   color: var(--color-text-muted);
 }
 .emptyHint {
-  font-size: var(--text-13);
+  font-size: var(--text-14);
   color: var(--color-text-muted);
 }
 @keyframes glow {
@@ -322,10 +322,10 @@
     display: none;
   }
   .emptyTitle {
-    font-size: 16px;
+    font-size: var(--text-16);
   }
   .emptyText {
-    font-size: 14px;
+    font-size: var(--text-14);
     line-height: 1.5;
   }
 }

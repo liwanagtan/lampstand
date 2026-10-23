@@ -5,7 +5,7 @@
 }
 .title input {
   font-family: var(--font-display);
-  font-size: 20px;
+  font-size: var(--text-20);
   font-weight: var(--weight-semibold);
 }
 .saved {
@@ -17,12 +17,12 @@
 /* Phones: a calmer type scale (docs/DECISIONS.md 2026-10-18). */
 @media (max-width: 640px) {
   .title input {
-    font-size: 18px !important;
+    font-size: var(--text-20) !important;
   }
 }
 
 .storageNote {
-  font-size: 12px;
+  font-size: var(--text-12);
   line-height: 1.5;
   color: var(--color-text-muted);
 }

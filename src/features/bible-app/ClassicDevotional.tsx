@@ -66,7 +66,7 @@ export function ClassicDevotional({ now }: { now: Date }) {
                   : setOpen(true)
               }
             >
-              Read the whole reading
+              Read in full
             </Button>
           </div>
           <ClassicSheet

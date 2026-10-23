@@ -1,15 +1,21 @@
 import { expect, test } from '@playwright/test';
 import { openApp } from './helpers';
 
-test('app shell loads and the theme switch works', async ({ page }) => {
+test('app shell loads in light mode, with Dark and System unavailable for now', async ({
+  page,
+}) => {
   await openApp(page, '/profile/settings');
   await expect(page.getByRole('heading', { name: 'Appearance' })).toBeVisible();
-  await page.getByRole('radio', { name: 'Light' }).click();
+  const appearance = page.getByRole('radiogroup', { name: 'App appearance' });
+  await expect(appearance.getByRole('radio', { name: 'Light' })).toHaveAttribute(
+    'aria-checked',
+    'true',
+  );
+  await expect(appearance.getByRole('radio', { name: 'Dark' })).toBeDisabled();
+  await expect(appearance.getByRole('radio', { name: 'System' })).toBeDisabled();
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
   await page.reload();
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
-  await page.getByRole('radio', { name: 'Dark' }).click();
-  await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
 });
 
 test('every route renders', async ({ page }) => {
@@ -81,16 +87,22 @@ test('each workspace has its own atmosphere, and reduced motion stills page entr
     ['/bible', 'bible'],
     ['/plans', 'plans'],
     ['/profile', 'journal'],
-    ['/screen', 'stage'],
+    ['/screen', 'screen'],
   ] as const) {
     await openApp(page, path);
     await expect(page.locator('#main')).toHaveAttribute('data-atmosphere', atmosphere);
   }
-  // Screen is a dark stage even in light mode.
-  await page.emulateMedia({ colorScheme: 'light' });
+  // Screen shares the calm light workspace (the TV output itself stays dark).
+  await page.emulateMedia({ colorScheme: 'dark' });
   await openApp(page, '/screen');
-  const bg = await page.locator('#main').evaluate((el) => getComputedStyle(el).backgroundColor);
-  expect(bg).toBe('rgb(9, 12, 17)');
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
+  const [bg, pageBg] = await page
+    .locator('#main')
+    .evaluate((el) => [
+      getComputedStyle(el).backgroundColor,
+      getComputedStyle(document.body).backgroundColor,
+    ]);
+  expect(bg).toBe(pageBg);
 
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await openApp(page, '/plans');

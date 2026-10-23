@@ -21,7 +21,7 @@
   color: var(--color-accent-text);
 }
 .hello {
-  font-size: clamp(32px, 4vw, 52px);
+  font-size: clamp(32px, 4vw, 44px);
   font-weight: var(--weight-extrabold);
   line-height: 1.05;
   letter-spacing: -0.035em;
@@ -91,7 +91,7 @@
   margin: 0;
   font-family: var(--font-display);
   font-weight: 400;
-  font-size: clamp(22px, 2.6vw, 30px);
+  font-size: clamp(24px, 2.6vw, 32px);
   line-height: 1.42;
   text-wrap: pretty;
 }
@@ -128,7 +128,8 @@
 .heroActions > .heroButton:first-child:hover:not(:disabled) {
   background: color-mix(in srgb, var(--color-hero-text) 88%, #0a0f1c);
 }
-.heroIcon {
+.heroIcon,
+.heroQuiet {
   border-color: transparent;
   background: rgb(245 242 234 / 0.1);
 }
@@ -155,11 +156,11 @@
   gap: var(--space-1) var(--space-3);
 }
 .weekTitle {
-  font-size: var(--text-18);
+  font-size: var(--text-20);
   font-weight: var(--weight-extrabold);
 }
 .weekSub {
-  font-size: var(--text-13);
+  font-size: var(--text-14);
   color: var(--color-text-muted);
 }
 .weekDays {
@@ -195,9 +196,20 @@
 .weekToday .weekDot {
   border: 2.5px solid var(--color-accent);
 }
-.weekLater .weekDot {
-  border-style: dashed;
-  border-color: var(--color-border-strong);
+/* Days without reading are quiet dots, not empty circles: the strip celebrates the days you
+   read and invites today, rather than reading as a report card. */
+.weekDay:not(.weekOn):not(.weekToday) .weekDot {
+  border-color: transparent;
+}
+.weekDay:not(.weekOn):not(.weekToday) .weekDot::after {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-border-strong);
+}
+.weekLater .weekDot::after {
+  background: var(--color-border);
 }
 .weekLetter {
   font-size: var(--text-12);
@@ -220,11 +232,11 @@
   background: var(--color-surface);
 }
 .cardTitle {
-  font-size: var(--text-18);
+  font-size: var(--text-20);
   font-weight: var(--weight-extrabold);
 }
 .muted {
-  font-size: var(--text-15);
+  font-size: var(--text-16);
   line-height: 1.55;
   color: var(--color-text-muted);
 }
@@ -253,14 +265,14 @@
 }
 .continueContent { min-width: 0; }
 .continueContent h2 {
-  font-size: 14px;
+  font-size: var(--text-14);
   font-weight: 800;
   line-height: 1.35;
 }
 .continuePlace {
   margin-top: 2px;
   color: var(--color-text-muted);
-  font-size: 12px;
+  font-size: var(--text-12);
 }
 .continuePlace span { color: var(--color-text-faint); }
 .continueButton {
@@ -273,11 +285,18 @@
   border-radius: 999px;
   background: var(--color-text);
   color: var(--color-surface);
-  font-size: 14px;
+  font-size: var(--text-14);
   font-weight: 700;
   text-decoration: none;
 }
 .continueButton:hover { opacity: .88; }
+.continueHide {
+  flex: none;
+  margin-left: -8px;
+}
+@media (pointer: coarse) {
+  .continueHide { min-width: 44px; min-height: 44px; }
+}
 /* Take five minutes: the warm card, with the flame companion. */
 .reflect {
   background: var(--color-accent-tint);
@@ -290,7 +309,7 @@
   display: -webkit-box;
   overflow: hidden;
   font-family: var(--font-display);
-  font-size: 18px;
+  font-size: var(--text-20);
   line-height: 1.5;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
@@ -327,17 +346,22 @@
     width: 32px;
     height: 32px;
   }
-  /* The verse's actions sit on one row: two named buttons and Copy. */
+  /* The verse's actions sit on one row: three named buttons, sized to fit a phone. */
   .heroActions {
     flex-wrap: nowrap;
-    gap: 8px;
+    gap: 6px;
   }
   .heroButton {
     flex: 1 1 auto;
-    padding: 0 var(--space-3);
+    min-width: 0;
+    padding: 0 var(--space-2);
+    font-size: var(--text-14);
+  }
+  .heroButton svg {
+    display: none;
   }
   .heroText {
-    font-size: 21px;
+    font-size: var(--text-20);
   }
 }
 
@@ -352,7 +376,7 @@
     gap: 6px;
   }
   .hello {
-    font-size: 32px;
+    font-size: var(--text-32);
     line-height: 1.1;
     letter-spacing: -0.03em;
   }
@@ -360,7 +384,7 @@
     padding: 24px 22px 22px;
   }
   .heroText {
-    font-size: 21px;
+    font-size: var(--text-20);
     line-height: 1.55;
   }
 }
@@ -405,17 +429,19 @@
     border-radius: 26px;
   }
   .heroText {
-    font-size: 22px;
+    font-size: var(--text-24);
     line-height: 1.45;
   }
   .heroActions {
-    gap: 10px;
+    gap: 6px;
     margin-top: 0;
     align-items: center;
   }
+  /* Three named buttons share the row; each shrinks a little rather than spilling off. */
   .heroButton {
-    flex: none;
-    padding-inline: 16px;
+    flex: 1 1 auto;
+    min-width: 0;
+    padding-inline: 10px;
   }
   .heroButton > svg {
     display: none;
@@ -453,14 +479,14 @@
     gap: 10px;
   }
   .reflect .muted {
-    font-size: 14px;
+    font-size: var(--text-14);
     line-height: 1.5;
   }
 }
 @media (max-width: 359px) {
   .heroButton {
     padding-inline: 10px;
-    font-size: 13px;
+    font-size: var(--text-14);
   }
 }
 
@@ -476,11 +502,11 @@
 }
 .eveningRead strong {
   display: block;
-  font-size: 15px;
+  font-size: var(--text-16);
 }
 .eveningRead small {
   display: block;
-  font-size: 13px;
+  font-size: var(--text-14);
   color: var(--color-text-muted);
   margin-top: 4px;
 }
@@ -501,7 +527,7 @@
     padding: 40px;
   }
   .reflect .cardTitle {
-    font-size: 20px;
+    font-size: var(--text-20);
   }
 }
 .nextReading {
@@ -509,7 +535,7 @@
   gap: 12px;
 }
 .nextHeading {
-  font-size: 16px;
+  font-size: var(--text-16);
   font-weight: 700;
 }
 .otherPlans summary {
@@ -517,7 +543,7 @@
   min-height: 44px;
   cursor: pointer;
   color: var(--color-text-muted);
-  font-size: 14px;
+  font-size: var(--text-14);
   font-weight: 600;
 }
 .otherPlansList {
@@ -531,4 +557,7 @@
 .salvationInvitation span span { line-height: 1.45; color: #58636b; }
 @media (max-width: 640px) {
   .page { padding-bottom: 154px; }
+}
+.plansSlot:empty {
+  display: none;
 }

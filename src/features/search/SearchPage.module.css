@@ -7,7 +7,7 @@
 .box {
   height: 60px;
   border-radius: 999px;
-  font-size: 18px;
+  font-size: var(--text-20);
   font-weight: var(--weight-semibold);
 }
 .try {
@@ -34,7 +34,7 @@
   background: var(--color-surface);
   color: var(--color-text);
   font: inherit;
-  font-size: var(--text-15);
+  font-size: var(--text-16);
   font-weight: var(--weight-bold);
   cursor: pointer;
 }
@@ -102,7 +102,7 @@
   overflow: hidden;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
-  font-size: var(--text-15);
+  font-size: var(--text-16);
   line-height: 1.5;
   color: var(--color-text-muted);
 }
@@ -138,7 +138,7 @@
     overflow: visible;
     clip-path: none;
     margin: 8px 4px 18px;
-    font-size: 32px;
+    font-size: var(--text-32);
     font-weight: var(--weight-extrabold);
     line-height: 1.1;
     letter-spacing: -0.03em;
@@ -168,7 +168,7 @@
     border-radius: 0;
     background: none;
     text-align: left;
-    font-size: 16px;
+    font-size: var(--text-16);
     font-weight: 600;
   }
   .suggestionIcon {
@@ -177,14 +177,14 @@
   .suggestionKind {
     display: block;
     margin-left: auto;
-    font-size: 12px;
+    font-size: var(--text-12);
     font-weight: var(--weight-bold);
     color: var(--color-text-muted);
   }
 }
 
 .tryTitle {
-  font-size: 13px;
+  font-size: var(--text-14);
   font-weight: 700;
   color: var(--color-text-muted);
   margin-top: 24px;
@@ -192,7 +192,7 @@
 }
 .privacy {
   margin-top: 24px;
-  font-size: 13px;
+  font-size: var(--text-14);
   line-height: 1.5;
   color: var(--color-text-faint);
 }
@@ -211,7 +211,7 @@
   border-radius: 999px;
   background: var(--color-surface);
   font: inherit;
-  font-size: 13px;
+  font-size: var(--text-14);
   font-weight: 700;
   color: var(--color-text);
   cursor: pointer;

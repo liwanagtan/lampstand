@@ -52,7 +52,7 @@
   border-radius: var(--radius-pill);
   color: var(--color-text-muted);
   text-decoration: none;
-  font-size: var(--text-15);
+  font-size: var(--text-16);
   font-weight: var(--weight-bold);
   transition:
     color var(--dur-state) var(--ease-state),
@@ -115,7 +115,7 @@
 }
 .initial {
   font-family: var(--font-display);
-  font-size: 16px;
+  font-size: var(--text-16);
   font-weight: var(--weight-semibold);
 }
 .tabbar {
@@ -201,11 +201,12 @@
 :global([data-theme='dark']) .main[data-atmosphere='today'] {
   --sky: color-mix(in srgb, var(--color-dawn) 70%, var(--color-bg));
   background:
-    radial-gradient(circle at 12% 120px, var(--color-accent) 0 2px, transparent 3px),
-    radial-gradient(circle at 34% 260px, var(--color-accent-soft) 0 1.5px, transparent 2.5px),
-    radial-gradient(circle at 58% 80px, var(--color-accent) 0 2px, transparent 3px),
-    radial-gradient(circle at 76% 200px, var(--color-accent) 0 2.5px, transparent 3.5px),
-    radial-gradient(circle at 90% 330px, var(--color-accent-soft) 0 1.5px, transparent 2.5px),
+    /* Stars keep to the open sky on the right, clear of the greeting. */
+    radial-gradient(circle at 74% 64px, var(--color-accent) 0 2px, transparent 3px),
+    radial-gradient(circle at 86% 140px, var(--color-accent-soft) 0 1.5px, transparent 2.5px),
+    radial-gradient(circle at 95% 48px, var(--color-accent) 0 2px, transparent 3px),
+    radial-gradient(circle at 80% 230px, var(--color-accent) 0 2.5px, transparent 3.5px),
+    radial-gradient(circle at 97% 300px, var(--color-accent-soft) 0 1.5px, transparent 2.5px),
     linear-gradient(var(--sky), var(--color-bg)) 0 0 / 100% 440px no-repeat,
     var(--color-bg);
   background-attachment: local;
@@ -239,7 +240,7 @@
     min-height: 52px;
     border-radius: var(--radius-md);
     color: var(--color-text-faint);
-    font-size: var(--text-11);
+    font-size: var(--text-12);
     font-weight: var(--weight-semibold);
     text-decoration: none;
   }

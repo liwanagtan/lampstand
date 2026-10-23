@@ -4,12 +4,7 @@ import { openApp, importSample } from './helpers';
 for (const width of [360, 390, 640, 641, 768, 820, 1024, 1100, 1101, 1440]) {
   test(`personal pages fit at ${width}px`, async ({ page }) => {
     await page.setViewportSize({ width, height: 900 });
-    for (const path of [
-      '/plans',
-      '/salvation',
-      '/profile/settings',
-      '/screen',
-    ]) {
+    for (const path of ['/plans', '/salvation', '/profile/settings', '/screen']) {
       await openApp(page, path);
       expect(
         await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1),
@@ -39,6 +34,9 @@ test('guided plan completion offers reflection and immediate next reading', asyn
   await openApp(page, '/plans/p/first-steps-in-faith');
   await page.getByRole('button', { name: 'Start plan', exact: true }).click();
   await page.getByRole('button', { name: 'Finish day 1', exact: true }).click();
+  const done = page.getByRole('dialog', { name: 'Day 1 done' });
+  await expect(done.getByRole('button', { name: 'Write a reflection' })).toBeVisible();
+  await done.getByRole('button', { name: 'Back to the passage' }).click();
   await expect(page.getByRole('button', { name: 'Read day 2 now' })).toBeVisible();
   await page.getByRole('button', { name: 'Reflect on today', exact: true }).click();
   await expect(page.getByRole('dialog').getByLabel('Title')).toHaveValue(

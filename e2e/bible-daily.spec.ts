@@ -46,14 +46,16 @@ test('Today, reading plans and the journal', async ({ page }) => {
   const classic = page.getByRole('region', { name: 'Classic devotional' });
   await expect(classic).toContainText('Spurgeon, 1865');
   await classic.getByRole('radio', { name: 'Evening' }).click();
-  await classic.getByRole('button', { name: 'Read' }).click();
+  await classic.getByRole('button', { name: 'Read in full' }).click();
   await expect(page.getByRole('dialog')).toContainText('Spurgeon · Morning and Evening');
   await page.keyboard.press('Escape');
 
-  // Start a plan; only the next reading is shown.
-  await page.getByRole('button', { name: 'Choose a plan' }).click();
-  // Discover: open the plan page, preview, then start.
-  await page.getByRole('link', { name: 'The Gospels in 40 days' }).click();
+  // Start a plan from Plans' first suggestions: open the plan page, preview, then start.
+  await page.getByRole('link', { name: 'Plans' }).click();
+  await page
+    .getByRole('region', { name: 'A place to start' })
+    .getByRole('link', { name: /The Gospels in 40 days/ })
+    .click();
   await expect(page.getByRole('region', { name: 'First reading' })).toContainText('Matthew 1–4');
   await page.getByRole('button', { name: 'Start plan' }).click();
 
@@ -61,7 +63,10 @@ test('Today, reading plans and the journal', async ({ page }) => {
   await expect(page.getByRole('heading', { name: 'Matthew 1–4' })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Matthew 4' })).toBeVisible();
   await page.getByRole('button', { name: 'Finish day 1' }).click();
-  await expect(page.getByRole('status').filter({ hasText: 'Well done!' })).toBeVisible();
+  // A completion moment invites reflection; returning to the passage offers the next day.
+  const done = page.getByRole('dialog', { name: 'Day 1 done' });
+  await expect(done).toContainText('1 of 40 days done');
+  await done.getByRole('button', { name: 'Back to the passage' }).click();
   await page.getByRole('button', { name: 'Read day 2 now' }).click();
   await expect(page.getByRole('heading', { name: 'Matthew 5–7' })).toBeVisible();
   await page.getByRole('link', { name: 'Plans' }).click();
@@ -75,7 +80,7 @@ test('Today, reading plans and the journal', async ({ page }) => {
   await expect(page.getByRole('heading', { name: 'The Sower' })).toBeVisible();
   await expect(page.getByRole('region', { name: 'Questions' })).toContainText('four soils');
   await page.getByRole('button', { name: 'Finish lesson 1' }).click();
-  await expect(page.getByRole('status').filter({ hasText: 'Well done!' })).toContainText(
+  await expect(page.getByRole('dialog', { name: 'Lesson 1 done' })).toContainText(
     'The next lesson opens',
   );
   await page.getByRole('link', { name: 'Plans' }).click();
@@ -89,7 +94,7 @@ test('Today, reading plans and the journal', async ({ page }) => {
   const sheet = page.getByRole('dialog');
   await sheet.getByLabel('Verse').fill('psalm 23 1');
   await sheet.getByLabel('Verse').press('Enter');
-  await expect(sheet).toContainText('The LORD is my shepherd');
+  await expect(sheet).toContainText(/The Lord is my shepherd/i);
   await sheet.getByLabel('Title').fill('My shepherd');
   await sheet.getByLabel('Your entry').fill('Grace upon grace.');
   await expect(sheet.getByRole('status').filter({ hasText: 'Saved' })).toBeVisible();

@@ -22,17 +22,22 @@ test('on a phone the reader is all thumbs: pill, Aa sheet, and the selection bar
   await expect(bar.getByRole('button', { name: 'John 1', exact: true })).toBeVisible();
 
   // Aa: translation and text size in a bottom sheet.
-  await bar.getByRole('button', { name: 'Reading settings' }).tap();
+  await bar.getByRole('button', { name: /^Reading settings/ }).tap();
   const sheet = page.getByRole('dialog', { name: 'Reading' });
   await sheet.getByRole('button', { name: 'Larger text' }).tap();
   await page.keyboard.press('Escape');
 
   // Selecting verses swaps the pill for the selection bar, with named actions.
-  await page.locator('[data-verse="1"] button').last().tap();
+  await page.locator('[data-verse="1"] [aria-pressed]').tap();
   await expect(pill).toBeHidden();
   const selected = page.getByRole('toolbar', { name: 'Selected verses' });
   await expect(selected).toContainText('Bookmark');
   await expect(selected).toContainText('Note');
+  // Study notes, out of the hidden margin: the bar opens them for the selected verse.
+  await selected.getByRole('button', { name: 'Study notes on verse 1' }).tap();
+  await expect(page.getByRole('dialog')).toContainText('Adapted from Tyndale Open Study Notes');
+  await page.keyboard.press('Escape');
+  await expect(page.getByRole('dialog')).toBeHidden();
   await selected.getByRole('button', { name: 'Clear selection' }).tap();
   await expect(pill).toBeVisible();
 });
@@ -42,13 +47,18 @@ test('on a phone a parallel translation reads beneath each verse, and plans use 
 }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await openApp(page, '/bible');
-  await page.getByRole('button', { name: 'Reading settings', exact: true }).tap();
-  await page.getByLabel('Parallel translation').tap();
+  await page
+    .getByRole('button', { name: /^Reading settings/ })
+    .filter({ visible: true })
+    .tap();
+  // Side by side is part of the Study layout.
+  await page.getByRole('radio', { name: /^Study/ }).tap();
+  await page.getByLabel('Side by side').tap(); // "Parallel translation" on larger screens
   await page.getByRole('option', { name: /WEB/ }).tap();
   await page.keyboard.press('Escape');
   const verse = page.locator('[data-verse="1"]');
   const [first, second] = await Promise.all([
-    verse.locator('span').first().boundingBox(),
+    verse.locator('button[aria-pressed] > span').first().boundingBox(),
     verse.locator('[data-code="WEB"]').boundingBox(),
   ]);
   expect(second!.y).toBeGreaterThan(first!.y + first!.height - 2);
@@ -60,7 +70,7 @@ test('on a phone a parallel translation reads beneath each verse, and plans use 
     .getByRole('button', { name: /Reading settings:/ })
     .tap();
   const sheet = page.getByRole('dialog', { name: 'Reading' });
-  await expect(sheet.getByLabel('Parallel translation')).toHaveCount(0);
+  await expect(sheet.getByLabel('Side by side')).toHaveCount(0);
   await sheet.getByRole('button', { name: 'Larger text' }).tap();
 });
 

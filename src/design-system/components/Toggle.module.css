@@ -18,7 +18,7 @@
   cursor: pointer;
 }
 .description {
-  font-size: var(--text-13);
+  font-size: var(--text-14);
   color: var(--color-text-muted);
 }
 /* Design system Switch: on is ink with a gold knob (cream with a gold knob in the evening). */

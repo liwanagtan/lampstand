@@ -11,12 +11,14 @@ import { loadBackgrounds, type BackgroundEntry } from '@/features/library/backgr
 import { useAsset } from '@/slides/useAsset';
 import { OVERLAY_MODES, TEMPLATE_IDS, type OverlayMode, type UiMode } from '@/schema/common';
 import { getTemplate } from '@/templates/templates';
-import { backupFileName, createBackup, restoreBackup } from './backup';
+import { downloadBackup, restoreBackup } from './backup';
 import { useSettings } from './settingsStore';
 import { ReadingSection, TipsSection } from './MeSections';
 import { RemindersSection } from '@/features/reminders/RemindersSection';
 import { Section } from './Section';
 import { InstallSection } from './InstallSection';
+import { AccountSection } from '@/features/account/AccountSection';
+import { PrivacySection } from '@/features/insights/PrivacySection';
 import { LAMPSTAND_PLANS, OPEN_CONTENT } from './credits';
 import styles from './SettingsPage.module.css';
 
@@ -34,6 +36,7 @@ export function SettingsPage() {
   const [detail, setDetail] = useState<'translations' | 'credits' | null>(null);
   return (
     <div className={styles.sections}>
+      <AccountSection />
       <ReadingSection />
       <RemindersSection />
       <InstallSection />
@@ -50,6 +53,7 @@ export function SettingsPage() {
         </div>
       )}
       <TipsSection />
+      <PrivacySection />
       {phone ? (
         <>
           <Section title="Translations and data">
@@ -367,17 +371,11 @@ function DataSection({ embedded = false }: { embedded?: boolean }) {
   const onExport = async () => {
     setExporting(true);
     try {
-      const blob = await createBackup();
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = backupFileName();
-      a.click();
-      setTimeout(() => URL.revokeObjectURL(url), 2000);
+      await downloadBackup();
       toast({
         title: 'Backup saved',
         description:
-          'Includes your journal, notes, highlights, bookmarks, plan progress, preferences and presentations.',
+          'Includes your journal, notes, highlights, bookmarks, plan progress, reading positions, preferences and presentations.',
         tone: 'success',
       });
     } finally {
@@ -431,9 +429,10 @@ function DataSection({ embedded = false }: { embedded?: boolean }) {
         {usage && <span className={cx(styles.muted, styles.usage)}>{usage}</span>}
       </div>
       <p className={styles.small}>
-        Your backup includes journal entries, notes, highlights, bookmarks, plan progress,
-        preferences and presentations. Keep a copy before changing devices. Import merges saved
-        content without deleting existing items.
+        Your backup includes journal entries, notes, highlights, bookmarks, plan progress, reading
+        positions, preferences and presentations. Keep a copy before changing devices. Import merges
+        saved content, restores backed-up preferences and fills missing reading positions without
+        deleting existing entries.
       </p>
     </div>
   );

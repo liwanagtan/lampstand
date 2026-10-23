@@ -18,11 +18,48 @@
   align-items: center;
   gap: var(--space-3);
 }
-.sample {
-  min-width: 2.2em;
+.layouts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-2);
+}
+.layout {
+  display: grid;
+  gap: 2px;
+  min-height: 56px;
+  padding: var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.layout strong {
+  font-size: var(--text-14);
+}
+.layout span {
+  color: var(--color-text-muted);
+  font-size: var(--text-12);
+}
+.layout[aria-checked='true'] {
+  border-color: var(--color-text);
+  box-shadow: inset 0 0 0 1px var(--color-text);
+}
+/* Text size as a row of growing letters: where you are on the scale, no pixel numbers. */
+.scale {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
   font-family: var(--font-display);
-  text-align: center;
   line-height: 1;
+}
+.scale span {
+  color: var(--color-border-strong);
+}
+.scale span[data-on] {
+  color: var(--color-text);
 }
 
 .translations {
@@ -36,10 +73,10 @@
   gap: 4px;
 }
 .translationHead strong {
-  font-size: 15px;
+  font-size: var(--text-16);
 }
 .translationHead span {
-  font-size: 13px;
+  font-size: var(--text-14);
   color: var(--color-text-muted);
 }
 .translationChips {
@@ -53,7 +90,7 @@
   border: 1px solid var(--color-border);
   border-radius: 999px;
   font: inherit;
-  font-size: 13px;
+  font-size: var(--text-14);
   font-weight: 700;
   color: var(--color-text);
   background: var(--color-surface);
@@ -69,12 +106,6 @@
   border-radius: 18px;
   background: var(--color-surface-sunk);
   font-family: var(--font-display);
-  font-size: 20px;
+  font-size: var(--text-20);
   line-height: 1.6;
-}
-@media (max-width: 640px) {
-  .sample {
-    font-family: var(--font-ui);
-    font-size: 14px !important;
-  }
 }

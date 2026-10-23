@@ -87,7 +87,7 @@
 .detail {
   display: -webkit-box;
   overflow: hidden;
-  font-size: var(--text-13);
+  font-size: var(--text-14);
   color: var(--color-text-muted);
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
@@ -99,7 +99,7 @@
 }
 .hint {
   padding: var(--space-2) var(--space-3);
-  font-size: var(--text-13);
+  font-size: var(--text-14);
   color: var(--color-text-muted);
 }
 @keyframes pop {

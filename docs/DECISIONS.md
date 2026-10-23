@@ -229,3 +229,43 @@ Owner explicitly requested multi-select faith journey, superseding the earlier s
 ### 2026-10-21 — Final reviewed UI refinements
 
 Suggestions use a softly tinted section with all corners rounded and no left border. Bible sits in the middle of the full phone navigation (Today, Plans, Bible, Search, Profile). Hide Finish setup later on translation and plan steps; label the final action Complete setup. Welcome’s form does not flex-shrink, preserving 48px bottom clearance at all widths. Screen library/import, presentation controls and Bible console use the light interface palette; slide content and live output retain their designed appearance.
+
+### 2026-10-23 — Accounts Phase 3: guest import by choice
+
+After sign-in, a device with guest data asks once to bring it into the account (Bring it in / Not now); Settings › Account keeps the option. Plan days from both sides are combined; highlights and bookmarks keep the most recent choice; a journal entry or note that differs is kept twice (`guest:` copy) and reviewed in Journey (keep one, the other, or both). The guest profile is never changed, a failed import says so and can be retried, and a finished guest setup carries over so the account opens on Today.
+
+### 2026-10-23 — Accounts Phase 4: cross-device sync
+
+Signed-in profiles sync plans, journal entries, notes/highlights/bookmarks, profile and personal preferences (translation, features, motion, devotional and study-note choices, presenting defaults) and reading place to Supabase `user_records`; reminders, tips, presentations, imported plans and Bible text stay on each device. Each sync pulls first, compares both sides with the last agreed version (`syncBase`), then pushes. Plan days combine (a restart replaces the older run); an edit beats a deletion; differing journal entries and notes keep this device's version as a `device:` copy for review in Journey; highlights keep the latest choice; an account's existing settings win on a new device. The server stamps change times. A device the account has not set up loads the account before Welcome, with retry or "set up on this device for now" when offline. Settings › Account shows sync status, Sync now, export, sign-out and Delete account (server records always; this device's copy by choice). Journal text is not end-to-end encrypted in this release, and the privacy page says so. `supabase/rls-check.sql` is the ownership test to run in staging.
+
+### 2026-10-23 — Accounts Phase 5: anonymous usage insights
+
+Owner-approved, superseding the PRD's "no analytics in V1". On by default; Settings › Privacy turns it off and drops unsent events. Each event is only its name, a random device code (never linked to an account) and the local date; reading events count once a day per device; tests and automated browsers never count. Events queue offline and send in batches to `usage_events`, which apps can add to but not read. `usage_rollup()` keeps daily totals, active devices (a reading or plan event), and day-1/7/28 returns; raw events are removed after 30 days and device codes 90 days after last use. `/insights` shows the totals to maintainers listed in `usage_admins`. Cloudflare Web Analytics, if wanted for page visits, is a separate dashboard switch.
+
+### 2026-10-23 — Start first, save later
+
+The first visit has one job: a centred lamp, "Grow in the Word, every day.", **Get started**, and a quiet **I have an account** (Google). The offline Bibles prepare while it shows. Welcome is at most three steps with no step counter: name (filled from Google when signed in), what brings you here, and where to start. Each place to start names its plan; exploring or new to faith begins with Understanding salvation. Translation is no longer asked; it changes in the reader. A 5-second handoff shows the flame and what is being prepared for this person. An account is offered once, on Today, after the first finished reading or written entry ("Keep your journey"); choosing Google there brings the guest data in without a second question. Today's floating Continue reading bar shows only to resume a chapter actually read, and can be closed until the next chapter. Usage counts add `save_offer_shown`.
+
+### 2026-10-23 — One reader: Read and Study
+
+The Bible reader and plan readings share one `Passage` component and one selection bar (`VerseActions`). Two layouts: **Read** (default; the text flows as paragraphs with small inline verse numbers, each verse still tappable) and **Study** (a verse per row with the margin for numbers, notes and study marks). The choice lives in the Reading sheet, is remembered with the reader preferences and syncs with the reading place. Side by side is a Study feature: two translations interleaved in paragraphs read poorly. Plan readings gain the verse actions (highlight, bookmark, note, study notes, copy). One reading control, "KJV | Aa", replaces the separate translation chip, Aa button and the plan reader's select and A−/A+. Text size shows as a row of growing letters instead of pixels. Both readers use serif titles and cap the text at about 65 characters a line.
+
+### 2026-10-23 — A seven-step type scale, enforced
+
+App type uses seven sizes: 12 caption, 14 small and labels, 16 body, 20 subheading, 24 heading, 32 page title, 44 display (`fontSize` in `src/design-system/tokens.ts`, as `var(--text-N)`). The CSS had 85 different font-size values, about 190 in raw px; each moved to its nearest step, with ties rounding up for legibility (13 to 14, 15 to 16), and fluid `clamp()` headings keep their fluidity with endpoints on the scale. Scripture keeps following the reader's own size (em and `--reader-size`), and the TV output keeps its own scale. `npm run lint` now runs stylelint, which rejects raw px font sizes and size tokens off the scale (`stylelint.config.mjs`).
+
+### 2026-10-23 — Laptop layouts that use the width
+
+On laptops (1024px and up) Plans puts your plan beside the suggestions instead of one card stretching edge to edge; the plan page shows the list of days (previously phone-only) on the left with your progress, or how to start, on the right; tablets get the days list stacked. Screen's two ways in are compact rows, icon beside text, so the library below is in view.
+
+### 2026-10-23 — Go deeper, and a calmer day done
+
+Today's reflection prompt and Spurgeon's Morning and Evening share one "Go deeper" card (two rows; the full devotional opens in its sheet or page), so Today shows five blocks instead of six. The verse card's copy action has a visible label. Day done offers two choices, Write a reflection and Done, with Pray and Back to the passage as quiet links, and names what is up next ("Up next · Day 2: Matthew 5–7"); the repeated progress pill is gone.
+
+### 2026-10-23 — Google sign-in hidden until the app is finished
+
+Accounts are switched off by default: `accountsConfigured` (src/features/account/client.ts) is true only with `VITE_ACCOUNTS=on` as well as the Supabase keys. While off, the landing offers only Get started, Settings has no Account section, the "Keep your journey" offer never shows, the privacy page leaves out the Google section, and any stored session is ignored so everyone uses the app as a guest. Anonymous usage counts keep working. The account, sync and Insights end-to-end tests skip until the switch is on. All the account code stays in place for later.
+
+### 2026-10-23 — Go deeper reverted
+
+The owner prefers Take five minutes and the Classic devotional as separate blocks, with the devotional's key verse, preview and Morning/Evening control on Today. The Go deeper card is removed; the labelled Copy button and the calmer day-done moment stay.

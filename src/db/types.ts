@@ -80,6 +80,8 @@ export interface Settings {
   classicDevotional: boolean;
   /** Tyndale study notes in the reader and plan days. */
   studyNotes: boolean;
+  /** Send anonymous usage counts (src/features/insights/insights.ts). */
+  insights: boolean;
 }
 
 export interface RemindersState {
@@ -186,4 +188,13 @@ export interface JournalRecord {
   answers: Record<string, string>;
   createdAt: number;
   updatedAt: number;
+}
+
+/** Account sync: the hash of a record as last agreed with the server, or the pull cursor. */
+export interface SyncBaseRecord {
+  /** "kind/id", or "@cursor". */
+  key: string;
+  hash?: string;
+  /** For "@cursor": the newest server change time seen (ISO). */
+  at?: string;
 }

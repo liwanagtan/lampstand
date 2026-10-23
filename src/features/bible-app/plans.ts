@@ -11,10 +11,12 @@ import {
   type RefRange,
 } from '@/features/bible/ref';
 import { parsePlanFile, type Plan, type PlanDay } from '@/schema/plan';
+import { track } from '@/features/insights/insights';
 import { localDayNumber } from './dailyVerses';
 import returning from './plans/returning-to-the-word.lampstand-plan.json';
 import understanding from './plans/reading-with-understanding.lampstand-plan.json';
 import { clearPlanResume } from './readingResume';
+
 // Every bundled plan file in ./plans is a built-in plan.
 const BUNDLED = {
   ...import.meta.glob<unknown>('./plans/*.lampstand-plan.json', { eager: true, import: 'default' }),
@@ -340,7 +342,11 @@ export function nextReadingDate(
   const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
   if (!latestDone || latestDone <= (progress.rhythmChangedAt ?? progress.startedAt)) return today;
   const anchorDate = new Date(latestDone);
-  const target = new Date(anchorDate.getFullYear(), anchorDate.getMonth(), anchorDate.getDate() + interval);
+  const target = new Date(
+    anchorDate.getFullYear(),
+    anchorDate.getMonth(),
+    anchorDate.getDate() + interval,
+  );
   return target > today ? target : today;
 }
 
@@ -349,7 +355,12 @@ export async function setPlanRhythm(planId: string, rhythm: PlanRhythm | null): 
     const progress = await db.plans.get(planId);
     if (!progress || progress.rhythm === (rhythm ?? undefined)) return;
     const now = Date.now();
-    await db.plans.put({ ...progress, rhythm: rhythm ?? undefined, rhythmChangedAt: now, updatedAt: now });
+    await db.plans.put({
+      ...progress,
+      rhythm: rhythm ?? undefined,
+      rhythmChangedAt: now,
+      updatedAt: now,
+    });
   });
 }
 
@@ -400,6 +411,7 @@ export async function startPlan(planId: string): Promise<void> {
   clearPlanResume(planId);
   const now = Date.now();
   await db.plans.put({ planId, startedAt: now, done: [], updatedAt: now });
+  track('plan_started');
 }
 
 export async function stopPlan(planId: string): Promise<void> {
@@ -427,6 +439,7 @@ export async function setDayRead(planId: string, day: number, read: boolean): Pr
       updatedAt: Date.now(),
     });
   });
+  if (read) track('plan_day_completed');
 }
 
 export function usePlanProgress(): PlanProgressRecord[] | undefined {

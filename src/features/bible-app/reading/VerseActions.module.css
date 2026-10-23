@@ -1,0 +1,175 @@
+/* The selected verses and what you can do with them: a bar on laptops, a bottom sheet on phones. */
+.selectionBar {
+  position: absolute;
+  left: 50%;
+  bottom: var(--space-6);
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  translate: -50% 0;
+  padding: var(--space-2) var(--space-2) var(--space-2) var(--space-5);
+  border: 0;
+  border-radius: 999px;
+  /* Verse actions (design system): an ink bar on laptops, a white sheet on phones. */
+  background: var(--color-hero);
+  color: var(--color-hero-text);
+  box-shadow: var(--elevation-2);
+  animation: barIn var(--dur-state) var(--ease-sheet);
+}
+.swatches {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.swatch {
+  width: 28px;
+  height: 28px;
+  border: 2px solid transparent;
+  border-radius: 50%;
+  background: var(--hl);
+  cursor: pointer;
+  transition: transform var(--dur-quick) var(--ease-quick);
+}
+.swatch:hover {
+  transform: scale(1.12);
+}
+.swatch[aria-pressed='true'] {
+  box-shadow:
+    0 0 0 2px var(--color-hero),
+    0 0 0 4px var(--color-hero-text);
+}
+.selectionCount {
+  font-weight: var(--weight-regular, 400);
+  color: var(--color-hero-text-muted);
+}
+.selectionLabel {
+  margin-right: var(--space-2);
+  white-space: nowrap;
+  font-weight: var(--weight-extrabold);
+}
+.selectionBar .bookmarkMark,
+.selectionBar :global(button) {
+  color: var(--color-hero-text);
+}
+.selectionBar :global(button):hover:not(:disabled) {
+  background: rgb(245 242 234 / 0.1);
+}
+/* Selection actions: icons on laptops. */
+.barActions {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+.barButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--color-hero-text);
+  font: inherit;
+  cursor: pointer;
+}
+.barButton:hover {
+  background: rgb(245 242 234 / 0.1);
+}
+.barButton[aria-pressed='true'] {
+  color: var(--color-accent);
+}
+.barText {
+  display: none;
+}
+@media (max-width: 640px) {
+  .selectionBar {
+    right: var(--space-2);
+    bottom: var(--space-2);
+    left: var(--space-2);
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    padding: var(--space-4);
+    translate: none;
+    border-radius: var(--radius-xl);
+    background: var(--color-surface);
+    color: var(--color-text);
+    box-shadow: var(--elevation-3);
+  }
+  .selectionBar .bookmarkMark,
+  .selectionBar :global(button) {
+    color: var(--color-text);
+  }
+  .selectionCount {
+    color: var(--color-text-muted);
+  }
+  .swatch[aria-pressed='true'] {
+    box-shadow:
+      0 0 0 3px var(--color-surface),
+      0 0 0 5px var(--color-text);
+  }
+  .selectionLabel {
+    flex: 1 1 0;
+    min-width: 0;
+    margin: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .clear {
+    order: 1;
+  }
+  .swatches {
+    order: 2;
+    flex: 1 1 100%;
+    justify-content: space-between;
+  }
+  .swatch {
+    width: 44px;
+    height: 44px;
+  }
+  .barActions {
+    order: 3;
+    flex: 1 1 100%;
+    gap: var(--space-2);
+  }
+  .barButton {
+    flex: 1;
+    flex-direction: column;
+    width: auto;
+    min-width: 0;
+    height: 64px;
+    border-radius: var(--radius-md);
+    background: var(--color-surface-sunk);
+    color: var(--color-text);
+  }
+  .barButton:hover {
+    background: var(--color-surface-sunk);
+  }
+  .barButton[aria-pressed='true'] {
+    color: var(--color-accent-text);
+  }
+  .barText {
+    display: block;
+    font-size: var(--text-14);
+    font-weight: var(--weight-bold);
+  }
+}
+@media (hover: none) and (max-width: 640px) {
+  .swatch:hover {
+    transform: none;
+  }
+}
+@keyframes barIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+.pinned {
+  position: fixed;
+  z-index: 40;
+}

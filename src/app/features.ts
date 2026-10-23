@@ -70,6 +70,8 @@ export type UseCaseId = 'grow' | 'study' | 'teach';
 export interface UseCase {
   id: UseCaseId;
   title: string;
+  /** One short line, for Welcome and Profile. */
+  summary: string;
   description: string;
   turnsOn: string;
   parts: FeatureKey[];
@@ -80,6 +82,7 @@ export const USE_CASES: readonly UseCase[] = [
   {
     id: 'grow',
     title: 'Grow daily',
+    summary: 'Daily verse, plans and journal',
     description:
       'A verse to start each day, reading plans that fit your pace, and a private journal for what God is teaching you.',
     turnsOn: 'Turns on Today, Plans and the journal in Journey.',
@@ -88,6 +91,7 @@ export const USE_CASES: readonly UseCase[] = [
   {
     id: 'study',
     title: 'Read and study',
+    summary: 'Read, search and save notes',
     description:
       'The Bible with nothing in the way: search, compare translations side by side, and highlight, bookmark and take notes as you read.',
     turnsOn: 'Turns on the Bible reader, highlights and notes.',
@@ -96,6 +100,7 @@ export const USE_CASES: readonly UseCase[] = [
   {
     id: 'teach',
     title: 'Teach and present',
+    summary: 'Present Scripture and slides',
     description:
       'Put Scripture and sermon slides on a TV or projector for a service, a class or a small group, from your laptop.',
     turnsOn: 'Turns on Screen.',

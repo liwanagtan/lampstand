@@ -169,7 +169,7 @@
   display: -webkit-box;
   overflow: hidden;
   font-family: var(--font-display);
-  font-size: 17px;
+  font-size: var(--text-16);
   line-height: 1.55;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
@@ -306,7 +306,7 @@
 }
 .timeline .title {
   margin-top: 0;
-  font-size: 22px;
+  font-size: var(--text-24);
 }
 .timeline:first-child {
   margin-top: 0;
@@ -357,6 +357,6 @@
 /* Phones: a calmer type scale (docs/DECISIONS.md 2026-10-18). */
 @media (max-width: 640px) {
   .timeline .title {
-    font-size: 19px;
+    font-size: var(--text-20);
   }
 }

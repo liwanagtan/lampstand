@@ -102,6 +102,8 @@
     justify-content: center;
     min-height: 40px;
     border-radius: 999px;
+    font-size: var(--text-14);
+    white-space: nowrap;
   }
   .body {
     margin-top: var(--space-6);
@@ -124,7 +126,7 @@
 }
 .statValue {
   margin: 0;
-  font-size: 34px;
+  font-size: var(--text-32);
   font-weight: var(--weight-extrabold);
   line-height: 1.1;
   letter-spacing: -0.03em;
@@ -153,7 +155,7 @@
   align-items: center;
   min-height: 44px;
   color: var(--color-accent-text);
-  font-size: var(--text-15);
+  font-size: var(--text-16);
   font-weight: var(--weight-bold);
   text-decoration: none;
 }
@@ -225,7 +227,7 @@
   .heroAvatar {
     width: 48px !important;
     height: 48px !important;
-    font-size: 20px !important;
+    font-size: var(--text-20) !important;
   }
   .line {
     margin-top: 0;
@@ -244,7 +246,7 @@
   }
   .statValue {
     margin: 0;
-    font-size: 22px;
+    font-size: var(--text-24);
   }
   .statLabel {
     font-size: var(--text-12);
@@ -291,10 +293,10 @@
 /* Phones: a calmer type scale (docs/DECISIONS.md 2026-10-18). */
 @media (max-width: 640px) {
   .sectionTitle {
-    font-size: 19px;
+    font-size: var(--text-20);
   }
   .statValue {
-    font-size: 24px;
+    font-size: var(--text-24);
   }
 }
 
@@ -313,12 +315,12 @@
   .heroAvatar {
     width: 64px !important;
     height: 64px !important;
-    font-size: 26px !important;
+    font-size: var(--text-24) !important;
     flex: none;
   }
   .mobileName {
     display: block;
-    font-size: 24px;
+    font-size: var(--text-24);
     line-height: 1.15;
     font-weight: var(--weight-extrabold);
     letter-spacing: -0.02em;
@@ -326,7 +328,7 @@
   .mobileSince {
     display: block;
     margin-top: 2px;
-    font-size: 13px;
+    font-size: var(--text-14);
     line-height: 1.4;
     color: var(--color-text-muted);
   }
@@ -347,10 +349,10 @@
     border-left: 0;
   }
   .statValue {
-    font-size: 26px;
+    font-size: var(--text-24);
   }
   .statLabel {
-    font-size: 12px;
+    font-size: var(--text-12);
   }
 }
 
@@ -380,11 +382,11 @@
     align-items: baseline;
   }
   .calendarHead h2 {
-    font-size: 18px;
+    font-size: var(--text-20);
     font-weight: 800;
   }
   .calendarHead span {
-    font-size: 13px;
+    font-size: var(--text-14);
     color: var(--color-text-muted);
   }
   .calendarGrid {
@@ -394,7 +396,7 @@
     text-align: center;
   }
   .calendarWeekday {
-    font-size: 11px;
+    font-size: var(--text-12);
     font-weight: 700;
     color: var(--color-text-faint);
   }
@@ -403,7 +405,7 @@
     place-items: center;
     aspect-ratio: 1;
     border-radius: 50%;
-    font-size: 13px;
+    font-size: var(--text-14);
   }
   .calendarDay[data-read] {
     background: var(--color-accent);
@@ -429,12 +431,12 @@
   }
   .journeyPlan strong {
     display: block;
-    font-size: 15px;
+    font-size: var(--text-16);
   }
   .journeyPlan small {
     display: block;
     margin-top: 4px;
-    font-size: 13px;
+    font-size: var(--text-14);
     color: var(--color-text-muted);
   }
 }
@@ -456,10 +458,28 @@
   min-height: 44px;
   margin-bottom: 16px;
   color: var(--color-accent-text);
-  font-size: 14px;
+  font-size: var(--text-14);
   font-weight: 600;
   text-decoration: none;
 }
 .journalShortcut:hover {
   text-decoration: underline;
+}
+
+/* Phones, About you and Settings: name and a small avatar in one row. */
+@media (max-width: 640px) {
+  .slimHeader {
+    flex-direction: row;
+    align-items: center;
+    gap: var(--space-2);
+  }
+  .slimHeader .heroAvatar {
+    width: 32px !important;
+    height: 32px !important;
+    font-size: var(--text-14) !important;
+    box-shadow: none;
+  }
+  .slimHeader .greeting {
+    font-size: var(--text-16);
+  }
 }

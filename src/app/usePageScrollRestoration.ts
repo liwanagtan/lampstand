@@ -23,6 +23,9 @@ export function usePageScrollRestoration() {
     let lastPosition = target;
     let persistTimer: ReturnType<typeof setTimeout> | null = null;
     const save = () => {
+      // Leaving swaps the page's content, and the shorter page scrolls the pane back up. That
+      // scroll belongs to the next page, not to the reader's place on this one.
+      if (window.location.pathname !== pathname) return;
       if (!restoring) {
         lastPosition = pane.scrollTop;
         positions.set(key, lastPosition);

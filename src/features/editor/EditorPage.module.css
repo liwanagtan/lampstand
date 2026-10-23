@@ -29,7 +29,7 @@
 .saved {
   flex: none;
   min-width: 80px;
-  font-size: var(--text-13);
+  font-size: var(--text-14);
   color: var(--color-text-muted);
 }
 .savedOk,
@@ -173,7 +173,7 @@
   padding: var(--space-2) var(--space-6) var(--space-4);
 }
 .position {
-  font-size: var(--text-13);
+  font-size: var(--text-14);
   color: var(--color-text-muted);
 }
 .toolbarActions {

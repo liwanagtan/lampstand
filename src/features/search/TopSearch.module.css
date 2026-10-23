@@ -63,7 +63,7 @@
 }
 .group {
   padding: var(--space-2) var(--space-2) 2px;
-  font-size: 11px;
+  font-size: var(--text-12);
   font-weight: var(--weight-semibold);
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -112,7 +112,7 @@
 }
 .detail {
   overflow: hidden;
-  font-size: var(--text-13);
+  font-size: var(--text-14);
   color: var(--color-text-muted);
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -124,7 +124,7 @@
 }
 .hint {
   padding: var(--space-2);
-  font-size: var(--text-13);
+  font-size: var(--text-14);
   color: var(--color-text-muted);
 }
 /* Phones have the Search tab instead. */
@@ -139,6 +139,6 @@
     min-height: 44px;
   }
   .box input {
-    font-size: 16px;
+    font-size: var(--text-16);
   }
 }

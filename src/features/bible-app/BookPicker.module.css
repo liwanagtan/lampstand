@@ -124,7 +124,7 @@
   gap: 18px;
 }
 .recent h3 {
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 700;
   color: var(--color-text-faint);
   margin-bottom: 10px;
@@ -141,7 +141,7 @@
   color: var(--color-text);
   padding: 10px 14px;
   font: inherit;
-  font-size: 13px;
+  font-size: var(--text-14);
   font-weight: 700;
   cursor: pointer;
 }
@@ -166,7 +166,7 @@
 .testamentButton span,
 .bookRow small {
   color: var(--color-text-muted);
-  font-size: 12px;
+  font-size: var(--text-12);
 }
 .mobileBookList {
   list-style: none;
@@ -176,7 +176,7 @@
 .bookRow {
   min-height: 48px;
   border-bottom: 1px solid var(--color-border);
-  font-size: 15px;
+  font-size: var(--text-16);
 }
 .mobileBookList .chapters {
   padding: 10px 0;

@@ -12,6 +12,13 @@ import type {
 import { validatePresentation } from '@/schema/validate';
 import { parsePlanFile } from '@/schema/plan';
 import type { StoredPresentation } from '@/schema/presentation';
+import { safeBackupSetting } from './backupSettings';
+import {
+  captureLocalReading,
+  restoreLocalReading,
+  type LocalReadingBackup,
+} from './localReadingBackup';
+import { useSettings } from './settingsStore';
 
 export const BACKUP_FORMAT = 'lampstand-backup';
 
@@ -26,6 +33,8 @@ interface BackupFile {
   presentations: PresentationRecord<StoredPresentation>[];
   assets: BackupAsset[];
   settings: { key: string; value: unknown }[];
+  /** Optional in older backups: reader preferences and resume positions. */
+  reading?: LocalReadingBackup;
   /** Bible app data (added later; absent in older backups). */
   marks?: MarkRecord[];
   plans?: PlanProgressRecord[];
@@ -62,6 +71,7 @@ export async function createBackup(): Promise<Blob> {
     exportedAt: new Date().toISOString(),
     presentations,
     settings,
+    reading: captureLocalReading(),
     marks: await db.marks.toArray(),
     plans: await db.plans.toArray(),
     planDefs: await db.planDefs.toArray(),
@@ -138,10 +148,14 @@ export async function restoreBackup(file: File): Promise<RestoreSummary> {
   const planDefs = (Array.isArray(data.planDefs) ? data.planDefs : []).filter(
     (d) => typeof d?.id === 'string' && parsePlanFile(d.file).ok,
   );
+  const settings = (Array.isArray(data.settings) ? data.settings : [])
+    .map(safeBackupSetting)
+    .filter((row) => row !== null);
   await db.transaction(
     'rw',
-    [db.presentations, db.assets, db.marks, db.plans, db.entries, db.planDefs],
+    [db.presentations, db.assets, db.marks, db.plans, db.entries, db.planDefs, db.settings],
     async () => {
+      await db.settings.bulkPut(settings);
       for (const d of planDefs) {
         const cur = await db.planDefs.get(d.id);
         if (!cur || d.importedAt > cur.importedAt) {
@@ -191,9 +205,22 @@ export async function restoreBackup(file: File): Promise<RestoreSummary> {
       }
     },
   );
+  if (settings.length) await useSettings.getState().load();
+  restoreLocalReading(data.reading);
   return summary;
 }
 
 export function backupFileName(now = new Date()): string {
   return `lampstand-backup-${now.toISOString().slice(0, 10)}.json`;
+}
+
+/** Saves a backup file through the browser's download. */
+export async function downloadBackup(): Promise<void> {
+  const blob = await createBackup();
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = backupFileName();
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(url), 2000);
 }

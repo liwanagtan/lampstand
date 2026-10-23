@@ -10,7 +10,8 @@ test('find a plan by feeling, by group and by search; preview, start and reflect
 
   // By feeling: a chip opens the category. (Empty categories stay hidden: see the unit test.)
   const feel = page.getByRole('group', { name: 'For how you feel' });
-  await expect(feel.getByRole('link', { name: /^Pride/ })).toBeVisible();
+  // The first feelings show as chips; See all lists every one.
+  await expect(feel.getByRole('link', { name: 'See all' })).toBeVisible();
   await feel.getByRole('link', { name: /^Anxiety/ }).click();
   await expect(page.getByRole('heading', { name: 'Anxiety', level: 1 })).toBeVisible();
   await page.getByRole('link', { name: 'When anxiety rises' }).click();
@@ -92,7 +93,16 @@ test('in a plan day, every part follows the text size', async ({ page }) => {
   const note = 'p[class*="note"]';
   const chapter = 'section[aria-label^="Philippians"] div[class*="chapter"]';
   const before = [await size(note), await size(chapter)];
-  await page.getByRole('button', { name: 'Larger text' }).click();
+  // The one reading control opens the Reading sheet with the size scale.
+  await page
+    .getByRole('button', { name: /^Reading settings/ })
+    .filter({ visible: true })
+    .click();
+  await page
+    .getByRole('dialog', { name: 'Reading' })
+    .getByRole('button', { name: 'Larger text' })
+    .click();
+  await page.keyboard.press('Escape');
   await expect.poll(() => size(chapter)).toBeGreaterThan(before[1]!);
   expect(await size(note)).toBeGreaterThan(before[0]!);
 });

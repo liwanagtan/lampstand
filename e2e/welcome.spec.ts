@@ -6,14 +6,12 @@ test.describe.configure({ timeout: 120_000 });
 
 async function startWelcome(page: Page) {
   await page.goto('/');
-  await expect(
-    page.getByRole('heading', { name: 'Grow in faith, one day at a time.' }),
-  ).toBeVisible({
+  await expect(page.getByRole('heading', { name: 'Grow in the Word, every day.' })).toBeVisible({
     timeout: 60_000,
   });
   await expect(page.getByLabel('What should we call you?')).toHaveCount(0);
-  await page.getByRole('button', { name: 'Continue in browser' }).click();
-  await expect(page.getByRole('heading', { name: 'Make Lampstand yours' })).toBeVisible({
+  await page.getByRole('button', { name: 'Get started' }).click();
+  await expect(page.getByRole('heading', { name: 'What should we call you?' })).toBeVisible({
     timeout: 60_000,
   });
   await expect(page).toHaveURL(/\/welcome$/);
@@ -26,18 +24,12 @@ test('presenting: Today remains the onboarding landing page', async ({ page }) =
   await startWelcome(page);
   await page.getByLabel('What should we call you?').fill('Grace');
   await page.getByRole('button', { name: 'Continue' }).click();
-  const next = page.getByRole('button', { name: 'Continue' });
-  await expect(next).toBeDisabled();
+  // Nothing chosen yet: the last step's button waits.
+  await expect(page.getByRole('button', { name: 'Let’s begin' })).toBeDisabled();
   await page.getByText('Teach and present').click();
-  await next.click();
-  await expect(
-    page.getByRole('heading', { name: 'Where are you in your faith journey?' }),
-  ).toBeVisible();
-  await next.click();
-  await page.getByRole('radio', { name: /WEB/ }).click();
-  await page.getByRole('button', { name: 'Continue' }).click();
-  await page.getByRole('button', { name: 'Complete setup', exact: true }).click();
-  await expect(page).toHaveURL(/\/$/);
+  // Presenting only: no plan to choose, so two questions in all.
+  await page.getByRole('button', { name: 'Let’s begin' }).click();
+  await expect(page).toHaveURL(/\/$/, { timeout: 15_000 });
   expect(await navLabels(page)).toEqual(['Today', 'Bible', 'Screen']);
   await expect(page.getByRole('link', { name: /Profile: your journey/ })).toHaveText('G');
 });
@@ -49,14 +41,11 @@ test('growing daily with a plan: opens Today with the plan started', async ({ pa
   await page.getByText('Grow daily').click();
   await page.getByText('Read and study').click();
   await page.getByRole('button', { name: 'Continue' }).click();
-  await page.getByRole('button', { name: 'Continue' }).click();
-  await page.getByRole('button', { name: 'Continue' }).click();
-  await page.getByRole('radio', { name: /The Gospels in 40 days/ }).click();
-  await page.getByRole('button', { name: 'Complete setup' }).click();
-  await expect(page.getByRole('heading', { name: 'Preparing your daily reading…' })).toBeVisible();
-  await expect(page).toHaveURL(/\/$/);
+  await page.getByRole('radio', { name: /Building a daily rhythm/ }).click();
+  await page.getByRole('button', { name: 'Let’s begin' }).click();
+  await expect(page).toHaveURL(/\/$/, { timeout: 15_000 });
   expect(await navLabels(page)).toEqual(['Today', 'Plans', 'Bible']);
-  await expect(page.getByText('The Gospels in 40 days').first()).toBeVisible();
+  await expect(page.getByText('Rhythms of grace').first()).toBeVisible();
 
   // Profile greets by name and mirrors the same choices; switching one on adds its tab,
   // Customize trims a part.
@@ -72,8 +61,13 @@ test('growing daily with a plan: opens Today with the plan started', async ({ pa
   await sections.getByRole('link', { name: 'Settings' }).click();
   await expect(page.getByRole('heading', { name: 'Presenting' })).toBeVisible();
   await sections.getByRole('link', { name: 'About you' }).click();
+  // Customize opens the parts of Grow daily in a sheet.
   await page.getByRole('button', { name: 'Customize' }).click();
-  await page.getByRole('switch', { name: 'Plans' }).click();
+  await page
+    .getByRole('dialog', { name: 'Grow daily' })
+    .getByRole('switch', { name: 'Plans' })
+    .click();
+  await page.getByRole('button', { name: 'Done' }).click();
   expect(await navLabels(page)).toEqual(['Today', 'Bible', 'Screen']);
   await expect(page.getByRole('switch', { name: 'Grow daily (customised)' })).toBeChecked();
 });
@@ -87,11 +81,9 @@ test('a name is required and readers can start with only the daily verse', async
   await page.getByRole('button', { name: 'Continue' }).click();
   await page.getByText('Grow daily').click();
   await page.getByRole('button', { name: 'Continue' }).click();
-  await page.getByRole('button', { name: 'Continue' }).click();
-  await page.getByRole('button', { name: 'Continue' }).click();
   await page.getByRole('radio', { name: /Just the verse of the day/ }).click();
-  await page.getByRole('button', { name: 'Complete setup' }).click();
-  await expect(page).toHaveURL(/\/$/);
+  await page.getByRole('button', { name: 'Let’s begin' }).click();
+  await expect(page).toHaveURL(/\/$/, { timeout: 15_000 });
   expect(await navLabels(page)).toEqual(['Today', 'Plans', 'Bible']);
   await page.reload();
   await expect(page).toHaveURL(/\/$/);

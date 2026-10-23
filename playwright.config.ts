@@ -15,7 +15,11 @@ export default defineConfig({
       origins: [
         {
           origin: 'http://localhost:4173',
-          localStorage: [{ name: 'lampstand.onboarded', value: '1' }],
+          // The save-to-account offer is tested on its own (e2e/account.spec.ts).
+          localStorage: [
+            { name: 'lampstand.onboarded', value: '1' },
+            { name: 'lampstand.saveOffer.dismissed', value: '1' },
+          ],
         },
       ],
     },

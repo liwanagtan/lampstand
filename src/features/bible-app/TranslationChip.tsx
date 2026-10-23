@@ -1,11 +1,10 @@
-import { ChevronDown } from 'lucide-react';
 import { Tooltip } from '@/design-system/components';
 import { useReader } from './readerStore';
 import styles from './TranslationChip.module.css';
 
 /**
- * The translation you're reading ("KJV", or "KJV + WEB" side by side) as a chip; it opens the
- * Reading sheet: translation, parallel translation and text size.
+ * The one reading control, in both readers: the translation you're reading ("KJV", or
+ * "KJV + WEB" side by side) and Aa. It opens the Reading sheet: layout, translation and size.
  */
 export function TranslationChip({
   onClick,
@@ -19,7 +18,7 @@ export function TranslationChip({
   const second = useReader((s) => s.parallel);
   const label = parallel && second ? `${translation} + ${second}` : translation;
   return (
-    <Tooltip content="Translation and text size">
+    <Tooltip content="Layout, translation and text size">
       <button
         type="button"
         className={styles.chip}
@@ -27,7 +26,9 @@ export function TranslationChip({
         onClick={onClick}
       >
         {label}
-        <ChevronDown size={14} aria-hidden />
+        <span className={styles.aa} aria-hidden>
+          Aa
+        </span>
       </button>
     </Tooltip>
   );

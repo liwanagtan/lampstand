@@ -39,7 +39,7 @@
 .progress {
   margin: 0 0 6px;
   color: var(--color-text-faint);
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 700;
   letter-spacing: .16em;
 }
@@ -54,7 +54,7 @@
 }
 .title {
   margin: 0;
-  font-size: clamp(25px, 4vw, 30px);
+  font-size: clamp(24px, 4vw, 32px);
   line-height: 1.2;
   font-weight: 800;
   letter-spacing: -.03em;
@@ -64,7 +64,7 @@
   max-width: 40ch;
   margin: 0;
   color: var(--color-text-muted);
-  font-size: 15px;
+  font-size: var(--text-16);
   line-height: 1.5;
 }
 .nameField {
@@ -81,7 +81,7 @@
   height: 54px;
   border-radius: 14px;
   padding-inline: 20px;
-  font-size: 18px;
+  font-size: var(--text-20);
   font-weight: 600;
   text-align: center;
 }
@@ -157,12 +157,13 @@
 }
 .useTitle,
 .optionTitle {
-  font-size: 16px;
+  font-size: var(--text-16);
   font-weight: 700;
 }
-.useBody {
+.useBody,
+.optionDescription {
   color: var(--color-text-muted);
-  font-size: 13px;
+  font-size: var(--text-14);
   line-height: 1.4;
 }
 .optionCode {
@@ -174,7 +175,7 @@
   display: inline-block;
   margin-left: 9px;
   color: var(--color-accent-text);
-  font-size: 11px;
+  font-size: var(--text-12);
   font-weight: 700;
 }
 .actions {
@@ -212,19 +213,20 @@
   text-align: center;
   outline: none;
 }
-.setup .title { font-size: clamp(24px, 4vw, 30px); }
+.setup .title { font-size: clamp(24px, 4vw, 32px); }
 .setupExpectations {
   display: grid;
+  justify-items: start;
   gap: 14px;
-  width: 100%;
-  margin-top: 8px;
+  width: fit-content;
+  max-width: 100%;
+  margin: 8px auto 0;
 }
 .setupExpectation {
   display: flex;
   align-items: center;
-  justify-content: center;
   gap: 12px;
-  font-size: 14px;
+  font-size: var(--text-14);
   line-height: 1.5;
   visibility: hidden;
 }
@@ -233,7 +235,7 @@
 .setupStatus {
   min-height: 3em;
   color: var(--color-text-muted);
-  font-size: 13px;
+  font-size: var(--text-14);
   line-height: 1.5;
 }
 @media (max-width: 640px) {

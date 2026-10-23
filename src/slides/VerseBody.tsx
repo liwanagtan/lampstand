@@ -65,7 +65,6 @@ export function VerseBody({
             ) : liveText ? (
               <LiveText
                 tools={liveText}
-                osis={seg.osis}
                 text={seg.text}
                 emphasis={emphasis}
                 emphasisOn={emphasisOn}

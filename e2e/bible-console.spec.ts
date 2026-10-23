@@ -34,12 +34,11 @@ test('Bible console: preview, show, step, highlight, blank and the passage queue
   // The side panel is the chapter alone; tools live on the Live pane and in the dock.
   await expect(page.getByRole('tab')).toHaveCount(0);
 
-  // Highlight: click words on the Live pane itself; click again to turn one off.
+  // Full screen only: no layout choices for the Bible.
+  await expect(page.getByRole('radio', { name: /Lower third/i })).toHaveCount(0);
+
+  // Every word on Live can be clicked to light it up; click again to turn it off.
   const live = page.locator('[data-pane="live"]');
-  await expect(page.getByRole('button', { name: 'Highlight', exact: true })).toHaveAttribute(
-    'aria-pressed',
-    'true',
-  );
   await live.locator('[data-live-word="world"]').first().click();
   await expect(tv.locator('[class*="emphasis"]').first()).toContainText('world');
   await live.locator('[data-live-word="condemn"]').first().click();
@@ -66,11 +65,23 @@ test('Bible console: preview, show, step, highlight, blank and the passage queue
   await queue.getByRole('button', { name: /^Passage 1: John 3:18/ }).dblclick();
   await expect(tv).toContainText('He that believeth on him is not condemned');
 
+  // A long passage pages on Live itself.
+  await page.getByLabel('Search the Bible').fill('ps 119 1-40');
+  await page.keyboard.press('Enter');
+  await page.getByRole('button', { name: 'Show on screen' }).click();
+  const pager = page.getByRole('group', { name: 'Pages of the passage' });
+  await expect(pager).toContainText(/^1 \/ \d/);
+  await pager.getByRole('button', { name: 'Next page' }).click();
+  await expect(pager).toContainText(/^2 \/ \d/);
+  await page.screenshot({ path: 'test-results/console-pages.png' });
+  await pager.getByRole('button', { name: 'Previous page' }).click();
+  await expect(pager).toContainText(/^1 \/ \d/);
+
   await page.keyboard.press('Escape');
   await expect(page.getByText('Nothing on screen')).toBeVisible();
 });
 
-test('word study on the TV: tap a word, ask first, step through, put it away', async ({ page }) => {
+test('word study on the TV: choose a word, preview it, send it, take it off', async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await openApp(page, '/screen');
   await page.getByRole('button', { name: /Show the Bible/ }).click();
@@ -82,34 +93,42 @@ test('word study on the TV: tap a word, ask first, step through, put it away', a
   const tv = output.getByTestId('output');
   await expect(tv).toContainText('For God so loved the world');
 
-  // Words mode: the TV shows the KJV, so it offers the BSB, whose words are linked.
-  const live = page.locator('[data-pane="live"]');
+  // Words opens a column beside Live. The TV shows the KJV, so it offers the BSB first.
   await page.getByRole('button', { name: 'Words', exact: true }).click();
-  const words = page.getByRole('region', { name: 'Word study' });
+  const words = page.getByRole('region', { name: 'Words' });
   await expect(words).toContainText('The TV is showing KJV');
-  await expect(live.locator('[data-live-study]')).toHaveCount(0);
   await words.getByRole('button', { name: 'Show John 3:16 in BSB' }).click();
   await expect(tv).toContainText('one and only Son');
 
-  // Underlined words on the Live pane: click one and the TV studies it.
-  await live.locator('[data-live-study="loved"]').click();
+  // Choose a word: the column previews its card; the TV doesn't change yet.
+  const preview = words.locator('[data-pane="word-preview"]');
+  await words
+    .getByRole('group', { name: 'Words in the passage' })
+    .getByRole('button', { name: 'loved', exact: true })
+    .click();
+  await expect(preview).toContainText('agapaō');
+  await expect(words).toContainText('to love');
+  await expect(tv).not.toContainText('agapaō');
+
+  // Show on screen sends it.
+  await words.getByRole('button', { name: /^Show on screen/ }).click();
   await expect(tv).toContainText('agapaō');
-  await expect(tv).toContainText('to love');
   await expect(tv).toContainText('Used in');
-  await expect(words).toContainText('On the TV now');
   await page.screenshot({ path: 'test-results/console-words.png' });
   await output.screenshot({ path: 'test-results/word-study-tv.png' });
 
-  // W hides the word so the class can be asked first, and brings it back.
+  // W takes it off so the class can be asked first, and sends it again.
   await page.keyboard.press('w');
   await expect(tv).not.toContainText('agapaō');
   await expect(tv).toContainText('For God so loved the world');
-  await expect(live.locator('[data-live-study="loved"]')).toBeVisible();
   await page.keyboard.press('w');
   await expect(tv).toContainText('agapaō');
 
-  // Next word steps through the verse.
+  // Next word chooses the next one; the TV keeps "loved" until it is sent.
   await words.getByRole('button', { name: 'Next word' }).click();
+  await expect(preview).toContainText('kosmos');
+  await expect(tv).toContainText('agapaō');
+  await words.getByRole('button', { name: /^Show on screen/ }).click();
   await expect(tv).toContainText('kosmos');
 
   // Another verse that uses it goes on the TV, and the word is put away with the old verse.

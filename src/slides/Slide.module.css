@@ -162,15 +162,6 @@
   background: rgb(255 255 255 / 0.16);
   box-shadow: 0 0 0 4px rgb(255 255 255 / 0.16);
 }
-.liveStudy {
-  text-decoration: underline dotted var(--t-accent);
-  text-decoration-thickness: 5px;
-  text-underline-offset: 0.2em;
-}
-.liveStudy[data-active] {
-  background: color-mix(in srgb, var(--t-accent) 32%, transparent);
-  text-decoration-style: solid;
-}
 .pageIndicator {
   position: absolute;
   right: var(--s-safe-x);

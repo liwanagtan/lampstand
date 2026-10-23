@@ -1,37 +1,41 @@
-.section {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-  padding: var(--space-4);
+/* The Words column: a word card preview, Show on screen, then the passage's words and the entry. */
+.column {
+  flex: none;
+  width: 340px;
+  height: 100%;
+  min-height: 0;
 }
-.head {
-  display: flex;
-  align-items: baseline;
-  gap: var(--space-2);
-  min-height: 28px;
-}
-.title {
-  font-size: var(--text-12);
-  font-weight: var(--weight-semibold);
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--color-accent-text);
+.preview {
+  flex: none;
 }
 .hint {
-  overflow: hidden;
-  font-size: var(--text-12);
+  padding: var(--space-3) 0;
+  font-size: var(--text-14);
+  line-height: 1.5;
   color: var(--color-text-muted);
-  white-space: nowrap;
-  text-overflow: ellipsis;
 }
-.controls {
+.offer {
   display: flex;
-  align-items: center;
-  gap: var(--space-2);
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-3) 0;
+  font-size: var(--text-14);
+  line-height: 1.5;
+  color: var(--color-text-muted);
+}
+/* Words and entry scroll under the fixed preview. */
+.body {
+  overflow-y: auto;
+  flex: 1;
+  min-height: 0;
+  margin-top: var(--space-1);
+  padding: var(--space-3) var(--space-4) var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
 }
 .verses {
-  max-height: 200px;
-  overflow-y: auto;
   font-family: var(--font-display);
   font-size: var(--text-16);
   line-height: 1.8;
@@ -45,20 +49,6 @@
   font-size: 0.65em;
   font-weight: var(--weight-semibold);
   color: var(--color-accent-text);
-}
-.offer {
-  font-size: var(--text-14);
-  line-height: 1.5;
-  color: var(--color-text-muted);
-}
-.list summary {
-  font-size: var(--text-12);
-  font-weight: var(--weight-semibold);
-  color: var(--color-text-muted);
-  cursor: pointer;
-}
-.list[open] summary {
-  margin-bottom: var(--space-2);
 }
 .note {
   margin-top: var(--space-1);

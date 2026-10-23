@@ -1,23 +1,15 @@
-// Words on the TV in Show the Bible: highlighting, the studied word (WordStudyTools) and the W
-// key that hides it or brings it back.
-import { useCallback } from 'react';
+// Words on the TV in Show the Bible: highlighting, the word staged in the Words column, and the
+// W key that sends it or takes it off.
 import { create } from 'zustand';
 import { fromOsis } from '@/features/bible/ref';
-import {
-  WORD_STUDY_TRANSLATION,
-  useBookWords,
-  verseWords,
-  type WordSpan,
-} from '@/features/bible-app/wordStudy';
-import { usePassage } from '@/slides/usePassage';
 import { useControl } from '@/features/present/live/controlStore';
 import type { LiveWord } from '@/features/present/live/types';
 
 /** Highlighted words on the TV at once (clicked on the Live pane). */
 export const EMPHASIS_MAX = 12;
 
-/** The word last put on the TV, so it can come back after the class has been asked. */
-export const useLastWord = create<{ word: LiveWord | null }>(() => ({ word: null }));
+/** The word chosen in the Words column: previewed there, sent to the TV with Show on screen. */
+export const useStagedWord = create<{ word: LiveWord | null }>(() => ({ word: null }));
 
 /** "PSA.119.105" → its parts. */
 export function parseVerse(osis: string) {
@@ -34,40 +26,26 @@ export function overlayHas(ref: string, osis: string): boolean {
   return at >= r.start.chapter * 1000 + r.start.verse && at <= r.end.chapter * 1000 + r.end.verse;
 }
 
-/**
- * The linked words of what the Live pane shows of a verse (BSB on screen only). A long verse can
- * be split across pages, so the shown text is found in the whole verse and the links moved to it.
- */
-export function useWordsFor(ref: string | null, translation: string | null) {
-  const bsb = translation === WORD_STUDY_TRANSLATION;
-  const { passage } = usePassage(bsb ? ref : null, WORD_STUDY_TRANSLATION);
-  const book = ref ? (fromOsis(ref)?.start.book ?? null) : null;
-  const words = useBookWords(bsb ? book : null);
-  return useCallback(
-    (osis: string, text: string): WordSpan[] | null => {
-      if (!bsb || !words) return null;
-      const whole = passage?.verses.find((v) => v.osis === osis)?.text ?? text;
-      const at = whole.indexOf(text);
-      if (at < 0) return null;
-      const v = parseVerse(osis);
-      return verseWords(words, v.chapter, v.verse)
-        .filter((s) => s.start >= at && s.start + s.length <= at + text.length)
-        .map((s) => ({ ...s, start: s.start - at }));
-    },
-    [bsb, words, passage],
-  );
+/** Choose a word in the Words column; the TV doesn't change. */
+export function stageWord(word: LiveWord) {
+  useStagedWord.setState({ word });
+}
+
+/** The staged word, if it belongs to the passage on screen. */
+export function stagedFor(ref: string | undefined): LiveWord | null {
+  const word = useStagedWord.getState().word;
+  return word && ref && overlayHas(ref, word.verse) ? word : null;
 }
 
 export function showWord(word: LiveWord) {
-  useLastWord.setState({ word });
+  useStagedWord.setState({ word });
   useControl.getState().dispatch({ type: 'showWord', word });
 }
 
-/** Hide the word on the TV, or bring the last one back (W in the console). */
+/** Take the word off the TV, or send the staged one (W in the console). */
 export function toggleWord() {
   const control = useControl.getState();
   if (control.live.word) return control.dispatch({ type: 'hideWord' });
-  const last = useLastWord.getState().word;
-  const overlay = control.live.overlay;
-  if (last && overlay && overlayHas(overlay.ref, last.verse)) showWord(last);
+  const staged = stagedFor(control.live.overlay?.ref);
+  if (staged) showWord(staged);
 }

@@ -38,7 +38,8 @@ export async function stepTv(delta: 1 | -1): Promise<void> {
   const range = fromOsis(o.ref);
   const next = range && adjacentVerse(range, delta, counts(o.translation));
   if (!next) return;
-  await showOnTv(toOsis(next), o.translation);
+  // The next verse keeps the way the passage is shown.
+  await showOnTv(toOsis(next), o.translation, o.mode);
   // The reader follows the TV, so the operator always sees what is up.
   const v = next.start.verse;
   useReader.getState().goTo(next.start.book, next.start.chapter, { start: v, end: v });

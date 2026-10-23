@@ -88,6 +88,8 @@ export type DockProps = {
   onClear: () => void;
   /** The Bible console's picture behind the verses. */
   onBackground?: () => void;
+  /** Overlay layouts (lower third, side panel…); the Bible console is full screen only. */
+  modes?: boolean;
 };
 
 /** Screen and verse actions in a compact column under Preview (each shows its key). */
@@ -131,8 +133,8 @@ export function Dock(p: DockProps) {
           />
         )}
       </DockGroup>
-      <DockGroup label="Verse" className={styles.verseRow}>
-        <OverlayModes mode={p.mode} onChange={p.onMode} />
+      <DockGroup label="Verse" className={p.modes === false ? undefined : styles.verseRow}>
+        {p.modes !== false && <OverlayModes mode={p.mode} onChange={p.onMode} />}
         <DockButton
           label="Clear"
           title="Clear verse"
@@ -140,7 +142,7 @@ export function Dock(p: DockProps) {
           icon={<X size={16} />}
           onClick={p.onClear}
           disabled={!p.hasOverlay}
-          iconOnly
+          iconOnly={p.modes !== false}
         />
       </DockGroup>
     </div>

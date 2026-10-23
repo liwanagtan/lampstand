@@ -301,3 +301,7 @@ In Show the Bible, a **Words** tab puts one word of the live passage on the TV f
 ### 2026-10-23 — Show the Bible: act on Live, Chapter alone beside it
 
 At the owner's request the console's side panel is the chapter only (no Highlight, Words or Background tabs). Highlighting and word study happen by clicking words on the Live pane, which shows exactly what the TV shows. A Highlight / Words switch in Live's header decides what a click does, so one click never means two things and word study is never triggered by accident. Word links exist only for the BSB, so with another translation on the TV the notes offer to show the passage in the BSB. Background moved to the dock beside Blank and Logo, since it is a session setting, not a per-verse one.
+
+### 2026-10-24 — Show the Bible: full screen only, Live for highlighting, a Words column
+
+The owner simplified it further. The Bible goes on the TV full screen only; long passages page with arrows on Live. Every word on Live is clickable to highlight, with no mode switch. Word study moved off Live into a Words column (opened from Live's header) that works like Preview: choose a word, see its card in the column's preview, then Show on screen. Staging first means a word never reaches the TV by accident and the teacher can read it before the class does.

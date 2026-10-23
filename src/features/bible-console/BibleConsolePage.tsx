@@ -7,7 +7,6 @@ import {
   ChevronDown,
   ChevronLeft,
   ChevronRight,
-  Highlighter,
   Languages,
   MonitorOff,
   MonitorPlay,
@@ -53,8 +52,11 @@ import { useApplyDocumentTheme } from '@/features/settings/theme';
 import frame from '@/features/present/PresentPage.module.css';
 import { LiveTextContext, type LiveTextTools } from '@/slides/liveTextTools';
 import { BackgroundControl } from './TvTools';
-import { WordStudyTools } from './WordStudyTools';
-import { EMPHASIS_MAX, showWord, toggleWord, useWordsFor } from './wordOnTv';
+import { WordsColumn } from './WordsColumn';
+import { EMPHASIS_MAX, toggleWord } from './wordOnTv';
+
+/** The Bible goes on the TV full screen only. */
+const FULL = 'fullScreen' as const;
 import styles from './BibleConsole.module.css';
 
 const label = (ref: string) => {
@@ -86,18 +88,16 @@ export function BibleConsolePage() {
   const output = useControl((s) => s.output);
   const presenting = useControl((s) => s.presenting);
   const pages = useControl((s) => s.overlayPageCount);
-  const mode = useTv((s) => s.mode);
   const [exitOpen, setExitOpen] = useState(false);
   const [backgroundOpen, setBackgroundOpen] = useState(false);
-  // What a click on a word of the Live pane does.
-  const [liveTool, setLiveTool] = useState<'highlight' | 'words'>('highlight');
+  // The Words column beside Live, for word study with the class.
+  const [wordsOpen, setWordsOpen] = useState(false);
   const { live } = snapshot;
   const overlay = live.overlay;
   const control = useControl.getState;
 
-  const wordsFor = useWordsFor(overlay?.ref ?? null, overlay?.translation ?? null);
+  // Every word on Live can be clicked to light it up on the TV.
   const liveText: LiveTextTools = {
-    mode: liveTool,
     onHighlight: (word) => {
       const emphasis = control().live.overlay?.emphasis ?? [];
       const key = word.toLowerCase();
@@ -109,14 +109,12 @@ export function BibleConsolePage() {
       }
       control().dispatch({ type: 'overlayEmphasis', emphasis: next });
     },
-    wordsFor,
-    active: live.word ? { osis: live.word.verse, strong: live.word.strong } : null,
-    onWord: (osis, strong, text) => showWord({ strong, verse: osis, text }),
   };
 
   const preview = selection ? toOsis(selectionRange(book, chapter, selection)) : null;
+  // A class reads the verse, so the Bible goes on the TV full screen (no lower third or panel).
   const send = () => {
-    if (preview) void showOnTv(preview, translation);
+    if (preview) void showOnTv(preview, translation, FULL);
   };
   const exit = () => {
     setExitOpen(false);
@@ -145,16 +143,12 @@ export function BibleConsolePage() {
     // Esc puts away a studied word first, then the verse.
     Escape: () =>
       control().dispatch(control().live.word ? { type: 'hideWord' } : { type: 'clearOverlay' }),
-    // W hides the word on the TV, or brings the last one back (ask the class first).
+    // W sends the word chosen in Words, or takes it off the TV.
     w: toggleWord,
     g: () => setBackgroundOpen(true),
     b: () => control().toggleScreen('blank'),
     l: () => control().toggleScreen('logo'),
     f: () => control().toggleFreeze(),
-    '1': () => useTv.getState().setMode('lowerThird'),
-    '2': () => useTv.getState().setMode('sidePanel'),
-    '3': () => useTv.getState().setMode('fullScreen'),
-    '4': () => useTv.getState().setMode('popup'),
     '/': () =>
       document.querySelector<HTMLInputElement>('input[aria-label="Search the Bible"]')?.focus(),
   });
@@ -229,7 +223,7 @@ export function BibleConsolePage() {
       <main className={frame.main}>
         <section className={frame.stage} aria-label="Preview and live">
           <div className={frame.canvases}>
-            <div className={frame.narrow}>
+            <div className={cx(frame.narrow, wordsOpen && styles.narrowSlim)}>
               <div className={cx(frame.pane, frame.stack, frame.previewStack)}>
                 <div className={frame.paneHead}>
                   <h2 className={frame.paneTitle}>Preview</h2>
@@ -242,13 +236,13 @@ export function BibleConsolePage() {
                 <div className={frame.paneBody} data-pane="preview">
                   {preview ? (
                     <LiveScreen
-                      key={`${preview}|${translation}|${mode}`}
+                      key={`${preview}|${translation}`}
                       snapshot={{
                         ...snapshot,
                         live: {
                           ...live,
                           screen: 'content',
-                          overlay: { ref: preview, translation, mode, page: 0 },
+                          overlay: { ref: preview, translation, mode: FULL, page: 0 },
                           // Preview is the next passage: no studied word.
                           word: null,
                         },
@@ -296,64 +290,68 @@ export function BibleConsolePage() {
                 <ChapterPicker />
               </section>
             </div>
-            <div className={cx(frame.wide, liveTool === 'words' && overlay && styles.withNotes)}>
+            {wordsOpen && (
+              <FeatureBoundary name="Word study">
+                <WordsColumn snapshot={snapshot} onClose={() => setWordsOpen(false)} />
+              </FeatureBoundary>
+            )}
+            <div className={cx(frame.wide, wordsOpen && styles.wideBesideWords)}>
               <div className={cx(frame.stack, frame.liveStack)}>
                 <LivePane
                   meta={liveMeta}
                   frozen={Boolean(frozen)}
                   tools={
-                    <div className={styles.liveTools} role="group" aria-label="Click words on Live">
-                      {(['highlight', 'words'] as const).map((t) => (
-                        <Tooltip
-                          key={t}
-                          content={
-                            t === 'highlight'
-                              ? 'Click words on Live to light them up on the TV'
-                              : 'Click an underlined word on Live to study it on the TV'
-                          }
-                        >
-                          <button
-                            type="button"
-                            className={styles.liveTool}
-                            aria-pressed={liveTool === t}
-                            onClick={() => setLiveTool(t)}
-                          >
-                            {t === 'highlight' ? (
-                              <Highlighter size={14} aria-hidden />
-                            ) : (
-                              <Languages size={14} aria-hidden />
-                            )}
-                            {t === 'highlight' ? 'Highlight' : 'Words'}
-                          </button>
-                        </Tooltip>
-                      ))}
-                    </div>
+                    <Tooltip content="Study a word of the passage with the class">
+                      <button
+                        type="button"
+                        className={styles.liveTool}
+                        aria-pressed={wordsOpen}
+                        onClick={() => setWordsOpen((o) => !o)}
+                      >
+                        <Languages size={14} aria-hidden /> Words
+                      </button>
+                    </Tooltip>
                   }
                 >
-                  {/* Words are clickable on Live, but never while the TV is frozen. */}
+                  {/* Click words on Live to light them up, but never while the TV is frozen. */}
                   <LiveTextContext.Provider value={frozen || !overlay ? null : liveText}>
                     <LiveScreen snapshot={frozen ?? snapshot} label="Live output" />
                   </LiveTextContext.Provider>
+                  {overlay && pages > 1 && !frozen && (
+                    <div className={styles.pager} role="group" aria-label="Pages of the passage">
+                      <IconButton
+                        label="Previous page"
+                        icon={<ChevronLeft size={16} />}
+                        size="sm"
+                        onClick={() => control().dispatch({ type: 'overlayPage', delta: -1 })}
+                        disabled={overlay.page === 0}
+                      />
+                      <span className={styles.pagerCount}>
+                        {overlay.page + 1} / {pages}
+                      </span>
+                      <IconButton
+                        label="Next page"
+                        icon={<ChevronRight size={16} />}
+                        size="sm"
+                        onClick={() => control().dispatch({ type: 'overlayPage', delta: 1 })}
+                        disabled={overlay.page >= pages - 1}
+                      />
+                    </div>
+                  )}
                 </LivePane>
                 <Dock
                   sermon={false}
                   screen={live.screen}
                   frozen={Boolean(frozen)}
                   hasOverlay={Boolean(overlay)}
-                  mode={mode}
+                  mode={FULL}
+                  modes={false}
                   onScreen={(s) => control().toggleScreen(s)}
                   onFreeze={() => control().toggleFreeze()}
-                  onMode={(m) => useTv.getState().setMode(m)}
+                  onMode={() => undefined}
                   onClear={() => control().dispatch({ type: 'clearOverlay' })}
                   onBackground={() => setBackgroundOpen(true)}
                 />
-                {liveTool === 'words' && overlay && (
-                  <FeatureBoundary name="Word study">
-                    <div className={styles.notes}>
-                      <WordStudyTools key={`${overlay.ref}|${overlay.translation}`} />
-                    </div>
-                  </FeatureBoundary>
-                )}
               </div>
             </div>
           </div>
@@ -533,7 +531,7 @@ function PassageQueue({ preview, translation }: { preview: string | null; transl
                     if (r) selectFound(r);
                     useReader.getState().setTranslation(item.translation);
                   }}
-                  onDoubleClick={() => void showOnTv(item.ref, item.translation)}
+                  onDoubleClick={() => void showOnTv(item.ref, item.translation, FULL)}
                 >
                   <span className={styles.passageNum}>{i + 1}</span>
                   <span className={styles.passageRef}>{label(item.ref)}</span>

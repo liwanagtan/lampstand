@@ -36,7 +36,8 @@ test('on a phone the reader is all thumbs: pill, Aa sheet, and the selection bar
   // Study notes, out of the hidden margin: the bar opens them for the selected verse.
   await selected.getByRole('button', { name: 'Study notes on verse 1' }).tap();
   await expect(page.getByRole('dialog')).toContainText('Adapted from Tyndale Open Study Notes');
-  await page.keyboard.press('Escape');
+  // The Close button, not Escape: Escape is flaky here while the sheet settles.
+  await page.getByRole('dialog').getByRole('button', { name: 'Close' }).tap();
   await expect(page.getByRole('dialog')).toBeHidden();
   await selected.getByRole('button', { name: 'Clear selection' }).tap();
   await expect(pill).toBeVisible();

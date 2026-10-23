@@ -222,7 +222,8 @@ export function LiveScreen({ snapshot, fit = 'width', label, className }: LiveSc
               transition={overlayTransition}
             >
               <FeatureBoundary name="Word study" silent>
-                <WordStudyScreen key={wordKey} word={live.word} />
+                {/* The panel stays; its content changes from word to word. */}
+                <WordStudyScreen word={live.word} reduced={reduced} />
               </FeatureBoundary>
             </motion.div>
           )}

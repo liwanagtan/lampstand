@@ -9,7 +9,6 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 14px;
   padding: calc(var(--s-safe-y) + var(--s-panel-py)) var(--s-safe-x)
     calc(var(--s-safe-y) + var(--s-panel-py)) var(--s-panel-px);
   overflow: hidden;
@@ -17,6 +16,12 @@
   backdrop-filter: blur(var(--s-overlay-blur)) saturate(1.1);
   border-left: 2px solid color-mix(in srgb, var(--t-accent) 55%, transparent);
   color: var(--t-text);
+}
+/* The word's content, which changes in place when another word is shown. */
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
 }
 .eyebrow {
   font-family: var(--font-ui);

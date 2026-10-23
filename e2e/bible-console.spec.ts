@@ -15,8 +15,12 @@ test('Bible console: preview, show, step, highlight, blank and the passage queue
   await page.getByLabel('Search the Bible').fill('jn 3 16');
   await page.keyboard.press('Enter');
   await expect(page.getByText('John 3:16 · KJV').first()).toBeVisible();
-  const popup = page.waitForEvent('popup');
+  // Not presenting yet: Show on screen puts the passage on Live only; no TV opens.
   await page.getByRole('button', { name: 'Show on screen' }).click();
+  await expect(page.getByText('Not presenting')).toBeVisible();
+  // Start Presentation opens the TV with what is on Live.
+  const popup = page.waitForEvent('popup');
+  await page.getByRole('button', { name: 'Start Presentation' }).click();
   const output = await popup;
   const tv = output.getByTestId('output');
   await expect(tv).toContainText('For God so loved the world');
@@ -37,16 +41,9 @@ test('Bible console: preview, show, step, highlight, blank and the passage queue
   // Full screen only: no layout choices for the Bible.
   await expect(page.getByRole('radio', { name: /Lower third/i })).toHaveCount(0);
 
-  // Every word on Live can be clicked to light it up; click again to turn it off.
+  // Clicking words on Live to light them up is off for now; the TV draws words plain.
   const live = page.locator('[data-pane="live"]');
-  await live.locator('[data-live-word="world"]').first().click();
-  await expect(tv.locator('[class*="emphasis"]').first()).toContainText('world');
-  await live.locator('[data-live-word="condemn"]').first().click();
-  await expect(tv.locator('[class*="emphasis"]')).toHaveCount(4); // "world" three times
-  await live.locator('[data-live-word="condemn"]').first().click();
-  await expect(tv.locator('[class*="emphasis"]')).toHaveCount(3);
-  await page.screenshot({ path: 'test-results/console-highlight.png' });
-  // The TV draws words plain: nothing there is clickable.
+  await expect(live.locator('[data-live-word]')).toHaveCount(0);
   await expect(tv.locator('[data-live-word]')).toHaveCount(0);
 
   // Background sits in the dock, beside Blank and Logo.
@@ -93,8 +90,12 @@ test('word study on the TV: choose a word, preview it, send it, take it off', as
   await page.getByRole('button', { name: /Show the Bible/ }).click();
   await page.getByLabel('Search the Bible').fill('jn 3 16');
   await page.keyboard.press('Enter');
-  const popup = page.waitForEvent('popup');
+  // Not presenting yet: Show on screen puts the passage on Live only; no TV opens.
   await page.getByRole('button', { name: 'Show on screen' }).click();
+  await expect(page.getByText('Not presenting')).toBeVisible();
+  // Start Presentation opens the TV with what is on Live.
+  const popup = page.waitForEvent('popup');
+  await page.getByRole('button', { name: 'Start Presentation' }).click();
   const output = await popup;
   const tv = output.getByTestId('output');
   await expect(tv).toContainText('For God so loved the world');
@@ -164,9 +165,12 @@ test('word study on the TV: choose a word, preview it, send it, take it off', as
   // A word of several words is one box on the TV.
   await expect(tv.locator('[class*="studyActive"]')).toHaveText('one and only');
   await page.screenshot({ path: 'test-results/console-words-live.png' });
-  // A word without an entry still lights up gold.
-  await page.locator('[data-pane="live"] [data-live-word="so"]').first().click();
-  await expect(tv.locator('[class*="emphasis"]').first()).toHaveText('so');
+  // Changing words keeps the panel; only its content changes.
+  await page.locator('[data-pane="live"] [data-live-study="Son"]').click();
+  await expect(tv).toContainText('“Son”');
+  await expect(tv).not.toContainText('monogenēs');
+  // Words without an entry aren't clickable while highlighting on Live is off.
+  await expect(page.locator('[data-pane="live"] [data-live-word]')).toHaveCount(0);
 
   // Another verse that uses it goes on the TV, and the word is put away with the old verse.
   await words

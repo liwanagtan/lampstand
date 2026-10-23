@@ -57,6 +57,8 @@ import { EMPHASIS_MAX, showWord, toggleWord } from './wordOnTv';
 
 /** The Bible goes on the TV full screen only. */
 const FULL = 'fullScreen' as const;
+/** Click words on Live to light them up on the TV: off for now, at the owner's request. */
+const HIGHLIGHT_ON_LIVE = false;
 import styles from './BibleConsole.module.css';
 
 const label = (ref: string) => {
@@ -99,19 +101,22 @@ export function BibleConsolePage() {
   const overlay = live.overlay;
   const control = useControl.getState;
 
-  // Every word on Live can be clicked to light it up on the TV.
+  // Clicking words on Live: an underlined word goes on the TV while Words is open. Lighting
+  // words up (highlights) is off for now; HIGHLIGHT_ON_LIVE turns it back on.
   const liveText: LiveTextTools = {
-    onHighlight: (word) => {
-      const emphasis = control().live.overlay?.emphasis ?? [];
-      const key = word.toLowerCase();
-      const lit = emphasis.some((e) => e.toLowerCase() === key);
-      const next = lit ? emphasis.filter((e) => e.toLowerCase() !== key) : [...emphasis, word];
-      if (next.length > EMPHASIS_MAX) {
-        toast({ title: `Up to ${EMPHASIS_MAX} highlighted words at a time.`, tone: 'warning' });
-        return;
-      }
-      control().dispatch({ type: 'overlayEmphasis', emphasis: next });
-    },
+    onHighlight: !HIGHLIGHT_ON_LIVE
+      ? undefined
+      : (word) => {
+          const emphasis = control().live.overlay?.emphasis ?? [];
+          const key = word.toLowerCase();
+          const lit = emphasis.some((e) => e.toLowerCase() === key);
+          const next = lit ? emphasis.filter((e) => e.toLowerCase() !== key) : [...emphasis, word];
+          if (next.length > EMPHASIS_MAX) {
+            toast({ title: `Up to ${EMPHASIS_MAX} highlighted words at a time.`, tone: 'warning' });
+            return;
+          }
+          control().dispatch({ type: 'overlayEmphasis', emphasis: next });
+        },
     // With Words open, an underlined word on Live goes straight on the TV (and into Words).
     onStudy: wordsOpen
       ? (osis, strong, text) => showWord({ strong, verse: osis, text })
@@ -121,7 +126,7 @@ export function BibleConsolePage() {
   const preview = selection ? toOsis(selectionRange(book, chapter, selection)) : null;
   // A class reads the verse, so the Bible goes on the TV full screen (no lower third or panel).
   const send = () => {
-    if (preview) void showOnTv(preview, translation, FULL);
+    if (preview) void showOnTv(preview, translation, FULL, undefined, false);
   };
   const exit = () => {
     setExitOpen(false);
@@ -323,7 +328,13 @@ export function BibleConsolePage() {
               <div className={cx(frame.stack, frame.liveStack)}>
                 <LivePane meta={liveMeta} frozen={Boolean(frozen)}>
                   {/* Click words on Live to light them up, but never while the TV is frozen. */}
-                  <LiveTextContext.Provider value={frozen || !overlay ? null : liveText}>
+                  <LiveTextContext.Provider
+                    value={
+                      frozen || !overlay || (!liveText.onHighlight && !liveText.onStudy)
+                        ? null
+                        : liveText
+                    }
+                  >
                     <LiveScreen snapshot={frozen ?? snapshot} label="Live output" />
                   </LiveTextContext.Provider>
                 </LivePane>
@@ -545,7 +556,9 @@ function PassageQueue({ preview, translation }: { preview: string | null; transl
                     if (r) selectFound(r);
                     useReader.getState().setTranslation(item.translation);
                   }}
-                  onDoubleClick={() => void showOnTv(item.ref, item.translation, FULL)}
+                  onDoubleClick={() =>
+                    void showOnTv(item.ref, item.translation, FULL, undefined, false)
+                  }
                 >
                   <span className={styles.passageNum}>{i + 1}</span>
                   <span className={styles.passageRef}>{label(item.ref)}</span>

@@ -6,14 +6,14 @@ Reading the BSB, select a verse (or several) and their studyable words get dotte
 
 For lessons, Sunday school and lectures. The Bible goes on the TV full screen only (no lower third, side panel or popup). Beside Preview is the chapter alone; the rest acts on **Live**, which shows exactly what the TV shows:
 
-- **Highlight:** click any word on Live to light it up on the TV; click again to turn it off (up to 12). Clicks are off while the output is frozen.
+- **Highlight:** clicking words on Live to light them up is off for now (`HIGHLIGHT_ON_LIVE` in `BibleConsolePage.tsx` turns it back on). **Show on screen** puts a passage on Live; until **Start Presentation**, no TV window opens.
 - **Verses:** each verse on its own line, in the Bible reader's serif, over a stronger shade on background photos. A verse is never cut across pages or truncated: pages hold whole verses, and a verse too long for one page gets a page to itself in smaller type.
 - **Pages:** a passage too long for one screen gets **‹ 2 / 3 ›** at the start of the dock, before Blank, only while it has pages (**[** and **]**; → and ← go on to the next verse after the last page).
 - **Background** is in the dock beside Blank and Logo (**G**).
 - **Words** in Preview's header opens the Words column between Preview and Live (Live narrows; Preview and the chapter keep their size). Like Preview and Live, nothing reaches the TV until it's sent:
   - At the top, a preview of the TV with the word shown, in the side panel layout: the verse's words ease to the left (the background picture stays full size behind them) with the studied word lit up, and a panel slides in on the right with the original word, how it sounds, Hebrew or Greek and part of speech, the gloss, two short senses and how many verses use it. Taking the word off reverses it.
   - Until a word is chosen, the column's preview explains what it is for.
-  - **Click an underlined word on Live** and it goes beside the verse on the TV straight away; the column follows. (Words without an entry still light up gold.) Choosing a word in the column instead previews it first.
+  - **Click an underlined word on Live** and it goes beside the verse on the TV straight away; the column follows. Choosing a word in the column instead previews it first. Moving from word to word, the side panel stays and its content changes (the old word fades, the new one rises in).
   - While the column is open, every studyable word of the verse on the TV (and on Live and the previews) gets a quiet dotted underline in the text's own colour, and the word on screen a soft box, apart from the gold of clicked highlights (a word can be both). Closing the column takes the underlines and any word off.
   - **Show on screen** (or **W**) sends it; **Take off screen** (or **W**) takes it off so the class can be asked first. **Previous** and **Next word** choose another word without touching the TV.
   - Below, the passage with its studyable words underlined (click one to choose it), and the entry for the teacher with every verse that uses the word, each with **Show** to put it on the TV.

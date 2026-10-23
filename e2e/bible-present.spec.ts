@@ -21,8 +21,12 @@ test('a background picture shows behind Bible verses on the TV', async ({ page }
   await page.getByRole('button', { name: /Show the Bible/ }).click();
   await page.getByLabel('Search the Bible').fill('ps 23 1');
   await page.keyboard.press('Enter');
-  const popup = page.waitForEvent('popup');
+  // Not presenting yet: Show on screen puts the passage on Live only; no TV opens.
   await page.getByRole('button', { name: 'Show on screen' }).click();
+  await expect(page.getByText('Not presenting')).toBeVisible();
+  // Start Presentation opens the TV with what is on Live.
+  const popup = page.waitForEvent('popup');
+  await page.getByRole('button', { name: 'Start Presentation' }).click();
   const output = await popup;
   const tv = output.getByTestId('output');
   await expect(tv).toContainText(/The Lord is my shepherd/i);

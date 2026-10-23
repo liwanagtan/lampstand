@@ -8,8 +8,8 @@ import type { WordSpan } from '@/features/bible-app/wordStudy';
 import { splitEmphasis } from './emphasis';
 
 export interface LiveTextTools {
-  /** Light a word up on the TV, or turn it off. */
-  onHighlight: (word: string) => void;
+  /** Light a word up on the TV, or turn it off (off for now: the owner turned it off). */
+  onHighlight?: (word: string) => void;
   /** While word study is open: put an underlined word on the TV beside the verse. */
   onStudy?: (osis: string, strong: number, text: string) => void;
 }

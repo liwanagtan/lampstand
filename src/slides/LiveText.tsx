@@ -25,14 +25,14 @@ export function LiveText({
   const piece = (t: Token, key: number, inStudy: boolean) => {
     const lit = [t.emphasis && s.emphasis, t.emphasis && emphasisOn && s.emphasisOn];
     // Inside a study word, a click studies it (the group handles it); elsewhere it highlights.
-    const clickable = t.word && tools && !(inStudy && tools.onStudy);
+    const clickable = t.word && tools?.onHighlight && !(inStudy && tools.onStudy);
     const className = [...lit, clickable && s.liveWord].filter(Boolean).join(' ') || undefined;
     return clickable ? (
       <span
         key={key}
         className={className}
         data-live-word={t.text}
-        onClick={() => tools!.onHighlight(t.text)}
+        onClick={() => tools!.onHighlight!(t.text)}
       >
         {t.text}
       </span>

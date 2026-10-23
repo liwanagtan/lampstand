@@ -243,7 +243,9 @@ function Entry({ word }: { word: LiveWord }) {
                 icon={<MonitorPlay size={14} />}
                 className={styles.useShow}
                 aria-label={`Show ${formatRef({ start: at, end: at })} on screen`}
-                onClick={() => void showOnTv(osis, WORD_STUDY_TRANSLATION, 'fullScreen')}
+                onClick={() =>
+                  void showOnTv(osis, WORD_STUDY_TRANSLATION, 'fullScreen', undefined, false)
+                }
               >
                 Show
               </Button>

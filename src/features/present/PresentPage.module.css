@@ -115,7 +115,39 @@
   background: var(--palette-black);
 }
 .liveFrame {
+  position: relative;
+  border-width: 4px;
   border-color: var(--color-live);
+}
+/* On air (presenting): a soft red glow pulses in from the border. */
+.onAir::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  border-radius: inherit;
+  box-shadow: inset 0 0 18px 4px color-mix(in srgb, var(--color-live) 70%, transparent);
+  pointer-events: none;
+  animation: onAirPulse 2s ease-in-out infinite;
+}
+@keyframes onAirPulse {
+  0%,
+  100% {
+    opacity: 0.15;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .onAir::after {
+    animation: none;
+    opacity: 0.6;
+  }
+}
+[data-reduce-motion='true'] .onAir::after {
+  animation: none;
+  opacity: 0.6;
 }
 .liveLabel {
   color: var(--color-live);

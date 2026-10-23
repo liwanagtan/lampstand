@@ -33,6 +33,8 @@ export function LivePane({
   children: ReactNode;
 }) {
   const beat = useControl((s) => s.liveBeat);
+  // On air: presenting to a connected TV, and not frozen.
+  const onAir = useControl((s) => s.presenting && s.output === 'connected') && !frozen;
   const reduced = useReducedMotion();
   return (
     <div className={cx(styles.pane, styles.livePane)}>
@@ -52,8 +54,14 @@ export function LivePane({
       </div>
       <motion.div
         key={beat}
-        className={cx(styles.paneBody, styles.liveFrame, frozen && styles.frozenFrame)}
+        className={cx(
+          styles.paneBody,
+          styles.liveFrame,
+          frozen && styles.frozenFrame,
+          onAir && styles.onAir,
+        )}
         data-pane="live"
+        data-on-air={onAir || undefined}
         initial={reduced ? false : { boxShadow: '0 0 0 0px var(--color-live)' }}
         animate={{
           boxShadow: [

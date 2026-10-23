@@ -7,6 +7,7 @@ import {
   ChevronDown,
   ChevronLeft,
   ChevronRight,
+  Languages,
   MonitorOff,
   MonitorPlay,
   Play,
@@ -21,7 +22,6 @@ import {
   IconButton,
   Menu,
   ShortcutHint,
-  Tabs,
   Tooltip,
   cx,
   toast,
@@ -50,10 +50,16 @@ import { startOutput } from '@/features/present/live/startOutput';
 import { useShortcuts } from '@/features/present/useShortcuts';
 import { useApplyDocumentTheme } from '@/features/settings/theme';
 import frame from '@/features/present/PresentPage.module.css';
-import { BackgroundControl, Highlighter } from './TvTools';
-import styles from './BibleConsole.module.css';
+import { LiveTextContext, type LiveTextTools } from '@/slides/liveTextTools';
+import { BackgroundControl } from './TvTools';
+import { WordsColumn } from './WordsColumn';
+import { EMPHASIS_MAX, showWord, toggleWord } from './wordOnTv';
 
-type Panel = 'chapter' | 'highlight' | 'background';
+/** The Bible goes on the TV full screen only. */
+const FULL = 'fullScreen' as const;
+/** Click words on Live to light them up on the TV: off for now, at the owner's request. */
+const HIGHLIGHT_ON_LIVE = false;
+import styles from './BibleConsole.module.css';
 
 const label = (ref: string) => {
   const r = fromOsis(ref);
@@ -84,21 +90,52 @@ export function BibleConsolePage() {
   const output = useControl((s) => s.output);
   const presenting = useControl((s) => s.presenting);
   const pages = useControl((s) => s.overlayPageCount);
-  const mode = useTv((s) => s.mode);
-  const [panel, setPanel] = useState<Panel>('chapter');
   const [exitOpen, setExitOpen] = useState(false);
+  const [backgroundOpen, setBackgroundOpen] = useState(false);
+  // The Words column beside Live, for word study with the class. While it is open the TV
+  // underlines the studyable words; closing it takes them (and any word) off.
+  const wordsOpen = useControl((s) => Boolean(s.live.studyWords));
+  const setWordsOpen = (open: boolean) =>
+    useControl.getState().dispatch({ type: 'studyWords', on: open });
   const { live } = snapshot;
   const overlay = live.overlay;
   const control = useControl.getState;
 
+  // Clicking words on Live: an underlined word goes on the TV while Words is open. Lighting
+  // words up (highlights) is off for now; HIGHLIGHT_ON_LIVE turns it back on.
+  const liveText: LiveTextTools = {
+    onHighlight: !HIGHLIGHT_ON_LIVE
+      ? undefined
+      : (word) => {
+          const emphasis = control().live.overlay?.emphasis ?? [];
+          const key = word.toLowerCase();
+          const lit = emphasis.some((e) => e.toLowerCase() === key);
+          const next = lit ? emphasis.filter((e) => e.toLowerCase() !== key) : [...emphasis, word];
+          if (next.length > EMPHASIS_MAX) {
+            toast({ title: `Up to ${EMPHASIS_MAX} highlighted words at a time.`, tone: 'warning' });
+            return;
+          }
+          control().dispatch({ type: 'overlayEmphasis', emphasis: next });
+        },
+    // With Words open, an underlined word on Live goes straight on the TV (and into Words).
+    onStudy: wordsOpen
+      ? (osis, strong, text) => showWord({ strong, verse: osis, text })
+      : undefined,
+  };
+
   const preview = selection ? toOsis(selectionRange(book, chapter, selection)) : null;
+  // A class reads the verse, so the Bible goes on the TV full screen (no lower third or panel).
   const send = () => {
-    if (preview) void showOnTv(preview, translation);
+    if (preview) void showOnTv(preview, translation, FULL, undefined, false);
   };
   const exit = () => {
     setExitOpen(false);
     control().setPresenting(false);
     closeOutput();
+  };
+  /** The previous or next page of the passage on the TV. */
+  const page = (delta: 1 | -1) => {
+    if (!control().frozen) control().dispatch({ type: 'overlayPage', delta });
   };
   const requestExit = () => (control().output === 'connected' ? setExitOpen(true) : exit());
   /** ↑ ↓ move the preview one verse within the chapter. */
@@ -119,14 +156,18 @@ export function BibleConsolePage() {
     'Alt+ArrowLeft': () => void stepTv(-1),
     ArrowDown: () => movePreview(1),
     ArrowUp: () => movePreview(-1),
-    Escape: () => control().dispatch({ type: 'clearOverlay' }),
+    // Esc puts away a studied word first, then the verse.
+    Escape: () =>
+      control().dispatch(control().live.word ? { type: 'hideWord' } : { type: 'clearOverlay' }),
+    // W sends the word chosen in Words, or takes it off the TV.
+    w: toggleWord,
+    // [ and ] turn the pages of a long passage (→ and ← go on to the next verse after the last).
+    '[': () => page(-1),
+    ']': () => page(1),
+    g: () => setBackgroundOpen(true),
     b: () => control().toggleScreen('blank'),
     l: () => control().toggleScreen('logo'),
     f: () => control().toggleFreeze(),
-    '1': () => useTv.getState().setMode('lowerThird'),
-    '2': () => useTv.getState().setMode('sidePanel'),
-    '3': () => useTv.getState().setMode('fullScreen'),
-    '4': () => useTv.getState().setMode('popup'),
     '/': () =>
       document.querySelector<HTMLInputElement>('input[aria-label="Search the Bible"]')?.focus(),
   });
@@ -206,21 +247,33 @@ export function BibleConsolePage() {
                 <div className={frame.paneHead}>
                   <h2 className={frame.paneTitle}>Preview</h2>
                   {preview && (
-                    <span className={frame.paneMeta}>
+                    <span className={cx(frame.paneMeta, styles.previewMeta)}>
                       {label(preview)} · {translation}
                     </span>
                   )}
+                  <Tooltip content="Study a word of the passage with the class">
+                    <button
+                      type="button"
+                      className={styles.liveTool}
+                      aria-pressed={wordsOpen}
+                      onClick={() => setWordsOpen(!wordsOpen)}
+                    >
+                      <Languages size={14} aria-hidden /> Words
+                    </button>
+                  </Tooltip>
                 </div>
                 <div className={frame.paneBody} data-pane="preview">
                   {preview ? (
                     <LiveScreen
-                      key={`${preview}|${translation}|${mode}`}
+                      key={`${preview}|${translation}`}
                       snapshot={{
                         ...snapshot,
                         live: {
                           ...live,
                           screen: 'content',
-                          overlay: { ref: preview, translation, mode, page: 0 },
+                          overlay: { ref: preview, translation, mode: FULL, page: 0 },
+                          // Preview is the next passage: no studied word.
+                          word: null,
                         },
                       }}
                       label={`Preview: ${label(preview)}`}
@@ -262,53 +315,67 @@ export function BibleConsolePage() {
                   />
                 </div>
               </div>
-              <section className={frame.sidePanel} aria-label="Chapter and tools">
-                <Tabs<Panel>
-                  fill
-                  label="Tools"
-                  value={panel}
-                  onChange={setPanel}
-                  items={[
-                    { value: 'chapter', label: 'Chapter', content: <ChapterPicker /> },
-                    {
-                      value: 'highlight',
-                      label: 'Highlight',
-                      content: overlay ? (
-                        <Highlighter key={`${overlay.ref}|${overlay.translation}`} />
-                      ) : (
-                        <p className={styles.muted}>
-                          Show a passage, then tap words to light them up on the TV.
-                        </p>
-                      ),
-                    },
-                    {
-                      value: 'background',
-                      label: 'Background',
-                      content: (
-                        <div className={styles.bgPanel}>
-                          <BackgroundControl />
-                        </div>
-                      ),
-                    },
-                  ]}
-                />
+              <section className={frame.sidePanel} aria-label="Chapter">
+                <ChapterPicker />
               </section>
             </div>
-            <div className={frame.wide}>
+            {wordsOpen && (
+              <FeatureBoundary name="Word study">
+                <WordsColumn snapshot={snapshot} onClose={() => setWordsOpen(false)} />
+              </FeatureBoundary>
+            )}
+            <div className={cx(frame.wide, wordsOpen && styles.wideBesideWords)}>
               <div className={cx(frame.stack, frame.liveStack)}>
                 <LivePane meta={liveMeta} frozen={Boolean(frozen)}>
-                  <LiveScreen snapshot={frozen ?? snapshot} label="Live output" />
+                  {/* Click words on Live to light them up, but never while the TV is frozen. */}
+                  <LiveTextContext.Provider
+                    value={
+                      frozen || !overlay || (!liveText.onHighlight && !liveText.onStudy)
+                        ? null
+                        : liveText
+                    }
+                  >
+                    <LiveScreen snapshot={frozen ?? snapshot} label="Live output" />
+                  </LiveTextContext.Provider>
                 </LivePane>
                 <Dock
                   sermon={false}
                   screen={live.screen}
                   frozen={Boolean(frozen)}
                   hasOverlay={Boolean(overlay)}
-                  mode={mode}
+                  mode={FULL}
+                  modes={false}
                   onScreen={(s) => control().toggleScreen(s)}
                   onFreeze={() => control().toggleFreeze()}
-                  onMode={(m) => useTv.getState().setMode(m)}
+                  onMode={() => undefined}
                   onClear={() => control().dispatch({ type: 'clearOverlay' })}
+                  onBackground={() => setBackgroundOpen(true)}
+                  before={
+                    // Pages of a passage too long for one screen, only when it has them.
+                    overlay && pages > 1 ? (
+                      <div className={styles.pages} role="group" aria-label="Pages of the passage">
+                        <DockButton
+                          label="Previous page"
+                          keys="["
+                          icon={<ChevronLeft size={16} />}
+                          onClick={() => page(-1)}
+                          disabled={overlay.page === 0 || Boolean(frozen)}
+                          iconOnly
+                        />
+                        <span className={frame.dockPages}>
+                          {overlay.page + 1} / {pages}
+                        </span>
+                        <DockButton
+                          label="Next page"
+                          keys="]"
+                          icon={<ChevronRight size={16} />}
+                          onClick={() => page(1)}
+                          disabled={overlay.page >= pages - 1 || Boolean(frozen)}
+                          iconOnly
+                        />
+                      </div>
+                    ) : null
+                  }
                 />
               </div>
             </div>
@@ -319,6 +386,16 @@ export function BibleConsolePage() {
       <FeatureBoundary name="The passage queue">
         <PassageQueue preview={preview} translation={translation} />
       </FeatureBoundary>
+
+      <Dialog
+        open={backgroundOpen}
+        onOpenChange={setBackgroundOpen}
+        size="sm"
+        title="Background"
+        description="The picture behind the verses on the TV. A darker, simple picture keeps the words easy to read."
+      >
+        <BackgroundControl />
+      </Dialog>
 
       <Dialog
         open={exitOpen}
@@ -479,7 +556,9 @@ function PassageQueue({ preview, translation }: { preview: string | null; transl
                     if (r) selectFound(r);
                     useReader.getState().setTranslation(item.translation);
                   }}
-                  onDoubleClick={() => void showOnTv(item.ref, item.translation)}
+                  onDoubleClick={() =>
+                    void showOnTv(item.ref, item.translation, FULL, undefined, false)
+                  }
                 >
                   <span className={styles.passageNum}>{i + 1}</span>
                   <span className={styles.passageRef}>{label(item.ref)}</span>

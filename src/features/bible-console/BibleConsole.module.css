@@ -1,11 +1,48 @@
-.muted {
-  padding: var(--space-3) 0;
-  font-size: var(--text-14);
-  line-height: 1.5;
-  color: var(--color-text-muted);
+/* Preview's header: Words opens the Words column. */
+.previewMeta {
+  flex: 1;
+  min-width: 0;
+  text-align: right;
 }
-.bgPanel {
-  padding: var(--space-3) 0;
+.liveTool {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 28px;
+  padding: 0 var(--space-3);
+  border: 0;
+  border-radius: 999px;
+  background: var(--color-surface-sunk);
+  color: var(--color-text);
+  font: inherit;
+  font-size: var(--text-12);
+  font-weight: var(--weight-semibold);
+  cursor: pointer;
+}
+.liveTool:hover {
+  background: color-mix(in srgb, var(--color-text) 10%, var(--color-surface-sunk));
+}
+.liveTool[aria-pressed='true'] {
+  background: var(--color-hero);
+  color: var(--color-hero-text);
+}
+/*
+ * With the Words column open, Live gives up the room (Words is 340px wide, plus a gap); Preview
+ * and the chapter keep theirs.
+ */
+.wideBesideWords {
+  width: min(calc(100cqw - 336px - 356px), calc((100cqh - 96px) * 16 / 9));
+}
+/* Room for the dock's names in the narrower Live: the keys still work. */
+.wideBesideWords [role='toolbar'] kbd {
+  display: none;
+}
+/* Pages of a long passage, at the start of the dock. */
+.pages {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
 }
 
 /* Chapter picker */
@@ -52,11 +89,9 @@
 .selected:hover {
   background: color-mix(in srgb, var(--color-accent) 18%, transparent);
 }
+/* The verse on the TV: its number turns red (no border beside selected or live verses). */
 .live .num {
   color: var(--color-live);
-}
-.live {
-  box-shadow: inset 2px 0 0 var(--color-live);
 }
 .num {
   padding-top: 3px;

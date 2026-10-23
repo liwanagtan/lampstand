@@ -5,14 +5,15 @@ import { getTranslation } from '@/features/bible/bibleStore';
 import { fromOsis, parseRefDetailed } from '@/features/bible/ref';
 import { verseCountsFor } from '@/features/bible/versification';
 import type { OverlayMode, TemplateId } from '@/schema/common';
-import { getTemplate } from '@/templates/templates';
-import { browserMeasure, paginate, verseBox } from '@/slides/paginate';
+import { pagesFor } from '@/slides/paginate';
 
 export async function countPages(
   ref: string,
   translationCode: string,
   mode: OverlayMode | 'slide',
   templateId: TemplateId,
+  /** Show the Bible's layout: a verse per line, whole verses, the reader's serif. */
+  bible = false,
 ): Promise<number> {
   const t = getTranslation(translationCode);
   if (!t) return 1;
@@ -25,10 +26,5 @@ export async function countPages(
   if (!range) return 1;
   const passage = await getPassage(db, t, range);
   if (typeof document !== 'undefined' && document.fonts) await document.fonts.ready;
-  const tpl = getTemplate(templateId);
-  return Math.max(
-    1,
-    paginate(passage.verses, verseBox(mode), browserMeasure(tpl.body.family, tpl.body.weight))
-      .length,
-  );
+  return Math.max(1, pagesFor(passage.verses, mode, templateId, bible).length);
 }

@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useState, type ComponentProps, type ReactNode } from 'react';
 import {
   AnimatePresence,
   motion,
@@ -19,6 +19,8 @@ import { useAsset } from '@/slides/useAsset';
 import { OVERLAY } from '@/templates/metrics';
 import type { LiveSnapshot } from './live/types';
 import { VerseOverlay } from './VerseOverlay';
+import { WordStudyScreen } from '@/slides/WordStudyScreen';
+import { StudyMarksProvider } from '@/slides/StudyMarksProvider';
 import { PosterContext, posterInfoFor } from '@/slides/poster/posterInfo';
 import styles from './LiveScreen.module.css';
 
@@ -78,10 +80,16 @@ export function LiveScreen({ snapshot, fit = 'width', label, className }: LiveSc
   // Content that was already live when this screen mounted is drawn in its final state, so a
   // reopened output restores the TV without replaying entrance motion.
   const overlayKey = overlay ? `${overlay.ref}|${overlay.translation}|${overlay.mode}` : null;
-  const [initial, setInitial] = useState(() => ({ slide: slide?.id ?? null, overlay: overlayKey }));
+  const wordKey = live.word ? `${live.word.verse}|${live.word.strong}` : null;
+  const [initial, setInitial] = useState(() => ({
+    slide: slide?.id ?? null,
+    overlay: overlayKey,
+    word: wordKey,
+  }));
   if (initial.slide && slide?.id !== initial.slide) setInitial((i) => ({ ...i, slide: null }));
   if (initial.overlay && overlayKey !== initial.overlay)
     setInitial((i) => ({ ...i, overlay: null }));
+  if (initial.word && wordKey !== initial.word) setInitial((i) => ({ ...i, word: null }));
 
   // Direction of travel, for push transitions.
   const [travel, setTravel] = useState({ index: live.slideIndex, dir: 1 as 1 | -1 });
@@ -97,6 +105,7 @@ export function LiveScreen({ snapshot, fit = 'width', label, className }: LiveSc
     : { duration: sec(tokens.standard.duration * 2), ease: ease(tokens.slide.ease) };
 
   const side = overlay?.mode === 'sidePanel';
+  const studying = Boolean(overlay && live.word);
   const fullOverlay = overlay?.mode === 'fullScreen';
   const translation = snapshot.translation;
 
@@ -119,6 +128,7 @@ export function LiveScreen({ snapshot, fit = 'width', label, className }: LiveSc
               template={template}
               animate={!reduced}
               showPlaceholder={false}
+              strong
             />
           </div>
         )}
@@ -168,14 +178,52 @@ export function LiveScreen({ snapshot, fit = 'width', label, className }: LiveSc
               exit={overlayFrom(overlay.mode, reduced)}
               transition={overlayTransition}
             >
-              <FeatureBoundary name="Verse overlay" silent>
-                <VerseOverlay
-                  key={`${overlay.ref}|${overlay.translation}`}
-                  background={presentation ? undefined : (live.backdrop ?? undefined)}
-                  overlay={overlay}
-                  template={template}
-                  animate={overlayKey !== initial.overlay}
-                />
+              {/* Word study: the verse eases to the left, as in the side panel layout. */}
+              <motion.div
+                className={styles.verseStage}
+                initial={false}
+                animate={{ scale: studying ? 1 - OVERLAY.sidePanelWidth : 1 }}
+                transition={overlayTransition}
+              >
+                <FeatureBoundary name="Verse overlay" silent>
+                  <MaybeStudyMarks
+                    on={Boolean(live.studyWords) && !presentation}
+                    passageRef={overlay.ref}
+                    translation={overlay.translation}
+                    word={live.word}
+                  >
+                    <VerseOverlay
+                      key={`${overlay.ref}|${overlay.translation}`}
+                      background={presentation ? undefined : (live.backdrop ?? undefined)}
+                      overlay={overlay}
+                      template={template}
+                      animate={overlayKey !== initial.overlay}
+                      // Only the words shrink; the screen's background stays full size behind.
+                      bare={studying && !presentation}
+                      // Show the Bible: the reader's serif, a verse per line, whole verses.
+                      bible={!presentation}
+                    />
+                  </MaybeStudyMarks>
+                </FeatureBoundary>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Word study: the word slides in on the right, like the verse side panel. */}
+        <AnimatePresence>
+          {studying && live.word && (
+            <motion.div
+              key="word"
+              className={styles.overlayLayer}
+              initial={initial.word === wordKey ? false : overlayFrom('sidePanel', reduced)}
+              animate={{ opacity: 1, x: 0 }}
+              exit={overlayFrom('sidePanel', reduced)}
+              transition={overlayTransition}
+            >
+              <FeatureBoundary name="Word study" silent>
+                {/* The panel stays; its content changes from word to word. */}
+                <WordStudyScreen word={live.word} reduced={reduced} />
               </FeatureBoundary>
             </motion.div>
           )}
@@ -207,6 +255,18 @@ export function LiveScreen({ snapshot, fit = 'width', label, className }: LiveSc
       </SlideStage>
     </PosterContext.Provider>
   );
+}
+
+/** Word study's underlines on the verse, while the Words column is open. */
+function MaybeStudyMarks({
+  on,
+  children,
+  ...props
+}: { on: boolean; children: ReactNode } & Omit<
+  ComponentProps<typeof StudyMarksProvider>,
+  'children'
+>) {
+  return on ? <StudyMarksProvider {...props}>{children}</StudyMarksProvider> : <>{children}</>;
 }
 
 /** The sermon poster shown by the Sermon button: the presentation's title slide. */

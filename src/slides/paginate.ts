@@ -1,6 +1,8 @@
 // Pagination of long passages (PRD §6): a page holds what fits the layout at the minimum
 // type size; split at verse boundaries first, then at sentence breaks, then at words.
-import type { OverlayMode } from '@/schema/common';
+import { fonts } from '@/design-system/tokens';
+import type { OverlayMode, TemplateId } from '@/schema/common';
+import { getTemplate } from '@/templates/templates';
 import { CANVAS, LINE_HEIGHT, MEASURE, OVERLAY, SAFE, TYPE } from '@/templates/metrics';
 import type { PassageVerse } from '@/features/bible/passage';
 
@@ -44,6 +46,23 @@ export function verseBox(mode: OverlayMode | 'slide'): TextBox {
         height: CANVAS.height - SAFE.y * 2 - 120 - refLine - pageLine,
       };
   }
+}
+
+/** Show the Bible: a verse per line, whole verses only (and measured in the reader's serif). */
+export const BIBLE_LAYOUT: VerseLayout = { lines: true, wholeVerses: true };
+
+/** Pages as the screens draw them: the renderers and the page counter share this. */
+export function pagesFor(
+  verses: PassageVerse[],
+  mode: OverlayMode | 'slide',
+  templateId: TemplateId,
+  bible: boolean,
+): Page[] {
+  const t = getTemplate(templateId);
+  const measure = bible
+    ? browserMeasure(fonts.display, 400)
+    : browserMeasure(t.body.family, t.body.weight);
+  return paginate(verses, verseBox(mode), measure, bible ? BIBLE_LAYOUT : {});
 }
 
 /** Approximate width for environments without canvas text metrics. */
@@ -96,6 +115,37 @@ export function countLines(text: string, width: number, size: number, measure: M
 
 export function fits(text: string, box: TextBox, size: number, measure: Measure): boolean {
   return countLines(text, box.width, size, measure) * size * LINE_HEIGHT.verse <= box.height;
+}
+
+/**
+ * How verses are laid out (Show the Bible): each verse on its own line, and whole verses only, so
+ * a verse is never cut across pages or truncated (a very long verse gets a page to itself, smaller).
+ */
+export interface VerseLayout {
+  lines?: boolean;
+  wholeVerses?: boolean;
+}
+
+/** Space between verses on their own lines, in em (VerseBody draws the same). */
+export const VERSE_GAP = 0.3;
+/** The smallest a whole verse may shrink to fit one page. */
+const WHOLE_VERSE_MIN = 20;
+
+function pageFits(
+  segs: PageSegment[],
+  box: TextBox,
+  size: number,
+  measure: Measure,
+  layout: VerseLayout,
+): boolean {
+  if (!layout.lines) return fits(pageText(segs), box, size, measure);
+  const lines = segs.reduce(
+    (n, s) =>
+      n + countLines((s.showNumber ? NUMBER_ALLOWANCE : '') + s.text, box.width, size, measure),
+    0,
+  );
+  const gaps = Math.max(0, segs.length - 1) * VERSE_GAP * size;
+  return lines * size * LINE_HEIGHT.verse + gaps <= box.height;
 }
 
 /** A piece of a verse shown on a page (whole verse unless it had to be split). */
@@ -156,29 +206,35 @@ function splitLong(text: string, box: TextBox, measure: Measure): string[] {
   return pieces;
 }
 
-function bestSize(segs: PageSegment[], box: TextBox, measure: Measure): number {
-  const text = pageText(segs);
-  for (let size = TYPE.verse; size > TYPE.minimumBody; size -= 2) {
-    if (fits(text, box, size, measure)) return size;
+function bestSize(
+  segs: PageSegment[],
+  box: TextBox,
+  measure: Measure,
+  layout: VerseLayout,
+): number {
+  const floor = layout.wholeVerses ? WHOLE_VERSE_MIN : TYPE.minimumBody;
+  for (let size = TYPE.verse; size > floor; size -= 2) {
+    if (pageFits(segs, box, size, measure, layout)) return size;
   }
-  return TYPE.minimumBody;
+  return floor;
 }
 
 /**
  * Packs verses into pages that fit `box` at the minimum body size. Verses are never cut
- * unless one verse alone is too long, and text is never truncated.
+ * unless one verse alone is too long (never, with `wholeVerses`), and text is never truncated.
  */
 export function paginate(
   verses: PassageVerse[],
   box: TextBox,
   measure: Measure = approxMeasure,
+  layout: VerseLayout = {},
 ): Page[] {
   const minSize = TYPE.minimumBody;
   const segments: PageSegment[] = [];
   for (const v of verses) {
     const base = { osis: v.osis, chapter: v.chapter, verse: v.verse, missing: v.missing };
     const text = v.missing ? 'This verse is not included in this translation.' : v.text;
-    if (fits(NUMBER_ALLOWANCE + text, box, minSize, measure)) {
+    if (layout.wholeVerses || fits(NUMBER_ALLOWANCE + text, box, minSize, measure)) {
       segments.push({ ...base, text, showNumber: true });
     } else {
       splitLong(text, box, measure).forEach((t, i) =>
@@ -191,7 +247,7 @@ export function paginate(
   let current: PageSegment[] = [];
   for (const seg of segments) {
     const candidate = [...current, seg];
-    if (current.length === 0 || fits(pageText(candidate), box, minSize, measure)) {
+    if (current.length === 0 || pageFits(candidate, box, minSize, measure, layout)) {
       current = candidate;
     } else {
       pages.push(current);
@@ -199,5 +255,5 @@ export function paginate(
     }
   }
   if (current.length) pages.push(current);
-  return pages.map((segs) => ({ segments: segs, size: bestSize(segs, box, measure) }));
+  return pages.map((segs) => ({ segments: segs, size: bestSize(segs, box, measure, layout) }));
 }

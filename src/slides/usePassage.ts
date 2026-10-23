@@ -4,10 +4,8 @@ import { getPassage, type Passage } from '@/features/bible/passage';
 import { getTranslation, useBible } from '@/features/bible/bibleStore';
 import { fromOsis, parseRefDetailed, type RefParseResult } from '@/features/bible/ref';
 import { verseCountsFor } from '@/features/bible/versification';
-import type { OverlayMode } from '@/schema/common';
-import { getTemplate } from '@/templates/templates';
-import type { TemplateId } from '@/schema/common';
-import { browserMeasure, paginate, verseBox, type Page } from './paginate';
+import type { OverlayMode, TemplateId } from '@/schema/common';
+import { pagesFor, type Page } from './paginate';
 
 export interface PassageState {
   passage?: Passage;
@@ -53,11 +51,15 @@ export function usePassage(ref: string | null | undefined, code: string): Passag
   return state.key === key ? state.value : { loading: true };
 }
 
-/** Pages of a passage for a layout, measured with the template's body font. */
+/**
+ * Pages of a passage for a layout, measured with the template's body font, or for Show the Bible
+ * (`bible`) in the reader's serif with a verse per line and whole verses only.
+ */
 export function usePages(
   passage: Passage | undefined,
   mode: OverlayMode | 'slide',
   templateId: TemplateId,
+  bible = false,
 ): Page[] {
   const [fontsReady, setFontsReady] = useState(
     () => typeof document === 'undefined' || !document.fonts,
@@ -72,9 +74,8 @@ export function usePages(
   }, [fontsReady]);
   return useMemo(() => {
     if (!passage) return [];
-    const t = getTemplate(templateId);
-    return paginate(passage.verses, verseBox(mode), browserMeasure(t.body.family, t.body.weight));
+    return pagesFor(passage.verses, mode, templateId, bible);
     // fontsReady re-measures once the real font metrics are available.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [passage, mode, templateId, fontsReady]);
+  }, [passage, mode, templateId, bible, fontsReady]);
 }

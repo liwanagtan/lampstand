@@ -13,6 +13,16 @@ export interface LiveOverlay {
   look?: 'card';
 }
 
+/** Word study on the TV: one word of the verse on screen, with its Hebrew or Greek. */
+export interface LiveWord {
+  /** Strong's number as stored in public/words (src/features/bible-app/wordStudyCodes.ts). */
+  strong: number;
+  /** The verse it is in, e.g. "PSA.119.105". */
+  verse: string;
+  /** The word as the BSB has it ("lamp"), picked out in the verse. */
+  text: string;
+}
+
 /** What covers the slide on the TV: nothing, black, the logo, or the sermon poster. */
 export type Screen = 'content' | 'blank' | 'logo' | 'sermon';
 
@@ -30,6 +40,10 @@ export interface LiveState {
   countdownEndsAt: number | null;
   /** Bible session only: the picture behind the verses (template backdrop when unset). */
   backdrop?: Background | null;
+  /** A word of the verse on screen, studied on the TV (Bible session). */
+  word?: LiveWord | null;
+  /** Mark every studyable word of the verse on screen (while the Words column is open). */
+  studyWords?: boolean;
 }
 
 /** Everything the output needs to draw the TV without asking anyone. */

@@ -293,3 +293,23 @@ The phone Go to sheet shows Old Testament and New Testament as tabs, opening on 
 ### 2026-10-23 — Word study: underlines in the text, through the BSB
 
 Word study (docs/WORD-STUDY.md) underlines words in the verse itself rather than listing them as chips (the owner preferred the text). To keep the page calm and the targets easy to hit, underlines appear only on the verse being studied, only on meaningful words, with tap areas reaching into the line spacing. Reading the BSB, selected verses (one or several) are underlined at once and a word tap opens it (the owner asked to skip the extra step, and for one rule for any selection); taps between the words still work on the verse. Other translations use a **Words** button in the selection bar. It runs in a panel that isn't a dialog (docked under the verse on phones, the side column on laptops), so the text stays tappable. Only the BSB has word links; other translations study the verse through the BSB inside the panel. Words come from the BSB word tables (public domain) and meanings from STEP Bible's brief lexicons (CC BY 4.0). It follows the Study notes switch, now "Study notes and word study". Plan readings don't have it yet.
+
+### 2026-10-23 — Word study on the TV
+
+In Show the Bible, a **Words** tab puts one word of the live passage on the TV for teaching. The TV switches to its own word layout (verse left, word card right) rather than squeezing a card over the verse overlay, so it reads from the back of a room in every overlay mode. The verse stays in the translation on screen and the word is picked out where it matches the BSB's wording. Hide and show (W) let a teacher ask the class first. A new passage puts the word away, so a stale word never sits beside the wrong verse.
+
+### 2026-10-23 — Show the Bible: act on Live, Chapter alone beside it
+
+At the owner's request the console's side panel is the chapter only (no Highlight, Words or Background tabs). Highlighting and word study happen by clicking words on the Live pane, which shows exactly what the TV shows. A Highlight / Words switch in Live's header decides what a click does, so one click never means two things and word study is never triggered by accident. Word links exist only for the BSB, so with another translation on the TV the notes offer to show the passage in the BSB. Background moved to the dock beside Blank and Logo, since it is a session setting, not a per-verse one.
+
+### 2026-10-24 — Show the Bible: full screen only, Live for highlighting, a Words column
+
+The owner simplified it further. The Bible goes on the TV full screen only; long passages page with arrows on Live. Every word on Live is clickable to highlight, with no mode switch. Word study moved off Live into a Words column (opened from Live's header) that works like Preview: choose a word, see its card in the column's preview, then Show on screen. Staging first means a word never reaches the TV by accident and the teacher can read it before the class does.
+
+Later the same day: the Words button moved to Preview's header, and opening the column narrows Live rather than Preview. On the TV the word no longer opens its own slide: it uses the side panel layout, so the verse's words ease to the left (the background picture stays full size) with the word lit up, and the word's panel slides in on the right. The verse never re-draws, so its highlights and page stay as they were.
+
+Word study marks words its own way, apart from clicked highlights (gold text): while the Words column is open, every studyable word in the verse on the TV gets a solid accent underline, and the word on screen a soft box. The owner chose all studyable words (not only those studied) and the underline look. It is live state (`studyWords`), so the output window and a reopened TV show it. The underline became a quiet dotted line in the text's own colour, like the Bible reader's, after the solid accent one proved distracting.
+
+### 2026-10-24 — Show the Bible reads like the Bible
+
+Verses on the TV are set in the Bible reader's serif (Fraunces), each verse on its own line, over a stronger shade on photos. A verse is never cut across pages or truncated: pages hold whole verses (`BIBLE_LAYOUT` in `src/slides/paginate.ts`), and a verse too long for a page gets one to itself at a smaller size. The page counter uses the same layout, so the page count always matches the screen. Page buttons sit at the start of the dock, before Blank, only when there are pages ([ and ]); the dock is one row of buttons sized to their names, with no left border marking the live verse in the chapter list.

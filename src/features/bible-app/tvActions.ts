@@ -18,9 +18,14 @@ export async function showOnTv(
   translation: string,
   mode = useTv.getState().mode,
   look?: 'card',
+  /**
+   * Open the TV first if it isn't (Today's one-click Show on TV). Show the Bible doesn't: there
+   * Start Presentation opens the TV, and until then a passage just goes to Live.
+   */
+  start = true,
 ): Promise<void> {
   const control = useControl.getState();
-  if (!control.presenting && !(await startOutput())) return;
+  if (start && !control.presenting && !(await startOutput())) return;
   useTv.getState().setPanel(true);
   const { live } = useControl.getState();
   if (live.screen !== 'content') useControl.getState().toggleScreen(live.screen);
@@ -38,7 +43,8 @@ export async function stepTv(delta: 1 | -1): Promise<void> {
   const range = fromOsis(o.ref);
   const next = range && adjacentVerse(range, delta, counts(o.translation));
   if (!next) return;
-  await showOnTv(toOsis(next), o.translation);
+  // The next verse keeps the way the passage is shown.
+  await showOnTv(toOsis(next), o.translation, o.mode, o.look, false);
   // The reader follows the TV, so the operator always sees what is up.
   const v = next.start.verse;
   useReader.getState().goTo(next.start.book, next.start.chapter, { start: v, end: v });

@@ -12,6 +12,8 @@ export interface BackdropProps {
   showPlaceholder: boolean;
   /** Stronger dark overlay so text over photos keeps its contrast. */
   textOver?: boolean;
+  /** More shade over photos (Show the Bible, where verses must read from the back). */
+  strong?: boolean;
 }
 
 export function Backdrop({
@@ -20,6 +22,7 @@ export function Backdrop({
   animate,
   showPlaceholder,
   textOver = true,
+  strong = false,
 }: BackdropProps) {
   const bg = background ?? { type: 'template' as const };
   const media = bg.type === 'image' || bg.type === 'video' ? bg : null;
@@ -59,7 +62,9 @@ export function Backdrop({
             decoding="async"
           />
         ))}
-      {hasMedia && textOver && <div className={styles.photoOverlay} />}
+      {hasMedia && textOver && (
+        <div className={strong ? styles.photoOverlayStrong : styles.photoOverlay} />
+      )}
       {media && !asset && showPlaceholder && asset !== undefined && (
         <div className={styles.placeholder}>
           <span className={styles.placeholderChip}>

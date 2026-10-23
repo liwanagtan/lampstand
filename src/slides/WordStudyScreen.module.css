@@ -1,0 +1,88 @@
+/* Canvas coordinates (1920×1080): the word, in the side panel layout (VerseOverlay's sidePanel). */
+.panel {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 4;
+  width: var(--s-side-panel);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: calc(var(--s-safe-y) + var(--s-panel-py)) var(--s-safe-x)
+    calc(var(--s-safe-y) + var(--s-panel-py)) var(--s-panel-px);
+  overflow: hidden;
+  background: var(--t-panel);
+  backdrop-filter: blur(var(--s-overlay-blur)) saturate(1.1);
+  border-left: 2px solid color-mix(in srgb, var(--t-accent) 55%, transparent);
+  color: var(--t-text);
+}
+/* The word's content, which changes in place when another word is shown. */
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.eyebrow {
+  font-family: var(--font-ui);
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--t-accent);
+}
+.english {
+  font-family: var(--font-ui);
+  font-size: 36px;
+  font-weight: 500;
+  color: var(--t-muted);
+}
+.original {
+  margin-top: 8px;
+  font-family: var(--font-display);
+  font-size: 120px;
+  line-height: 1.15;
+  unicode-bidi: isolate;
+}
+.sound {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 24px;
+  font-family: var(--font-ui);
+  font-size: 30px;
+  color: var(--t-muted);
+}
+.translit {
+  font-size: 40px;
+  font-style: italic;
+  color: var(--t-text);
+}
+.gloss {
+  margin-top: 12px;
+  font-family: var(--t-heading-font);
+  font-size: 84px;
+  font-weight: var(--t-heading-weight);
+  line-height: 1.05;
+  letter-spacing: var(--t-heading-tracking);
+  color: var(--t-accent);
+}
+.meanings {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 8px 0 0;
+  padding-left: 1.1em;
+  font-family: var(--font-ui);
+  font-size: 32px;
+  line-height: 1.35;
+}
+.uses {
+  margin-top: 12px;
+  padding-top: 20px;
+  border-top: 1px solid rgb(255 255 255 / 0.16);
+  font-family: var(--font-ui);
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--t-muted);
+}

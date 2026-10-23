@@ -1,7 +1,7 @@
 // Pure live-state transitions (PRD §7.4, §7.5). The control store wraps this reducer.
 import type { OverlayMode } from '@/schema/common';
 import type { Background, StoredPresentation, StoredSlide } from '@/schema/presentation';
-import type { LiveOverlay, LiveState } from './types';
+import type { LiveOverlay, LiveState, LiveWord } from './types';
 
 export type LiveAction =
   | {
@@ -21,6 +21,9 @@ export type LiveAction =
   | { type: 'overlayTranslation'; translation: string }
   | { type: 'overlayEmphasis'; emphasis: string[] }
   | { type: 'backdrop'; backdrop: Background | null }
+  | { type: 'showWord'; word: LiveWord }
+  | { type: 'hideWord' }
+  | { type: 'studyWords'; on: boolean }
   | { type: 'theme'; theme: LiveState['theme'] };
 
 export interface LiveContext {
@@ -97,10 +100,24 @@ export function liveReducer(state: LiveState, action: LiveAction, ctx: LiveConte
       );
     case 'toggleScreen':
       return { ...state, screen: state.screen === action.screen ? 'content' : action.screen };
+    // A studied word belongs to the passage on screen: a new passage, or none, puts it away.
     case 'showOverlay':
-      return { ...state, overlay: { ...action.overlay, page: action.overlay.page ?? 0 } };
+      return {
+        ...state,
+        overlay: { ...action.overlay, page: action.overlay.page ?? 0 },
+        word: null,
+      };
     case 'clearOverlay':
-      return state.overlay ? { ...state, overlay: null } : state;
+      return state.overlay || state.word ? { ...state, overlay: null, word: null } : state;
+    case 'showWord':
+      return state.overlay ? { ...state, word: action.word } : state;
+    case 'hideWord':
+      return state.word ? { ...state, word: null } : state;
+    // Words stay marked through new passages until word study is put away.
+    case 'studyWords':
+      return Boolean(state.studyWords) === action.on
+        ? state
+        : { ...state, studyWords: action.on, word: action.on ? state.word : null };
     case 'overlayMode': {
       if (!state.overlay) return state;
       const overlay = { ...state.overlay, mode: action.mode };

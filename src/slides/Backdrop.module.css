@@ -2,6 +2,7 @@
 .base,
 .media,
 .photoOverlay,
+.photoOverlayStrong,
 .grain,
 .leak,
 .ambient,
@@ -57,6 +58,10 @@
 }
 .photoOverlay {
   background: var(--t-photo-overlay);
+}
+/* Show the Bible: verses over a photo need more shade to read from the back of a room. */
+.photoOverlayStrong {
+  background: linear-gradient(rgb(0 0 0 / 0.32), rgb(0 0 0 / 0.32)), var(--t-photo-overlay);
 }
 .ambient {
   inset: -20%;

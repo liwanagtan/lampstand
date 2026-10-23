@@ -21,13 +21,19 @@ test('a background picture shows behind Bible verses on the TV', async ({ page }
   await page.getByRole('button', { name: /Show the Bible/ }).click();
   await page.getByLabel('Search the Bible').fill('ps 23 1');
   await page.keyboard.press('Enter');
-  const popup = page.waitForEvent('popup');
+  // Not presenting yet: Show on screen puts the passage on Live only; no TV opens.
   await page.getByRole('button', { name: 'Show on screen' }).click();
+  await expect(page.getByText('Not presenting')).toBeVisible();
+  // Start Presentation opens the TV with what is on Live.
+  const popup = page.waitForEvent('popup');
+  await page.getByRole('button', { name: 'Start Presentation' }).click();
   const output = await popup;
   const tv = output.getByTestId('output');
   await expect(tv).toContainText(/The Lord is my shepherd/i);
 
-  await page.getByRole('tab', { name: 'Background' }).click();
+  // Background is in the dock, beside Blank and Logo.
+  const background = page.getByRole('button', { name: /^Background behind the verses/ });
+  await background.click();
   await page.getByRole('button', { name: 'Choose…' }).click();
   await page.getByRole('list', { name: 'Background library' }).getByRole('button').first().click();
   await expect(page.getByRole('button', { name: 'Remove background' })).toBeVisible();
@@ -35,7 +41,7 @@ test('a background picture shows behind Bible verses on the TV', async ({ page }
 
   // It is remembered for next time, and can be removed.
   await page.reload();
-  await page.getByRole('tab', { name: 'Background' }).click();
+  await page.keyboard.press('g');
   await page.getByRole('button', { name: 'Remove background' }).click();
   await expect(page.getByRole('button', { name: 'Choose…' })).toBeVisible();
 });

@@ -2,7 +2,7 @@
 // dock, the output status chip and the disconnect banner. Same look, same keys everywhere.
 import { useEffect, useState, type ReactNode } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
-import { MonitorOff, Snowflake, X } from 'lucide-react';
+import { ImageIcon, MonitorOff, Snowflake, X } from 'lucide-react';
 import {
   Button,
   Chip,
@@ -23,10 +23,13 @@ import styles from '../PresentPage.module.css';
 export function LivePane({
   meta,
   frozen,
+  tools,
   children,
 }: {
   meta: ReactNode[];
   frozen: boolean;
+  /** Controls in the pane's header (the Bible console's Highlight and Words). */
+  tools?: ReactNode;
   children: ReactNode;
 }) {
   const beat = useControl((s) => s.liveBeat);
@@ -45,6 +48,7 @@ export function LivePane({
             </span>
           ))}
         </span>
+        {tools}
       </div>
       <motion.div
         key={beat}
@@ -82,10 +86,68 @@ export type DockProps = {
   onFreeze: () => void;
   onMode: (m: OverlayMode) => void;
   onClear: () => void;
+  /** The Bible console's picture behind the verses. */
+  onBackground?: () => void;
+  /** Overlay layouts (lower third, side panel…); the Bible console is full screen only. */
+  modes?: boolean;
+  /** Controls before Blank (the Bible console's page buttons). */
+  before?: ReactNode;
 };
 
 /** Screen and verse actions in a compact column under Preview (each shows its key). */
 export function Dock(p: DockProps) {
+  if (p.modes === false)
+    // The Bible console: one row of buttons sized to their names, in groups.
+    return (
+      <div
+        className={cx(styles.dock, styles.dockRow)}
+        role="toolbar"
+        aria-label="Presentation controls"
+      >
+        {p.before && (
+          <>
+            {p.before}
+            <span className={styles.dockDivider} aria-hidden />
+          </>
+        )}
+        <DockButton
+          label="Blank"
+          keys="B"
+          active={p.screen === 'blank'}
+          onClick={() => p.onScreen('blank')}
+        />
+        <DockButton
+          label="Logo"
+          keys="L"
+          active={p.screen === 'logo'}
+          onClick={() => p.onScreen('logo')}
+        />
+        <DockButton
+          label={p.frozen ? 'Unfreeze' : 'Freeze'}
+          keys="F"
+          active={p.frozen}
+          onClick={p.onFreeze}
+        />
+        {p.onBackground && (
+          <DockButton
+            label="Background"
+            title="Background behind the verses"
+            keys="G"
+            icon={<ImageIcon size={16} />}
+            onClick={p.onBackground}
+          />
+        )}
+        <span className={styles.dockDivider} aria-hidden />
+        <DockButton
+          label="Clear"
+          title="Clear verse"
+          keys="Esc"
+          icon={<X size={16} />}
+          onClick={p.onClear}
+          disabled={!p.hasOverlay}
+        />
+      </div>
+    );
   return (
     <div className={styles.dock} role="toolbar" aria-label="Presentation controls">
       <DockGroup label="Screen" className={styles.gridTwo}>

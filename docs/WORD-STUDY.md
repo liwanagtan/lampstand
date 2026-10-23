@@ -2,6 +2,27 @@
 
 Reading the BSB, select a verse (or several) and their studyable words get dotted underlines straight away; a tap anywhere else in a verse works as a verse tap, as before. In other translations, tap **Words** in the selection bar instead: the panel shows the first selected verse in the BSB. Tap an underlined word to see the Hebrew or Greek word behind it, its transliteration, part of speech, a gloss and a few short senses, and every verse that uses it. The word stays highlighted in each listed verse, and a listed verse opens inside the panel with **Back** to return. Escape closes it.
 
+## On the TV (Screen › Show the Bible)
+
+For lessons, Sunday school and lectures. The Bible goes on the TV full screen only (no lower third, side panel or popup). Beside Preview is the chapter alone; the rest acts on **Live**, which shows exactly what the TV shows:
+
+- **Highlight:** clicking words on Live to light them up is off for now (`HIGHLIGHT_ON_LIVE` in `BibleConsolePage.tsx` turns it back on). **Show on screen** puts a passage on Live; until **Start Presentation**, no TV window opens.
+- **Verses:** each verse on its own line, in the Bible reader's serif, over a stronger shade on background photos. A verse is never cut across pages or truncated: pages hold whole verses, and a verse too long for one page gets a page to itself in smaller type.
+- **Pages:** a passage too long for one screen gets **‹ 2 / 3 ›** at the start of the dock, before Blank, only while it has pages (**[** and **]**; → and ← go on to the next verse after the last page).
+- **Background** is in the dock beside Blank and Logo (**G**).
+- **Words** in Preview's header opens the Words column between Preview and Live (Live narrows; Preview and the chapter keep their size). Like Preview and Live, nothing reaches the TV until it's sent:
+  - At the top, a preview of the TV with the word shown, in the side panel layout: the verse's words ease to the left (the background picture stays full size behind them) with the studied word lit up, and a panel slides in on the right with the original word, how it sounds, Hebrew or Greek and part of speech, the gloss, two short senses and how many verses use it. Taking the word off reverses it.
+  - Until a word is chosen, the column's preview explains what it is for.
+  - **Click an underlined word on Live** and it goes beside the verse on the TV straight away; the column follows. Choosing a word in the column instead previews it first. Moving from word to word, the side panel stays and its content changes (the old word fades, the new one rises in).
+  - While the column is open, every studyable word of the verse on the TV (and on Live and the previews) gets a quiet dotted underline in the text's own colour, and the word on screen a soft box, apart from the gold of clicked highlights (a word can be both). Closing the column takes the underlines and any word off.
+  - **Show on screen** (or **W**) sends it; **Take off screen** (or **W**) takes it off so the class can be asked first. **Previous** and **Next word** choose another word without touching the TV.
+  - Below, the passage with its studyable words underlined (click one to choose it), and the entry for the teacher with every verse that uses the word, each with **Show** to put it on the TV.
+  - Word links follow the BSB's wording, so with another translation on the TV the column offers **Show … in BSB** instead.
+- **Esc** puts away the word first, then the verse. A new passage puts the word away too.
+- The word is part of the live state (`LiveState.word`), so a reopened output window shows it, and **Blank** and **Logo** cover it.
+
+The TV layout is `src/slides/WordStudyScreen.tsx`; clickable words on Live are `src/slides/LiveText.tsx` (only the console provides `LiveTextContext`, so the TV draws them plain); the Words column is `src/features/bible-console/WordsColumn.tsx`.
+
 ## Sources and licences
 
 | Source                                                                                                                        | Used for                                                                                                | Licence                                                    |

@@ -16,6 +16,12 @@
   z-index: 3;
   pointer-events: none;
 }
+/* The verse, which eases to the left while a word is studied beside it. */
+.verseStage {
+  position: absolute;
+  inset: 0;
+  transform-origin: 0% 50%;
+}
 .screenLayer {
   z-index: 10;
   display: grid;

@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { LampLockup } from '@/design-system/LampMark';
+import { accountsConfigured } from '@/features/account/client';
 import styles from './PublicInfoPage.module.css';
 
 /** Public information is available before onboarding or installing the app. */
@@ -30,27 +31,32 @@ export function PublicInfoPage() {
           it.
         </p>
 
-        <h2>If you sign in with Google</h2>
-        <p>
-          Google tells Lampstand your name and email address so the same account opens on each of
-          your devices. Lampstand does not get access to your Gmail, contacts or files.
-        </p>
-        <p>
-          While you are signed in, your profile name and faith journey, plan progress, journal
-          entries, notes, highlights, bookmarks, preferences and the place you were reading are
-          copied to Lampstand’s account database so they appear on your other devices. It is run by
-          Supabase on Lampstand’s behalf. Bible text, presentations, pictures and reminder times
-          stay on each device. Records are sent over an encrypted connection and each account can
-          read only its own records, but they are not encrypted on your device first, so the people
-          who run Lampstand could technically read them. They do not look at them except to fix a
-          problem you report.
-        </p>
-        <p>
-          Profile → Settings → Account lets you export a copy and delete your account. Deleting it
-          removes your sign-in and every synced record from the server; you choose whether to keep
-          the copy on the device you are using. Signing out keeps that account’s records on the
-          device, hidden from anyone using Lampstand there without signing in.
-        </p>
+        {/* Shown once Google sign-in is switched on (src/features/account/client.ts). */}
+        {accountsConfigured && (
+          <>
+            <h2>If you sign in with Google</h2>
+            <p>
+              Google tells Lampstand your name and email address so the same account opens on each
+              of your devices. Lampstand does not get access to your Gmail, contacts or files.
+            </p>
+            <p>
+              While you are signed in, your profile name and faith journey, plan progress, journal
+              entries, notes, highlights, bookmarks, preferences and the place you were reading are
+              copied to Lampstand’s account database so they appear on your other devices. It is run
+              by Supabase on Lampstand’s behalf. Bible text, presentations, pictures and reminder
+              times stay on each device. Records are sent over an encrypted connection and each
+              account can read only its own records, but they are not encrypted on your device
+              first, so the people who run Lampstand could technically read them. They do not look
+              at them except to fix a problem you report.
+            </p>
+            <p>
+              Profile → Settings → Account lets you export a copy and delete your account. Deleting
+              it removes your sign-in and every synced record from the server; you choose whether to
+              keep the copy on the device you are using. Signing out keeps that account’s records on
+              the device, hidden from anyone using Lampstand there without signing in.
+            </p>
+          </>
+        )}
 
         <h2>Usage counts</h2>
         <p>

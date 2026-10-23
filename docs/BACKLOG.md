@@ -2,14 +2,16 @@
 
 As of 23 October 2026, on `design/responsive-redesign` (last commit `3f4dba6`). The full UI/UX review, with screenshots and scores, is the Claude Docs page "Lampstand UI and UX review". Decisions already made are in `docs/DECISIONS.md`.
 
-## 1. Before anyone else uses accounts (owner)
+## 1. Accounts (paused until the app is finished)
 
-These need you; none can be done from the code alone.
+Google sign-in is hidden for now (`docs/DECISIONS.md`, 2026-10-23). To turn it back on, add `VITE_ACCOUNTS=on` to `.env.local` (and the hosting environment); the landing, Settings › Account, the save offer, the privacy page's Google section and the account end-to-end tests all come back. Before anyone else uses it:
 
 - [ ] In the **staging** Supabase SQL editor, run in order: `supabase/account-sync.sql`, then `supabase/rls-check.sql` (must end with "All ownership checks passed"), then `supabase/usage-insights.sql`.
 - [ ] Add your maintainer email to `usage_admins` so `/insights` opens for you.
 - [ ] Add every origin you test on (for example `http://localhost:5311`, staging, production) to Supabase › Authentication › URL Configuration › Redirect URLs.
 - [ ] Google Auth is in Testing mode: publish it (and verify with Google if asked) before a public launch.
+- [ ] Once on, test: two devices on one account (sync, an offline edit, reconnect); guest to account through "Keep your journey"; deleting an account with and without the device copy.
+- [ ] Note: `/insights` needs a signed-in maintainer, so it is unreachable while accounts are off; usage counts are still collected.
 - [ ] Optional: enable `pg_cron` so usage totals roll up nightly even when nobody opens `/insights`.
 - [ ] None of the SQL has run against a real Postgres yet; `rls-check.sql` is the first real check.
 
@@ -18,9 +20,6 @@ These need you; none can be done from the code alone.
 - [ ] A week of daily reading on a phone: plan days, reflections, the Continue bar, resuming mid-chapter.
 - [ ] Reminders on a real device (Android installed PWA and iOS), including the evening reminder.
 - [ ] Install on Android and iOS; check the installed app signs in with Google and returns correctly.
-- [ ] Two devices signed in to one account: sync of plans, journal, notes and reading place; an offline edit on one, then reconnect.
-- [ ] Guest to account: use as a guest, finish a reading, accept "Keep your journey", confirm the data arrives once.
-- [ ] Delete an account from Settings, with and without removing the device copy.
 - [ ] Teach one class on a TV from a laptop (Screen, Show the Bible, a presentation).
 - [ ] The 2-hour soak test on the church laptop (`npm run soak`).
 

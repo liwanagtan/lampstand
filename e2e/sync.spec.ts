@@ -1,7 +1,7 @@
 import { expect, test, type Browser, type Page } from '@playwright/test';
 import { USER, fakeRecords, host, storedSession } from './account';
 
-test.skip(!host, 'Supabase is not configured for this build');
+test.skip(!host, 'Accounts are switched off (VITE_ACCOUNTS) or Supabase is not configured');
 test.describe.configure({ timeout: 90_000 });
 
 const ACCOUNT_DB = `lampstand-account-${USER.id}`;

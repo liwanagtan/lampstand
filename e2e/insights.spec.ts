@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test';
 import { USER, host, storedSession } from './account';
 import { openApp } from './helpers';
 
-test.skip(!host, 'Supabase is not configured for this build');
+test.skip(!host, 'Accounts are switched off (VITE_ACCOUNTS) or Supabase is not configured');
 
 test('maintainers see anonymous totals on /insights', async ({ page }) => {
   await openApp(page);

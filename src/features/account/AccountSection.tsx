@@ -104,7 +104,12 @@ function DeleteAccount() {
   );
 }
 
+/** Settings › Account; hidden while accounts are switched off (client.ts). */
 export function AccountSection() {
+  return accountsConfigured ? <AccountSettings /> : null;
+}
+
+function AccountSettings() {
   const status = useAccount((s) => s.status);
   const userId = useAccount((s) => s.user?.id);
   const email = useAccount((s) => s.user?.email);

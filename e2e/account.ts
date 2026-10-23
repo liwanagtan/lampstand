@@ -7,6 +7,8 @@ import type { Page, Route } from '@playwright/test';
 function supabaseHost(): string | null {
   try {
     const env = readFileSync('.env.local', 'utf8');
+    // Accounts are switched off until the app is finished (src/features/account/client.ts).
+    if (!/^VITE_ACCOUNTS=on\s*$/m.test(env)) return null;
     const url = /^VITE_SUPABASE_URL=(.+)$/m.exec(env)?.[1]?.trim();
     return url ? new URL(url).hostname : null;
   } catch {

@@ -261,3 +261,7 @@ On laptops (1024px and up) Plans puts your plan beside the suggestions instead o
 ### 2026-10-23 — Go deeper, and a calmer day done
 
 Today's reflection prompt and Spurgeon's Morning and Evening share one "Go deeper" card (two rows; the full devotional opens in its sheet or page), so Today shows five blocks instead of six. The verse card's copy action has a visible label. Day done offers two choices, Write a reflection and Done, with Pray and Back to the passage as quiet links, and names what is up next ("Up next · Day 2: Matthew 5–7"); the repeated progress pill is gone.
+
+### 2026-10-23 — Google sign-in hidden until the app is finished
+
+Accounts are switched off by default: `accountsConfigured` (src/features/account/client.ts) is true only with `VITE_ACCOUNTS=on` as well as the Supabase keys. While off, the landing offers only Get started, Settings has no Account section, the "Keep your journey" offer never shows, the privacy page leaves out the Google section, and any stored session is ignored so everyone uses the app as a guest. Anonymous usage counts keep working. The account, sync and Insights end-to-end tests skip until the switch is on. All the account code stays in place for later.

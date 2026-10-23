@@ -2,7 +2,7 @@ import { expect, test, type Page } from '@playwright/test';
 import { host, signIn } from './account';
 import { openApp } from './helpers';
 
-test.skip(!host, 'Supabase is not configured for this build');
+test.skip(!host, 'Accounts are switched off (VITE_ACCOUNTS) or Supabase is not configured');
 
 /** A guest journal entry, written straight into the guest database. */
 function writeGuestEntry(page: Page) {

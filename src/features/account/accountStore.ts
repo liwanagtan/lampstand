@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { isAuthRetryableFetchError, type User } from '@supabase/supabase-js';
-import { accountClient } from './client';
+import { accountClient, accountsConfigured } from './client';
 import { flushInsights, track } from '@/features/insights/insights';
 import { reloadApp } from './reload';
 import { removeAccountCopy } from './storage';
@@ -65,7 +65,8 @@ export const useAccount = create<AccountState>((set) => ({
   error: null,
   init: async () => {
     const client = accountClient;
-    if (!client) {
+    // With accounts switched off, everyone uses the app as a guest, even with an old session.
+    if (!client || !accountsConfigured) {
       set({ status: 'guest' });
       return;
     }

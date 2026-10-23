@@ -16,4 +16,9 @@ export const accountClient =
       })
     : null;
 
-export const accountsConfigured = Boolean(accountClient);
+/**
+ * Google sign-in and account sync are offered only when switched on (VITE_ACCOUNTS=on).
+ * Off for now: the app is finished first, then accounts (docs/BACKLOG.md). Anonymous usage
+ * counts still use the client above.
+ */
+export const accountsConfigured = Boolean(accountClient) && import.meta.env.VITE_ACCOUNTS === 'on';

@@ -1,101 +1,22 @@
-/* Canvas coordinates (1920×1080): word study on the TV. */
-.root {
+/* Canvas coordinates (1920×1080): the word, in the side panel layout (VerseOverlay's sidePanel). */
+.panel {
   position: absolute;
-  inset: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
   z-index: 4;
-  overflow: hidden;
-  background: var(--t-bg);
-}
-.scrim {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    90deg,
-    rgb(0 0 0 / 0.45) 0%,
-    rgb(0 0 0 / 0.2) 55%,
-    rgb(0 0 0 / 0.35) 100%
-  );
-}
-.layout {
-  position: absolute;
-  inset: 0;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 780px;
-  align-items: center;
-  gap: 80px;
-  padding: calc(var(--s-safe-y) * 1.6) var(--s-safe-x);
-  color: var(--t-text);
-}
-.layout[data-animate] .card {
-  animation: cardIn 600ms cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-@keyframes cardIn {
-  from {
-    opacity: 0;
-    transform: translateX(24px);
-  }
-}
-[data-reduce-motion='true'] .layout[data-animate] .card {
-  animation: none;
-}
-
-/* The verse */
-.verse {
+  width: var(--s-side-panel);
   display: flex;
   flex-direction: column;
-  gap: 28px;
-  min-width: 0;
-}
-.ref {
-  display: flex;
-  align-items: baseline;
-  gap: 0.7em;
-  font-family: var(--font-ui);
-  font-size: var(--s-caption);
-  font-weight: 600;
-  color: var(--t-accent);
-}
-.code {
-  font-size: 0.8em;
-  font-weight: 500;
-  letter-spacing: 0.04em;
-  color: var(--t-muted);
-}
-.text {
-  font-family: var(--t-heading-font);
-  font-weight: 400;
-  line-height: 1.32;
-  text-wrap: pretty;
-  text-shadow: 0 2px 18px rgb(0 0 0 / 0.35);
-}
-.mark {
-  padding: 0 0.12em;
-  border-radius: 0.18em;
-  background: color-mix(in srgb, var(--t-accent) 26%, transparent);
-  color: inherit;
-  text-decoration: underline;
-  text-decoration-color: var(--t-accent);
-  text-decoration-thickness: 0.08em;
-  text-underline-offset: 0.16em;
-}
-
-/* The word card */
-.card {
-  display: flex;
-  flex-direction: column;
+  justify-content: center;
   gap: 14px;
-  max-height: 100%;
-  padding: 64px 72px;
-  border-radius: 40px;
-  background:
-    linear-gradient(160deg, rgb(255 255 255 / 0.1) 0%, rgb(255 255 255 / 0) 40%),
-    linear-gradient(180deg, rgb(0 0 0 / 0) 0%, rgb(0 0 0 / 0.22) 100%), var(--t-glass);
-  backdrop-filter: blur(var(--s-glass-blur)) saturate(1.25);
-  border: 1px solid rgb(255 255 255 / 0.16);
-  box-shadow:
-    inset 0 1px 0 rgb(255 255 255 / 0.22),
-    0 40px 120px rgb(0 0 0 / 0.4);
+  padding: calc(var(--s-safe-y) + var(--s-panel-py)) var(--s-safe-x)
+    calc(var(--s-safe-y) + var(--s-panel-py)) var(--s-panel-px);
   overflow: hidden;
+  background: var(--t-panel);
+  backdrop-filter: blur(var(--s-overlay-blur)) saturate(1.1);
+  border-left: 2px solid color-mix(in srgb, var(--t-accent) 55%, transparent);
+  color: var(--t-text);
 }
 .eyebrow {
   font-family: var(--font-ui);

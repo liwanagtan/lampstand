@@ -13,10 +13,21 @@ interface VerseOverlayProps {
   animate: boolean;
   /** Full screen draws this behind the verse (the Bible's backdrop); the template otherwise. */
   background?: Background;
+  /**
+   * Full screen without its own background, so only the words move or shrink (word study beside
+   * the verse); the screen's background shows through.
+   */
+  bare?: boolean;
 }
 
 /** The verse drawn over the slide in one of the three overlay modes (PRD §8 Verse overlays). */
-export function VerseOverlay({ overlay, template, animate, background }: VerseOverlayProps) {
+export function VerseOverlay({
+  overlay,
+  template,
+  animate,
+  background,
+  bare = false,
+}: VerseOverlayProps) {
   const { passage } = usePassage(overlay.ref, overlay.translation);
   const pages = usePages(passage, overlay.mode, template.id);
   if (!passage) return null;
@@ -35,14 +46,16 @@ export function VerseOverlay({ overlay, template, animate, background }: VerseOv
     // in quotes, and the reference beneath.
     const text = page?.segments.map((seg) => seg.text).join(' ') ?? '';
     return (
-      <div className={styles.full}>
-        <Backdrop
-          background={background}
-          template={template}
-          animate={animate}
-          showPlaceholder={false}
-        />
-        <div className={styles.cardScrim} aria-hidden />
+      <div className={bare ? styles.fullBare : styles.full}>
+        {!bare && (
+          <Backdrop
+            background={background}
+            template={template}
+            animate={animate}
+            showPlaceholder={false}
+          />
+        )}
+        {!bare && <div className={styles.cardScrim} aria-hidden />}
         <div
           key={`${passage.osis}-${passage.translation}-${index}`}
           className={`${s.content} ${s.start} ${styles.card}`}
@@ -63,13 +76,15 @@ export function VerseOverlay({ overlay, template, animate, background }: VerseOv
 
   if (overlay.mode === 'fullScreen') {
     return (
-      <div className={styles.full}>
-        <Backdrop
-          background={background}
-          template={template}
-          animate={animate}
-          showPlaceholder={false}
-        />
+      <div className={bare ? styles.fullBare : styles.full}>
+        {!bare && (
+          <Backdrop
+            background={background}
+            template={template}
+            animate={animate}
+            showPlaceholder={false}
+          />
+        )}
         <VerseBody
           key={`${passage.osis}-${passage.translation}-${index}`}
           className={`${s.content} ${s.start} ${s['stack-sm']}`}

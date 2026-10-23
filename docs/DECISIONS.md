@@ -305,3 +305,5 @@ At the owner's request the console's side panel is the chapter only (no Highligh
 ### 2026-10-24 — Show the Bible: full screen only, Live for highlighting, a Words column
 
 The owner simplified it further. The Bible goes on the TV full screen only; long passages page with arrows on Live. Every word on Live is clickable to highlight, with no mode switch. Word study moved off Live into a Words column (opened from Live's header) that works like Preview: choose a word, see its card in the column's preview, then Show on screen. Staging first means a word never reaches the TV by accident and the teacher can read it before the class does.
+
+Later the same day: the Words button moved to Preview's header, and opening the column narrows Live rather than Preview. On the TV the word no longer opens its own slide: it uses the side panel layout, so the verse's words ease to the left (the background picture stays full size) with the word lit up, and the word's panel slides in on the right. The verse never re-draws, so its highlights and page stay as they were.

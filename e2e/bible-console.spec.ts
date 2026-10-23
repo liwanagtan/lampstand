@@ -100,6 +100,17 @@ test('word study on the TV: choose a word, preview it, send it, take it off', as
   await words.getByRole('button', { name: 'Show John 3:16 in BSB' }).click();
   await expect(tv).toContainText('one and only Son');
 
+  // A picture behind the verses stays full size while a word is studied.
+  await page.keyboard.press('g');
+  await page.getByRole('button', { name: 'Choose…' }).click();
+  await page.getByRole('list', { name: 'Background library' }).getByRole('button').first().click();
+  await expect(tv.locator('img, video').first()).toBeVisible();
+  await page
+    .getByRole('dialog', { name: 'Background' })
+    .getByRole('button', { name: 'Close' })
+    .click();
+  await expect(page.getByRole('dialog')).toHaveCount(0);
+
   // Choose a word: the column previews its card; the TV doesn't change yet.
   const preview = words.locator('[data-pane="word-preview"]');
   await words
@@ -114,6 +125,11 @@ test('word study on the TV: choose a word, preview it, send it, take it off', as
   await words.getByRole('button', { name: /^Show on screen/ }).click();
   await expect(tv).toContainText('agapaō');
   await expect(tv).toContainText('Used in');
+  // The word is lit up in the verse on the TV and on Live.
+  await expect(tv.locator('[class*="emphasis"]').first()).toContainText('loved');
+  await expect(page.locator('[data-pane="live"] [class*="emphasis"]').first()).toContainText(
+    'loved',
+  );
   await page.screenshot({ path: 'test-results/console-words.png' });
   await output.screenshot({ path: 'test-results/word-study-tv.png' });
 

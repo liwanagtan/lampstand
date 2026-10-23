@@ -1,4 +1,9 @@
-/* Live's header: Words opens the Words column. */
+/* Preview's header: Words opens the Words column. */
+.previewMeta {
+  flex: 1;
+  min-width: 0;
+  text-align: right;
+}
 .liveTool {
   flex: none;
   display: inline-flex;
@@ -23,18 +28,15 @@
   color: var(--color-hero-text);
 }
 /*
- * With the Words column open: Preview and the chapter narrow to make room, so Live stays as
- * large as it can (Words is 340px wide, plus a gap).
+ * With the Words column open, Live gives up the room (Words is 340px wide, plus a gap); Preview
+ * and the chapter keep theirs.
  */
-.narrowSlim {
-  min-width: 240px;
-}
-/* Room for the button's name: Enter still sends it. */
-.narrowSlim kbd {
-  display: none;
-}
 .wideBesideWords {
-  width: min(calc(100cqw - 256px - 356px), calc((100cqh - 96px) * 16 / 9));
+  width: min(calc(100cqw - 336px - 356px), calc((100cqh - 96px) * 16 / 9));
+}
+/* Room for the dock's names in the narrower Live: the keys still work. */
+.wideBesideWords [role='toolbar'] kbd {
+  display: none;
 }
 /* Pages of a long passage, on Live itself. */
 .pager {

@@ -104,6 +104,7 @@ export function LiveScreen({ snapshot, fit = 'width', label, className }: LiveSc
     : { duration: sec(tokens.standard.duration * 2), ease: ease(tokens.slide.ease) };
 
   const side = overlay?.mode === 'sidePanel';
+  const studying = Boolean(overlay && live.word);
   const fullOverlay = overlay?.mode === 'fullScreen';
   const translation = snapshot.translation;
 
@@ -175,38 +176,47 @@ export function LiveScreen({ snapshot, fit = 'width', label, className }: LiveSc
               exit={overlayFrom(overlay.mode, reduced)}
               transition={overlayTransition}
             >
-              <FeatureBoundary name="Verse overlay" silent>
-                <VerseOverlay
-                  key={`${overlay.ref}|${overlay.translation}`}
-                  background={presentation ? undefined : (live.backdrop ?? undefined)}
-                  overlay={overlay}
-                  template={template}
-                  animate={overlayKey !== initial.overlay}
-                />
-              </FeatureBoundary>
+              {/* Word study: the verse eases to the left, as in the side panel layout. */}
+              <motion.div
+                className={styles.verseStage}
+                initial={false}
+                animate={{ scale: studying ? 1 - OVERLAY.sidePanelWidth : 1 }}
+                transition={overlayTransition}
+              >
+                <FeatureBoundary name="Verse overlay" silent>
+                  <VerseOverlay
+                    key={`${overlay.ref}|${overlay.translation}`}
+                    background={presentation ? undefined : (live.backdrop ?? undefined)}
+                    overlay={
+                      // The studied word is lit up in the verse too.
+                      studying && live.word
+                        ? { ...overlay, emphasis: [...(overlay.emphasis ?? []), live.word.text] }
+                        : overlay
+                    }
+                    template={template}
+                    animate={overlayKey !== initial.overlay}
+                    // Only the words shrink; the screen's background stays full size behind.
+                    bare={studying && !presentation}
+                  />
+                </FeatureBoundary>
+              </motion.div>
             </motion.div>
           )}
         </AnimatePresence>
 
-        {/* Word study: the verse and the word behind it, over the verse (Bible session). */}
+        {/* Word study: the word slides in on the right, like the verse side panel. */}
         <AnimatePresence>
-          {overlay && live.word && (
+          {studying && live.word && (
             <motion.div
               key="word"
               className={styles.overlayLayer}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
+              initial={initial.word === wordKey ? false : overlayFrom('sidePanel', reduced)}
+              animate={{ opacity: 1, x: 0 }}
+              exit={overlayFrom('sidePanel', reduced)}
               transition={overlayTransition}
             >
               <FeatureBoundary name="Word study" silent>
-                <WordStudyScreen
-                  word={live.word}
-                  translation={overlay.translation}
-                  template={template}
-                  background={presentation ? undefined : (live.backdrop ?? undefined)}
-                  animate={!reduced && initial.word !== wordKey}
-                />
+                <WordStudyScreen key={wordKey} word={live.word} />
               </FeatureBoundary>
             </motion.div>
           )}

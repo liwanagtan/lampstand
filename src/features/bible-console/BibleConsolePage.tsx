@@ -223,15 +223,25 @@ export function BibleConsolePage() {
       <main className={frame.main}>
         <section className={frame.stage} aria-label="Preview and live">
           <div className={frame.canvases}>
-            <div className={cx(frame.narrow, wordsOpen && styles.narrowSlim)}>
+            <div className={frame.narrow}>
               <div className={cx(frame.pane, frame.stack, frame.previewStack)}>
                 <div className={frame.paneHead}>
                   <h2 className={frame.paneTitle}>Preview</h2>
                   {preview && (
-                    <span className={frame.paneMeta}>
+                    <span className={cx(frame.paneMeta, styles.previewMeta)}>
                       {label(preview)} · {translation}
                     </span>
                   )}
+                  <Tooltip content="Study a word of the passage with the class">
+                    <button
+                      type="button"
+                      className={styles.liveTool}
+                      aria-pressed={wordsOpen}
+                      onClick={() => setWordsOpen((o) => !o)}
+                    >
+                      <Languages size={14} aria-hidden /> Words
+                    </button>
+                  </Tooltip>
                 </div>
                 <div className={frame.paneBody} data-pane="preview">
                   {preview ? (
@@ -297,22 +307,7 @@ export function BibleConsolePage() {
             )}
             <div className={cx(frame.wide, wordsOpen && styles.wideBesideWords)}>
               <div className={cx(frame.stack, frame.liveStack)}>
-                <LivePane
-                  meta={liveMeta}
-                  frozen={Boolean(frozen)}
-                  tools={
-                    <Tooltip content="Study a word of the passage with the class">
-                      <button
-                        type="button"
-                        className={styles.liveTool}
-                        aria-pressed={wordsOpen}
-                        onClick={() => setWordsOpen((o) => !o)}
-                      >
-                        <Languages size={14} aria-hidden /> Words
-                      </button>
-                    </Tooltip>
-                  }
-                >
+                <LivePane meta={liveMeta} frozen={Boolean(frozen)}>
                   {/* Click words on Live to light them up, but never while the TV is frozen. */}
                   <LiveTextContext.Provider value={frozen || !overlay ? null : liveText}>
                     <LiveScreen snapshot={frozen ?? snapshot} label="Live output" />

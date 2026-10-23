@@ -10,6 +10,12 @@
   inset: 0;
   background: var(--t-bg);
 }
+/* Full screen words only: the screen's own background shows behind them. */
+.fullBare {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+}
 .lowerThird {
   left: 0;
   right: 0;

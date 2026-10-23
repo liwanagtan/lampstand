@@ -9,8 +9,8 @@ For lessons, Sunday school and lectures. The Bible goes on the TV full screen on
 - **Highlight:** click any word on Live to light it up on the TV; click again to turn it off (up to 12). Clicks are off while the output is frozen.
 - **Pages:** a passage too long for one screen gets **‹ 1 / 3 ›** in Live's corner (→ and ← still step too).
 - **Background** is in the dock beside Blank and Logo (**G**).
-- **Words** in Live's header opens the Words column between Preview and Live (Preview narrows so Live stays large). Like Preview and Live, nothing reaches the TV until it's sent:
-  - At the top, a preview of the word card exactly as the TV will show it: the verse on the left in the translation on screen, with the word picked out, and a card with the original word, how it sounds, Hebrew or Greek and part of speech, the gloss, two short senses and how many verses use it.
+- **Words** in Preview's header opens the Words column between Preview and Live (Live narrows; Preview and the chapter keep their size). Like Preview and Live, nothing reaches the TV until it's sent:
+  - At the top, a preview of the TV with the word shown, in the side panel layout: the verse's words ease to the left (the background picture stays full size behind them) with the studied word lit up, and a panel slides in on the right with the original word, how it sounds, Hebrew or Greek and part of speech, the gloss, two short senses and how many verses use it. Taking the word off reverses it.
   - **Show on screen** (or **W**) sends it; **Take off screen** (or **W**) takes it off so the class can be asked first. **Previous** and **Next word** choose another word without touching the TV.
   - Below, the passage with its studyable words underlined (click one to choose it), and the entry for the teacher with every verse that uses the word, each with **Show** to put it on the TV.
   - Word links follow the BSB's wording, so with another translation on the TV the column offers **Show … in BSB** instead.

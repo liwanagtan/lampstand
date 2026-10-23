@@ -14,6 +14,8 @@ export interface ToastItem {
   action?: ToastAction;
   duration: number;
   tone: 'neutral' | 'success' | 'warning';
+  /** A notice nothing waits on: on phones it sits above the tab bar, clear of page headers. */
+  quiet?: boolean;
 }
 
 interface ToastState {

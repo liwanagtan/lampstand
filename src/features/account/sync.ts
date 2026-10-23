@@ -50,6 +50,7 @@ export const SYNCED_SETTINGS: readonly SettingKey[] = [
   'defaultTranslation',
   'reduceMotion',
   'classicDevotional',
+  'faithFoundations',
   'studyNotes',
   'insights',
   'defaultTheme',

@@ -109,5 +109,5 @@
 .mobileTabs button[aria-pressed='true'] {
   background: var(--color-surface);
   color: var(--color-text);
-  box-shadow: 0 1px 2px #0a0f1c14;
+  box-shadow: 0 1px 2px color-mix(in srgb, var(--palette-ink) 8%, transparent);
 }

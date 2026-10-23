@@ -1,0 +1,31 @@
+.offer {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  margin: var(--space-5) 0;
+  padding: var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+}
+.icon {
+  flex: none;
+  margin-top: 2px;
+  color: var(--color-accent-text);
+}
+.text {
+  display: grid;
+  flex: 1;
+  gap: var(--space-1);
+}
+.text strong {
+  font-size: var(--text-16);
+}
+.text span {
+  color: var(--color-text-muted);
+  font-size: var(--text-14);
+}
+.install {
+  justify-self: start;
+  margin-top: var(--space-2);
+}

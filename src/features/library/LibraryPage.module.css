@@ -52,7 +52,7 @@
   justify-content: center;
   gap: var(--space-2);
   background: rgb(0 0 0 / 0.45);
-  color: #fff;
+  color: var(--palette-white);
   font-weight: var(--weight-semibold);
   opacity: 0;
   transition: opacity var(--dur-quick) var(--ease-quick);
@@ -307,8 +307,8 @@
     height: 130px;
     margin-bottom: 16px;
     border-radius: 22px;
-    background: #000;
-    box-shadow: inset 0 0 0 1px #222a3b;
+    background: var(--palette-black);
+    box-shadow: inset 0 0 0 1px var(--palette-ink-border);
     overflow: hidden;
   }
   .empty {

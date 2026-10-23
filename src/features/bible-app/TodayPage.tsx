@@ -37,10 +37,10 @@ import { ContextPanel, ReflectPanel } from './TodayPanels';
 import { showOnTv } from './tvActions';
 import { FlameCompanion } from '@/design-system/FlameCompanion';
 import { ClassicDevotional } from './ClassicDevotional';
+import { InstallOffer } from './InstallOffer';
 import styles from './Today.module.css';
 import { useIsPhone } from '@/app/useIsPhone';
 import { paths } from '@/app/paths';
-import { faithJourneys } from '@/app/faithJourney';
 import { biblePosition, recentPlanDay } from './readingResume';
 import { track } from '@/features/insights/insights';
 import { SaveOffer } from '@/features/account/SaveOffer';
@@ -71,10 +71,8 @@ export function TodayPage() {
   const reduced = useReducedMotion();
   const name = useSettings((s) => s.profile.name.trim().split(/\s+/)[0] ?? '');
   const classic = useSettings((s) => s.classicDevotional);
-  const faithJourney = useSettings((s) => s.profile.faithJourney);
-  const showSalvation = faithJourneys(faithJourney).some(
-    (value) => value === 'exploring' || value === 'new',
-  );
+  // Shown to everyone; it can be turned off in Settings › Reading.
+  const showSalvation = useSettings((s) => s.faithFoundations);
   const phone = useIsPhone();
   const progress = usePlanProgress();
   const plans = usePlans();
@@ -133,6 +131,7 @@ export function TodayPage() {
                 </span>
               </Link>
             )}
+            <InstallOffer />
             {showSalvation && <SalvationInvitation />}
             <div className={styles.weekSlot}>
               <WeekStrip now={now} />
@@ -517,7 +516,7 @@ function TodayPlans() {
           <summary>Other reading plans ({active.length - 1})</summary>
           <div className={styles.otherPlansList}>
             {active.slice(1).map(({ plan, p }) => (
-              <ActivePlan key={plan.id} plan={plan} progress={p} compact />
+              <ActivePlan key={plan.id} plan={plan} progress={p} compact quiet />
             ))}
           </div>
         </details>

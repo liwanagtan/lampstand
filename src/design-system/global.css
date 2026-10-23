@@ -107,7 +107,7 @@ a {
   --color-border-strong: var(--color-stage-border);
   --color-text-faint: var(--color-stage-text-muted);
   --color-accent-text: var(--color-accent);
-  --color-accent-tint: #2a2416;
+  --color-accent-tint: var(--palette-gold-tint-dark);
   --color-hero: var(--color-stage-raised);
   --color-focus-ring: rgb(245 242 234 / 0.7);
   --color-overlay: rgb(5 7 10 / 0.6);

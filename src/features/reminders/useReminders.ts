@@ -2,7 +2,13 @@ import { useEffect } from 'react';
 import { formatRef } from '@/features/bible/ref';
 import { localDate, verseOfTheDay } from '@/features/bible-app/dailyVerses';
 import { useEntries } from '@/features/bible-app/journal';
-import { currentDay, isLessons, usePlanProgress, usePlans } from '@/features/bible-app/plans';
+import {
+  currentDay,
+  formatDay,
+  isLessons,
+  usePlanProgress,
+  usePlans,
+} from '@/features/bible-app/plans';
 import { useSettings } from '@/features/settings/settingsStore';
 import { setBackgroundCheck, showReminder } from './notify';
 import { nextReminderAt, readToday, reminderMessage } from './reminders';
@@ -33,14 +39,17 @@ export function useReminders(): void {
         else void set('reminders', { ...r, reading: { ...r.reading!, lastNotified: today } });
         if (readToday(progress, entries, today)) return;
         // Name the reading that's up next in the plan you touched most recently.
-        let next: { plan: string; label: string } | null = null;
+        let next: Parameters<typeof reminderMessage>[0] = null;
         for (const pr of [...progress].sort((a, b) => b.updatedAt - a.updatedAt)) {
           const plan = plans.find((p) => p.id === pr.planId);
           const status = plan && currentDay(plan, pr, now);
           if (plan && status?.kind === 'read') {
+            const day = plan.days[status.day - 1];
             next = {
               plan: plan.name,
               label: `${isLessons(plan) ? 'Lesson' : 'Day'} ${status.day}`,
+              passage: day && formatDay(day),
+              title: day?.title,
             };
             break;
           }

@@ -269,3 +269,23 @@ Accounts are switched off by default: `accountsConfigured` (src/features/account
 ### 2026-10-23 — Go deeper reverted
 
 The owner prefers Take five minutes and the Classic devotional as separate blocks, with the devotional's key verse, preview and Morning/Evening control on Today. The Go deeper card is removed; the labelled Copy button and the calmer day-done moment stay.
+
+### 2026-10-23 — Design refinements from the review
+
+- **Faith Foundations for everyone.** Understanding salvation shows on Today for every reader, not only those exploring or new to faith (the one-question Welcome set that rarely). Settings › Reading has a switch to hide it; it syncs and backs up like the Classic devotional.
+- **Journey's first days.** Until there are three days of reading or a finished plan, Journey shows one encouraging line instead of a summary of zeros and a mostly blank month. "Plans finished" appears only once one is.
+- **Text size everywhere is the growing-letters scale.** Settings › Reading uses the same stepper as the Reading sheet; no pixel numbers.
+- **Primary buttons.** Gold is your next step in the Word: read or continue a day, continue a chapter, start or revisit a plan, write a reflection. Dark confirms: save, done, finish a day, continue a form. One gold per screen; extra plans on Today step back to secondary.
+- **Search.** Each section of results has one icon beside its heading instead of an icon on every row; rows keep their own icon only where one section mixes kinds (your saved reflections, notes and marks). The same in the laptop quick search.
+- **Headings.** Section headings are sentence case; uppercase eyebrows stay for card labels.
+- **Colours on tokens.** The ~110 hex colours in CSS moved to `--color-*` (follows light and dark) or the new fixed `--palette-*` (ink, cream and gold on always-dark or always-gold surfaces, the highlight and avatar colours), from `palette` in `src/design-system/tokens.ts`. Stylelint rejects hex colours in CSS. The Faith Foundations cards and the salvation page now use the theme's warm tokens.
+- **PWA.** The phone status bar follows the screen: cream for the app, ink on the landing and Welcome. The "ready to work offline" notice sits above the tab bar on phones instead of over the page header (a new quiet toast). After the first finished plan reading, Today offers once to add Lampstand to the home screen: the install button where the browser allows it, Safari's two taps on iPhone.
+- **Habit.** Reminders name the passage and the day ("Psalm 1 is ready" / "Rooted like a tree · Day 1 of …"). A finished plan shows a keepsake: when you began and finished, and how many reflections you wrote.
+
+### 2026-10-23 — Updates found while the app stays open
+
+The update screen ("A new Lampstand is ready") never appeared after a deploy because the browser only looks for a new service worker when a page loads, and an installed app is usually resumed rather than reloaded. Lampstand now asks for one when it comes back to the foreground (at most once a minute), when the connection returns, and every 30 minutes while open (`src/app/pwa.ts`). `e2e/app-update.spec.ts` changes the served worker after the app opens and expects the update screen.
+
+### 2026-10-23 — Go to: testament tabs on phones
+
+The phone Go to sheet shows Old Testament and New Testament as tabs, opening on the one you are reading in, instead of two collapsing sections; Bookmarks sits beside them as an icon tab so both testament names fit on one line. The tabs stay at the top while a long list (Psalms' 150 chapters) scrolls. Recently read stays above. Laptops keep both testaments side by side. The chapter you are in is ink again (a later style had washed it out).

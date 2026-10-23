@@ -42,6 +42,13 @@
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: var(--space-4);
 }
+/* The Reading sheet's text-size stepper, labelled like the rows around it. */
+@media (max-width: 640px) {
+  .textSize > div > span:first-child {
+    font-size: var(--text-16);
+    font-weight: var(--weight-bold);
+  }
+}
 .row {
   display: flex;
   flex-wrap: wrap;
@@ -92,7 +99,7 @@
   aspect-ratio: 16 / 9;
   overflow: hidden;
   border-radius: var(--radius-md);
-  background: #000;
+  background: var(--palette-black);
 }
 .logoPreview img {
   max-width: 60%;
@@ -100,7 +107,7 @@
   object-fit: contain;
 }
 .logoMark {
-  color: #f5f2ea;
+  color: var(--palette-cream);
 }
 .table {
   min-width: 540px;
@@ -271,11 +278,9 @@
   }
   .sectionTitle {
     padding: 6px 4px 0;
-    font-size: var(--text-12);
+    font-size: var(--text-14);
     font-weight: var(--weight-bold);
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--color-accent-text);
+    color: var(--color-text-muted);
   }
   .sectionHead > .muted {
     display: none;

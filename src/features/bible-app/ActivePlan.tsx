@@ -19,11 +19,14 @@ export function ActivePlan({
   plan,
   progress,
   compact = false,
+  quiet = false,
   resumeDay,
 }: {
   plan: Plan;
   progress: PlanProgressRecord;
   compact?: boolean;
+  /** One of several on a screen: its button steps back so only one reading is gold. */
+  quiet?: boolean;
   resumeDay?: number;
 }) {
   const navigate = useNavigate();
@@ -118,7 +121,7 @@ export function ActivePlan({
           </p>
           <div className={styles.row}>
             <Button
-              variant={compact ? 'primary' : 'gold'}
+              variant={quiet ? 'secondary' : 'gold'}
               icon={<BookOpen size={16} />}
               onClick={() => navigate(paths.planDay(plan.id, status.day))}
             >

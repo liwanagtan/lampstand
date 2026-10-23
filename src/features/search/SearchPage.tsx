@@ -100,9 +100,8 @@ export function SearchPage() {
       )}
 
       {(filter === 'all' || filter === 'bible') && parsed?.ok && (
-        <Group title="Passage">
+        <Group title="Passage" icon={<BookOpen size={16} />}>
           <ResultButton
-            icon={<BookOpen size={16} />}
             title={formatRef(parsed.range)}
             detail={parsed.translation ? `Open in ${parsed.translation}` : 'Open in the Bible'}
             onClick={() => {
@@ -118,14 +117,17 @@ export function SearchPage() {
 
       {(filter === 'all' || filter === 'topics') &&
         topics.map((topic) => (
-          <Group key={topic.label} title={`Verses for ${topic.label.toLowerCase()}`}>
+          <Group
+            key={topic.label}
+            title={`Verses for ${topic.label.toLowerCase()}`}
+            icon={<Heart size={16} />}
+          >
             {topic.refs.map((osis) => {
               const r = fromOsis(osis);
               if (!r) return null;
               return (
                 <ResultButton
                   key={osis}
-                  icon={<Heart size={16} />}
                   title={formatRef(r)}
                   detail={<RefText osis={osis} translation={translation} />}
                   onClick={() => openInReader(r)}
@@ -136,7 +138,7 @@ export function SearchPage() {
         ))}
 
       {(filter === 'all' || filter === 'mine') && journey.length > 0 && (
-        <Group title="Saved reflections and verses">
+        <Group title="Saved reflections and verses" icon={<NotebookPen size={16} />}>
           {journey.map((i) =>
             isEntryItem(i) ? (
               <ResultButton
@@ -168,13 +170,10 @@ export function SearchPage() {
       )}
 
       {(filter === 'all' || filter === 'plans') && planHits.length > 0 && (
-        <Group title="Plans">
+        <Group title="Plans" icon={<CalendarCheck size={16} />}>
           {planHits.map((p) => (
             <li key={p.id}>
               <Link to={paths.planPage(p.id)} className={styles.result}>
-                <span className={styles.icon} aria-hidden>
-                  <CalendarCheck size={16} />
-                </span>
                 <span className={styles.text}>
                   <span className={styles.title}>{p.name}</span>
                   <span className={styles.detail}>{planMeta(p)}</span>
@@ -186,14 +185,13 @@ export function SearchPage() {
       )}
 
       {(filter === 'all' || filter === 'bible') && verses.length > 0 && (
-        <Group title={`Bible · ${translation}`}>
+        <Group title={`Bible · ${translation}`} icon={<BookOpen size={16} />}>
           {verses.map((h) => {
             const r = fromOsis(h.osis);
             if (!r) return null;
             return (
               <ResultButton
                 key={h.osis}
-                icon={<BookOpen size={16} />}
                 title={formatRef(r)}
                 detail={snippetRuns(highlightRuns(h.text, h.terms)).map((run, n) =>
                   run.hit ? <mark key={n}>{run.text}</mark> : <span key={n}>{run.text}</span>,
@@ -219,10 +217,24 @@ export function SearchPage() {
   );
 }
 
-function Group({ title, children }: { title: string; children: React.ReactNode }) {
+/** A section of results; its icon says what kind they are, so rows need none of their own. */
+function Group({
+  title,
+  icon,
+  children,
+}: {
+  title: string;
+  icon: React.ReactNode;
+  children: React.ReactNode;
+}) {
   return (
     <section className={styles.group} aria-label={title}>
-      <h2 className={styles.groupTitle}>{title}</h2>
+      <h2 className={styles.groupTitle}>
+        <span className={styles.groupIcon} aria-hidden>
+          {icon}
+        </span>
+        {title}
+      </h2>
       <ul className={styles.list}>{children}</ul>
     </section>
   );
@@ -234,7 +246,8 @@ function ResultButton({
   detail,
   onClick,
 }: {
-  icon: React.ReactNode;
+  /** Only where one section mixes kinds (your saved reflections, notes and marks). */
+  icon?: React.ReactNode;
   title: string;
   detail?: React.ReactNode;
   onClick: () => void;
@@ -242,9 +255,11 @@ function ResultButton({
   return (
     <li>
       <button type="button" className={styles.result} onClick={onClick}>
-        <span className={styles.icon} aria-hidden>
-          {icon}
-        </span>
+        {icon && (
+          <span className={styles.icon} aria-hidden>
+            {icon}
+          </span>
+        )}
         <span className={styles.text}>
           <span className={styles.title}>{title}</span>
           {detail && <span className={styles.detail}>{detail}</span>}

@@ -190,12 +190,12 @@
 .actions button svg { display: none; }
 .continue {
   width: min(220px, 58vw);
-  background: #f2b33d;
-  color: #0a0f1c;
+  background: var(--palette-gold);
+  color: var(--palette-ink);
 }
 .continue:hover:not(:disabled) {
-  background: #ffcb69;
-  color: #0a0f1c;
+  background: var(--palette-gold-bright);
+  color: var(--palette-ink);
 }
 .setupPage {
   grid-template-rows: minmax(0, 1fr);

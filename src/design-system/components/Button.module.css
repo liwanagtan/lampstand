@@ -57,14 +57,15 @@
   --button-primary-text: var(--color-accent-contrast);
 }
 
-/* The gold action: on hero cards and wherever the flame is the point (Reflect, Read day). */
+/* The rule (docs/DECISIONS.md 2026-10-23): gold is your next step in the Word — read, continue,
+   start a plan, reflect. Dark (primary) confirms — save, done, finish, continue a form. */
 .gold {
   background: var(--color-accent);
   color: var(--color-accent-contrast);
 }
 .gold:hover:not(:disabled),
 .gold[data-force='hover'] {
-  background: color-mix(in srgb, var(--color-accent) 86%, #fff);
+  background: color-mix(in srgb, var(--color-accent) 86%, var(--palette-white));
 }
 
 .secondary {

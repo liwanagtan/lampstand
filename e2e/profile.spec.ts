@@ -17,7 +17,7 @@ test('Profile greets you, opens on Journey, and keeps your plans and colour', as
     page.getByRole('link', { name: /Profile: your journey/ }).locator('[data-avatar-color]'),
   ).toHaveAttribute('data-avatar-color', 'sage');
 
-  // Start a plan; Journey shows it going, and the summary counts it.
+  // Start a plan; Journey shows it going. No summary of zeros yet, just one line.
   await page.getByRole('navigation', { name: 'Main' }).getByRole('link', { name: 'Plans' }).click();
   await page.getByLabel('Search plans').fill('anxiety');
   await page.getByRole('link', { name: 'When anxiety rises' }).first().click();
@@ -26,8 +26,8 @@ test('Profile greets you, opens on Journey, and keeps your plans and colour', as
   await page.getByRole('link', { name: /Profile: your journey/ }).click();
   await expect(page.getByRole('heading', { level: 1 })).toContainText('Ruth');
   await expect(page.getByText('1 plan going')).toBeVisible();
-  const summary = page.getByRole('region', { name: 'Your journey so far' });
-  await expect(summary).toContainText('Plans going1');
+  await expect(page.getByText('Your journey has begun.')).toBeVisible();
+  await expect(page.getByRole('region', { name: 'Your journey so far' })).toHaveCount(0);
   await expect(
     page
       .getByRole('region', { name: 'Your plans' })
@@ -55,8 +55,10 @@ test('an empty Journey has one welcome and one way to write', async ({ page }) =
     page.getByRole('dialog').getByRole('status').filter({ hasText: 'Saved' }),
   ).toBeVisible();
   await page.keyboard.press('Escape');
-  // Now the journal has an entry: New entry moves to its header, and the summary appears.
+  // Now the journal has an entry: New entry moves to its header, and one encouraging line
+  // stands in for the summary until there are a few days of reading.
   await expect(page.getByRole('button', { name: 'New entry' })).toHaveCount(1);
   await expect(page.getByRole('button', { name: 'Write your first entry' })).toHaveCount(0);
-  await expect(page.getByRole('region', { name: 'Your journey so far' })).toBeVisible();
+  await expect(page.getByText('You have read on one day. A good beginning.')).toBeVisible();
+  await expect(page.getByRole('region', { name: 'Your journey so far' })).toHaveCount(0);
 });

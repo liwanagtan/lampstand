@@ -13,11 +13,11 @@
   fill: var(--color-accent-soft);
 }
 .face {
-  fill: #0a0f1c;
+  fill: var(--palette-ink);
 }
 .line {
   fill: none;
-  stroke: #0a0f1c;
+  stroke: var(--palette-ink);
   stroke-width: 2.4;
   stroke-linecap: round;
 }

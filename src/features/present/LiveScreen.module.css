@@ -20,7 +20,7 @@
   z-index: 10;
   display: grid;
   place-items: center;
-  background: #000;
+  background: var(--palette-black);
 }
 .logoImage {
   max-width: 60%;
@@ -30,7 +30,7 @@
 .defaultLogo {
   display: grid;
   place-items: center;
-  color: #f5f2ea;
+  color: var(--palette-cream);
 }
 .defaultLogo span {
   color: var(--t-text);

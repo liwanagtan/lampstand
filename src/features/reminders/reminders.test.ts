@@ -31,6 +31,12 @@ describe('reading reminders', () => {
     expect(reminderMessage({ plan: 'Hope for hard days', label: 'Day 3' }, 'John 1:5').title).toBe(
       'Day 3 of Hope for hard days is ready',
     );
+    expect(
+      reminderMessage(
+        { plan: 'Psalms', label: 'Day 1', passage: 'Psalm 1', title: 'Rooted like a tree' },
+        'John 1:5',
+      ),
+    ).toEqual({ title: 'Psalm 1 is ready', body: 'Rooted like a tree · Day 1 of Psalms' });
     expect(reminderMessage(null, 'John 1:5').body).toContain('John 1:5');
   });
 

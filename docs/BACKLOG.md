@@ -20,6 +20,7 @@ Google sign-in is hidden for now (`docs/DECISIONS.md`, 2026-10-23). To turn it b
 - [ ] A week of daily reading on a phone: plan days, reflections, the Continue bar, resuming mid-chapter.
 - [ ] Reminders on a real device (Android installed PWA and iOS), including the evening reminder.
 - [ ] Install on Android and iOS; check the installed app signs in with Google and returns correctly.
+- [ ] On a phone: the status bar colour (cream app, ink landing and Welcome), the offline notice above the tab bar, and the one-time Add to Home Screen offer on Today after the first plan reading.
 - [ ] Teach one class on a TV from a laptop (Screen, Show the Bible, a presentation).
 - [ ] The 2-hour soak test on the church laptop (`npm run soak`).
 
@@ -28,18 +29,18 @@ Google sign-in is hidden for now (`docs/DECISIONS.md`, 2026-10-23). To turn it b
 In rough order of value (from the review's "Still to do").
 
 - [x] Today: labelled Copy on the verse card (done `3f4dba6`). The "Go deeper" card was tried and reverted at the owner's request: Take five minutes and the Classic devotional stay separate, the devotional in its fuller form.
-- [ ] **Faith Foundations:** it shows only when the faith journey includes exploring or new to faith. The new Welcome asks one "where to start" question, so fewer people get it; decide whether to show it more widely.
+- [x] **Faith Foundations:** now shows for everyone, with a switch in Settings › Reading (2026-10-23). Was: it shows only when the faith journey includes exploring or new to faith. The new Welcome asks one "where to start" question, so fewer people get it; decide whether to show it more widely.
 - [x] Day done: two choices and the next reading's title (done `3f4dba6`).
-- [ ] **Journey for new readers:** hide "0 Plans finished" and the month calendar until there is history; lead with the journal and one encouraging line.
-- [ ] **Settings › Reading:** text size still reads "20 px"; use the same growing-letters scale as the Reading sheet.
-- [ ] **Primary buttons:** decide the rule (proposal: gold means "your next step in the Word", dark means "confirm") and apply it everywhere.
-- [ ] **Search:** one icon per section heading instead of a heart on every result.
-- [ ] **Welcome:** "Exploring who Jesus is" and "Taking my first steps" share the subtitle "Understanding salvation, on Today"; give each its own line.
-- [ ] **Colour drift:** about 122 hard-coded hex colours in CSS; move them to tokens and add a stylelint rule like the type-scale rule.
-- [ ] **Eyebrows:** keep uppercase eyebrows for card labels only; section headings in sentence case.
-- [ ] **PWA polish:** `theme-color` per screen (dark landing and Welcome, cream app); move the "ready to work offline" toast off the top of the screen (it covers headers); offer Add to Home Screen after the first finished reading.
-- [ ] **Habit:** reminder text that names the reading ("Psalm 1 is ready: Rooted like a tree"); a quiet keepsake when a plan is finished.
-- [ ] **Today on laptop without a plan:** the main column holds only the verse card; consider moving Go deeper up beside it.
+- [x] **Journey for new readers:** (2026-10-23) hide "0 Plans finished" and the month calendar until there is history; lead with the journal and one encouraging line.
+- [x] **Settings › Reading:** (2026-10-23) text size still reads "20 px"; use the same growing-letters scale as the Reading sheet.
+- [x] **Primary buttons:** gold = next step in the Word, dark = confirm, applied (2026-10-23). Was: decide the rule (proposal: gold means "your next step in the Word", dark means "confirm") and apply it everywhere.
+- [x] **Search:** (2026-10-23) one icon per section heading instead of a heart on every result.
+- [x] **Welcome:** (2026-10-23) "Exploring who Jesus is" and "Taking my first steps" share the subtitle "Understanding salvation, on Today"; give each its own line.
+- [x] **Colour drift:** done with `--palette-*` tokens and a `color-no-hex` rule (2026-10-23). Was: about 122 hard-coded hex colours in CSS; move them to tokens and add a stylelint rule like the type-scale rule.
+- [x] **Eyebrows:** (2026-10-23) keep uppercase eyebrows for card labels only; section headings in sentence case.
+- [x] **PWA polish:** (2026-10-23; the install offer and status bar still need a check on a real phone) `theme-color` per screen (dark landing and Welcome, cream app); move the "ready to work offline" toast off the top of the screen (it covers headers); offer Add to Home Screen after the first finished reading.
+- [x] **Habit:** (2026-10-23) reminder text that names the reading ("Psalm 1 is ready: Rooted like a tree"); a quiet keepsake when a plan is finished.
+- [x] **Today on laptop without a plan:** no longer only the verse: Faith Foundations and the Classic devotional now sit in the main column for everyone (2026-10-23). Was: the main column holds only the verse card; consider moving Go deeper up beside it.
 
 ## 4. Things to watch
 

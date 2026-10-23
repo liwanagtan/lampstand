@@ -5,11 +5,9 @@
 }
 .heading {
   margin-bottom: var(--space-2);
-  font-size: var(--text-12);
+  font-size: var(--text-14);
   font-weight: var(--weight-bold);
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--color-accent-text);
+  color: var(--color-text-muted);
 }
 .books {
   display: grid;
@@ -46,7 +44,8 @@
   background: var(--color-text);
   color: var(--color-bg);
 }
-.current,
+.book.current,
+.chapter.current,
 .current:hover {
   background: var(--color-text);
   color: var(--color-bg);
@@ -145,7 +144,6 @@
   font-weight: 700;
   cursor: pointer;
 }
-.testamentButton,
 .bookRow {
   display: flex;
   width: 100%;
@@ -159,19 +157,31 @@
   text-align: left;
   cursor: pointer;
 }
-.testamentButton strong,
 .bookRow span {
   flex: 1;
 }
-.testamentButton span,
 .bookRow small {
   color: var(--color-text-muted);
   font-size: var(--text-12);
 }
+/* The testament tabs stay in reach while a long book list scrolls under them; Bookmarks is an
+   icon so both testaments keep their full names on one line. */
+.mobileBooks [role='tablist'] {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  box-shadow: 0 0 0 8px var(--color-surface);
+}
+.mobileBooks [role='tab'] {
+  white-space: nowrap;
+}
+.mobileBooks [role='tab'][aria-controls$='bookmarks'] {
+  flex: 0 0 52px;
+}
 .mobileBookList {
   list-style: none;
   padding: 0;
-  margin: 0;
+  margin: var(--space-2) 0 0;
 }
 .bookRow {
   min-height: 48px;

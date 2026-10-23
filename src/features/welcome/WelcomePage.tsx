@@ -12,7 +12,11 @@ import { markOnboarded } from '@/app/onboarding';
 import { builtinPlans, startPlan } from '@/features/bible-app/plans';
 import { useAccount } from '@/features/account/accountStore';
 import { useSettings } from '@/features/settings/settingsStore';
-import { useApplyDocumentTheme, useReducedMotion } from '@/features/settings/theme';
+import {
+  useApplyDocumentTheme,
+  useReducedMotion,
+  useStatusBarColor,
+} from '@/features/settings/theme';
 import styles from './WelcomePage.module.css';
 import { colors } from '@/design-system/tokens';
 import { track } from '@/features/insights/insights';
@@ -34,6 +38,10 @@ const STARTS: readonly { journey: FaithJourney; title: string }[] = [
 ];
 // Someone exploring or new to faith begins with Understanding salvation on Today, not a plan.
 const SALVATION_FIRST: ReadonlySet<FaithJourney> = new Set(['exploring', 'new']);
+const SALVATION_DETAIL: Partial<Record<FaithJourney, string>> = {
+  exploring: 'Who Jesus is and why he came',
+  new: 'The good news, one step at a time',
+};
 const VERSE_ONLY = 'verse';
 // Long enough to meet the flame and see what is being prepared.
 const SETUP_DURATION_MS = 5000;
@@ -52,6 +60,7 @@ function googleFirstName(meta: Record<string, unknown> | undefined): string {
  */
 export function WelcomePage() {
   useApplyDocumentTheme();
+  useStatusBarColor(colors.dark.bg);
   const navigate = useNavigate();
   const reduced = useReducedMotion();
   const googleName = useAccount((s) => googleFirstName(s.user?.user_metadata));
@@ -239,7 +248,7 @@ export function WelcomePage() {
                 {STARTS.flatMap(({ journey, title }) => {
                   const id = startPlanId(journey);
                   const detail = SALVATION_FIRST.has(journey)
-                    ? 'Understanding salvation, on Today'
+                    ? SALVATION_DETAIL[journey]
                     : id && plansById.get(id)!.name;
                   return detail
                     ? [

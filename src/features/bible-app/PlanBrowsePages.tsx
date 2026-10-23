@@ -199,7 +199,7 @@ export function PlanPage() {
                 aria-label="Plan progress"
               />
               {next && (
-                <Button variant="primary" onClick={() => navigate(paths.planDay(plan.id, next))}>
+                <Button variant="gold" onClick={() => navigate(paths.planDay(plan.id, next))}>
                   Read {unit.toLowerCase()} {next} · {formatDay(plan.days[next - 1]!)}
                 </Button>
               )}
@@ -220,7 +220,7 @@ export function PlanPage() {
           <div className={styles.startArea}>
             <div className={styles.startRow}>
               <Button
-                variant="primary"
+                variant="gold"
                 icon={<Play size={16} />}
                 onClick={() => (activeCount >= 2 ? setStartAdviceOpen(true) : begin())}
                 disabled={allPlans === undefined || allProgress === undefined}

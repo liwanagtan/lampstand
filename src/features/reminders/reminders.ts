@@ -30,11 +30,19 @@ export function nextReminderAt(
   return at.getTime() >= now.getTime() ? at.getTime() : null;
 }
 
-/** The reminder's words: your plan's next reading if one is going, else the verse of the day. */
-export function reminderMessage(next: { plan: string; label: string } | null, verse: string) {
-  return next
-    ? { title: `${next.label} of ${next.plan} is ready`, body: 'A few quiet minutes in the Word.' }
-    : { title: 'Time for today’s reading', body: `Today’s verse: ${verse}` };
+/**
+ * The reminder's words: the passage that's up next in your plan, with the day's title ("Psalm 1
+ * is ready" / "Rooted like a tree · Day 1 of …"), else the verse of the day.
+ */
+export function reminderMessage(
+  next: { plan: string; label: string; passage?: string; title?: string } | null,
+  verse: string,
+) {
+  if (!next) return { title: 'Time for today’s reading', body: `Today’s verse: ${verse}` };
+  const where = `${next.label} of ${next.plan}`;
+  return next.passage
+    ? { title: `${next.passage} is ready`, body: next.title ? `${next.title} · ${where}` : where }
+    : { title: `${where} is ready`, body: 'A few quiet minutes in the Word.' };
 }
 
 /** "07:30" → "7:30 AM" in the person's locale. */

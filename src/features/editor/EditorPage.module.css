@@ -140,7 +140,7 @@
   height: 20px;
   border-radius: 50%;
   background: var(--color-warning);
-  color: #1a1305;
+  color: var(--color-accent-contrast);
 }
 .addRow {
   padding: var(--space-3);

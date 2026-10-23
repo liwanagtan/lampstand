@@ -1,6 +1,6 @@
 import type { PassageVerse } from '@/features/bible/passage';
 import { TYPE } from '@/templates/metrics';
-import { approxMeasure, countLines, paginate, verseBox } from './paginate';
+import { BIBLE_LAYOUT, approxMeasure, countLines, paginate, verseBox } from './paginate';
 
 function verses(n: number, words = 20): PassageVerse[] {
   return Array.from({ length: n }, (_, i) => ({
@@ -59,5 +59,33 @@ describe('paginate', () => {
         countLines(text, box.width, p.size, approxMeasure) * p.size * 1.35,
       ).toBeLessThanOrEqual(box.height);
     }
+  });
+});
+
+describe('paginate for Show the Bible (a verse per line, whole verses)', () => {
+  it('never cuts a verse across pages, even one too long for a page', () => {
+    const input = [
+      ...verses(3),
+      ...verses(1, 400).map((v) => ({ ...v, verse: 4, osis: 'PSA.119.4' })),
+    ];
+    const pages = paginate(input, verseBox('fullScreen'), approxMeasure, BIBLE_LAYOUT);
+    const segments = pages.flatMap((p) => p.segments);
+    // Each verse appears once, whole, with its number.
+    expect(segments.map((s) => s.verse)).toEqual([1, 2, 3, 4]);
+    expect(segments.every((s) => s.showNumber)).toBe(true);
+    expect(segments.map((s) => s.text)).toEqual(input.map((v) => v.text));
+    // The long verse has a page of its own, smaller.
+    const last = pages[pages.length - 1]!;
+    expect(last.segments.map((s) => s.verse)).toEqual([4]);
+    expect(last.size).toBeLessThan(TYPE.minimumBody);
+  });
+
+  it('allows for each verse starting a new line', () => {
+    const input = verses(12, 6);
+    const flowing = paginate(input, verseBox('fullScreen'), approxMeasure);
+    const lines = paginate(input, verseBox('fullScreen'), approxMeasure, BIBLE_LAYOUT);
+    const size = (p: typeof lines) => p.reduce((n, page) => n + page.size, 0) / p.length;
+    // Short verses on their own lines take more room: more pages, or smaller type.
+    expect(lines.length > flowing.length || size(lines) < size(flowing)).toBe(true);
   });
 });

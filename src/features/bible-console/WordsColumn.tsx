@@ -114,7 +114,15 @@ function PassageWords({ snapshot, ref_ }: { snapshot: LiveSnapshot; ref_: string
             label={`Word preview: ${staged.text}`}
           />
         ) : (
-          <div className={frame.endCard}>Choose a word below</div>
+          // What the column is for, until a word is chosen.
+          <div className={styles.intro}>
+            <strong>Teach the meaning behind a word.</strong>
+            <span>
+              Underlined words have a Hebrew or Greek entry. Click one on Live to put it beside the
+              verse on the TV straight away, or choose one below to preview it here first, then Show
+              on screen (W).
+            </span>
+          </div>
         )}
       </div>
       <div className={frame.sendRow}>

@@ -90,10 +90,64 @@ export type DockProps = {
   onBackground?: () => void;
   /** Overlay layouts (lower third, side panel…); the Bible console is full screen only. */
   modes?: boolean;
+  /** Controls before Blank (the Bible console's page buttons). */
+  before?: ReactNode;
 };
 
 /** Screen and verse actions in a compact column under Preview (each shows its key). */
 export function Dock(p: DockProps) {
+  if (p.modes === false)
+    // The Bible console: one row of buttons sized to their names, in groups.
+    return (
+      <div
+        className={cx(styles.dock, styles.dockRow)}
+        role="toolbar"
+        aria-label="Presentation controls"
+      >
+        {p.before && (
+          <>
+            {p.before}
+            <span className={styles.dockDivider} aria-hidden />
+          </>
+        )}
+        <DockButton
+          label="Blank"
+          keys="B"
+          active={p.screen === 'blank'}
+          onClick={() => p.onScreen('blank')}
+        />
+        <DockButton
+          label="Logo"
+          keys="L"
+          active={p.screen === 'logo'}
+          onClick={() => p.onScreen('logo')}
+        />
+        <DockButton
+          label={p.frozen ? 'Unfreeze' : 'Freeze'}
+          keys="F"
+          active={p.frozen}
+          onClick={p.onFreeze}
+        />
+        {p.onBackground && (
+          <DockButton
+            label="Background"
+            title="Background behind the verses"
+            keys="G"
+            icon={<ImageIcon size={16} />}
+            onClick={p.onBackground}
+          />
+        )}
+        <span className={styles.dockDivider} aria-hidden />
+        <DockButton
+          label="Clear"
+          title="Clear verse"
+          keys="Esc"
+          icon={<X size={16} />}
+          onClick={p.onClear}
+          disabled={!p.hasOverlay}
+        />
+      </div>
+    );
   return (
     <div className={styles.dock} role="toolbar" aria-label="Presentation controls">
       <DockGroup label="Screen" className={styles.gridTwo}>
@@ -123,18 +177,9 @@ export function Dock(p: DockProps) {
           active={p.frozen}
           onClick={p.onFreeze}
         />
-        {p.onBackground && (
-          <DockButton
-            label="Background"
-            title="Background behind the verses"
-            keys="G"
-            icon={<ImageIcon size={16} />}
-            onClick={p.onBackground}
-          />
-        )}
       </DockGroup>
-      <DockGroup label="Verse" className={p.modes === false ? undefined : styles.verseRow}>
-        {p.modes !== false && <OverlayModes mode={p.mode} onChange={p.onMode} />}
+      <DockGroup label="Verse" className={styles.verseRow}>
+        <OverlayModes mode={p.mode} onChange={p.onMode} />
         <DockButton
           label="Clear"
           title="Clear verse"
@@ -142,7 +187,7 @@ export function Dock(p: DockProps) {
           icon={<X size={16} />}
           onClick={p.onClear}
           disabled={!p.hasOverlay}
-          iconOnly={p.modes !== false}
+          iconOnly
         />
       </DockGroup>
     </div>

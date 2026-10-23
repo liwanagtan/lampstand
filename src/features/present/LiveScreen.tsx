@@ -128,6 +128,7 @@ export function LiveScreen({ snapshot, fit = 'width', label, className }: LiveSc
               template={template}
               animate={!reduced}
               showPlaceholder={false}
+              strong
             />
           </div>
         )}
@@ -199,6 +200,8 @@ export function LiveScreen({ snapshot, fit = 'width', label, className }: LiveSc
                       animate={overlayKey !== initial.overlay}
                       // Only the words shrink; the screen's background stays full size behind.
                       bare={studying && !presentation}
+                      // Show the Bible: the reader's serif, a verse per line, whole verses.
+                      bible={!presentation}
                     />
                   </MaybeStudyMarks>
                 </FeatureBoundary>

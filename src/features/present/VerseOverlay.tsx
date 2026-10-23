@@ -18,6 +18,8 @@ interface VerseOverlayProps {
    * the verse); the screen's background shows through.
    */
   bare?: boolean;
+  /** Show the Bible: the reader's serif, a verse per line, whole verses only. */
+  bible?: boolean;
 }
 
 /** The verse drawn over the slide in one of the three overlay modes (PRD §8 Verse overlays). */
@@ -27,9 +29,10 @@ export function VerseOverlay({
   animate,
   background,
   bare = false,
+  bible = false,
 }: VerseOverlayProps) {
   const { passage } = usePassage(overlay.ref, overlay.translation);
-  const pages = usePages(passage, overlay.mode, template.id);
+  const pages = usePages(passage, overlay.mode, template.id, bible);
   if (!passage) return null;
   const index = Math.min(overlay.page, Math.max(pages.length - 1, 0));
   const page = pages[index];
@@ -53,6 +56,7 @@ export function VerseOverlay({
             template={template}
             animate={animate}
             showPlaceholder={false}
+            strong={bible}
           />
         )}
         {!bare && <div className={styles.cardScrim} aria-hidden />}
@@ -83,6 +87,7 @@ export function VerseOverlay({
             template={template}
             animate={animate}
             showPlaceholder={false}
+            strong={bible}
           />
         )}
         <VerseBody
@@ -92,6 +97,7 @@ export function VerseOverlay({
           page={page}
           emphasis={overlay.emphasis}
           animate={animate}
+          bible={bible}
         />
         {pages.length > 1 && (
           <p className={s.pageIndicator}>
@@ -113,6 +119,7 @@ export function VerseOverlay({
             page={page}
             emphasis={overlay.emphasis}
             animate={animate}
+            bible={bible}
           />
           {indicator}
         </div>
@@ -129,6 +136,7 @@ export function VerseOverlay({
         page={page}
         emphasis={overlay.emphasis}
         animate={animate}
+        bible={bible}
       />
       {indicator}
     </div>

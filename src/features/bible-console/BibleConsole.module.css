@@ -38,26 +38,11 @@
 .wideBesideWords [role='toolbar'] kbd {
   display: none;
 }
-/* Pages of a long passage, on Live itself. */
-.pager {
-  position: absolute;
-  right: 10px;
-  bottom: 10px;
-  z-index: 2;
+/* Pages of a long passage, at the start of the dock. */
+.pages {
   display: flex;
   align-items: center;
-  gap: 2px;
-  padding: 2px;
-  border-radius: 999px;
-  background: var(--color-surface);
-  box-shadow: var(--elevation-2);
-}
-.pagerCount {
-  min-width: 40px;
-  font-size: var(--text-12);
-  font-weight: var(--weight-semibold);
-  font-variant-numeric: tabular-nums;
-  text-align: center;
+  gap: var(--space-1);
 }
 
 /* Chapter picker */
@@ -104,11 +89,9 @@
 .selected:hover {
   background: color-mix(in srgb, var(--color-accent) 18%, transparent);
 }
+/* The verse on the TV: its number turns red (no border beside selected or live verses). */
 .live .num {
   color: var(--color-live);
-}
-.live {
-  box-shadow: inset 2px 0 0 var(--color-live);
 }
 .num {
   padding-top: 3px;

@@ -599,6 +599,39 @@
   padding: 0 6px 0 var(--space-3);
 }
 
+/* The Bible console's dock: one row, buttons sized to their names, groups set apart. */
+.dock.dockRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1);
+}
+.dockRow > * {
+  flex: none;
+}
+.dockRow .dockButton {
+  justify-content: center;
+  gap: 6px;
+  padding: 0 var(--space-2) 0 var(--space-3);
+}
+.dockRow .dockIconOnly {
+  padding: 0 var(--space-2);
+}
+.dockDivider {
+  align-self: stretch;
+  width: 1px;
+  margin: 6px var(--space-1);
+  background: var(--color-border);
+}
+.dockPages {
+  min-width: 44px;
+  font-size: var(--text-12);
+  font-weight: var(--weight-semibold);
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+  color: var(--color-text-muted);
+}
+
 /* Ink workspaces and rounded controls, with Preview/Live semantics preserved. */
 .top {
   min-height: 72px;

@@ -158,17 +158,22 @@
   position: absolute;
   inset: -14px -6px;
 }
-/* Word study: studyable words underlined, the word on screen boxed (not the highlight gold). */
+/*
+ * Word study: studyable words get a quiet dotted underline in the text's own colour, as in the
+ * Bible reader; the word on screen is boxed (not the highlight gold).
+ */
 .study {
-  text-decoration: underline solid var(--t-accent);
-  text-decoration-thickness: 4px;
-  text-underline-offset: 0.2em;
-  text-decoration-skip-ink: none;
+  text-decoration: underline dotted color-mix(in srgb, currentColor 55%, transparent);
+  text-decoration-thickness: 3px;
+  text-underline-offset: 0.22em;
 }
+/* One box around the whole word, even across a line break. */
 .studyActive {
-  border-radius: 8px;
+  padding: 0 0.12em;
+  border-radius: 0.18em;
   background: color-mix(in srgb, var(--t-accent) 30%, transparent);
-  box-shadow: 0 0 0 6px color-mix(in srgb, var(--t-accent) 30%, transparent);
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
 }
 .liveWord:hover {
   background: rgb(255 255 255 / 0.16);

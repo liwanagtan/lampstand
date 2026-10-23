@@ -100,7 +100,14 @@ export const useControl = create<ControlState>((set, get) => {
 
   const refreshOverlayPages = async (overlay: LiveOverlay | null) => {
     if (!overlay) return 1;
-    const n = await countPages(overlay.ref, overlay.translation, overlay.mode, get().live.theme);
+    // Show the Bible (no presentation) lays verses out its own way: count pages the same way.
+    const n = await countPages(
+      overlay.ref,
+      overlay.translation,
+      overlay.mode,
+      get().live.theme,
+      !get().presentation,
+    );
     set({ overlayPageCount: n });
     return n;
   };

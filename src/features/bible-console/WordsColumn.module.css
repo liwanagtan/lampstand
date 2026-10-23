@@ -8,6 +8,24 @@
 .preview {
   flex: none;
 }
+/* What the column is for, in the preview until a word is chosen. */
+.intro {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--space-2);
+  aspect-ratio: 16 / 9;
+  padding: var(--space-4) var(--space-5);
+  background: var(--color-surface);
+  font-size: var(--text-12);
+  line-height: 1.5;
+  color: var(--color-text-muted);
+}
+.intro strong {
+  font-size: var(--text-14);
+  font-weight: var(--weight-semibold);
+  color: var(--color-text);
+}
 .hint {
   padding: var(--space-3) 0;
   font-size: var(--text-14);

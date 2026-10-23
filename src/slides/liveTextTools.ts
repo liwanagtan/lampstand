@@ -10,6 +10,8 @@ import { splitEmphasis } from './emphasis';
 export interface LiveTextTools {
   /** Light a word up on the TV, or turn it off. */
   onHighlight: (word: string) => void;
+  /** While word study is open: put an underlined word on the TV beside the verse. */
+  onStudy?: (osis: string, strong: number, text: string) => void;
 }
 
 export const LiveTextContext = createContext<LiveTextTools | null>(null);

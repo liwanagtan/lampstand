@@ -9,6 +9,7 @@ export const SHORTCUTS: { keys: string[]; action: string }[] = [
   { keys: ['Ctrl+Enter'], action: 'Add verse to the queue (in the bar)' },
   { keys: ['Esc'], action: 'Hide the studied word, then clear the overlay (or close the bar)' },
   { keys: ['W'], action: 'Hide or show the studied word (Show the Bible)' },
+  { keys: ['[', ']'], action: 'Previous / next page of a long passage (Show the Bible)' },
   { keys: ['1', '2', '3', '4'], action: 'Lower third / side panel / full screen / popup' },
   { keys: ['Alt+→', 'Alt+←'], action: 'Next / previous verse or page' },
   { keys: ['T'], action: 'Cycle translation on the live verse' },

@@ -4,7 +4,7 @@ import { splitEmphasis } from './emphasis';
 import { LiveText } from './LiveText';
 import { useLiveText, useStudyMarks } from './liveTextTools';
 import { isReducedMotion, revealBlock } from './motion';
-import type { Page } from './paginate';
+import { VERSE_GAP, type Page } from './paginate';
 import s from './Slide.module.css';
 
 export interface VerseBodyProps {
@@ -15,6 +15,8 @@ export interface VerseBodyProps {
   className?: string;
   /** Reference and text sizes can be overridden by overlays. */
   style?: CSSProperties;
+  /** Show the Bible: the reader's serif (not the theme's body font), a verse per line. */
+  bible?: boolean;
 }
 
 /** Reference in the accent color above the verse text (PRD §8), with the verse moment motion (§9). */
@@ -25,6 +27,7 @@ export function VerseBody({
   animate,
   className,
   style,
+  bible = false,
 }: VerseBodyProps) {
   const refEl = useRef<HTMLParagraphElement>(null);
   const textEl = useRef<HTMLParagraphElement>(null);
@@ -58,9 +61,22 @@ export function VerseBody({
       <p ref={refEl} className={s.reference}>
         {reference}
       </p>
-      <p ref={textEl} className={s.verseText} style={page ? { fontSize: page.size } : undefined}>
+      <p
+        ref={textEl}
+        className={s.verseText}
+        style={{
+          ...(page ? { fontSize: page.size } : {}),
+          ...(bible ? { fontFamily: 'var(--font-display)' } : {}),
+        }}
+      >
         {page?.segments.map((seg, i) => (
-          <span key={`${seg.osis}-${i}`}>
+          <span
+            key={`${seg.osis}-${i}`}
+            // A verse per line, with the gap paginate allows for (VERSE_GAP).
+            style={
+              bible ? { display: 'block', marginTop: i ? `${VERSE_GAP}em` : undefined } : undefined
+            }
+          >
             {seg.showNumber && <sup className={s.verseNum}>{seg.verse}</sup>}
             {seg.missing ? (
               <span className={s.missing}>{seg.text}</span>
@@ -84,7 +100,7 @@ export function VerseBody({
                 ),
               )
             )}
-            {i < page.segments.length - 1 ? ' ' : ''}
+            {!bible && i < page.segments.length - 1 ? ' ' : ''}
           </span>
         ))}
       </p>

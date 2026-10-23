@@ -69,16 +69,22 @@ test('Bible console: preview, show, step, highlight, blank and the passage queue
   await page.getByLabel('Search the Bible').fill('ps 119 1-40');
   await page.keyboard.press('Enter');
   await page.getByRole('button', { name: 'Show on screen' }).click();
+  // Its page buttons sit in the dock, before Blank, only while the passage has pages.
   const pager = page.getByRole('group', { name: 'Pages of the passage' });
-  await expect(pager).toContainText(/^1 \/ \d/);
-  await pager.getByRole('button', { name: 'Next page' }).click();
-  await expect(pager).toContainText(/^2 \/ \d/);
+  await expect(pager).toContainText(/1 \/ \d/);
+  await pager.getByRole('button', { name: /Next page/ }).click();
+  await expect(pager).toContainText(/2 \/ \d/);
   await page.screenshot({ path: 'test-results/console-pages.png' });
-  await pager.getByRole('button', { name: 'Previous page' }).click();
-  await expect(pager).toContainText(/^1 \/ \d/);
+  await page.keyboard.press('[');
+  await expect(pager).toContainText(/1 \/ \d/);
+  await page.keyboard.press(']');
+  await expect(pager).toContainText(/2 \/ \d/);
+  // Each verse is whole on its page, on its own line.
+  await expect(tv.locator('p').filter({ hasText: /\d/ }).first()).toBeVisible();
 
   await page.keyboard.press('Escape');
   await expect(page.getByText('Nothing on screen')).toBeVisible();
+  await expect(pager).toHaveCount(0);
 });
 
 test('word study on the TV: choose a word, preview it, send it, take it off', async ({ page }) => {
@@ -150,6 +156,17 @@ test('word study on the TV: choose a word, preview it, send it, take it off', as
   await expect(tv).toContainText('agapaō');
   await words.getByRole('button', { name: /^Show on screen/ }).click();
   await expect(tv).toContainText('kosmos');
+
+  // Clicking an underlined word on Live puts it on the TV at once, and Words follows.
+  await page.locator('[data-pane="live"] [data-live-study="one and only"]').click();
+  await expect(tv).toContainText('monogenēs');
+  await expect(preview).toContainText('monogenēs');
+  // A word of several words is one box on the TV.
+  await expect(tv.locator('[class*="studyActive"]')).toHaveText('one and only');
+  await page.screenshot({ path: 'test-results/console-words-live.png' });
+  // A word without an entry still lights up gold.
+  await page.locator('[data-pane="live"] [data-live-word="so"]').first().click();
+  await expect(tv.locator('[class*="emphasis"]').first()).toHaveText('so');
 
   // Another verse that uses it goes on the TV, and the word is put away with the old verse.
   await words

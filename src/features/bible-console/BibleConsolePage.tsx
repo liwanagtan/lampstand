@@ -53,7 +53,7 @@ import frame from '@/features/present/PresentPage.module.css';
 import { LiveTextContext, type LiveTextTools } from '@/slides/liveTextTools';
 import { BackgroundControl } from './TvTools';
 import { WordsColumn } from './WordsColumn';
-import { EMPHASIS_MAX, toggleWord } from './wordOnTv';
+import { EMPHASIS_MAX, showWord, toggleWord } from './wordOnTv';
 
 /** The Bible goes on the TV full screen only. */
 const FULL = 'fullScreen' as const;
@@ -112,6 +112,10 @@ export function BibleConsolePage() {
       }
       control().dispatch({ type: 'overlayEmphasis', emphasis: next });
     },
+    // With Words open, an underlined word on Live goes straight on the TV (and into Words).
+    onStudy: wordsOpen
+      ? (osis, strong, text) => showWord({ strong, verse: osis, text })
+      : undefined,
   };
 
   const preview = selection ? toOsis(selectionRange(book, chapter, selection)) : null;
@@ -123,6 +127,10 @@ export function BibleConsolePage() {
     setExitOpen(false);
     control().setPresenting(false);
     closeOutput();
+  };
+  /** The previous or next page of the passage on the TV. */
+  const page = (delta: 1 | -1) => {
+    if (!control().frozen) control().dispatch({ type: 'overlayPage', delta });
   };
   const requestExit = () => (control().output === 'connected' ? setExitOpen(true) : exit());
   /** ↑ ↓ move the preview one verse within the chapter. */
@@ -148,6 +156,9 @@ export function BibleConsolePage() {
       control().dispatch(control().live.word ? { type: 'hideWord' } : { type: 'clearOverlay' }),
     // W sends the word chosen in Words, or takes it off the TV.
     w: toggleWord,
+    // [ and ] turn the pages of a long passage (→ and ← go on to the next verse after the last).
+    '[': () => page(-1),
+    ']': () => page(1),
     g: () => setBackgroundOpen(true),
     b: () => control().toggleScreen('blank'),
     l: () => control().toggleScreen('logo'),
@@ -315,27 +326,6 @@ export function BibleConsolePage() {
                   <LiveTextContext.Provider value={frozen || !overlay ? null : liveText}>
                     <LiveScreen snapshot={frozen ?? snapshot} label="Live output" />
                   </LiveTextContext.Provider>
-                  {overlay && pages > 1 && !frozen && (
-                    <div className={styles.pager} role="group" aria-label="Pages of the passage">
-                      <IconButton
-                        label="Previous page"
-                        icon={<ChevronLeft size={16} />}
-                        size="sm"
-                        onClick={() => control().dispatch({ type: 'overlayPage', delta: -1 })}
-                        disabled={overlay.page === 0}
-                      />
-                      <span className={styles.pagerCount}>
-                        {overlay.page + 1} / {pages}
-                      </span>
-                      <IconButton
-                        label="Next page"
-                        icon={<ChevronRight size={16} />}
-                        size="sm"
-                        onClick={() => control().dispatch({ type: 'overlayPage', delta: 1 })}
-                        disabled={overlay.page >= pages - 1}
-                      />
-                    </div>
-                  )}
                 </LivePane>
                 <Dock
                   sermon={false}
@@ -349,6 +339,32 @@ export function BibleConsolePage() {
                   onMode={() => undefined}
                   onClear={() => control().dispatch({ type: 'clearOverlay' })}
                   onBackground={() => setBackgroundOpen(true)}
+                  before={
+                    // Pages of a passage too long for one screen, only when it has them.
+                    overlay && pages > 1 ? (
+                      <div className={styles.pages} role="group" aria-label="Pages of the passage">
+                        <DockButton
+                          label="Previous page"
+                          keys="["
+                          icon={<ChevronLeft size={16} />}
+                          onClick={() => page(-1)}
+                          disabled={overlay.page === 0 || Boolean(frozen)}
+                          iconOnly
+                        />
+                        <span className={frame.dockPages}>
+                          {overlay.page + 1} / {pages}
+                        </span>
+                        <DockButton
+                          label="Next page"
+                          keys="]"
+                          icon={<ChevronRight size={16} />}
+                          onClick={() => page(1)}
+                          disabled={overlay.page >= pages - 1 || Boolean(frozen)}
+                          iconOnly
+                        />
+                      </div>
+                    ) : null
+                  }
                 />
               </div>
             </div>

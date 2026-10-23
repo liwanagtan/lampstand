@@ -127,7 +127,6 @@ export function ContextPanel({
                   <MarkedVerseText verse={v} marks={marks} />
                 </p>
               ))}
-            {passage.copyright && <small>{passage.copyright}</small>}
           </>
         ) : (
           <p className={styles.loading}>Loading…</p>

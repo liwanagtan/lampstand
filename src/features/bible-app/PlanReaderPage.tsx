@@ -330,7 +330,7 @@ function ChapterBlock({
       .filter((v) => v.verse >= range.start.verse && v.verse <= range.end.verse && !v.missing)
       .map((v) => v.text)
       .join(' ');
-    return `${formatRef(range)} (${translation})\n${text}${passage.copyright ? `\n\n${passage.copyright}` : ''}`;
+    return `${formatRef(range)} (${translation})\n${text}`;
   };
   return (
     <div
@@ -354,7 +354,6 @@ function ChapterBlock({
             studyByVerse={studyByVerse}
             onOpenStudy={setStudy}
           />
-          {passage.copyright && <small>{passage.copyright}</small>}
         </>
       ) : (
         <p className={styles.loading}>Loading…</p>

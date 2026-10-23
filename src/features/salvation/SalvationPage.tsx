@@ -39,7 +39,6 @@ function ScriptureChapter({
                 </span>
               ))}
           </p>
-          {passage.copyright && <small>{passage.copyright}</small>}
         </>
       ) : (
         <p className={styles.loading}>Loading Scripture…</p>

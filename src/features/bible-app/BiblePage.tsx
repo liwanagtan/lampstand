@@ -223,7 +223,7 @@ export function BibleReader({ toolbar, selectionActions }: BiblePageSlots) {
     const verses = primary.verses.filter(
       (v) => v.verse >= range.start.verse && v.verse <= range.end.verse && !v.missing,
     );
-    return `${formatRef(range)} (${translation})\n${verses.map((v) => v.text).join(' ')}${primary.copyright ? `\n\n${primary.copyright}` : ''}`;
+    return `${formatRef(range)} (${translation})\n${verses.map((v) => v.text).join(' ')}`;
   };
 
   return (
@@ -321,9 +321,6 @@ export function BibleReader({ toolbar, selectionActions }: BiblePageSlots) {
                   studyByVerse={studyByVerse}
                   onOpenStudy={(verse) => setStudy(verse)}
                 />
-                {(primary.copyright || second?.copyright) && (
-                  <p className={styles.loading}>{primary.copyright || second?.copyright}</p>
-                )}
               </>
             ) : (
               <p className={styles.loading}>Loading…</p>

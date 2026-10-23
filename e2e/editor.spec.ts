@@ -40,7 +40,7 @@ test('every edit persists after a reload', async ({ page }) => {
   await expect(page.getByText('Slide 6 of 22 · Quote')).toBeVisible();
 
   // Presentation settings.
-  await page.getByRole('button', { name: 'Presentation settings' }).click();
+  await page.getByRole('button', { name: 'Slide settings' }).click();
   await page.getByLabel('Title', { exact: true }).fill('A Lamp in the Dark (edited)');
   await page.getByRole('button', { name: 'Done' }).click();
   await saved(page);

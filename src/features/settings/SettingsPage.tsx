@@ -111,7 +111,7 @@ function PresentingSection() {
   return (
     <Section
       title="Presenting"
-      description="Defaults for Screen, used when a presentation doesn’t choose its own."
+      description="Defaults for Screen, used when slides don’t choose their own."
     >
       <div className={styles.grid3}>
         <Select
@@ -375,7 +375,7 @@ function DataSection({ embedded = false }: { embedded?: boolean }) {
       toast({
         title: 'Backup saved',
         description:
-          'Includes your journal, notes, highlights, bookmarks, plan progress, reading positions, preferences and presentations.',
+          'Includes your journal, notes, highlights, bookmarks, plan progress, reading positions, preferences and slides.',
         tone: 'success',
       });
     } finally {
@@ -430,7 +430,7 @@ function DataSection({ embedded = false }: { embedded?: boolean }) {
       </div>
       <p className={styles.small}>
         Your backup includes journal entries, notes, highlights, bookmarks, plan progress, reading
-        positions, preferences and presentations. Keep a copy before changing devices. Import merges
+        positions, preferences and slides. Keep a copy before changing devices. Import merges
         saved content, restores backed-up preferences and fills missing reading positions without
         deleting existing entries.
       </p>

@@ -55,3 +55,50 @@ test('Bible console: preview, show, step, highlight, blank and the passage queue
   await page.keyboard.press('Escape');
   await expect(page.getByText('Nothing on screen')).toBeVisible();
 });
+
+test('word study on the TV: tap a word, ask first, step through, put it away', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await openApp(page, '/screen');
+  await page.getByRole('button', { name: /Show the Bible/ }).click();
+  await page.getByLabel('Search the Bible').fill('jn 3 16');
+  await page.keyboard.press('Enter');
+  const popup = page.waitForEvent('popup');
+  await page.getByRole('button', { name: 'Show on screen' }).click();
+  const output = await popup;
+  const tv = output.getByTestId('output');
+  await expect(tv).toContainText('For God so loved the world');
+
+  // The live verse's words, from the BSB, underlined in the Words tab; the TV keeps the KJV.
+  await page.getByRole('tab', { name: 'Words' }).click();
+  const words = page.getByRole('region', { name: 'Word study' });
+  await expect(words).toContainText('the TV keeps KJV');
+  await words.getByRole('button', { name: 'loved', exact: true }).click();
+  await expect(tv).toContainText('agapaō');
+  await expect(tv).toContainText('to love');
+  await expect(tv).toContainText('Used in');
+  await expect(words).toContainText('On the TV now');
+  await output.screenshot({ path: 'test-results/word-study-tv.png' });
+
+  // W hides the word so the class can be asked first, and brings it back.
+  await page.keyboard.press('w');
+  await expect(tv).not.toContainText('agapaō');
+  await expect(tv).toContainText('For God so loved the world');
+  await page.keyboard.press('w');
+  await expect(tv).toContainText('agapaō');
+
+  // Next word steps through the verse.
+  await words.getByRole('button', { name: 'Next word' }).click();
+  await expect(tv).toContainText('kosmos');
+
+  // Another verse that uses it goes on the TV, and the word is put away with the old verse.
+  await words
+    .getByRole('button', { name: /^Show .* on screen$/ })
+    .first()
+    .click();
+  await expect(tv).not.toContainText('kosmos');
+
+  // Esc puts away a word first, then the verse.
+  await words.getByRole('button', { name: 'Show word again' }).isDisabled();
+  await page.keyboard.press('Escape');
+  await expect(page.getByText('Nothing on screen')).toBeVisible();
+});

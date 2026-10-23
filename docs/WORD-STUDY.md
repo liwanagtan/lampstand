@@ -2,6 +2,17 @@
 
 Reading the BSB, select a verse (or several) and their studyable words get dotted underlines straight away; a tap anywhere else in a verse works as a verse tap, as before. In other translations, tap **Words** in the selection bar instead: the panel shows the first selected verse in the BSB. Tap an underlined word to see the Hebrew or Greek word behind it, its transliteration, part of speech, a gloss and a few short senses, and every verse that uses it. The word stays highlighted in each listed verse, and a listed verse opens inside the panel with **Back** to return. Escape closes it.
 
+## On the TV (Screen › Show the Bible)
+
+For lessons, Sunday school and lectures. Show a passage, open the **Words** tab beside Chapter and Highlight, and tap an underlined word. The TV changes to word study: the verse on the left in the translation on screen, with the word picked out, and on the right a card with the original word, how it sounds, Hebrew or Greek and part of speech, the gloss, two short senses and how many verses use it. The laptop shows the same entry with every verse that uses the word, each with **Show** to put it on the TV.
+
+- **Hide word** (or **W**) takes the card away so the class can be asked first; **Show word again** (or **W**) brings it back.
+- **Previous** and **Next word** step through the passage's words.
+- **Esc** puts away the word first, then the verse. A new passage puts the word away too.
+- The word is part of the live state (`LiveState.word`), so a reopened output window shows it, and **Blank** and **Logo** cover it.
+
+The TV layout is `src/slides/WordStudyScreen.tsx`; the console tab is `src/features/bible-console/WordStudyTools.tsx`.
+
 ## Sources and licences
 
 | Source                                                                                                                        | Used for                                                                                                | Licence                                                    |

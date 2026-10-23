@@ -19,6 +19,7 @@ import { useAsset } from '@/slides/useAsset';
 import { OVERLAY } from '@/templates/metrics';
 import type { LiveSnapshot } from './live/types';
 import { VerseOverlay } from './VerseOverlay';
+import { WordStudyScreen } from '@/slides/WordStudyScreen';
 import { PosterContext, posterInfoFor } from '@/slides/poster/posterInfo';
 import styles from './LiveScreen.module.css';
 
@@ -78,10 +79,16 @@ export function LiveScreen({ snapshot, fit = 'width', label, className }: LiveSc
   // Content that was already live when this screen mounted is drawn in its final state, so a
   // reopened output restores the TV without replaying entrance motion.
   const overlayKey = overlay ? `${overlay.ref}|${overlay.translation}|${overlay.mode}` : null;
-  const [initial, setInitial] = useState(() => ({ slide: slide?.id ?? null, overlay: overlayKey }));
+  const wordKey = live.word ? `${live.word.verse}|${live.word.strong}` : null;
+  const [initial, setInitial] = useState(() => ({
+    slide: slide?.id ?? null,
+    overlay: overlayKey,
+    word: wordKey,
+  }));
   if (initial.slide && slide?.id !== initial.slide) setInitial((i) => ({ ...i, slide: null }));
   if (initial.overlay && overlayKey !== initial.overlay)
     setInitial((i) => ({ ...i, overlay: null }));
+  if (initial.word && wordKey !== initial.word) setInitial((i) => ({ ...i, word: null }));
 
   // Direction of travel, for push transitions.
   const [travel, setTravel] = useState({ index: live.slideIndex, dir: 1 as 1 | -1 });
@@ -175,6 +182,30 @@ export function LiveScreen({ snapshot, fit = 'width', label, className }: LiveSc
                   overlay={overlay}
                   template={template}
                   animate={overlayKey !== initial.overlay}
+                />
+              </FeatureBoundary>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Word study: the verse and the word behind it, over the verse (Bible session). */}
+        <AnimatePresence>
+          {overlay && live.word && (
+            <motion.div
+              key="word"
+              className={styles.overlayLayer}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={overlayTransition}
+            >
+              <FeatureBoundary name="Word study" silent>
+                <WordStudyScreen
+                  word={live.word}
+                  translation={overlay.translation}
+                  template={template}
+                  background={presentation ? undefined : (live.backdrop ?? undefined)}
+                  animate={!reduced && initial.word !== wordKey}
                 />
               </FeatureBoundary>
             </motion.div>

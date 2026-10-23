@@ -51,9 +51,11 @@ import { useShortcuts } from '@/features/present/useShortcuts';
 import { useApplyDocumentTheme } from '@/features/settings/theme';
 import frame from '@/features/present/PresentPage.module.css';
 import { BackgroundControl, Highlighter } from './TvTools';
+import { WordStudyTools } from './WordStudyTools';
+import { toggleWord } from './wordOnTv';
 import styles from './BibleConsole.module.css';
 
-type Panel = 'chapter' | 'highlight' | 'background';
+type Panel = 'chapter' | 'highlight' | 'words' | 'background';
 
 const label = (ref: string) => {
   const r = fromOsis(ref);
@@ -119,7 +121,11 @@ export function BibleConsolePage() {
     'Alt+ArrowLeft': () => void stepTv(-1),
     ArrowDown: () => movePreview(1),
     ArrowUp: () => movePreview(-1),
-    Escape: () => control().dispatch({ type: 'clearOverlay' }),
+    // Esc puts away a studied word first, then the verse.
+    Escape: () =>
+      control().dispatch(control().live.word ? { type: 'hideWord' } : { type: 'clearOverlay' }),
+    // W hides the word on the TV, or brings the last one back (ask the class first).
+    w: toggleWord,
     b: () => control().toggleScreen('blank'),
     l: () => control().toggleScreen('logo'),
     f: () => control().toggleFreeze(),
@@ -278,6 +284,20 @@ export function BibleConsolePage() {
                       ) : (
                         <p className={styles.muted}>
                           Show a passage, then tap words to light them up on the TV.
+                        </p>
+                      ),
+                    },
+                    {
+                      value: 'words',
+                      label: 'Words',
+                      content: overlay ? (
+                        <FeatureBoundary name="Word study">
+                          <WordStudyTools key={`${overlay.ref}|${overlay.translation}`} />
+                        </FeatureBoundary>
+                      ) : (
+                        <p className={styles.muted}>
+                          Show a passage, then tap a word to study it with the class: the TV shows
+                          the Hebrew or Greek behind it and what it means.
                         </p>
                       ),
                     },

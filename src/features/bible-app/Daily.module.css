@@ -475,3 +475,11 @@
     width: 100%;
   }
 }
+
+/* Plan options (⋯): quiet, beside the reading. */
+.optionsButton {
+  color: var(--color-text-muted);
+}
+.hero .optionsButton {
+  color: var(--color-hero-text-muted);
+}

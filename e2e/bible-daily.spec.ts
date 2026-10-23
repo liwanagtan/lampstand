@@ -46,7 +46,7 @@ test('Today, reading plans and the journal', async ({ page }) => {
   const classic = page.getByRole('region', { name: 'Classic devotional' });
   await expect(classic).toContainText('Spurgeon, 1865');
   await classic.getByRole('radio', { name: 'Evening' }).click();
-  await classic.getByRole('button', { name: 'Read the whole reading' }).click();
+  await classic.getByRole('button', { name: 'Read in full' }).click();
   await expect(page.getByRole('dialog')).toContainText('Spurgeon · Morning and Evening');
   await page.keyboard.press('Escape');
 

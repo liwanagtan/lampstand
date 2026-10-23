@@ -195,9 +195,20 @@
 .weekToday .weekDot {
   border: 2.5px solid var(--color-accent);
 }
-.weekLater .weekDot {
-  border-style: dashed;
-  border-color: var(--color-border-strong);
+/* Days without reading are quiet dots, not empty circles: the strip celebrates the days you
+   read and invites today, rather than reading as a report card. */
+.weekDay:not(.weekOn):not(.weekToday) .weekDot {
+  border-color: transparent;
+}
+.weekDay:not(.weekOn):not(.weekToday) .weekDot::after {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-border-strong);
+}
+.weekLater .weekDot::after {
+  background: var(--color-border);
 }
 .weekLetter {
   font-size: var(--text-12);
@@ -538,4 +549,7 @@
 .salvationInvitation span span { line-height: 1.45; color: #58636b; }
 @media (max-width: 640px) {
   .page { padding-bottom: 154px; }
+}
+.plansSlot:empty {
+  display: none;
 }

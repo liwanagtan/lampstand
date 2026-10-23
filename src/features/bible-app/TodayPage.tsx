@@ -110,6 +110,10 @@ export function TodayPage() {
       <div className={styles.cols}>
         {phone ? (
           <>
+            {/* With a plan going, today's reading comes first: it is what you came to do. */}
+            <div className={styles.plansSlot}>
+              <TodayPlans />
+            </div>
             <div className={styles.verseSlot}>
               <VerseHero
                 now={now}
@@ -133,9 +137,6 @@ export function TodayPage() {
             <div className={styles.weekSlot}>
               <WeekStrip now={now} />
             </div>
-            <div className={styles.plansSlot}>
-              <TodayPlans />
-            </div>
             <div className={styles.reflectSlot}>
               <ReflectionCard date={date} onReflect={() => setPanel('reflect')} />
             </div>
@@ -148,13 +149,13 @@ export function TodayPage() {
         ) : (
           <>
             <div className={styles.main}>
+              <TodayPlans />
               <VerseHero
                 now={now}
                 onContext={() => setPanel('context')}
                 onReflect={() => setPanel('reflect')}
               />
               {showSalvation && <SalvationInvitation />}
-              <TodayPlans />
               {classic && <ClassicDevotional now={now} />}
             </div>
             <aside className={styles.aside} aria-label="Your daily reading">
@@ -381,7 +382,7 @@ function WeekStrip({ now }: { now: Date }) {
         <h2 className={styles.weekTitle}>This week</h2>
         <p className={styles.weekSub}>
           {count === 0
-            ? 'Every day is a fresh start.'
+            ? 'Today is a good day to begin.'
             : count === 1
               ? '1 day with the Word so far.'
               : `${count} days with the Word so far.`}

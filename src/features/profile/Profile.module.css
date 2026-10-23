@@ -463,3 +463,21 @@
 .journalShortcut:hover {
   text-decoration: underline;
 }
+
+/* Phones, About you and Settings: name and a small avatar in one row. */
+@media (max-width: 640px) {
+  .slimHeader {
+    flex-direction: row;
+    align-items: center;
+    gap: var(--space-2);
+  }
+  .slimHeader .heroAvatar {
+    width: 32px !important;
+    height: 32px !important;
+    font-size: 14px !important;
+    box-shadow: none;
+  }
+  .slimHeader .greeting {
+    font-size: var(--text-16);
+  }
+}

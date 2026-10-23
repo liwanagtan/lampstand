@@ -443,9 +443,9 @@
     flex-direction: column;
     align-items: flex-start;
   }
-  /* The heading lives in the top bar on phones, so the first section starts at the top. */
+  /* The page heading sits above the first section: give it room to breathe. */
   .headRow + .section {
-    margin-top: 0;
+    margin-top: var(--space-5);
   }
   /* On a phone a pinned search and filters would cover too much of the screen. */
   .searchBar {
@@ -1082,3 +1082,13 @@
 .foundationBanner span span { color: #58636b; line-height: 1.4; }
 .foundationBanner > svg { flex: none; }
 .foundationBanner:hover, .foundationBanner:focus-visible { border-color: #d7a844; background: #fff2d6; }
+
+.planOptionsRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+.planOptionsRow > :last-child {
+  margin-left: auto;
+}

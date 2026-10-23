@@ -1,4 +1,4 @@
-import { Link, NavLink, Outlet } from 'react-router-dom';
+import { Link, NavLink, Outlet, useLocation } from 'react-router-dom';
 import { cx } from '@/design-system/components';
 import { paths } from '@/app/paths';
 import { useIsPhone } from '@/app/useIsPhone';
@@ -20,13 +20,17 @@ export function ProfileLayout() {
   const name = useSettings((s) => s.profile.name);
   const stats = useJourneyStats();
   const greeting = profileGreeting(name, new Date(), previousVisit());
+  // On a phone the full header belongs to Journey; About you and Settings get a slim one, so
+  // their own content starts near the top.
+  const { pathname } = useLocation();
+  const slim = phone && pathname !== paths.profile;
   return (
     <div className={styles.page} data-enter>
-      <header className={styles.header}>
+      <header className={cx(styles.header, slim && styles.slimHeader)}>
         <Avatar size={64} className={styles.heroAvatar} />
         <div className={styles.headText}>
           <h1 className={styles.greeting}>{phone ? name.trim() || 'Your profile' : greeting}</h1>
-          {phone && stats?.since && (
+          {phone && !slim && stats?.since && (
             <p className={styles.mobileSince}>
               Reading with Lampstand since{' '}
               {new Intl.DateTimeFormat(undefined, { month: 'long', year: 'numeric' }).format(

@@ -69,13 +69,10 @@ export function PlansPage() {
           <p className={styles.lede}>{hello.line}</p>
         </div>
       </div>
-      {plans && progress && (
+      {/* Advice only when it changes a decision: with two or more plans going. */}
+      {plans && progress && activeCount >= 2 && (
         <p className={styles.paceAdvice}>
-          {activeCount === 0
-            ? 'Start with one plan. Add a second only if it fits your rhythm.'
-            : activeCount === 1
-              ? 'One plan is a good rhythm. Keep going before adding another.'
-              : `You have ${activeCount} plans going. Focus on these before starting another.`}
+          {activeCount} plans going. Finish one before starting another.
         </p>
       )}
 
@@ -95,7 +92,9 @@ export function PlansPage() {
           <h2 className={`${styles.activeHeading} ${styles.pausedHeading}`}>Paused plans</h2>
           <p className={styles.groupText}>Your progress is here whenever you want to return.</p>
           <div className={styles.activeGrid}>
-            {paused.map((plan) => <ActivePlan key={plan.id} plan={plan} progress={byId.get(plan.id)!} />)}
+            {paused.map((plan) => (
+              <ActivePlan key={plan.id} plan={plan} progress={byId.get(plan.id)!} />
+            ))}
           </div>
         </section>
       )}

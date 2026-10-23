@@ -221,15 +221,7 @@ export function WelcomePage() {
                       </span>
                       <span className={styles.useText}>
                         <span className={styles.useTitle}>{u.title}</span>
-                        <span className={styles.useBody}>
-                          {
-                            {
-                              grow: 'Daily verse, plans and journal',
-                              study: 'Read, search and save notes',
-                              teach: 'Present Scripture and slides',
-                            }[u.id]
-                          }
-                        </span>
+                        <span className={styles.useBody}>{u.summary}</span>
                       </span>
                     </label>
                   );

@@ -250,7 +250,8 @@ export function PlanReaderPage() {
         </section>
       )}
 
-      <div className={styles.reflectRow}>
+      {/* Phones reflect from the pinned footer beside Finish; one Reflect per screen. */}
+      <div className={cx(styles.reflectRow, 'laptop-only')}>
         <Button variant="secondary" icon={<NotebookPen size={16} />} onClick={openReflection}>
           Reflect on this {unit.toLowerCase()}
         </Button>

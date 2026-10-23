@@ -1,21 +1,12 @@
-import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { BookOpen, Check, Clock } from 'lucide-react';
-import { Button, Dialog, cx } from '@/design-system/components';
+import { Button, cx } from '@/design-system/components';
 import type { PlanProgressRecord } from '@/db/types';
 import { paths } from '@/app/paths';
-import {
-  currentDay,
-  currentLabel,
-  formatDay,
-  isLessons,
-  readingMinutes,
-  stopPlan,
-  type Plan,
-} from './plans';
+import { currentDay, currentLabel, formatDay, isLessons, readingMinutes, type Plan } from './plans';
 import styles from './Daily.module.css';
 import { CompletedPlanActions } from './CompletedPlanActions';
-import { PlanPacingControls } from './PlanPacingControls';
+import { PlanOptions, PlanPaceHint } from './PlanPacingControls';
 
 const dateFormat = new Intl.DateTimeFormat(undefined, {
   weekday: 'long',
@@ -36,7 +27,6 @@ export function ActivePlan({
   resumeDay?: number;
 }) {
   const navigate = useNavigate();
-  const [stopping, setStopping] = useState(false);
   const next = currentDay(plan, progress);
   const status =
     next.kind === 'read' &&
@@ -52,7 +42,11 @@ export function ActivePlan({
 
   return (
     <section
-      className={cx(styles.card, compact ? styles.compact : styles.hero, progress.pausedAt && styles.paused)}
+      className={cx(
+        styles.card,
+        compact ? styles.compact : styles.hero,
+        progress.pausedAt && styles.paused,
+      )}
       aria-label={plan.name}
     >
       <div className={styles.cardHead}>
@@ -131,13 +125,9 @@ export function ActivePlan({
               {resumeDay === status.day ? 'Continue' : 'Read'} {unit.toLowerCase()} {status.day}
             </Button>
             {!compact && (
-              <Button
-                variant="ghost"
-                className={cx(styles.push, styles.quiet)}
-                onClick={() => setStopping(true)}
-              >
-                Stop plan
-              </Button>
+              <span className={styles.push}>
+                <PlanOptions plan={plan} progress={progress} />
+              </span>
             )}
           </div>
         </>
@@ -152,32 +142,25 @@ export function ActivePlan({
           </p>
         </>
       )}
-      {status.kind === 'paused' && <p className={styles.muted}>Paused. Your finished readings are saved; resume whenever you are ready.</p>}
+      {status.kind === 'paused' && (
+        <>
+          <p className={styles.muted}>Paused. Your finished readings are saved.</p>
+          {!compact && (
+            <div className={styles.row}>
+              <PlanOptions plan={plan} progress={progress} />
+            </div>
+          )}
+        </>
+      )}
+      {status.kind === 'waiting' && !compact && (
+        <div className={styles.row}>
+          <span className={styles.push}>
+            <PlanOptions plan={plan} progress={progress} />
+          </span>
+        </div>
+      )}
       {status.kind === 'finished' && <CompletedPlanActions plan={plan} />}
-      {status.kind !== 'finished' && <PlanPacingControls plan={plan} progress={progress} compact={compact} />}
-      <Dialog
-        open={stopping}
-        onOpenChange={setStopping}
-        size="sm"
-        title={`Stop ${plan.name}?`}
-        description="Your progress on this plan is removed. You can start it again any time."
-        footer={
-          <>
-            <Button variant="ghost" onClick={() => setStopping(false)}>
-              Keep going
-            </Button>
-            <Button
-              variant="primary"
-              onClick={() => {
-                setStopping(false);
-                void stopPlan(plan.id);
-              }}
-            >
-              Stop plan
-            </Button>
-          </>
-        }
-      />
+      {status.kind === 'read' && !compact && <PlanPaceHint progress={progress} />}
     </section>
   );
 }

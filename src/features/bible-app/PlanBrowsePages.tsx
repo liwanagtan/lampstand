@@ -10,7 +10,7 @@ import { useReader } from './readerStore';
 import { useOpenInReader } from './useOpenInReader';
 import { categoryById } from '@/schema/planCatalog';
 import { ActivePlan } from './ActivePlan';
-import { PlanPacingControls } from './PlanPacingControls';
+import { PlanOptions, PlanPaceHint } from './PlanPacingControls';
 import { CompletedPlanActions } from './CompletedPlanActions';
 import { planMeta, plansIn, visibleChildren } from './discover';
 import { CategoryChip, CategoryLinks, PlanCard } from './PlanCards';
@@ -19,7 +19,6 @@ import {
   currentDay,
   activePlanCount,
   isPlanFinished,
-  stopPlan,
   formatDay,
   isLessons,
   readingMinutes,
@@ -133,7 +132,6 @@ export function PlanPage() {
   const cover = useCoverUrl(plan?.cover, 'full');
   const [removing, setRemoving] = useState(false);
   const [allDays, setAllDays] = useState(false);
-  const [stopping, setStopping] = useState(false);
   const [startAdviceOpen, setStartAdviceOpen] = useState(false);
 
   if (plan === undefined || progress === undefined) return <div className={styles.page} />;
@@ -207,11 +205,10 @@ export function PlanPage() {
               <p>Your next lesson opens {new Date(status.unlocks).toLocaleDateString()}.</p>
             )}
             {status?.kind === 'paused' && <p>Paused. Your finished readings are saved.</p>}
-            {status?.kind !== 'finished' && <PlanPacingControls plan={plan} progress={progress} />}
             {status?.kind !== 'finished' && (
-              <div>
-                <small>{progress.pausedAt ? 'Resume whenever you’re ready.' : 'Miss a day and simply carry on.'}</small>
-                <button onClick={() => setStopping(true)}>Stop plan</button>
+              <div className={styles.planOptionsRow}>
+                <PlanPaceHint progress={progress} />
+                <PlanOptions plan={plan} progress={progress} />
               </div>
             )}
           </section>
@@ -233,13 +230,6 @@ export function PlanPage() {
               </Button>
             )}
           </div>
-          {allPlans && allProgress && activeCount < 2 && (
-            <p className={styles.startAdvice}>
-              {activeCount === 0
-                ? 'A steady start: choose one plan and build a rhythm. Two at most is plenty.'
-                : 'You already have a plan going. Add another only if you have room for it.'}
-            </p>
-          )}
         </div>
       )}
 
@@ -250,22 +240,24 @@ export function PlanPage() {
         </p>
       )}
 
-      {!progress && <section className={cx(styles.preview, 'laptop-only')} aria-label="First reading">
-        <p className={styles.eyebrow}>{unit} 1</p>
-        <h2 className={styles.previewTitle}>{first.title ?? formatDay(first)}</h2>
-        <p className={styles.planMeta}>
-          {first.title && <span>{formatDay(first)} · </span>}
-          <Clock size={12} aria-hidden /> {readingMinutes(first)} min
-        </p>
-        {first.note && <p className={styles.previewNote}>{first.note}</p>}
-        <Button
-          variant="ghost"
-          icon={<BookOpen size={16} />}
-          onClick={() => navigate(paths.planDay(plan.id, 1))}
-        >
-          Read {unit.toLowerCase()} 1
-        </Button>
-      </section>}
+      {!progress && (
+        <section className={cx(styles.preview, 'laptop-only')} aria-label="First reading">
+          <p className={styles.eyebrow}>{unit} 1</p>
+          <h2 className={styles.previewTitle}>{first.title ?? formatDay(first)}</h2>
+          <p className={styles.planMeta}>
+            {first.title && <span>{formatDay(first)} · </span>}
+            <Clock size={12} aria-hidden /> {readingMinutes(first)} min
+          </p>
+          {first.note && <p className={styles.previewNote}>{first.note}</p>}
+          <Button
+            variant="ghost"
+            icon={<BookOpen size={16} />}
+            onClick={() => navigate(paths.planDay(plan.id, 1))}
+          >
+            Read {unit.toLowerCase()} 1
+          </Button>
+        </section>
+      )}
 
       <section className={styles.mobileDays} aria-label="Plan readings">
         <h2>
@@ -307,25 +299,6 @@ export function PlanPage() {
             </Button>
             <Button variant="primary" onClick={begin}>
               Start anyway
-            </Button>
-          </>
-        }
-      />
-      <Dialog
-        open={stopping}
-        onOpenChange={setStopping}
-        title={`Stop ${plan.name}?`}
-        description="Your progress on this plan is removed. You can start it again any time."
-        footer={
-          <>
-            <Button variant="ghost" onClick={() => setStopping(false)}>
-              Keep going
-            </Button>
-            <Button
-              variant="primary"
-              onClick={() => void stopPlan(plan.id).then(() => setStopping(false))}
-            >
-              Stop plan
             </Button>
           </>
         }

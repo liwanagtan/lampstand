@@ -61,9 +61,13 @@ test('growing daily with a plan: opens Today with the plan started', async ({ pa
   await sections.getByRole('link', { name: 'Settings' }).click();
   await expect(page.getByRole('heading', { name: 'Presenting' })).toBeVisible();
   await sections.getByRole('link', { name: 'About you' }).click();
-  // The last Customize belongs to the usage choices (the first is the faith journey's).
-  await page.getByRole('button', { name: 'Customize' }).last().click();
-  await page.getByRole('switch', { name: 'Plans' }).click();
+  // Customize opens the parts of Grow daily in a sheet.
+  await page.getByRole('button', { name: 'Customize' }).click();
+  await page
+    .getByRole('dialog', { name: 'Grow daily' })
+    .getByRole('switch', { name: 'Plans' })
+    .click();
+  await page.getByRole('button', { name: 'Done' }).click();
   expect(await navLabels(page)).toEqual(['Today', 'Bible', 'Screen']);
   await expect(page.getByRole('switch', { name: 'Grow daily (customised)' })).toBeChecked();
 });

@@ -3,8 +3,8 @@ import { useState } from 'react';
 import { useIsPhone } from '@/app/useIsPhone';
 import { Link } from 'react-router-dom';
 import { paths } from '@/app/paths';
-import { ChevronDown } from 'lucide-react';
-import { Input, Select, Toggle, cx } from '@/design-system/components';
+import { Check, ChevronRight } from 'lucide-react';
+import { Button, Input, Select, Sheet, Toggle } from '@/design-system/components';
 import {
   PART_LABELS,
   USE_CASES,
@@ -31,11 +31,7 @@ export function YouSection() {
   const stats = useJourneyStats();
   const selectedJourneys = faithJourneys(profile.faithJourney);
   return (
-    <Section
-      profile
-      title={phone ? 'Your name' : 'You'}
-      description="Today and Profile greet you by name."
-    >
+    <Section profile title={phone ? 'Your name' : 'You'}>
       <div className={styles.you}>
         <Avatar size={48} />
         <Input
@@ -64,37 +60,55 @@ export function YouSection() {
         <button
           type="button"
           className={styles.customize}
-          aria-expanded={journeyOpen}
-          aria-controls="faith-journey-choices"
-          onClick={() => setJourneyOpen((open) => !open)}
+          aria-haspopup="dialog"
+          onClick={() => setJourneyOpen(true)}
         >
-          Customize
-          <ChevronDown size={14} className={cx(journeyOpen && styles.flip)} aria-hidden />
+          Change
+          <ChevronRight size={14} aria-hidden />
         </button>
       </div>
-      {journeyOpen && (
-        <fieldset id="faith-journey-choices" className={styles.faithChoices}>
-          <legend className={styles.visuallyHidden}>Your faith journey</legend>
-          <p>Choose all that describe you today. This is optional.</p>
-          {FAITH_JOURNEYS.map((option) => (
-            <label key={option.value}>
-              <input
-                type="checkbox"
-                checked={selectedJourneys.includes(option.value)}
-                onChange={(event) => {
+      <Sheet
+        open={journeyOpen}
+        onOpenChange={setJourneyOpen}
+        title="Your faith journey"
+        description="Choose any that describe you today. Lampstand suggests plans to match."
+        footer={
+          <Button variant="primary" onClick={() => setJourneyOpen(false)}>
+            Done
+          </Button>
+        }
+      >
+        <div className={styles.choiceList} role="group" aria-label="Your faith journey">
+          {FAITH_JOURNEYS.map((option) => {
+            const on = selectedJourneys.includes(option.value);
+            return (
+              <button
+                key={option.value}
+                type="button"
+                role="checkbox"
+                aria-checked={on}
+                className={styles.choice}
+                onClick={() =>
                   void set('profile', {
                     ...profile,
-                    faithJourney: event.target.checked
-                      ? [...selectedJourneys, option.value]
-                      : selectedJourneys.filter((value) => value !== option.value),
-                  });
-                }}
-              />
-              <span>{option.label}</span>
-            </label>
-          ))}
-        </fieldset>
-      )}
+                    faithJourney: on
+                      ? selectedJourneys.filter((value) => value !== option.value)
+                      : [...selectedJourneys, option.value],
+                  })
+                }
+              >
+                <span className={styles.choiceText}>
+                  <strong>{option.label}</strong>
+                  <span>{option.description}</span>
+                </span>
+                <span className={styles.choiceCheck} aria-hidden>
+                  {on && <Check size={14} strokeWidth={3} />}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+      </Sheet>
       <div className={styles.colors} role="radiogroup" aria-label="Avatar colour">
         {AVATAR_COLORS.map(({ color, label }) => (
           <button
@@ -127,7 +141,7 @@ export function UsesSection() {
     <Section
       profile
       title="What I use Lampstand for"
-      description="Turn parts of Lampstand on or off. Switching off hides them; nothing you wrote is lost. The Bible is always here."
+      description="Switch parts on or off. Nothing you wrote is lost."
     >
       <div className={styles.uses}>
         {USE_CASES.map((u) => (
@@ -137,6 +151,14 @@ export function UsesSection() {
     </Section>
   );
 }
+
+const PART_DETAILS: Record<FeatureKey, string> = {
+  today: 'The verse of the day and your next reading',
+  plans: 'Reading plans and your progress',
+  journal: 'Reflections and your journal, in Journey',
+  marks: 'Highlight, bookmark and note as you read',
+  screen: 'Scripture and slides on a TV',
+};
 
 function UseCaseSwitch({ useCase: u }: { useCase: UseCase }) {
   const features = useSettings((s) => s.features);
@@ -151,7 +173,7 @@ function UseCaseSwitch({ useCase: u }: { useCase: UseCase }) {
         checked={state !== 'off'}
         onChange={(on) => setParts(u.parts, on)}
         label={state === 'some' ? `${u.title} (customised)` : u.title}
-        description={`${u.description} ${u.turnsOn}`}
+        description={u.summary}
       />
       {u.id === 'teach' && features.screen && (
         <Link to={paths.screen} className={styles.mobileOpenScreen}>
@@ -163,13 +185,23 @@ function UseCaseSwitch({ useCase: u }: { useCase: UseCase }) {
           <button
             type="button"
             className={styles.customize}
-            aria-expanded={open}
-            onClick={() => setOpen((o) => !o)}
+            aria-haspopup="dialog"
+            onClick={() => setOpen(true)}
           >
             Customize
-            <ChevronDown size={14} className={cx(open && styles.flip)} aria-hidden />
+            <ChevronRight size={14} aria-hidden />
           </button>
-          {open && (
+          <Sheet
+            open={open}
+            onOpenChange={setOpen}
+            title={u.title}
+            description="Choose which parts to show. Switching one off hides it; nothing you wrote is lost."
+            footer={
+              <Button variant="primary" onClick={() => setOpen(false)}>
+                Done
+              </Button>
+            }
+          >
             <div className={styles.parts}>
               {u.parts.map((p) => (
                 <Toggle
@@ -177,10 +209,11 @@ function UseCaseSwitch({ useCase: u }: { useCase: UseCase }) {
                   checked={features[p]}
                   onChange={(on) => setParts([p], on)}
                   label={PART_LABELS[p]}
+                  description={PART_DETAILS[p]}
                 />
               ))}
             </div>
-          )}
+          </Sheet>
         </>
       )}
     </div>

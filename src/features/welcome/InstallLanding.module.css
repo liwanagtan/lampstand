@@ -32,7 +32,7 @@
 .title {
   max-width: 14ch;
   margin: 8px 0 12px;
-  font-size: clamp(30px, 6vw, 40px);
+  font-size: clamp(32px, 6vw, 44px);
   line-height: 1.12;
   letter-spacing: -0.035em;
 }
@@ -50,7 +50,7 @@
 .eyebrow {
   margin: 0;
   color: var(--color-accent);
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 800;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -58,7 +58,7 @@
 .copy h1 {
   max-width: 15ch;
   margin: 0;
-  font-size: clamp(28px, 5vw, 38px);
+  font-size: clamp(32px, 5vw, 44px);
   line-height: 1.15;
   letter-spacing: -0.035em;
 }
@@ -66,7 +66,7 @@
   max-width: 35ch;
   margin: 0 0 10px;
   color: var(--color-text-muted);
-  font-size: 16px;
+  font-size: var(--text-16);
   line-height: 1.55;
 }
 .install {
@@ -85,7 +85,7 @@
 .note {
   margin: -6px 0 0;
   color: var(--color-text-faint);
-  font-size: 13px;
+  font-size: var(--text-14);
 }
 .guidance {
   display: grid;
@@ -97,7 +97,7 @@
   border-radius: 16px;
   background: var(--color-surface);
   color: var(--color-text-muted);
-  font-size: 14px;
+  font-size: var(--text-14);
   line-height: 1.5;
 }
 .guidance strong {
@@ -115,6 +115,6 @@
     padding: 28px 20px calc(32px + env(safe-area-inset-bottom));
   }
   .lede {
-    font-size: 15px;
+    font-size: var(--text-16);
   }
 }

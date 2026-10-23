@@ -19,7 +19,7 @@
 }
 .title {
   margin-top: var(--space-2);
-  font-size: clamp(32px, 4vw, 52px);
+  font-size: clamp(32px, 4vw, 44px);
   font-weight: var(--weight-extrabold);
   line-height: 1.05;
   letter-spacing: -0.035em;
@@ -135,7 +135,7 @@
 }
 .groupText {
   margin-top: var(--space-1);
-  font-size: var(--text-15);
+  font-size: var(--text-16);
   color: var(--color-text-muted);
 }
 .seeAll {
@@ -145,7 +145,7 @@
   gap: 4px;
   min-height: 44px;
   color: var(--color-accent-text);
-  font-size: var(--text-15);
+  font-size: var(--text-16);
   font-weight: var(--weight-bold);
   text-decoration: none;
   margin-top: var(--space-3);
@@ -171,7 +171,7 @@
   border-radius: 999px;
   background: var(--color-surface);
   color: var(--color-text);
-  font-size: var(--text-15);
+  font-size: var(--text-16);
   font-weight: var(--weight-bold);
   text-decoration: none;
   transition:
@@ -265,7 +265,7 @@
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  font-size: var(--text-13);
+  font-size: var(--text-14);
   color: var(--color-text-muted);
 }
 
@@ -303,7 +303,7 @@
   }
 }
 .tileName {
-  font-size: var(--text-18);
+  font-size: var(--text-20);
   font-weight: var(--weight-extrabold);
   letter-spacing: -0.01em;
 }
@@ -379,7 +379,7 @@
   color: var(--color-accent);
 }
 .heroTitle {
-  font-size: clamp(30px, 4vw, 52px);
+  font-size: clamp(32px, 4vw, 44px);
   font-weight: var(--weight-extrabold);
   line-height: 1.05;
   letter-spacing: -0.035em;
@@ -418,7 +418,7 @@
 }
 .previewTitle {
   font-family: var(--font-display);
-  font-size: 28px;
+  font-size: var(--text-32);
   font-weight: 500;
   line-height: 1.15;
 }
@@ -499,7 +499,7 @@
     bottom: 4px;
     left: 4px;
     padding: 1px 6px;
-    font-size: 10px;
+    font-size: var(--text-12);
   }
   .cardGrid .cardBody {
     padding: 0;
@@ -538,18 +538,18 @@
 /* Phones: a calmer type scale (docs/DECISIONS.md 2026-10-18). */
 @media (max-width: 640px) {
   .previewTitle {
-    font-size: 24px;
+    font-size: var(--text-24);
   }
   .heroTitle {
-    font-size: 30px;
+    font-size: var(--text-32);
   }
   .tileName {
-    font-size: 17px;
+    font-size: var(--text-16);
   }
 }
 .credits {
   margin-top: var(--space-2);
-  font-size: var(--text-13);
+  font-size: var(--text-14);
   color: var(--color-text-muted);
 }
 
@@ -564,12 +564,12 @@
     padding: 8px 4px 0;
   }
   .title {
-    font-size: 32px;
+    font-size: var(--text-32);
     line-height: 1.1;
     letter-spacing: -0.03em;
   }
   .lede {
-    font-size: 15px;
+    font-size: var(--text-16);
   }
   .section {
     margin-top: 22px;
@@ -582,7 +582,7 @@
     flex-wrap: wrap;
     min-height: 44px;
     align-items: center;
-    font-size: 13px;
+    font-size: var(--text-14);
   }
   .hero {
     margin-top: -20px;
@@ -651,12 +651,12 @@
     display: flex;
     justify-content: space-between;
     align-items: baseline;
-    font-size: 20px;
+    font-size: var(--text-20);
     font-weight: var(--weight-extrabold);
     margin-bottom: 8px;
   }
   .mobileDays h2 span {
-    font-size: 13px;
+    font-size: var(--text-14);
     color: var(--color-text-muted);
     font-weight: var(--weight-medium);
   }
@@ -678,7 +678,7 @@
     height: 40px;
     border-radius: 50%;
     border: 1.5px solid var(--color-border-strong);
-    font-size: 14px;
+    font-size: var(--text-14);
     font-weight: var(--weight-extrabold);
   }
   .dayRow > span:nth-child(2) {
@@ -687,12 +687,12 @@
   }
   .dayRow strong {
     display: block;
-    font-size: 15px;
+    font-size: var(--text-16);
   }
   .dayRow small {
     display: block;
     color: var(--color-text-muted);
-    font-size: 13px;
+    font-size: var(--text-14);
     margin-top: 2px;
   }
   .dayArrow {
@@ -703,7 +703,7 @@
 
 .activeHeading {
   margin-bottom: 16px;
-  font-size: 12px;
+  font-size: var(--text-12);
   font-weight: 700;
   text-transform: uppercase;
   color: var(--color-accent-text);
@@ -724,17 +724,17 @@
     padding: 0;
   }
   .sectionTitle {
-    font-size: 22px;
+    font-size: var(--text-24);
     letter-spacing: -0.02em;
     text-transform: none;
     color: var(--color-text);
     margin-bottom: 12px;
   }
   .groupTitle {
-    font-size: 20px;
+    font-size: var(--text-20);
   }
   .groupText {
-    font-size: 14px;
+    font-size: var(--text-14);
     line-height: 1.5;
   }
   .row {
@@ -746,7 +746,7 @@
     display: none;
   }
   .chip {
-    font-size: 14px;
+    font-size: var(--text-14);
     font-weight: 600;
     padding-inline: 14px;
   }
@@ -778,7 +778,7 @@
     margin-inline: -20px;
   }
   .heroTitle {
-    font-size: 30px;
+    font-size: var(--text-32);
   }
   .mobileProgress {
     display: flex;
@@ -796,12 +796,12 @@
     gap: 12px;
   }
   .mobileProgress h2 {
-    font-size: 15px;
+    font-size: var(--text-16);
     font-weight: 800;
   }
   .mobileProgress > div > span,
   .mobileProgress small {
-    font-size: 12px;
+    font-size: var(--text-12);
     color: var(--color-text-muted);
   }
   .mobileProgress progress {
@@ -826,7 +826,7 @@
     border: 0;
     background: none;
     font: inherit;
-    font-size: 12px;
+    font-size: var(--text-12);
     font-weight: 700;
     color: var(--color-text-muted);
     min-height: 44px;
@@ -872,7 +872,7 @@
     border-radius: 999px;
     background: var(--color-text);
     color: var(--color-bg);
-    font-size: 14px;
+    font-size: var(--text-14);
     font-weight: 700;
   }
   .categoryVerses,
@@ -884,7 +884,7 @@
   }
   .categoryVerses h2,
   .relatedCategories h2 {
-    font-size: 20px;
+    font-size: var(--text-20);
     font-weight: 800;
   }
   .categoryVerses button {
@@ -900,11 +900,11 @@
     cursor: pointer;
   }
   .categoryVerses strong {
-    font-size: 14px;
+    font-size: var(--text-14);
   }
   .categoryVerses span {
     font-family: var(--font-display);
-    font-size: 18px;
+    font-size: var(--text-20);
     line-height: 1.55;
   }
 }
@@ -923,7 +923,7 @@
   cursor: pointer;
   list-style: none;
   color: var(--color-text-muted);
-  font-size: 15px;
+  font-size: var(--text-16);
   font-weight: 600;
 }
 .completedPlans summary::-webkit-details-marker {
@@ -937,7 +937,7 @@
 }
 .completedIntro {
   color: var(--color-text-muted);
-  font-size: 14px;
+  font-size: var(--text-14);
   line-height: 1.5;
   margin: 8px 0 16px;
 }
@@ -971,13 +971,13 @@
 }
 .completedName {
   display: block;
-  font-size: 15px;
+  font-size: var(--text-16);
   font-weight: 600;
 }
 .completedMeta {
   display: block;
   margin-top: 4px;
-  font-size: 12px;
+  font-size: var(--text-12);
   color: var(--color-text-muted);
 }
 .completedLink:hover .completedName {
@@ -1025,7 +1025,7 @@
   flex: none;
   gap: 8px;
   color: var(--color-accent-text);
-  font-size: 13px;
+  font-size: var(--text-14);
   font-weight: 600;
 }
 .suggestionLink:focus-visible {
@@ -1034,7 +1034,7 @@
 }
 .suggestionName {
   display: block;
-  font-size: 16px;
+  font-size: var(--text-16);
   font-weight: 700;
   line-height: 1.4;
 }
@@ -1045,7 +1045,7 @@
 .suggestionReason {
   display: block;
   margin-top: 5px;
-  font-size: 13px;
+  font-size: var(--text-14);
   line-height: 1.5;
   color: var(--color-text-muted);
 }

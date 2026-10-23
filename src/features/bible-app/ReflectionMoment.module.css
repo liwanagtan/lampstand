@@ -28,7 +28,7 @@
 }
 .question {
   font-family: var(--font-display);
-  font-size: clamp(20px, 3vw, 26px);
+  font-size: clamp(20px, 3vw, 24px);
   line-height: 1.35;
 }
 .optional,

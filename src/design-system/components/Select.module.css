@@ -27,7 +27,7 @@
 }
 .sm {
   height: var(--control-height-sm);
-  font-size: var(--text-13);
+  font-size: var(--text-14);
 }
 .trigger > span:first-child {
   overflow: hidden;

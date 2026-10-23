@@ -25,7 +25,7 @@
   border-left: 3px solid var(--color-warning);
   border-radius: var(--radius-sm);
   background: var(--color-surface-raised);
-  font-size: var(--text-13);
+  font-size: var(--text-14);
 }
 .fieldset {
   display: flex;
@@ -39,7 +39,7 @@
 .legend {
   margin-bottom: var(--space-1);
   padding: 0;
-  font-size: var(--text-13);
+  font-size: var(--text-14);
   font-weight: var(--weight-medium);
 }
 .itemRow {
@@ -82,7 +82,7 @@
 }
 
 .heading {
-  font-size: var(--text-18);
+  font-size: var(--text-20);
   font-weight: var(--weight-extrabold);
   letter-spacing: -0.02em;
 }

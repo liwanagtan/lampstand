@@ -84,18 +84,19 @@ export const colors = {
 
 export type ColorToken = keyof (typeof colors)['dark'];
 
+/**
+ * The type scale: seven steps, each about 1.2× the last (docs/DECISIONS.md, 2026-10-23).
+ * 12 caption · 14 small and labels · 16 body · 20 subheading · 24 heading · 32 page title ·
+ * 44 display. Scripture follows the reader's own size (--reader-size) instead.
+ */
 export const fontSize = {
-  11: 11,
   12: 12,
-  13: 13,
   14: 14,
-  15: 15,
   16: 16,
-  18: 18,
   20: 20,
   24: 24,
   32: 32,
-  52: 52,
+  44: 44,
 } as const;
 export const fontWeight = {
   regular: 400,

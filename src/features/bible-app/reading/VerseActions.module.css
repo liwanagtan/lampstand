@@ -153,7 +153,7 @@
   }
   .barText {
     display: block;
-    font-size: 13px;
+    font-size: var(--text-14);
     font-weight: var(--weight-bold);
   }
 }

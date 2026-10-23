@@ -38,7 +38,7 @@
 .title {
   font-family: var(--font-ui);
   font-weight: var(--weight-extrabold);
-  font-size: clamp(28px, 3.6vw, 48px);
+  font-size: clamp(32px, 3.6vw, 44px);
   letter-spacing: -0.035em;
   line-height: 1.1;
 }
@@ -86,13 +86,13 @@
     margin-left: -8px;
     color: var(--color-text-muted);
     text-decoration: none;
-    font-size: 14px;
+    font-size: var(--text-14);
   }
   .title {
-    font-size: 32px;
+    font-size: var(--text-32);
   }
   .description {
-    font-size: 15px;
+    font-size: var(--text-16);
     margin-top: 6px;
   }
 }

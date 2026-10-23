@@ -37,7 +37,7 @@
   color: var(--color-text-muted);
 }
 .compact .body {
-  font-size: var(--text-13);
+  font-size: var(--text-14);
 }
 .actions {
   display: flex;
@@ -48,6 +48,6 @@
 /* Phones: a calmer type scale (docs/DECISIONS.md 2026-10-18). */
 @media (max-width: 640px) {
   .title {
-    font-size: 18px;
+    font-size: var(--text-20);
   }
 }

@@ -31,7 +31,7 @@
 }
 .title {
   font-family: var(--font-display);
-  font-size: clamp(34px, 4vw, 48px);
+  font-size: clamp(32px, 4vw, 44px);
   font-weight: var(--weight-semibold);
   line-height: 1.1;
   letter-spacing: -0.01em;
@@ -208,7 +208,7 @@
   color: var(--color-on-accent, #1b1408);
 }
 .doneTitle {
-  font-size: clamp(28px, 3vw, 36px);
+  font-size: var(--text-32);
   font-weight: var(--weight-extrabold);
   letter-spacing: -0.03em;
 }
@@ -271,10 +271,10 @@
 /* Compact headings; reading sizes retain the same meaning on every device. */
 @media (max-width: 640px) {
   .title {
-    font-size: 24px;
+    font-size: var(--text-24);
   }
   .doneTitle {
-    font-size: 20px;
+    font-size: var(--text-20);
   }
 }
 .studyButton {
@@ -376,12 +376,12 @@
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
-    font-size: 15px;
+    font-size: var(--text-16);
     font-weight: var(--weight-bold);
   }
   .title {
     font-family: var(--font-display);
-    font-size: 34px;
+    font-size: var(--text-32);
     font-weight: 600;
     letter-spacing: -0.01em;
   }
@@ -389,11 +389,11 @@
     gap: 8px;
   }
   .meta {
-    font-size: 13px;
+    font-size: var(--text-14);
   }
   .chapterTitle {
     font-family: var(--font-ui);
-    font-size: 14px;
+    font-size: var(--text-14);
     font-weight: var(--weight-extrabold);
     color: var(--color-text-muted);
   }
@@ -409,7 +409,7 @@
 }
 
 .completionPlan {
-  font-size: 15px;
+  font-size: var(--text-16);
   font-weight: 700;
   color: var(--color-text-muted);
 }
@@ -449,7 +449,7 @@
     overflow-y: auto;
   }
   .done[data-complete] .doneTitle {
-    font-size: 34px;
+    font-size: var(--text-32);
     font-weight: 800;
   }
 }
@@ -506,14 +506,14 @@
     color: var(--color-text);
   }
   .mobilePosition strong {
-    font-size: 13px;
+    font-size: var(--text-14);
   }
   .mobilePosition button {
     border: 0;
     background: none;
     color: var(--color-accent-text);
     font: inherit;
-    font-size: 13px;
+    font-size: var(--text-14);
     font-weight: 700;
     padding: 6px 0;
     cursor: pointer;
@@ -524,7 +524,7 @@
   padding: 12px 18px;
   border-radius: 999px;
   background: rgb(245 242 234 / 0.08);
-  font-size: 14px;
+  font-size: var(--text-14);
   font-weight: 700;
 }
 @media (max-width: 640px) {
@@ -541,17 +541,17 @@
   }
   .done[data-complete] .completionPlan {
     order: -1;
-    font-size: 12px;
+    font-size: var(--text-12);
     letter-spacing: 0.1em;
     text-transform: uppercase;
     color: #f2b33d;
   }
   .done[data-complete] .doneTitle {
-    font-size: 36px;
+    font-size: var(--text-32);
   }
   .done[data-complete] .doneText {
     color: #c9cdd6;
-    font-size: 16px;
+    font-size: var(--text-16);
   }
   .done[data-complete] .doneActions {
     margin-top: auto;

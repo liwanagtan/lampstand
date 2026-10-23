@@ -97,7 +97,7 @@
 .preview {
   display: -webkit-box;
   overflow: hidden;
-  font-size: var(--text-13);
+  font-size: var(--text-14);
   color: var(--color-text-muted);
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;

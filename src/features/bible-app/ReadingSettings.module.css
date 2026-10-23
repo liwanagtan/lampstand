@@ -73,10 +73,10 @@
   gap: 4px;
 }
 .translationHead strong {
-  font-size: 15px;
+  font-size: var(--text-16);
 }
 .translationHead span {
-  font-size: 13px;
+  font-size: var(--text-14);
   color: var(--color-text-muted);
 }
 .translationChips {
@@ -90,7 +90,7 @@
   border: 1px solid var(--color-border);
   border-radius: 999px;
   font: inherit;
-  font-size: 13px;
+  font-size: var(--text-14);
   font-weight: 700;
   color: var(--color-text);
   background: var(--color-surface);
@@ -106,6 +106,6 @@
   border-radius: 18px;
   background: var(--color-surface-sunk);
   font-family: var(--font-display);
-  font-size: 20px;
+  font-size: var(--text-20);
   line-height: 1.6;
 }

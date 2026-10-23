@@ -18,6 +18,8 @@ test('Bible console: preview, show, step, highlight, blank and the passage queue
   // Not presenting yet: Show on screen puts the passage on Live only; no TV opens.
   await page.getByRole('button', { name: 'Show on screen' }).click();
   await expect(page.getByText('Not presenting')).toBeVisible();
+  // Live pulses only while on air.
+  await expect(page.locator('[data-pane="live"][data-on-air]')).toHaveCount(0);
   // Start Presentation opens the TV with what is on Live.
   const popup = page.waitForEvent('popup');
   await page.getByRole('button', { name: 'Start Presentation' }).click();
@@ -25,6 +27,7 @@ test('Bible console: preview, show, step, highlight, blank and the passage queue
   const tv = output.getByTestId('output');
   await expect(tv).toContainText('For God so loved the world');
   await expect(page.getByText('Output connected')).toBeVisible();
+  await expect(page.locator('[data-pane="live"][data-on-air]')).toHaveCount(1);
 
   // Same keys as a sermon: → steps the TV to the next verse, B blanks, Esc clears.
   await page.keyboard.press('ArrowRight');

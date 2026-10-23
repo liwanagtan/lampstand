@@ -36,7 +36,7 @@ test('guided plan completion offers reflection and immediate next reading', asyn
   await page.getByRole('button', { name: 'Finish day 1', exact: true }).click();
   const done = page.getByRole('dialog', { name: 'Day 1 done' });
   await expect(done.getByRole('button', { name: 'Write a reflection' })).toBeVisible();
-  await done.getByRole('button', { name: 'Return to passage' }).click();
+  await done.getByRole('button', { name: 'Back to the passage' }).click();
   await expect(page.getByRole('button', { name: 'Read day 2 now' })).toBeVisible();
   await page.getByRole('button', { name: 'Reflect on today', exact: true }).click();
   await expect(page.getByRole('dialog').getByLabel('Title')).toHaveValue(

@@ -66,7 +66,7 @@ test('Today, reading plans and the journal', async ({ page }) => {
   // A completion moment invites reflection; returning to the passage offers the next day.
   const done = page.getByRole('dialog', { name: 'Day 1 done' });
   await expect(done).toContainText('1 of 40 days done');
-  await done.getByRole('button', { name: 'Return to passage' }).click();
+  await done.getByRole('button', { name: 'Back to the passage' }).click();
   await page.getByRole('button', { name: 'Read day 2 now' }).click();
   await expect(page.getByRole('heading', { name: 'Matthew 5–7' })).toBeVisible();
   await page.getByRole('link', { name: 'Plans' }).click();

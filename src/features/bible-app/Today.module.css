@@ -128,7 +128,8 @@
 .heroActions > .heroButton:first-child:hover:not(:disabled) {
   background: color-mix(in srgb, var(--color-hero-text) 88%, #0a0f1c);
 }
-.heroIcon {
+.heroIcon,
+.heroQuiet {
   border-color: transparent;
   background: rgb(245 242 234 / 0.1);
 }
@@ -345,14 +346,19 @@
     width: 32px;
     height: 32px;
   }
-  /* The verse's actions sit on one row: two named buttons and Copy. */
+  /* The verse's actions sit on one row: three named buttons, sized to fit a phone. */
   .heroActions {
     flex-wrap: nowrap;
-    gap: 8px;
+    gap: 6px;
   }
   .heroButton {
     flex: 1 1 auto;
-    padding: 0 var(--space-3);
+    min-width: 0;
+    padding: 0 var(--space-2);
+    font-size: var(--text-14);
+  }
+  .heroButton svg {
+    display: none;
   }
   .heroText {
     font-size: var(--text-20);
@@ -427,13 +433,15 @@
     line-height: 1.45;
   }
   .heroActions {
-    gap: 10px;
+    gap: 6px;
     margin-top: 0;
     align-items: center;
   }
+  /* Three named buttons share the row; each shrinks a little rather than spilling off. */
   .heroButton {
-    flex: none;
-    padding-inline: 16px;
+    flex: 1 1 auto;
+    min-width: 0;
+    padding-inline: 10px;
   }
   .heroButton > svg {
     display: none;

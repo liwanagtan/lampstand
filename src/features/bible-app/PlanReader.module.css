@@ -579,3 +579,12 @@
     border: 0;
   }
 }
+
+.upNext {
+  font-size: var(--text-14);
+  font-weight: var(--weight-semibold);
+  color: var(--color-accent-text);
+}
+.done[data-complete] .upNext {
+  color: var(--color-accent);
+}

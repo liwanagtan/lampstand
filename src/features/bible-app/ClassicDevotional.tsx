@@ -15,10 +15,10 @@ import { devotionalParagraphs } from './devotionalParagraphs';
 const dateFormat = new Intl.DateTimeFormat(undefined, { month: 'long', day: 'numeric' });
 
 /**
- * Today's classic devotional: Spurgeon's Morning and Evening (1865). His key verse shows in your
- * translation; his words stay as he wrote them, King James quotations included.
+ * The devotional as one row of Today's Go deeper card: Morning or Evening, his opening line,
+ * and Read in full (a sheet on laptops, its own page on phones).
  */
-export function ClassicDevotional({ now }: { now: Date }) {
+export function SpurgeonRow({ now, className }: { now: Date; className?: string }) {
   const phone = useIsPhone();
   const navigate = useNavigate();
   const location = useLocation();
@@ -28,10 +28,10 @@ export function ClassicDevotional({ now }: { now: Date }) {
   if (day === null) return null;
   const reading = day?.[half];
   return (
-    <section className={styles.card} aria-label="Classic devotional">
-      <div className={styles.head}>
-        <p className={styles.eyebrow}>Classic devotional · Spurgeon, 1865</p>
-        <div className={styles.halves} role="radiogroup" aria-label="Reading">
+    <section className={className} aria-label="Classic devotional">
+      <div className={styles.rowHead}>
+        <p className={styles.eyebrow}>Spurgeon, 1865</p>
+        <div className={cx(styles.halves, styles.halvesSmall)} role="radiogroup" aria-label="Reading">
           {(['morning', 'evening'] as const).map((h) => (
             <button
               key={h}
@@ -41,23 +41,19 @@ export function ClassicDevotional({ now }: { now: Date }) {
               className={styles.half}
               onClick={() => setHalf(h)}
             >
-              {h === 'morning' ? (
-                <Sunrise size={14} aria-hidden />
-              ) : (
-                <Sunset size={14} aria-hidden />
-              )}
+              {h === 'morning' ? <Sunrise size={13} aria-hidden /> : <Sunset size={13} aria-hidden />}
               {h === 'morning' ? 'Morning' : 'Evening'}
             </button>
           ))}
         </div>
       </div>
-      {reading ? (
+      <p className={styles.rowQuote}>{reading ? `“${reading.quote}”` : ' '}</p>
+      {reading && (
         <>
-          <KeyVerse reading={reading} />
-          <p className={styles.preview}>{reading.body[0]}</p>
           <div className={styles.row}>
             <Button
-              icon={<BookOpen size={16} />}
+              size="sm"
+              icon={<BookOpen size={15} />}
               onClick={() =>
                 phone
                   ? navigate(paths.devotional(dayKey(now), half), {
@@ -76,10 +72,6 @@ export function ClassicDevotional({ now }: { now: Date }) {
             title={`${half === 'morning' ? 'Morning' : 'Evening'}, ${dateFormat.format(now)}`}
           />
         </>
-      ) : (
-        <p className={styles.preview} aria-busy="true">
-          &nbsp;
-        </p>
       )}
     </section>
   );

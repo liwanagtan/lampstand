@@ -257,3 +257,7 @@ App type uses seven sizes: 12 caption, 14 small and labels, 16 body, 20 subheadi
 ### 2026-10-23 — Laptop layouts that use the width
 
 On laptops (1024px and up) Plans puts your plan beside the suggestions instead of one card stretching edge to edge; the plan page shows the list of days (previously phone-only) on the left with your progress, or how to start, on the right; tablets get the days list stacked. Screen's two ways in are compact rows, icon beside text, so the library below is in view.
+
+### 2026-10-23 — Go deeper, and a calmer day done
+
+Today's reflection prompt and Spurgeon's Morning and Evening share one "Go deeper" card (two rows; the full devotional opens in its sheet or page), so Today shows five blocks instead of six. The verse card's copy action has a visible label. Day done offers two choices, Write a reflection and Done, with Pray and Back to the passage as quiet links, and names what is up next ("Up next · Day 2: Matthew 5–7"); the repeated progress pill is gone.

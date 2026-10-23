@@ -487,6 +487,13 @@ function FinishBlock({
   const count = progress?.done.length ?? 0;
   const status = progress ? currentDay(plan, progress) : null;
   const next = progress ? readableNext(plan, progress, day) : null;
+  // The next unread day, ready now or later: knowing it makes tomorrow easier to start.
+  const upcoming =
+    status?.kind === 'finished'
+      ? null
+      : plan.days.findIndex((_, i) => i + 1 > day && !progress?.done.includes(i + 1)) + 1 ||
+        null;
+  const upcomingDay = upcoming ? plan.days[upcoming - 1] : null;
 
   return (
     <motion.div
@@ -517,12 +524,11 @@ function FinishBlock({
           : `${count} of ${plan.days.length} ${unit.toLowerCase()}s done.`}
         {status?.kind === 'waiting' &&
           ` The next lesson opens ${dateFormat.format(status.unlocks)}.`}
-        {next && ' Your next reading is ready whenever you are.'}
       </p>
-      {justFinished && (
-        <div className={styles.completionCount}>
-          {count} of {plan.days.length} readings finished
-        </div>
+      {upcoming && upcomingDay && (
+        <p className={styles.upNext}>
+          Up next · {unit} {upcoming}: {upcomingDay.title ?? formatDay(upcomingDay)}
+        </p>
       )}
       {justFinished && (
         <>

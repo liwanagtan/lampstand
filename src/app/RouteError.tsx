@@ -10,7 +10,7 @@ export function RouteError() {
       <p>
         {notFound
           ? 'That page does not exist.'
-          : 'This screen hit a problem. Your presentations are safe.'}
+          : 'This screen hit a problem. Your slides are safe.'}
       </p>
       <Link to="/">Back to Lampstand</Link>
     </div>

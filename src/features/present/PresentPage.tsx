@@ -110,7 +110,7 @@ export function PresentPage() {
     return (
       <div className={styles.center}>
         <EmptyState
-          title="Presentation not found"
+          title="Slides not found"
           actions={<Button onClick={() => navigate(paths.screen)}>Back to Screen</Button>}
         >
           It may have been deleted.
@@ -120,7 +120,7 @@ export function PresentPage() {
   }
   if (state === 'loading') {
     return (
-      <div className={styles.loading} aria-busy="true" aria-label="Loading presentation">
+      <div className={styles.loading} aria-busy="true" aria-label="Loading slides">
         <Skeleton height={48} />
         <div className={styles.loadingPanes}>
           <Skeleton height="auto" radius="md" className={styles.loadingPane} />
@@ -278,7 +278,7 @@ function ControlScreen() {
       label={`Preview: slide ${previewTarget + 1}`}
     />
   ) : (
-    <div className={styles.endCard}>End of presentation</div>
+    <div className={styles.endCard}>End of slides</div>
   );
 
   const previewMeta = frozen

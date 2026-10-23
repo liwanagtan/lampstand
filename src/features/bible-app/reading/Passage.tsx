@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, type MouseEvent, type ReactNode } from 'react';
 import { BookText, Bookmark, StickyNote } from 'lucide-react';
 import { Tooltip, cx } from '@/design-system/components';
 import type { MarkRecord } from '@/db/types';
@@ -7,6 +7,8 @@ import { formatRef, fromOsis } from '@/features/bible/ref';
 import type { ChapterMarks } from '../marks';
 import type { ReadingLayout, Selection } from '../readerStore';
 import type { StudyNote } from '../studyNotes';
+import type { WordSpan } from '../wordStudy';
+import { WordRuns } from '../WordStudyPanel';
 import styles from './Passage.module.css';
 
 export type { ReadingLayout };
@@ -26,9 +28,34 @@ export interface PassageProps {
   /** Tyndale study notes that start at each verse (Study margin). */
   studyByVerse?: Map<number, StudyNote[]>;
   onOpenStudy?: (verse: number) => void;
+  /** Word study on the selected verses: their words are underlined and become the buttons. */
+  words?: WordMode | null;
+}
+
+export interface WordMode {
+  /** Each underlined verse's linked words. */
+  spans: Map<number, WordSpan[]>;
+  /** The word being studied, shown highlighted. */
+  active: number | null;
+  onPick: (verse: number, strong: number) => void;
 }
 
 const NO_STUDY = new Map<number, StudyNote[]>();
+
+/** A verse's text: plain, or with its words underlined while it is selected for study. */
+function VerseText({ v, words }: { v: PassageVerse; words?: WordMode | null }) {
+  const spans = words?.spans.get(v.verse);
+  return words && spans ? (
+    <WordRuns
+      text={v.text}
+      spans={spans}
+      active={words.active}
+      onPick={(strong) => words.onPick(v.verse, strong)}
+    />
+  ) : (
+    <>{v.text}</>
+  );
+}
 
 /**
  * Scripture as both readers show it. Every verse is a button: tap to select, tap another to
@@ -38,7 +65,7 @@ export function Passage(props: PassageProps) {
   return props.layout === 'read' ? <ReadLayout {...props} /> : <StudyLayout {...props} />;
 }
 
-function ReadLayout({ verses, marks, selection, onSelect }: PassageProps) {
+function ReadLayout({ verses, marks, selection, onSelect, words }: PassageProps) {
   return (
     <p className={styles.prose}>
       {verses
@@ -48,6 +75,9 @@ function ReadLayout({ verses, marks, selection, onSelect }: PassageProps) {
           const color = marks.highlights.get(v.verse);
           const bookmarked = marks.bookmarks.has(v.verse);
           const notes = marks.notes.get(v.verse);
+          // While a verse's words are underlined they are the buttons (a button can't hold
+          // buttons); a tap elsewhere in the verse still works as a verse tap.
+          const studied = Boolean(words?.spans.has(v.verse));
           return (
             <span
               key={v.osis}
@@ -58,25 +88,30 @@ function ReadLayout({ verses, marks, selection, onSelect }: PassageProps) {
               {/* A span, not a <button>: buttons lay out as one box, so verses could not
                   share a line and the text would stop flowing as a paragraph. */}
               <span
-                role="button"
-                tabIndex={0}
+                role={studied ? undefined : 'button'}
+                tabIndex={studied ? undefined : 0}
                 className={styles.inlineButton}
                 data-no-press
-                aria-pressed={Boolean(selected)}
+                data-words={studied || undefined}
+                aria-pressed={studied ? undefined : Boolean(selected)}
                 onClick={(e) => onSelect(v.verse, e.shiftKey)}
-                onKeyDown={(e) => {
-                  if (e.key !== 'Enter' && e.key !== ' ') return;
-                  e.preventDefault();
-                  onSelect(v.verse, e.shiftKey);
-                }}
+                onKeyDown={
+                  studied
+                    ? undefined
+                    : (e) => {
+                        if (e.key !== 'Enter' && e.key !== ' ') return;
+                        e.preventDefault();
+                        onSelect(v.verse, e.shiftKey);
+                      }
+                }
               >
                 <sup className={styles.inlineNum}>{v.verse}</sup>
                 {color ? (
                   <mark className={styles.inlineHl} data-color={color}>
-                    {v.text}
+                    <VerseText v={v} words={words} />
                   </mark>
                 ) : (
-                  v.text
+                  <VerseText v={v} words={words} />
                 )}
                 {(bookmarked || notes?.length) && (
                   <span className={styles.inlineMarks}>
@@ -110,6 +145,7 @@ function StudyLayout({
   onOpenNote,
   studyByVerse = NO_STUDY,
   onOpenStudy,
+  words,
 }: PassageProps) {
   const secondByVerse = useMemo(
     () => new Map(second?.verses.map((v) => [v.verse, v]) ?? []),
@@ -185,11 +221,10 @@ function StudyLayout({
                 </Tooltip>
               )}
             </div>
-            <button
-              type="button"
+            <VerseButton
+              studied={Boolean(words?.spans.has(v.verse)) && !v.missing}
               className={styles.verseButton}
-              data-no-press
-              aria-pressed={Boolean(selected)}
+              selected={Boolean(selected)}
               onClick={(e) => onSelect(v.verse, e.shiftKey)}
             >
               <span className={cx(styles.text, v.missing && styles.missing)}>
@@ -207,10 +242,10 @@ function StudyLayout({
                   'Not included in this translation.'
                 ) : color ? (
                   <mark className={styles.hlText} data-color={color}>
-                    {v.text}
+                    <VerseText v={v} words={words} />
                   </mark>
                 ) : (
-                  v.text
+                  <VerseText v={v} words={words} />
                 )}
               </span>
               {second && (
@@ -225,11 +260,43 @@ function StudyLayout({
                   {other && !other.missing ? other.text : 'Not included in this translation.'}
                 </span>
               )}
-            </button>
+            </VerseButton>
           </li>
         );
       })}
     </ol>
+  );
+}
+
+/** A Study row's verse: a button, or a plain box while its words are the buttons. */
+function VerseButton({
+  studied,
+  selected,
+  className,
+  onClick,
+  children,
+}: {
+  studied: boolean;
+  selected: boolean;
+  className: string;
+  onClick: (e: MouseEvent<HTMLElement>) => void;
+  children: ReactNode;
+}) {
+  return studied ? (
+    // Taps between the words still reach the verse; keyboard users have the selection bar.
+    <div className={className} data-words onClick={onClick}>
+      {children}
+    </div>
+  ) : (
+    <button
+      type="button"
+      className={className}
+      data-no-press
+      aria-pressed={selected}
+      onClick={onClick}
+    >
+      {children}
+    </button>
   );
 }
 

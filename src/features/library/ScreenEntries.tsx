@@ -18,7 +18,7 @@ export function ScreenEntries({
           <Presentation size={22} />
         </span>
         <span className={styles.text}>
-          <span className={styles.title}>Show a presentation</span>
+          <span className={styles.title}>Show slides</span>
           <span className={styles.body}>
             {count
               ? 'Sermon slides with verses, notes and a countdown, from your library.'

@@ -1,5 +1,5 @@
 import type { ComponentProps, ReactNode } from 'react';
-import { BookText, Bookmark, Copy, Eraser, NotebookPen, X } from 'lucide-react';
+import { BookText, Bookmark, Copy, Eraser, Languages, NotebookPen, X } from 'lucide-react';
 import { IconButton, Tooltip, cx, toast } from '@/design-system/components';
 import type { MarkRecord } from '@/db/types';
 import {
@@ -23,7 +23,8 @@ import type { Selection } from '../readerStore';
 import styles from './VerseActions.module.css';
 
 /**
- * What you can do with the verses you tapped: highlight, bookmark, note, study notes, copy. The
+ * What you can do with the verses you tapped: highlight, bookmark, note, study notes, word study,
+ * copy. The
  * same bar in the Bible reader and in plan readings; a bottom sheet on phones.
  */
 export function VerseActions({
@@ -33,6 +34,7 @@ export function VerseActions({
   copyText,
   studyVerse,
   onStudy,
+  onWords,
   extra,
   onNote,
   onClose,
@@ -47,6 +49,8 @@ export function VerseActions({
   /** The first selected verse with Tyndale study notes, if any. */
   studyVerse?: number;
   onStudy?: (verse: number) => void;
+  /** Word study on the first selected verse. */
+  onWords?: () => void;
   extra?: ReactNode;
   /** Add or edit the note on this selection (the page owns the note dialog). */
   onNote: (target: { range: RefRange; note: MarkRecord | null }) => void;
@@ -164,6 +168,16 @@ export function VerseActions({
                 text="Study"
                 icon={<BookText size={18} />}
                 onClick={() => onStudy(studyVerse)}
+              />
+            </Tooltip>
+          )}
+          {onWords && (
+            <Tooltip content="Word study">
+              <BarButton
+                label={`Word study on verse ${selection.start}`}
+                text="Words"
+                icon={<Languages size={18} />}
+                onClick={onWords}
               />
             </Tooltip>
           )}

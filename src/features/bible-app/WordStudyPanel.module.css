@@ -1,0 +1,214 @@
+/* Word study: a side column on laptops; on phones a panel docked under the verse it studies. */
+.panel {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  height: 100%;
+  border-left: 1px solid var(--color-border);
+  background: var(--color-surface);
+}
+.docked {
+  position: absolute;
+  inset: auto 0 0;
+  z-index: 20;
+  height: auto;
+  max-height: 55%;
+  border-top: 1px solid var(--color-border);
+  border-left: 0;
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  box-shadow: var(--elevation-2);
+}
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-4) var(--space-5);
+  border-bottom: 1px solid var(--color-border);
+}
+.docked .header {
+  padding: var(--space-3) var(--space-4);
+}
+.eyebrow {
+  margin-bottom: var(--space-1);
+  font-size: var(--text-12);
+  font-weight: var(--weight-bold);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-accent-text);
+}
+.title {
+  font-size: var(--text-20);
+  font-weight: var(--weight-extrabold);
+  letter-spacing: -0.02em;
+}
+.body {
+  overflow-y: auto;
+  min-height: 0;
+  padding: var(--space-5) var(--space-5) var(--space-8);
+  overscroll-behavior: contain;
+}
+.docked .body {
+  padding: var(--space-4) var(--space-4) calc(var(--space-6) + env(safe-area-inset-bottom));
+}
+.hint {
+  color: var(--color-text-muted);
+  font-size: var(--text-16);
+}
+
+/* The verse shown inside the panel (other translations, or a verse opened from "Used in"). */
+.verseBox {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-2);
+  margin-bottom: var(--space-5);
+  padding-bottom: var(--space-4);
+  border-bottom: 1px solid var(--color-border);
+}
+.verse {
+  font-family: var(--font-display);
+  font-size: var(--text-20);
+  line-height: 1.6;
+}
+.note {
+  font-size: var(--text-12);
+  color: var(--color-text-muted);
+}
+
+/*
+ * A studyable word: a dotted underline, and a tap area taller than the line (Fitts's law) that
+ * reaches into the line spacing without moving the text.
+ */
+.word {
+  position: relative;
+  border-radius: 4px;
+  text-decoration: underline dotted var(--color-accent-text);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.22em;
+  cursor: pointer;
+  transition: background-color var(--dur-standard) var(--ease-standard);
+}
+.word::after {
+  content: '';
+  position: absolute;
+  inset: -0.35em -0.15em;
+}
+@media (pointer: coarse) {
+  .word::after {
+    inset: max(-0.45em, -10px) -0.2em;
+  }
+}
+.word:hover {
+  background: var(--color-accent-tint);
+}
+.word:focus-visible {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 2px;
+}
+.word[data-word-active] {
+  background: var(--color-accent-tint);
+  text-decoration-style: solid;
+}
+
+/* The entry */
+.entry {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.original {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-3);
+}
+.lemma {
+  font-family: var(--font-display);
+  font-size: var(--text-32);
+  line-height: 1.2;
+}
+.translit {
+  font-size: var(--text-16);
+  font-style: italic;
+  color: var(--color-text-muted);
+}
+.gloss {
+  font-size: var(--text-24);
+  font-weight: var(--weight-extrabold);
+  letter-spacing: -0.02em;
+}
+.meta {
+  font-size: var(--text-14);
+  color: var(--color-text-muted);
+}
+.meanings {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  margin: var(--space-2) 0 0;
+  padding-left: 1.2em;
+  font-size: var(--text-16);
+  line-height: 1.55;
+}
+.usesTitle {
+  margin-top: var(--space-5);
+  font-size: var(--text-16);
+  font-weight: var(--weight-bold);
+}
+.uses {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.use {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: 100%;
+  min-height: 44px;
+  padding: var(--space-2) 0;
+  border: 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--color-border) 70%, transparent);
+  background: none;
+  color: var(--color-text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.use:hover .useRef {
+  text-decoration: underline;
+}
+.use[aria-current] {
+  cursor: default;
+}
+.use[aria-current] .useRef::after {
+  content: ' · this verse';
+  color: var(--color-text-muted);
+  font-weight: var(--weight-semibold);
+}
+.useRef {
+  font-size: var(--text-14);
+  font-weight: var(--weight-bold);
+  color: var(--color-accent-text);
+}
+.useText {
+  font-size: var(--text-16);
+  line-height: 1.5;
+}
+/* The word stands out in each verse (Von Restorff). */
+.useMark {
+  border-radius: 3px;
+  background: var(--color-accent-tint);
+  color: inherit;
+  font-weight: var(--weight-semibold);
+}
+.credit {
+  margin-top: var(--space-6);
+  font-size: var(--text-12);
+  line-height: 1.5;
+  color: var(--color-text-muted);
+}

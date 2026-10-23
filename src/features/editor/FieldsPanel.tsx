@@ -271,7 +271,7 @@ function VerseFields({
           set('translation', (s) => setOpt(s, 'translation', v === '__default' ? '' : v))
         }
         options={[
-          { value: '__default', label: 'Presentation default' },
+          { value: '__default', label: 'Slides default' },
           ...translations.map((t) => ({ value: t.code, label: `${t.code} — ${t.name}` })),
         ]}
       />

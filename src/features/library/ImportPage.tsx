@@ -112,7 +112,7 @@ export function ImportPage() {
   const readFile = async (file: File | undefined) => {
     if (!file) return;
     if (file.size > MAX_FILE_BYTES) {
-      toast({ title: 'That file is too large to be a presentation (over 5 MB).', tone: 'warning' });
+      toast({ title: 'That file is too large to be a slides file (over 5 MB).', tone: 'warning' });
       return;
     }
     load({ name: file.name, text: await file.text() });
@@ -184,7 +184,7 @@ export function ImportPage() {
       <Page
         back={paths.screen}
         title="Import"
-        description="Upload a presentation file to preview it, then save it to your library."
+        description="Upload a slides file to preview it, then save it to your library."
       >
         <div
           className={cx(styles.drop, dragging && styles.dragging)}
@@ -206,7 +206,7 @@ export function ImportPage() {
             type="file"
             accept=".json,.lampstand.json,application/json"
             className="visually-hidden"
-            aria-label="Choose a presentation file"
+            aria-label="Choose a slides file"
             onChange={(e) => void readFile(e.target.files?.[0])}
           />
           <Button

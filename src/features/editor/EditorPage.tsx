@@ -88,7 +88,7 @@ export function EditorPage() {
   if (state === 'missing') {
     return (
       <EmptyState
-        title="Presentation not found"
+        title="Slides not found"
         actions={<Button onClick={() => navigate(paths.screen)}>Back to Screen</Button>}
       >
         It may have been deleted.
@@ -173,7 +173,7 @@ function Editor({ id }: { id: string }) {
               />
             </Tooltip>
             <Button icon={<Settings2 size={16} />} onClick={() => setSettingsOpen(true)}>
-              Presentation settings
+              Slide settings
             </Button>
             <Button
               variant="primary"
@@ -521,7 +521,7 @@ function PresentationSettings({
     <Dialog
       open={open}
       onOpenChange={onOpenChange}
-      title="Presentation settings"
+      title="Slide settings"
       footer={
         <Button variant="primary" onClick={() => onOpenChange(false)}>
           Done

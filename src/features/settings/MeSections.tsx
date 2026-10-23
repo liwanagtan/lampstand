@@ -280,11 +280,11 @@ export function ReadingSection() {
       <Toggle
         checked={studyNotes}
         onChange={(on) => void set('studyNotes', on)}
-        label="Study notes"
+        label="Study notes and word study"
         description={
           phone
-            ? 'Tyndale Open Study Notes beside the verses'
-            : 'Tyndale Open Study Notes: an introduction to each book, and notes beside the verses that have them.'
+            ? 'Notes beside the verses, and the Hebrew or Greek behind a word'
+            : 'Tyndale Open Study Notes beside the verses, and word study: the Hebrew or Greek behind a word, what it means, and where else it’s used.'
         }
       />
     </Section>

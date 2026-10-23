@@ -57,7 +57,7 @@ test('empty library invites an import, and import is upload-only', async ({ page
 
 test('library: search, duplicate, delete with undo, export', async ({ page }) => {
   await importSample(page);
-  const cards = page.getByRole('list', { name: 'Presentations' }).getByRole('listitem');
+  const cards = page.getByRole('list', { name: 'Slides' }).getByRole('listitem');
   await expect(cards).toHaveCount(1);
 
   await page.getByRole('button', { name: 'Actions for A Lamp in the Dark' }).click();
@@ -108,7 +108,7 @@ test('50 presentations load and scroll smoothly', async ({ page }) => {
   });
   const t0 = Date.now();
   await page.reload();
-  const cards = page.getByRole('list', { name: 'Presentations' }).getByRole('listitem');
+  const cards = page.getByRole('list', { name: 'Slides' }).getByRole('listitem');
   await expect(cards).toHaveCount(50, { timeout: 10_000 });
   expect(Date.now() - t0).toBeLessThan(5000);
   // Scroll to the bottom and measure frame times.

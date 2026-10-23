@@ -20,7 +20,7 @@ export function PublicInfoPage() {
         <h2>Your reading data</h2>
         <p>
           Your name, faith journey choices, reading progress, journal entries, notes, highlights,
-          bookmarks, preferences and presentations are stored in this browser on this device.
+          bookmarks, preferences and slides are stored in this browser on this device.
           Without an account, nothing leaves the device. Anyone who can access this browser profile
           may be able to access that data.
         </p>
@@ -43,7 +43,7 @@ export function PublicInfoPage() {
               While you are signed in, your profile name and faith journey, plan progress, journal
               entries, notes, highlights, bookmarks, preferences and the place you were reading are
               copied to Lampstand’s account database so they appear on your other devices. It is run
-              by Supabase on Lampstand’s behalf. Bible text, presentations, pictures and reminder
+              by Supabase on Lampstand’s behalf. Bible text, slides, pictures and reminder
               times stay on each device. Records are sent over an encrypted connection and each
               account can read only its own records, but they are not encrypted on your device
               first, so the people who run Lampstand could technically read them. They do not look

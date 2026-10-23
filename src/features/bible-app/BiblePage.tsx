@@ -28,6 +28,8 @@ import { ReadingSettings } from './ReadingSettings';
 import { TranslationChip } from './TranslationChip';
 import { StudyNotesSheet } from './StudyNotesSheet';
 import { notesByVerse, useStudyNotes } from './studyNotes';
+import { WORD_STUDY_TRANSLATION, useBookWords, verseWords, type WordSpan } from './wordStudy';
+import { WordStudyPanel } from './WordStudyPanel';
 import { haptic } from '@/app/haptics';
 import { noteTipEvent } from '@/features/tips/tipStore';
 import { useSettings } from '@/features/settings/settingsStore';
@@ -87,7 +89,14 @@ export function BibleReader({ toolbar, selectionActions }: BiblePageSlots) {
   const [picking, setPicking] = useState(false);
   const [reading, setReading] = useState(false);
   const [reflecting, setReflecting] = useState(false);
-  const [study, setStudy] = useState<number | 'intro' | null>(null);
+  const [study, setStudyState] = useState<number | 'intro' | null>(null);
+  // Word study on one verse, and the word chosen in it.
+  const [words, setWords] = useState<{ verse: number; strong: number | null } | null>(null);
+  // Study notes and word study share the side column: opening one closes the other.
+  const setStudy = (s: number | 'intro' | null) => {
+    if (s !== null) setWords(null);
+    setStudyState(s);
+  };
   const wide = useWideLayout();
   const [noteFor, setNoteFor] = useState<{ range: RefRange; note: MarkRecord | null } | null>(null);
   const marksOn = useSettings((st) => st.features.marks);
@@ -97,6 +106,8 @@ export function BibleReader({ toolbar, selectionActions }: BiblePageSlots) {
   const studyOn = useSettings((st) => st.studyNotes);
   const bookNotes = useStudyNotes(studyOn ? book : null);
   const studyByVerse = useMemo(() => notesByVerse(bookNotes, chapter), [bookNotes, chapter]);
+  // Fetched once a verse is selected, so the Words button opens without a wait.
+  const bookWords = useBookWords(studyOn && (selection || words) ? book : null);
   const primary = useChapter(translation, book, chapter);
   // Side by side is a Study layout: two translations interleaved in paragraphs read poorly.
   const parallel = layout === 'study' ? parallelPref : null;
@@ -139,9 +150,61 @@ export function BibleReader({ toolbar, selectionActions }: BiblePageSlots) {
   useShortcuts({
     ArrowRight: () => go(1),
     ArrowLeft: () => go(-1),
-    // Esc clears the selection first; with nothing selected it falls through (e.g. to the TV).
-    ...(selection ? { Escape: () => setSelection(null) } : {}),
+    // Esc leaves word study, then clears the selection; with nothing selected it falls through
+    // (e.g. to the TV).
+    ...(words
+      ? { Escape: () => setWords(null) }
+      : selection
+        ? { Escape: () => setSelection(null) }
+        : {}),
   });
+
+  // Word study follows the selection: tapping another verse studies that one; clearing it (or
+  // moving to another chapter) ends it.
+  const [wordsFor, setWordsFor] = useState({ selection, book, chapter });
+  if (wordsFor.selection !== selection || wordsFor.book !== book || wordsFor.chapter !== chapter) {
+    setWordsFor({ selection, book, chapter });
+    const moved = wordsFor.book !== book || wordsFor.chapter !== chapter;
+    const inside =
+      selection && words && words.verse >= selection.start && words.verse <= selection.end;
+    if (words && (!selection || moved)) setWords(null);
+    // Reading the BSB the new verses are underlined: wait for a word. Elsewhere, study the first.
+    else if (words && selection && !inside)
+      setWords(
+        translation === WORD_STUDY_TRANSLATION ? null : { verse: selection.start, strong: null },
+      );
+  }
+
+  // Keep the studied verse in view: on phones above the docked panel (which grows once a word is
+  // chosen), on laptops after the side column narrows the text.
+  useEffect(() => {
+    if (!words) return;
+    const scroller = body.current;
+    const panel = document.querySelector<HTMLElement>('aside[aria-label="Word study"]');
+    if (!scroller || !panel) return;
+    let frame = 0;
+    const keepVisible = () => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => {
+        const verse = scroller.querySelector<HTMLElement>(`[data-verse="${words.verse}"]`);
+        if (!verse) return;
+        const v = verse.getBoundingClientRect();
+        const box = scroller.getBoundingClientRect();
+        const top = box.top;
+        const limit = (wide ? box.bottom : panel.getBoundingClientRect().top) - 16;
+        if (v.top < top || v.bottom > limit)
+          scroller.scrollBy({ top: v.top - top - 12, behavior: 'smooth' });
+      });
+    };
+    keepVisible();
+    // The panel grows once a word's entry has loaded.
+    const ro = typeof ResizeObserver !== 'undefined' ? new ResizeObserver(keepVisible) : null;
+    ro?.observe(panel);
+    return () => {
+      cancelAnimationFrame(frame);
+      ro?.disconnect();
+    };
+  }, [words?.verse, wide]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Keep the selection in view after a jump.
   useLayoutEffect(() => {
@@ -218,6 +281,29 @@ export function BibleReader({ toolbar, selectionActions }: BiblePageSlots) {
     );
   };
 
+  // Reading the BSB, selected verses show their studyable words at once: tap one to study it.
+  // (Other translations use the Words button, which studies a verse through the BSB.)
+  const inBsb = translation === WORD_STUDY_TRANSLATION;
+  const underlined = useMemo(() => {
+    if (!studyOn || !inBsb || !selection) return null;
+    const out = new Map<number, WordSpan[]>();
+    for (let v = selection.start; v <= selection.end; v++)
+      out.set(v, verseWords(bookWords, chapter, v));
+    return out;
+  }, [studyOn, inBsb, selection, bookWords, chapter]);
+
+  const wordPanel = words && (
+    <WordStudyPanel
+      key={`${book}.${chapter}.${words.verse}`}
+      verse={{ book, chapter, verse: words.verse }}
+      translation={translation}
+      strong={words.strong}
+      onPick={(strong) => setWords({ verse: words.verse, strong })}
+      onClose={() => setWords(null)}
+      docked={!wide}
+    />
+  );
+
   const copyText = () => {
     if (!range || !primary) return null;
     const verses = primary.verses.filter(
@@ -227,7 +313,7 @@ export function BibleReader({ toolbar, selectionActions }: BiblePageSlots) {
   };
 
   return (
-    <div className={cx(styles.layout, wide && study !== null && styles.withSide)}>
+    <div className={cx(styles.layout, wide && (study !== null || words) && styles.withSide)}>
       <div className={styles.reader}>
         <header className={styles.mobileHeader} role="group" aria-label="Bible reading controls">
           <button type="button" className={styles.mobilePlace} onClick={() => setPicking(true)}>
@@ -265,7 +351,7 @@ export function BibleReader({ toolbar, selectionActions }: BiblePageSlots) {
 
         <div
           ref={body}
-          className={styles.body}
+          className={cx(styles.body, words && !wide && styles.bodyUnderPanel)}
           style={{ '--reader-size': `${size}px` } as CSSProperties}
           onScroll={onScroll}
         >
@@ -320,6 +406,19 @@ export function BibleReader({ toolbar, selectionActions }: BiblePageSlots) {
                   }}
                   studyByVerse={studyByVerse}
                   onOpenStudy={(verse) => setStudy(verse)}
+                  words={
+                    underlined
+                      ? {
+                          spans: underlined,
+                          active: words?.strong ?? null,
+                          onPick: (verse, strong) => {
+                            haptic('select');
+                            setStudyState(null);
+                            setWords({ verse, strong });
+                          },
+                        }
+                      : null
+                  }
                 />
               </>
             ) : (
@@ -348,7 +447,7 @@ export function BibleReader({ toolbar, selectionActions }: BiblePageSlots) {
         </div>
 
         {/* Phones: getting around, in thumb reach. The selection bar takes its place. */}
-        {!selectionActionsOpen && (
+        {!selectionActionsOpen && !(words && !wide) && (
           <nav className={styles.pill} data-quiet={quiet || undefined} aria-label="Chapter">
             <IconButton
               label="Previous chapter"
@@ -369,7 +468,7 @@ export function BibleReader({ toolbar, selectionActions }: BiblePageSlots) {
           </nav>
         )}
 
-        {range && selection && selectionActionsOpen && (
+        {range && selection && selectionActionsOpen && !(words && !wide) && (
           <VerseActions
             range={range}
             selection={selection}
@@ -377,12 +476,22 @@ export function BibleReader({ toolbar, selectionActions }: BiblePageSlots) {
             copyText={copyText}
             studyVerse={studyVerse}
             onStudy={setStudy}
+            onWords={
+              studyOn && !inBsb
+                ? () => {
+                    setStudyState(null);
+                    setWords({ verse: selection.start, strong: null });
+                  }
+                : undefined
+            }
             extra={selectionActions?.(range, translation)}
             onNote={setNoteFor}
             onClose={() => setSelection(null)}
           />
         )}
+        {words && !wide && wordPanel}
       </div>
+      {words && wide && wordPanel}
 
       <NoteDialog target={noteFor} onClose={() => setNoteFor(null)} />
       <StudyNotesSheet

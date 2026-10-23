@@ -46,13 +46,19 @@ export default defineConfig({
       workbox: {
         // App shell, fonts, icons, Bible data and the background library all work offline.
         globPatterns: ['**/*.{js,css,html,svg,png,webp,woff2,json}'],
-        // Study notes (8 MB) download a book at a time when first opened, then work offline.
-        globIgnores: ['notes/**'],
+        // Study notes (8 MB) and word study (7 MB) download a file at a time when first opened,
+        // then work offline.
+        globIgnores: ['notes/**', 'words/**'],
         runtimeCaching: [
           {
             urlPattern: ({ url }) => url.pathname.startsWith('/notes/'),
             handler: 'CacheFirst',
             options: { cacheName: 'study-notes', expiration: { maxEntries: 80 } },
+          },
+          {
+            urlPattern: ({ url }) => url.pathname.startsWith('/words/'),
+            handler: 'CacheFirst',
+            options: { cacheName: 'word-study', expiration: { maxEntries: 300 } },
           },
         ],
         maximumFileSizeToCacheInBytes: 12 * 1024 * 1024,

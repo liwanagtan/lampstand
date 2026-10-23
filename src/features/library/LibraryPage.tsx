@@ -160,7 +160,7 @@ export function LibraryPage() {
       />
       {records && !empty && (
         <h2 id="presentations" className={styles.sectionTitle}>
-          Presentations <span>{records.length}</span>
+          Slides <span>{records.length}</span>
         </h2>
       )}
       {empty ? (
@@ -184,7 +184,7 @@ export function LibraryPage() {
               Nothing matches “{query}”. Try a title or speaker name.
             </EmptyState>
           ) : (
-            <ul className={styles.grid} aria-label="Presentations">
+            <ul className={styles.grid} aria-label="Slides">
               {visible.map((r) => (
                 <PresentationCard key={r.id} record={r} />
               ))}

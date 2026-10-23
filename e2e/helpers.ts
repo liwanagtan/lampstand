@@ -10,7 +10,7 @@ export async function openApp(page: Page, path = '/') {
 
 export async function importFile(page: Page, file: string) {
   await openApp(page, '/import');
-  await page.getByLabel('Choose a presentation file').setInputFiles(file);
+  await page.getByLabel('Choose a slides file').setInputFiles(file);
 }
 
 export async function importSample(page: Page) {

@@ -52,7 +52,7 @@ In rough order of value (from the review's "Still to do").
 
 ## 5. Later (not started)
 
-- STEPBible data (CC BY 4.0) for word studies.
+- [x] STEPBible data (CC BY 4.0) for word studies: done (2026-10-23), see `docs/WORD-STUDY.md`. Still to check: underlined words with a screen reader on iOS and Android, and word study in plan readings (the Bible reader only for now).
 - Imported plans, presentations and assets in account sync (kept on the device for now).
 - On-device encryption of journal text (declined for the first release; the privacy page says so).
 - A merge to `main` and a production deploy, only with the owner's approval.

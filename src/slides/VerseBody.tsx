@@ -2,7 +2,7 @@ import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties } from
 import { motion, motionDetail } from '@/design-system/tokens';
 import { splitEmphasis } from './emphasis';
 import { LiveText } from './LiveText';
-import { useLiveText } from './liveTextTools';
+import { useLiveText, useStudyMarks } from './liveTextTools';
 import { isReducedMotion, revealBlock } from './motion';
 import type { Page } from './paginate';
 import s from './Slide.module.css';
@@ -31,6 +31,8 @@ export function VerseBody({
   const [emphasisOn, setEmphasisOn] = useState(!animate);
   // The console's Live pane makes words clickable; the TV draws them plain.
   const liveText = useLiveText();
+  // Word study marks its words (TV too), separate from highlights.
+  const studyMarks = useStudyMarks();
 
   useLayoutEffect(() => {
     if (!animate) return;
@@ -62,9 +64,11 @@ export function VerseBody({
             {seg.showNumber && <sup className={s.verseNum}>{seg.verse}</sup>}
             {seg.missing ? (
               <span className={s.missing}>{seg.text}</span>
-            ) : liveText ? (
+            ) : liveText || studyMarks ? (
               <LiveText
                 tools={liveText}
+                marks={studyMarks}
+                osis={seg.osis}
                 text={seg.text}
                 emphasis={emphasis}
                 emphasisOn={emphasisOn}

@@ -90,8 +90,11 @@ export function BibleConsolePage() {
   const pages = useControl((s) => s.overlayPageCount);
   const [exitOpen, setExitOpen] = useState(false);
   const [backgroundOpen, setBackgroundOpen] = useState(false);
-  // The Words column beside Live, for word study with the class.
-  const [wordsOpen, setWordsOpen] = useState(false);
+  // The Words column beside Live, for word study with the class. While it is open the TV
+  // underlines the studyable words; closing it takes them (and any word) off.
+  const wordsOpen = useControl((s) => Boolean(s.live.studyWords));
+  const setWordsOpen = (open: boolean) =>
+    useControl.getState().dispatch({ type: 'studyWords', on: open });
   const { live } = snapshot;
   const overlay = live.overlay;
   const control = useControl.getState;
@@ -237,7 +240,7 @@ export function BibleConsolePage() {
                       type="button"
                       className={styles.liveTool}
                       aria-pressed={wordsOpen}
-                      onClick={() => setWordsOpen((o) => !o)}
+                      onClick={() => setWordsOpen(!wordsOpen)}
                     >
                       <Languages size={14} aria-hidden /> Words
                     </button>

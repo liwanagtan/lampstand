@@ -158,6 +158,18 @@
   position: absolute;
   inset: -14px -6px;
 }
+/* Word study: studyable words underlined, the word on screen boxed (not the highlight gold). */
+.study {
+  text-decoration: underline solid var(--t-accent);
+  text-decoration-thickness: 4px;
+  text-underline-offset: 0.2em;
+  text-decoration-skip-ink: none;
+}
+.studyActive {
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--t-accent) 30%, transparent);
+  box-shadow: 0 0 0 6px color-mix(in srgb, var(--t-accent) 30%, transparent);
+}
 .liveWord:hover {
   background: rgb(255 255 255 / 0.16);
   box-shadow: 0 0 0 4px rgb(255 255 255 / 0.16);

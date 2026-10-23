@@ -42,6 +42,8 @@ export interface LiveState {
   backdrop?: Background | null;
   /** A word of the verse on screen, studied on the TV (Bible session). */
   word?: LiveWord | null;
+  /** Mark every studyable word of the verse on screen (while the Words column is open). */
+  studyWords?: boolean;
 }
 
 /** Everything the output needs to draw the TV without asking anyone. */

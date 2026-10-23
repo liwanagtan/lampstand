@@ -148,4 +148,20 @@ describe('liveReducer', () => {
       word: null,
     });
   });
+
+  it('marks studyable words while word study is open, through new passages', () => {
+    const shown: LiveAction = {
+      type: 'showOverlay',
+      overlay: { ref: 'PSA.119.105', translation: 'BSB', mode: 'fullScreen' },
+    };
+    const word = { strong: 5216, verse: 'PSA.119.105', text: 'lamp' };
+    const on = run([{ type: 'studyWords', on: true }, shown, { type: 'showWord', word }]);
+    expect(on).toMatchObject({ studyWords: true, word });
+    expect(run([shown], ctx(), on).studyWords).toBe(true);
+    // Putting word study away takes the word off too.
+    expect(run([{ type: 'studyWords', on: false }], ctx(), on)).toMatchObject({
+      studyWords: false,
+      word: null,
+    });
+  });
 });

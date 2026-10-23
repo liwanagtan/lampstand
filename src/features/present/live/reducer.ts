@@ -23,6 +23,7 @@ export type LiveAction =
   | { type: 'backdrop'; backdrop: Background | null }
   | { type: 'showWord'; word: LiveWord }
   | { type: 'hideWord' }
+  | { type: 'studyWords'; on: boolean }
   | { type: 'theme'; theme: LiveState['theme'] };
 
 export interface LiveContext {
@@ -112,6 +113,11 @@ export function liveReducer(state: LiveState, action: LiveAction, ctx: LiveConte
       return state.overlay ? { ...state, word: action.word } : state;
     case 'hideWord':
       return state.word ? { ...state, word: null } : state;
+    // Words stay marked through new passages until word study is put away.
+    case 'studyWords':
+      return Boolean(state.studyWords) === action.on
+        ? state
+        : { ...state, studyWords: action.on, word: action.on ? state.word : null };
     case 'overlayMode': {
       if (!state.overlay) return state;
       const overlay = { ...state.overlay, mode: action.mode };

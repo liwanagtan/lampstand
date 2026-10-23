@@ -125,11 +125,12 @@ test('word study on the TV: choose a word, preview it, send it, take it off', as
   await words.getByRole('button', { name: /^Show on screen/ }).click();
   await expect(tv).toContainText('agapaō');
   await expect(tv).toContainText('Used in');
-  // The word is lit up in the verse on the TV and on Live.
-  await expect(tv.locator('[class*="emphasis"]').first()).toContainText('loved');
-  await expect(page.locator('[data-pane="live"] [class*="emphasis"]').first()).toContainText(
-    'loved',
-  );
+  // With Words open, the studyable words are underlined on the TV and on Live, apart from
+  // clicked highlights; the word on screen is boxed.
+  await expect(tv.locator('[class*="study"]').filter({ hasText: 'world' })).toHaveCount(1);
+  await expect(tv.locator('[class*="studyActive"]')).toHaveText('loved');
+  await expect(tv.locator('[class*="emphasis"]')).toHaveCount(0);
+  await expect(page.locator('[data-pane="live"] [class*="studyActive"]')).toHaveText('loved');
   await page.screenshot({ path: 'test-results/console-words.png' });
   await output.screenshot({ path: 'test-results/word-study-tv.png' });
 
@@ -137,6 +138,9 @@ test('word study on the TV: choose a word, preview it, send it, take it off', as
   await page.keyboard.press('w');
   await expect(tv).not.toContainText('agapaō');
   await expect(tv).toContainText('For God so loved the world');
+  // The underlines stay while Words is open; only the box goes.
+  await expect(tv.locator('[class*="studyActive"]')).toHaveCount(0);
+  await expect(tv.locator('[data-study]').first()).toBeVisible();
   await page.keyboard.press('w');
   await expect(tv).toContainText('agapaō');
 
@@ -153,6 +157,11 @@ test('word study on the TV: choose a word, preview it, send it, take it off', as
     .first()
     .click();
   await expect(tv).not.toContainText('kosmos');
+
+  // Closing Words takes the underlines off the TV.
+  await expect(tv.locator('[data-study]').first()).toBeVisible();
+  await words.getByRole('button', { name: 'Close words' }).click();
+  await expect(tv.locator('[data-study]')).toHaveCount(0);
 
   // Esc puts away the verse (the word went with the old one).
   await page.keyboard.press('Escape');

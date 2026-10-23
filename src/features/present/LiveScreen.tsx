@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useState, type ComponentProps, type ReactNode } from 'react';
 import {
   AnimatePresence,
   motion,
@@ -20,6 +20,7 @@ import { OVERLAY } from '@/templates/metrics';
 import type { LiveSnapshot } from './live/types';
 import { VerseOverlay } from './VerseOverlay';
 import { WordStudyScreen } from '@/slides/WordStudyScreen';
+import { StudyMarksProvider } from '@/slides/StudyMarksProvider';
 import { PosterContext, posterInfoFor } from '@/slides/poster/posterInfo';
 import styles from './LiveScreen.module.css';
 
@@ -184,20 +185,22 @@ export function LiveScreen({ snapshot, fit = 'width', label, className }: LiveSc
                 transition={overlayTransition}
               >
                 <FeatureBoundary name="Verse overlay" silent>
-                  <VerseOverlay
-                    key={`${overlay.ref}|${overlay.translation}`}
-                    background={presentation ? undefined : (live.backdrop ?? undefined)}
-                    overlay={
-                      // The studied word is lit up in the verse too.
-                      studying && live.word
-                        ? { ...overlay, emphasis: [...(overlay.emphasis ?? []), live.word.text] }
-                        : overlay
-                    }
-                    template={template}
-                    animate={overlayKey !== initial.overlay}
-                    // Only the words shrink; the screen's background stays full size behind.
-                    bare={studying && !presentation}
-                  />
+                  <MaybeStudyMarks
+                    on={Boolean(live.studyWords) && !presentation}
+                    passageRef={overlay.ref}
+                    translation={overlay.translation}
+                    word={live.word}
+                  >
+                    <VerseOverlay
+                      key={`${overlay.ref}|${overlay.translation}`}
+                      background={presentation ? undefined : (live.backdrop ?? undefined)}
+                      overlay={overlay}
+                      template={template}
+                      animate={overlayKey !== initial.overlay}
+                      // Only the words shrink; the screen's background stays full size behind.
+                      bare={studying && !presentation}
+                    />
+                  </MaybeStudyMarks>
                 </FeatureBoundary>
               </motion.div>
             </motion.div>
@@ -248,6 +251,18 @@ export function LiveScreen({ snapshot, fit = 'width', label, className }: LiveSc
       </SlideStage>
     </PosterContext.Provider>
   );
+}
+
+/** Word study's underlines on the verse, while the Words column is open. */
+function MaybeStudyMarks({
+  on,
+  children,
+  ...props
+}: { on: boolean; children: ReactNode } & Omit<
+  ComponentProps<typeof StudyMarksProvider>,
+  'children'
+>) {
+  return on ? <StudyMarksProvider {...props}>{children}</StudyMarksProvider> : <>{children}</>;
 }
 
 /** The sermon poster shown by the Sermon button: the presentation's title slide. */

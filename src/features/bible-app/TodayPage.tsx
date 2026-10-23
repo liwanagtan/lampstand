@@ -286,7 +286,7 @@ function VerseHero({
   const copy = async () => {
     try {
       await navigator.clipboard.writeText(
-        `“${text ?? ''}”\n— ${label} (${translation})${passage?.copyright ? `\n\n${passage.copyright}` : ''}`,
+        `“${text ?? ''}”\n— ${label} (${translation})`,
       );
       toast({ title: 'Copied the verse of the day', tone: 'success' });
     } catch {
@@ -311,7 +311,6 @@ function VerseHero({
         <p className={styles.heroRef}>
           {label} <span>{translation}</span>
         </p>
-        {passage?.copyright && <small>{passage.copyright}</small>}
         <div className={styles.heroActions}>
           <Button icon={<BookOpen size={16} />} onClick={onContext} className={styles.heroButton}>
             Read in context

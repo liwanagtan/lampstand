@@ -13,4 +13,22 @@
     "logs": { "enabled": true, "head_sampling_rate": 1 },
     "traces": { "enabled": true, "head_sampling_rate": 0.01 },
   },
+  // Two deployments (docs/PUBLISH-LIVE.md): the live site above deploys from `main`; the
+  // staging site deploys from `staging` with `npx wrangler deploy --env staging`. It needs its
+  // own NLT_API_KEY secret (secrets aren't shared between Workers).
+  "env": {
+    "staging": {
+      "name": "lampstand-staging",
+      "assets": {
+        "directory": "./dist",
+        "binding": "ASSETS",
+        "not_found_handling": "single-page-application",
+      },
+      "observability": {
+        "enabled": true,
+        "logs": { "enabled": true, "head_sampling_rate": 1 },
+        "traces": { "enabled": true, "head_sampling_rate": 0.01 },
+      },
+    },
+  },
 }

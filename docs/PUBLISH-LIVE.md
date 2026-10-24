@@ -1,8 +1,20 @@
 # Publishing Lampstand
 
-Status: **live on Cloudflare Workers** at https://lampstand.jonathanulandayliwanag.workers.dev. The owner’s theological review in [content/LAUNCH-REVIEW.md](content/LAUNCH-REVIEW.md) remains pending; public deployment does not imply content approval.
+Status: **live on Cloudflare Workers** at https://lampstand.jonathanulandayliwanag.workers.dev, with a staging site at https://lampstand-staging.jonathanulandayliwanag.workers.dev. The owner’s theological review in [content/LAUNCH-REVIEW.md](content/LAUNCH-REVIEW.md) remains pending; public deployment does not imply content approval.
 
 Cloudflare Workers Builds is connected to `liwanagtan/lampstand`. `main` is the production branch, builds are enabled, the build command is `npm run build`, and the deploy command is `npx wrangler deploy`. The first deployment succeeded on 2026-10-22. Cloudflare auto-configured Wrangler for the Vite app during that build, including SPA fallback; the repository does not yet contain a checked-in Wrangler configuration. The live site and manifest opened in Chrome, first-run Bible preparation completed, and a direct `/salvation` visit loaded the app and redirected to onboarding for a new user. The full release checklist below still needs to be completed.
+
+## Two deployments
+
+| | Live | Staging |
+| --- | --- | --- |
+| Worker | `lampstand` | `lampstand-staging` |
+| Address | lampstand.jonathanulandayliwanag.workers.dev | lampstand-staging.jonathanulandayliwanag.workers.dev |
+| Builds from | `main` | `staging` |
+| Deploy command | `npx wrangler deploy` | `npx wrangler deploy --env staging` |
+| Other branches | preview builds | none |
+
+Both use the same repository, build command (`npm run build`) and build token. The staging deployment is the `env.staging` section of `wrangler.jsonc` (added 2026-10-24). Secrets are not shared between Workers: `lampstand-staging` needs its own `NLT_API_KEY` (Settings › Variables and secrets), or NLT says it is unavailable there. Each address keeps its own browser data, so staging and live never share a reader’s highlights, plans or slides. When accounts return, point staging at the staging Supabase project and add the staging address to Supabase’s redirect URLs.
 
 ## Hosting choice
 
@@ -22,5 +34,5 @@ The current build is about 46 MB in 227 files; the largest file is about 4.2 MB.
 
 ## Branch flow
 
-Work happens on `design/<topic>` branches made from `staging`, the long-lived staging branch. `main` is the production release branch, now connected to Cloudflare. Preview work on staging, then merge to main only with the owner’s approval as required by [AGENTS.md](../AGENTS.md). Confirm Cloudflare’s preview branch behavior before relying on it; a design push must never deploy to the production URL.
+Work happens on `design/<topic>` branches made from `staging`, the long-lived staging branch. A topic merged into `staging` deploys the staging site; check it there. `main` is the production release branch: merging `staging` into `main`, only with the owner’s approval as required by [AGENTS.md](../AGENTS.md), deploys the live site. A design push must never deploy to the live address.
 

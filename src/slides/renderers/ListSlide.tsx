@@ -2,6 +2,7 @@ import { Reveal } from '../Reveal';
 import type { RenderProps } from '../types';
 import s from '../Slide.module.css';
 
+/** Numbered items in two columns. A build list shows them one at a time; unshown ones keep their place. */
 export function ListSlide({ slide, animate, buildStep }: RenderProps<'list'>) {
   const shown = slide.build && buildStep !== undefined ? buildStep : slide.items.length;
   return (
@@ -9,14 +10,16 @@ export function ListSlide({ slide, animate, buildStep }: RenderProps<'list'>) {
       <Reveal as="h1" className={s.subheading} animate={animate && (!slide.build || shown === 0)}>
         {slide.heading}
       </Reveal>
-      <ul className={s.list}>
+      <ol className={s.list}>
         {slide.items.map((item, i) => {
           const visible = i < shown;
           // On a build, only the newest item animates; earlier ones stay put.
           const animateItem = animate && visible && (slide.build ? i === shown - 1 : true);
           return (
             <li key={`${i}-${visible}`} className={`${s.listItem} ${visible ? '' : s.hidden}`}>
-              <span className={s.marker} aria-hidden />
+              <span className={s.marker} aria-hidden>
+                {i + 1}
+              </span>
               <Reveal
                 as="span"
                 animate={animateItem}
@@ -28,7 +31,7 @@ export function ListSlide({ slide, animate, buildStep }: RenderProps<'list'>) {
             </li>
           );
         })}
-      </ul>
+      </ol>
     </div>
   );
 }

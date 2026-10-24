@@ -14,7 +14,7 @@ Files next to this one:
 
 ## Workflow
 
-1. **Gather.** Ask for (or accept) the sermon notes, title, speaker, date and preferred template: `classic` (reverent, timeless; the default), `modern` (bold, clean) or `warm` (soft, photographic). Don't ask again for anything the user already gave you.
+1. **Gather.** Ask for (or accept) the sermon notes, title, speaker and date. Don't ask again for anything the user already gave you. Lampstand draws every presentation in its one theme (ink, cream and gold), so don't ask about a template and leave `theme` unset.
 2. **Outline first.** Propose a short outline: the big idea, the sections and main points, and the main verses. Wait for the user to confirm or adjust it before generating. Skip this step only if the user asks you to.
 3. **Generate** one presentation that follows the rules below.
 4. **Self-check** before you output (see the checklist).

@@ -18,7 +18,7 @@ import { useBible } from '@/features/bible/bibleStore';
 import { useSettings } from '@/features/settings/settingsStore';
 import { useReducedMotion } from '@/features/settings/theme';
 import { SlideSchema, type StoredPresentation, type StoredSlide } from '@/schema/presentation';
-import { TEMPLATE_IDS, type TemplateId } from '@/schema/common';
+import { ACTIVE_TEMPLATE_IDS, type TemplateId } from '@/schema/common';
 import {
   formatIssue,
   slidePrefix,
@@ -282,17 +282,20 @@ export function ImportPage() {
           <Chip tone="success" icon={<CheckCircle2 size={14} />}>
             Ready to save
           </Chip>
-          <Tabs
-            className={styles.templates}
-            label="Template"
-            value={templateId}
-            onChange={setTemplateId}
-            items={TEMPLATE_IDS.map((id) => ({
-              value: id,
-              label: getTemplate(id).name,
-              content: null,
-            }))}
-          />
+          {/* One theme for now (src/schema/common.ts): nothing to choose until there are more. */}
+          {ACTIVE_TEMPLATE_IDS.length > 1 && (
+            <Tabs
+              className={styles.templates}
+              label="Template"
+              value={templateId}
+              onChange={setTemplateId}
+              items={ACTIVE_TEMPLATE_IDS.map((id) => ({
+                value: id,
+                label: getTemplate(id).name,
+                content: null,
+              }))}
+            />
+          )}
         </div>
       )}
       {warnings.length > 0 && (

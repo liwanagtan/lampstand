@@ -1,6 +1,6 @@
 // Templates are token sets applied to the same slide renderers (PRD §8).
 import { fonts } from '@/design-system/tokens';
-import type { TemplateId } from '@/schema/common';
+import { ACTIVE_TEMPLATE_IDS, type TemplateId } from '@/schema/common';
 
 export interface FontSpec {
   family: string;
@@ -22,6 +22,10 @@ export interface Template {
     panel: string;
     /** Frosted glass behind the lower third and popup verse: the slide shows through. */
     glass: string;
+    /** Warm ground for verse panels and list numbers (Lampstand's gold-tint). */
+    chip?: string;
+    /** The soft light some slides glow with (Lampstand). */
+    glow?: string;
   };
   /** CSS background layers for the template's own background. */
   backdrop: string;
@@ -33,6 +37,8 @@ export interface Template {
   body: FontSpec;
   /** Font for emphasis/quote accents. */
   accentFont: FontSpec;
+  /** Scripture text; the body font when unset. */
+  verse?: FontSpec;
   texture: 'grain' | 'none' | 'grain-leak';
   /** Modern's slow-moving gradient accent. */
   ambient: boolean;
@@ -42,6 +48,39 @@ const serif = fonts.display;
 const sans = fonts.ui;
 
 export const TEMPLATES: Record<TemplateId, Template> = {
+  /**
+   * Lampstand (the slide templates canvas, October 2026): ink and cream, gold only for light.
+   * Plus Jakarta Sans for every word but Scripture, which is Fraunces. No logo, no lines.
+   */
+  lampstand: {
+    id: 'lampstand',
+    name: 'Lampstand',
+    mood: 'Calm light: ink, cream and gold',
+    colors: {
+      background: '#0A0F1C',
+      text: '#F5F2EA',
+      muted: '#A9AEBB',
+      accent: '#F2B33D',
+      panel: '#2A2416',
+      glass: 'rgb(10 15 28 / 0.94)',
+      chip: '#2A2416',
+      glow: 'rgb(242 179 61 / 0.16)',
+    },
+    backdrop: '#0A0F1C',
+    photoOverlay: 'linear-gradient(180deg, rgb(10 15 28 / 0.5) 0%, rgb(10 15 28 / 0.78) 100%)',
+    tones: { base: '#0A0F1C', accent: '#2A2416', deep: '#090C11' },
+    gradients: {
+      calm: 'radial-gradient(circle at 50% 50%, rgb(242 179 61 / 0.12), transparent 60%), #0A0F1C',
+      warm: 'radial-gradient(circle at 88% 12%, rgb(242 179 61 / 0.22), transparent 55%), #0A0F1C',
+      dawn: 'radial-gradient(ellipse at 50% 112%, rgb(242 179 61 / 0.26), transparent 62%), #0A0F1C',
+    },
+    heading: { family: sans, weight: 800, letterSpacing: '-0.03em' },
+    body: { family: sans, weight: 500 },
+    accentFont: { family: sans, weight: 700, letterSpacing: '-0.02em' },
+    verse: { family: serif, weight: 400 },
+    texture: 'none',
+    ambient: false,
+  },
   classic: {
     id: 'classic',
     name: 'Classic',
@@ -125,8 +164,10 @@ export const TEMPLATES: Record<TemplateId, Template> = {
   },
 };
 
+/** The theme a presentation draws in: its own if that one is offered, else Lampstand. */
 export function getTemplate(id: TemplateId | undefined): Template {
-  return TEMPLATES[id ?? 'classic'] ?? TEMPLATES.classic;
+  const active = (ACTIVE_TEMPLATE_IDS as readonly TemplateId[]).includes(id as TemplateId);
+  return TEMPLATES[active ? id! : 'lampstand'];
 }
 
 export function templateVars(t: Template): Record<string, string> {
@@ -148,5 +189,10 @@ export function templateVars(t: Template): Record<string, string> {
     '--t-accent-font': t.accentFont.family,
     '--t-accent-weight': String(t.accentFont.weight),
     '--t-accent-style': t.accentFont.style ?? 'normal',
+    '--t-accent-tracking': t.accentFont.letterSpacing ?? 'normal',
+    '--t-verse-font': (t.verse ?? t.body).family,
+    '--t-verse-weight': String((t.verse ?? t.body).weight),
+    '--t-chip': t.colors.chip ?? t.colors.panel,
+    '--t-glow': t.colors.glow ?? 'transparent',
   };
 }

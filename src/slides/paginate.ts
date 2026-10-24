@@ -61,8 +61,13 @@ export function pagesFor(
   const t = getTemplate(templateId);
   const measure = bible
     ? browserMeasure(fonts.display, 400)
-    : browserMeasure(t.body.family, t.body.weight);
-  return paginate(verses, verseBox(mode), measure, bible ? BIBLE_LAYOUT : {});
+    : browserMeasure((t.verse ?? t.body).family, (t.verse ?? t.body).weight);
+  const layout: VerseLayout = bible
+    ? BIBLE_LAYOUT
+    : mode === 'slide' && t.id === 'lampstand'
+      ? { max: LAMPSTAND_SLIDE_MAX }
+      : {};
+  return paginate(verses, verseBox(mode), measure, layout);
 }
 
 /** Approximate width for environments without canvas text metrics. */
@@ -124,7 +129,12 @@ export function fits(text: string, box: TextBox, size: number, measure: Measure)
 export interface VerseLayout {
   lines?: boolean;
   wholeVerses?: boolean;
+  /** Largest size a page may use (TYPE.verse when unset). */
+  max?: number;
 }
+
+/** A passage on its own Lampstand slide may grow to the Reading template's size. */
+const LAMPSTAND_SLIDE_MAX = 69;
 
 /** Space between verses on their own lines, in em (VerseBody draws the same). */
 export const VERSE_GAP = 0.3;
@@ -213,7 +223,7 @@ function bestSize(
   layout: VerseLayout,
 ): number {
   const floor = layout.wholeVerses ? WHOLE_VERSE_MIN : TYPE.minimumBody;
-  for (let size = TYPE.verse; size > floor; size -= 2) {
+  for (let size = layout.max ?? TYPE.verse; size > floor; size -= 2) {
     if (pageFits(segs, box, size, measure, layout)) return size;
   }
   return floor;

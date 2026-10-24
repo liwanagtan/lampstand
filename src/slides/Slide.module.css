@@ -1,8 +1,12 @@
-/* Shared slide layouts on the 1920×1080 canvas. All sizes come from --s-* and --t-* tokens. */
+/*
+ * Slide layouts on the 1920×1080 canvas (the Lampstand theme: the slide templates canvas,
+ * October 2026, drawn at 1280×720 and scaled 1.5×). Colours and fonts come from --t-* tokens.
+ * No logo and no decorative lines: hierarchy is size, weight and gold.
+ */
 
 .content {
   position: absolute;
-  inset: var(--s-safe-y) var(--s-safe-x);
+  inset: 132px 168px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -16,117 +20,199 @@
   align-items: flex-start;
   text-align: left;
 }
+.end {
+  justify-content: flex-end;
+}
+
+/* Soft light behind some slides: gold, never moving, never behind body text. */
+.glow {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+.glowCorner {
+  background: radial-gradient(circle at 88% 12%, var(--t-glow), transparent 48%);
+}
+.glowSide {
+  background: radial-gradient(circle at 92% 50%, var(--t-glow), transparent 42%);
+}
+.glowCenter {
+  background: radial-gradient(circle at 50% 52%, var(--t-glow), transparent 58%);
+}
+.glowBelow {
+  background: radial-gradient(ellipse at 50% 112%, var(--t-glow), transparent 62%);
+}
 
 .display,
 .heading,
-.subheading {
+.subheading,
+.statement {
   font-family: var(--t-heading-font);
   font-weight: var(--t-heading-weight);
   font-style: var(--t-heading-style);
   letter-spacing: var(--t-heading-tracking);
   text-wrap: balance;
-  max-width: var(--s-measure-heading);
 }
+/* Section and closing titles. */
 .display {
-  font-size: var(--s-display);
-  line-height: var(--s-lh-display);
+  font-size: 132px;
+  line-height: 1.04;
+  max-width: 1230px;
 }
+.closingTitle {
+  font-size: 156px;
+  line-height: 1;
+  max-width: 1500px;
+  letter-spacing: -0.035em;
+}
+/* A point's main idea. */
 .heading {
-  font-size: var(--s-heading);
-  line-height: var(--s-lh-heading);
+  font-size: 108px;
+  line-height: 1.06;
+  max-width: 1440px;
+}
+/* One bold line, centred. */
+.statement {
+  font-size: 120px;
+  line-height: 1.1;
+  max-width: 1500px;
 }
 .subheading {
-  font-size: var(--s-subheading);
-  line-height: var(--s-lh-heading);
+  font-size: 96px;
+  line-height: 1.06;
+  max-width: 1500px;
 }
 .body {
-  font-size: var(--s-body);
-  line-height: var(--s-lh-body);
+  font-family: var(--t-body-font);
+  font-weight: var(--t-body-weight);
+  font-size: 51px;
+  line-height: 1.45;
   color: var(--t-muted);
-  max-width: var(--s-measure-body);
+  max-width: 1350px;
   text-wrap: pretty;
 }
 .caption {
-  font-size: var(--s-caption);
+  font-size: 39px;
   line-height: 1.3;
   color: var(--t-muted);
 }
 .eyebrow {
-  font-size: var(--s-caption);
+  font-family: var(--t-body-font);
+  font-size: 36px;
   line-height: 1.2;
-  font-weight: 600;
-  letter-spacing: 0.16em;
+  font-weight: 700;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--t-accent);
 }
+/* Kept for older themes; the Lampstand theme draws no lines. */
 .rule {
-  width: 96px;
-  height: 4px;
-  border-radius: 2px;
-  background: var(--t-accent);
+  display: none;
 }
 
 .stack-sm > * + * {
-  margin-top: 24px;
+  margin-top: 30px;
 }
 .stack > * + * {
-  margin-top: 40px;
+  margin-top: 54px;
 }
 .stack-lg > * + * {
-  margin-top: 56px;
+  margin-top: 96px;
 }
 
-/* List */
+/* Title: the sermon's name, low on the screen. */
+.titleMeta {
+  font-size: 45px;
+  font-weight: 500;
+  color: var(--t-muted);
+}
+.titleHeading {
+  font-size: 168px;
+  line-height: 1;
+  max-width: 1440px;
+  letter-spacing: -0.035em;
+}
+
+/* Section: a large numeral sits behind the title. */
+.numeral {
+  position: absolute;
+  right: 108px;
+  top: 50%;
+  z-index: 0;
+  transform: translateY(-50%);
+  font-family: var(--t-verse-font);
+  font-size: 780px;
+  line-height: 1;
+  font-weight: 600;
+  color: color-mix(in srgb, var(--t-accent) 16%, transparent);
+  pointer-events: none;
+}
+
+/* List: numbered, two columns; every item shows unless the slide reveals them. */
 .list {
   list-style: none;
   margin: 0;
   padding: 0;
-  max-width: var(--s-measure-body);
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: 96px;
+  row-gap: 60px;
+  width: 100%;
+  max-width: 1584px;
 }
 .listItem {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   gap: 36px;
-  font-size: var(--s-body);
-  line-height: var(--s-lh-body);
+  font-size: 63px;
+  line-height: 1.15;
+  font-weight: 700;
+  letter-spacing: -0.015em;
   color: var(--t-text);
-}
-.listItem + .listItem {
-  margin-top: 28px;
 }
 .marker {
   flex: none;
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  background: var(--t-accent);
-  transform: translateY(-6px);
-}
-[data-template='modern'] .marker {
-  border-radius: 3px;
+  width: 96px;
+  height: 96px;
+  border-radius: 999px;
+  background: var(--t-chip);
+  color: var(--t-accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 42px;
+  font-weight: 800;
+  letter-spacing: 0;
 }
 .hidden {
   visibility: hidden;
 }
 
-/* Verse */
+/* Scripture: the reference in gold capitals, the words in Fraunces. */
 .reference {
-  font-size: var(--s-caption);
-  font-weight: 600;
-  letter-spacing: 0.04em;
+  font-family: var(--t-body-font);
+  font-size: 36px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
   color: var(--t-accent);
 }
 .verseText {
+  font-family: var(--t-verse-font);
+  font-weight: var(--t-verse-weight);
   font-size: var(--s-verse);
+  /* The line height pagination measures with (src/slides/paginate.ts). */
   line-height: var(--s-lh-body);
   color: var(--t-text);
   max-width: var(--s-measure-verse);
   text-wrap: pretty;
 }
 .verseNum {
-  font-size: 0.5em;
-  font-weight: 600;
-  vertical-align: 0.7em;
+  font-family: var(--t-body-font);
+  font-size: 0.48em;
+  font-weight: 800;
+  vertical-align: 0.9em;
   margin-right: 0.3em;
   color: var(--t-accent);
   font-variant-numeric: tabular-nums;
@@ -136,10 +222,13 @@
   font-style: italic;
 }
 .emphasis {
-  transition: color 600ms cubic-bezier(0.22, 1, 0.36, 1);
+  border-radius: 9px;
+  transition: background-color 600ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 .emphasisOn {
-  color: var(--t-accent);
+  background: color-mix(in srgb, var(--t-accent) 34%, transparent);
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
 }
 /*
  * Words on the console's Live pane (never on the TV): clickable even though overlays ignore the
@@ -179,6 +268,7 @@
   background: rgb(255 255 255 / 0.16);
   box-shadow: 0 0 0 4px rgb(255 255 255 / 0.16);
 }
+/* Where a long passage is: "2 / 3" for overlays, dots on a Scripture slide. */
 .pageIndicator {
   position: absolute;
   right: var(--s-safe-x);
@@ -189,57 +279,80 @@
   color: var(--t-muted);
   opacity: 0.8;
 }
+.pageDots {
+  position: absolute;
+  top: 132px;
+  right: 168px;
+  z-index: 2;
+  display: flex;
+  gap: 18px;
+}
+.pageDot {
+  width: 21px;
+  height: 21px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--t-muted) 26%, transparent);
+}
+.pageDotOn {
+  background: var(--t-accent);
+}
 
 /* Quote */
 .quoteMark {
-  font-family: var(--t-accent-font);
-  font-size: 220px;
+  font-family: var(--t-verse-font);
+  font-size: 240px;
+  font-weight: 600;
   line-height: 0.6;
-  height: 96px;
+  height: 108px;
   color: var(--t-accent);
 }
 .quoteText {
   font-family: var(--t-accent-font);
   font-weight: var(--t-accent-weight);
   font-style: var(--t-accent-style);
-  font-size: var(--s-subheading);
-  line-height: 1.25;
-  max-width: var(--s-measure-quote);
+  letter-spacing: var(--t-accent-tracking);
+  font-size: 84px;
+  line-height: 1.22;
+  max-width: 1470px;
   text-wrap: balance;
 }
-[data-template='modern'] .quoteText {
-  font-family: var(--t-heading-font);
-  letter-spacing: var(--t-heading-tracking);
+.author {
+  font-family: var(--t-body-font);
+  font-size: 39px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--t-accent);
 }
 
-/* Image caption */
+/* Image caption: words low on the picture, over a shade that rises from the bottom. */
 .captionBand {
   position: absolute;
   left: 0;
   right: 0;
   bottom: 0;
   z-index: 1;
-  padding: 160px var(--s-safe-x) calc(var(--s-safe-y) + 24px);
-  background: linear-gradient(180deg, transparent 0%, rgb(0 0 0 / 0.65) 100%);
+  padding: 220px 168px 132px;
+  background: linear-gradient(to top, rgb(10 15 28 / 0.88), rgb(10 15 28 / 0));
 }
 .captionText {
   font-family: var(--t-heading-font);
   font-weight: var(--t-heading-weight);
   font-style: var(--t-heading-style);
   letter-spacing: var(--t-heading-tracking);
-  font-size: var(--s-body);
-  line-height: 1.25;
-  max-width: var(--s-measure-body);
+  font-size: 84px;
+  line-height: 1.12;
+  max-width: 1350px;
 }
 
 /* Countdown */
 .countdown {
   font-family: var(--t-heading-font);
   font-weight: var(--t-heading-weight);
-  font-size: var(--s-countdown);
+  font-size: 360px;
   line-height: 1;
   font-variant-numeric: tabular-nums;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.04em;
 }
 
 /* Fallback */

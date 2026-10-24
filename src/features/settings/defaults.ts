@@ -3,7 +3,7 @@ import { ALL_FEATURES } from '@/app/features';
 
 export const DEFAULT_SETTINGS: Settings = {
   defaultTranslation: 'NLT',
-  defaultTheme: 'classic',
+  defaultTheme: 'lampstand',
   defaultOverlayMode: 'lowerThird',
   uiMode: 'light',
   reduceMotion: false,

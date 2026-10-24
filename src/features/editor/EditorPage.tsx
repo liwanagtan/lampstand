@@ -45,7 +45,7 @@ import {
   type StoredPresentation,
   type StoredSlide,
 } from '@/schema/presentation';
-import { TEMPLATE_IDS } from '@/schema/common';
+import { ACTIVE_TEMPLATE_IDS } from '@/schema/common';
 import { getTemplate } from '@/templates/templates';
 import { SlideFrame } from '@/slides/SlideView';
 import { useEditor } from './editorStore';
@@ -563,15 +563,17 @@ function PresentationSettings({
           onChange={(e) => set('series', e.target.value)}
           placeholder="Optional"
         />
-        <Select
-          label="Theme"
-          value={presentation.theme ?? DEFAULT}
-          onChange={(v) => set('theme', v)}
-          options={[
-            { value: DEFAULT, label: 'App default' },
-            ...TEMPLATE_IDS.map((t) => ({ value: t, label: getTemplate(t).name })),
-          ]}
-        />
+        {ACTIVE_TEMPLATE_IDS.length > 1 && (
+          <Select
+            label="Theme"
+            value={presentation.theme ?? DEFAULT}
+            onChange={(v) => set('theme', v)}
+            options={[
+              { value: DEFAULT, label: 'App default' },
+              ...ACTIVE_TEMPLATE_IDS.map((t) => ({ value: t, label: getTemplate(t).name })),
+            ]}
+          />
+        )}
         <Select
           label="Translation"
           value={presentation.translation ?? DEFAULT}

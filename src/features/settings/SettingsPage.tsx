@@ -9,7 +9,7 @@ import { invalidateSearch } from '@/features/bible/search';
 import { storeMediaFile } from '@/features/library/media';
 import { loadBackgrounds, type BackgroundEntry } from '@/features/library/backgrounds';
 import { useAsset } from '@/slides/useAsset';
-import { OVERLAY_MODES, TEMPLATE_IDS, type OverlayMode, type UiMode } from '@/schema/common';
+import { ACTIVE_TEMPLATE_IDS, OVERLAY_MODES, type OverlayMode, type UiMode } from '@/schema/common';
 import { getTemplate } from '@/templates/templates';
 import { downloadBackup, restoreBackup } from './backup';
 import { useSettings } from './settingsStore';
@@ -122,16 +122,18 @@ function PresentingSection() {
           onChange={(v) => void s.set('defaultTranslation', v)}
           options={translations.map((t) => ({ value: t.code, label: `${t.code} — ${t.name}` }))}
         />
-        <Select
-          label="Default template"
-          value={s.defaultTheme}
-          onChange={(v) => void s.set('defaultTheme', v)}
-          options={TEMPLATE_IDS.map((t) => ({
-            value: t,
-            label: getTemplate(t).name,
-            description: getTemplate(t).mood,
-          }))}
-        />
+        {ACTIVE_TEMPLATE_IDS.length > 1 && (
+          <Select
+            label="Default template"
+            value={s.defaultTheme}
+            onChange={(v) => void s.set('defaultTheme', v)}
+            options={ACTIVE_TEMPLATE_IDS.map((t) => ({
+              value: t,
+              label: getTemplate(t).name,
+              description: getTemplate(t).mood,
+            }))}
+          />
+        )}
         <Select
           label="Default verse overlay"
           value={s.defaultOverlayMode}

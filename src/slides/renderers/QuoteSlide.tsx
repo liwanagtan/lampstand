@@ -4,7 +4,7 @@ import s from '../Slide.module.css';
 
 export function QuoteSlide({ slide, animate }: RenderProps<'quote'>) {
   return (
-    <div className={`${s.content} ${s.start} ${s['stack']}`}>
+    <div className={`${s.content} ${s.start} ${s.stack}`}>
       <div className={s.quoteMark} aria-hidden>
         “
       </div>
@@ -12,8 +12,8 @@ export function QuoteSlide({ slide, animate }: RenderProps<'quote'>) {
         {slide.text}
       </Reveal>
       {slide.author && (
-        <Reveal as="p" className={s.eyebrow} animate={animate} by="block" delay={300}>
-          — {slide.author}
+        <Reveal as="p" className={s.author} animate={animate} by="block" delay={300}>
+          {slide.author}
         </Reveal>
       )}
     </div>

@@ -31,7 +31,12 @@
     },
     "theme": {
       "type": "string",
-      "enum": ["classic", "modern", "warm"]
+      "enum": [
+        "lampstand",
+        "classic",
+        "modern",
+        "warm"
+      ]
     },
     "translation": {
       "type": "string",
@@ -72,7 +77,12 @@
               },
               "transition": {
                 "type": "string",
-                "enum": ["fade", "rise", "push", "none"],
+                "enum": [
+                  "fade",
+                  "rise",
+                  "push",
+                  "none"
+                ],
                 "description": "Default fade; rise for section changes."
               },
               "background": {
@@ -85,7 +95,9 @@
                         "const": "template"
                       }
                     },
-                    "required": ["type"],
+                    "required": [
+                      "type"
+                    ],
                     "additionalProperties": false
                   },
                   {
@@ -97,10 +109,17 @@
                       },
                       "tone": {
                         "type": "string",
-                        "enum": ["base", "accent", "deep"]
+                        "enum": [
+                          "base",
+                          "accent",
+                          "deep"
+                        ]
                       }
                     },
-                    "required": ["type", "tone"],
+                    "required": [
+                      "type",
+                      "tone"
+                    ],
                     "additionalProperties": false
                   },
                   {
@@ -112,10 +131,17 @@
                       },
                       "tone": {
                         "type": "string",
-                        "enum": ["calm", "warm", "dawn"]
+                        "enum": [
+                          "calm",
+                          "warm",
+                          "dawn"
+                        ]
                       }
                     },
-                    "required": ["type", "tone"],
+                    "required": [
+                      "type",
+                      "tone"
+                    ],
                     "additionalProperties": false
                   },
                   {
@@ -136,10 +162,16 @@
                       },
                       "motion": {
                         "type": "string",
-                        "enum": ["still", "drift"]
+                        "enum": [
+                          "still",
+                          "drift"
+                        ]
                       }
                     },
-                    "required": ["type", "description"],
+                    "required": [
+                      "type",
+                      "description"
+                    ],
                     "additionalProperties": false
                   },
                   {
@@ -158,7 +190,10 @@
                         "type": "string"
                       }
                     },
-                    "required": ["type", "description"],
+                    "required": [
+                      "type",
+                      "description"
+                    ],
                     "additionalProperties": false
                   }
                 ]
@@ -179,7 +214,10 @@
                 "maxLength": 60
               }
             },
-            "required": ["type", "heading"],
+            "required": [
+              "type",
+              "heading"
+            ],
             "additionalProperties": false
           },
           {
@@ -201,7 +239,12 @@
               },
               "transition": {
                 "type": "string",
-                "enum": ["fade", "rise", "push", "none"],
+                "enum": [
+                  "fade",
+                  "rise",
+                  "push",
+                  "none"
+                ],
                 "description": "Default fade; rise for section changes."
               },
               "background": {
@@ -214,7 +257,9 @@
                         "const": "template"
                       }
                     },
-                    "required": ["type"],
+                    "required": [
+                      "type"
+                    ],
                     "additionalProperties": false
                   },
                   {
@@ -226,10 +271,17 @@
                       },
                       "tone": {
                         "type": "string",
-                        "enum": ["base", "accent", "deep"]
+                        "enum": [
+                          "base",
+                          "accent",
+                          "deep"
+                        ]
                       }
                     },
-                    "required": ["type", "tone"],
+                    "required": [
+                      "type",
+                      "tone"
+                    ],
                     "additionalProperties": false
                   },
                   {
@@ -241,10 +293,17 @@
                       },
                       "tone": {
                         "type": "string",
-                        "enum": ["calm", "warm", "dawn"]
+                        "enum": [
+                          "calm",
+                          "warm",
+                          "dawn"
+                        ]
                       }
                     },
-                    "required": ["type", "tone"],
+                    "required": [
+                      "type",
+                      "tone"
+                    ],
                     "additionalProperties": false
                   },
                   {
@@ -265,10 +324,16 @@
                       },
                       "motion": {
                         "type": "string",
-                        "enum": ["still", "drift"]
+                        "enum": [
+                          "still",
+                          "drift"
+                        ]
                       }
                     },
-                    "required": ["type", "description"],
+                    "required": [
+                      "type",
+                      "description"
+                    ],
                     "additionalProperties": false
                   },
                   {
@@ -287,7 +352,10 @@
                         "type": "string"
                       }
                     },
-                    "required": ["type", "description"],
+                    "required": [
+                      "type",
+                      "description"
+                    ],
                     "additionalProperties": false
                   }
                 ]
@@ -303,7 +371,10 @@
                 "maxLength": 50
               }
             },
-            "required": ["type", "heading"],
+            "required": [
+              "type",
+              "heading"
+            ],
             "additionalProperties": false
           },
           {
@@ -325,7 +396,12 @@
               },
               "transition": {
                 "type": "string",
-                "enum": ["fade", "rise", "push", "none"],
+                "enum": [
+                  "fade",
+                  "rise",
+                  "push",
+                  "none"
+                ],
                 "description": "Default fade; rise for section changes."
               },
               "background": {
@@ -338,7 +414,9 @@
                         "const": "template"
                       }
                     },
-                    "required": ["type"],
+                    "required": [
+                      "type"
+                    ],
                     "additionalProperties": false
                   },
                   {
@@ -350,10 +428,17 @@
                       },
                       "tone": {
                         "type": "string",
-                        "enum": ["base", "accent", "deep"]
+                        "enum": [
+                          "base",
+                          "accent",
+                          "deep"
+                        ]
                       }
                     },
-                    "required": ["type", "tone"],
+                    "required": [
+                      "type",
+                      "tone"
+                    ],
                     "additionalProperties": false
                   },
                   {
@@ -365,10 +450,17 @@
                       },
                       "tone": {
                         "type": "string",
-                        "enum": ["calm", "warm", "dawn"]
+                        "enum": [
+                          "calm",
+                          "warm",
+                          "dawn"
+                        ]
                       }
                     },
-                    "required": ["type", "tone"],
+                    "required": [
+                      "type",
+                      "tone"
+                    ],
                     "additionalProperties": false
                   },
                   {
@@ -389,10 +481,16 @@
                       },
                       "motion": {
                         "type": "string",
-                        "enum": ["still", "drift"]
+                        "enum": [
+                          "still",
+                          "drift"
+                        ]
                       }
                     },
-                    "required": ["type", "description"],
+                    "required": [
+                      "type",
+                      "description"
+                    ],
                     "additionalProperties": false
                   },
                   {
@@ -411,7 +509,10 @@
                         "type": "string"
                       }
                     },
-                    "required": ["type", "description"],
+                    "required": [
+                      "type",
+                      "description"
+                    ],
                     "additionalProperties": false
                   }
                 ]
@@ -427,7 +528,10 @@
                 "maxLength": 160
               }
             },
-            "required": ["type", "heading"],
+            "required": [
+              "type",
+              "heading"
+            ],
             "additionalProperties": false
           },
           {
@@ -449,7 +553,12 @@
               },
               "transition": {
                 "type": "string",
-                "enum": ["fade", "rise", "push", "none"],
+                "enum": [
+                  "fade",
+                  "rise",
+                  "push",
+                  "none"
+                ],
                 "description": "Default fade; rise for section changes."
               },
               "background": {
@@ -462,7 +571,9 @@
                         "const": "template"
                       }
                     },
-                    "required": ["type"],
+                    "required": [
+                      "type"
+                    ],
                     "additionalProperties": false
                   },
                   {
@@ -474,10 +585,17 @@
                       },
                       "tone": {
                         "type": "string",
-                        "enum": ["base", "accent", "deep"]
+                        "enum": [
+                          "base",
+                          "accent",
+                          "deep"
+                        ]
                       }
                     },
-                    "required": ["type", "tone"],
+                    "required": [
+                      "type",
+                      "tone"
+                    ],
                     "additionalProperties": false
                   },
                   {
@@ -489,10 +607,17 @@
                       },
                       "tone": {
                         "type": "string",
-                        "enum": ["calm", "warm", "dawn"]
+                        "enum": [
+                          "calm",
+                          "warm",
+                          "dawn"
+                        ]
                       }
                     },
-                    "required": ["type", "tone"],
+                    "required": [
+                      "type",
+                      "tone"
+                    ],
                     "additionalProperties": false
                   },
                   {
@@ -513,10 +638,16 @@
                       },
                       "motion": {
                         "type": "string",
-                        "enum": ["still", "drift"]
+                        "enum": [
+                          "still",
+                          "drift"
+                        ]
                       }
                     },
-                    "required": ["type", "description"],
+                    "required": [
+                      "type",
+                      "description"
+                    ],
                     "additionalProperties": false
                   },
                   {
@@ -535,7 +666,10 @@
                         "type": "string"
                       }
                     },
-                    "required": ["type", "description"],
+                    "required": [
+                      "type",
+                      "description"
+                    ],
                     "additionalProperties": false
                   }
                 ]
@@ -560,7 +694,11 @@
                 "description": "true reveals one item per click."
               }
             },
-            "required": ["type", "heading", "items"],
+            "required": [
+              "type",
+              "heading",
+              "items"
+            ],
             "additionalProperties": false
           },
           {
@@ -582,7 +720,12 @@
               },
               "transition": {
                 "type": "string",
-                "enum": ["fade", "rise", "push", "none"],
+                "enum": [
+                  "fade",
+                  "rise",
+                  "push",
+                  "none"
+                ],
                 "description": "Default fade; rise for section changes."
               },
               "background": {
@@ -595,7 +738,9 @@
                         "const": "template"
                       }
                     },
-                    "required": ["type"],
+                    "required": [
+                      "type"
+                    ],
                     "additionalProperties": false
                   },
                   {
@@ -607,10 +752,17 @@
                       },
                       "tone": {
                         "type": "string",
-                        "enum": ["base", "accent", "deep"]
+                        "enum": [
+                          "base",
+                          "accent",
+                          "deep"
+                        ]
                       }
                     },
-                    "required": ["type", "tone"],
+                    "required": [
+                      "type",
+                      "tone"
+                    ],
                     "additionalProperties": false
                   },
                   {
@@ -622,10 +774,17 @@
                       },
                       "tone": {
                         "type": "string",
-                        "enum": ["calm", "warm", "dawn"]
+                        "enum": [
+                          "calm",
+                          "warm",
+                          "dawn"
+                        ]
                       }
                     },
-                    "required": ["type", "tone"],
+                    "required": [
+                      "type",
+                      "tone"
+                    ],
                     "additionalProperties": false
                   },
                   {
@@ -646,10 +805,16 @@
                       },
                       "motion": {
                         "type": "string",
-                        "enum": ["still", "drift"]
+                        "enum": [
+                          "still",
+                          "drift"
+                        ]
                       }
                     },
-                    "required": ["type", "description"],
+                    "required": [
+                      "type",
+                      "description"
+                    ],
                     "additionalProperties": false
                   },
                   {
@@ -668,7 +833,10 @@
                         "type": "string"
                       }
                     },
-                    "required": ["type", "description"],
+                    "required": [
+                      "type",
+                      "description"
+                    ],
                     "additionalProperties": false
                   }
                 ]
@@ -694,7 +862,10 @@
                 "description": "Words or short phrases inside the verse to highlight, e.g. [\"so loved\"]."
               }
             },
-            "required": ["type", "ref"],
+            "required": [
+              "type",
+              "ref"
+            ],
             "additionalProperties": false
           },
           {
@@ -716,7 +887,12 @@
               },
               "transition": {
                 "type": "string",
-                "enum": ["fade", "rise", "push", "none"],
+                "enum": [
+                  "fade",
+                  "rise",
+                  "push",
+                  "none"
+                ],
                 "description": "Default fade; rise for section changes."
               },
               "background": {
@@ -729,7 +905,9 @@
                         "const": "template"
                       }
                     },
-                    "required": ["type"],
+                    "required": [
+                      "type"
+                    ],
                     "additionalProperties": false
                   },
                   {
@@ -741,10 +919,17 @@
                       },
                       "tone": {
                         "type": "string",
-                        "enum": ["base", "accent", "deep"]
+                        "enum": [
+                          "base",
+                          "accent",
+                          "deep"
+                        ]
                       }
                     },
-                    "required": ["type", "tone"],
+                    "required": [
+                      "type",
+                      "tone"
+                    ],
                     "additionalProperties": false
                   },
                   {
@@ -756,10 +941,17 @@
                       },
                       "tone": {
                         "type": "string",
-                        "enum": ["calm", "warm", "dawn"]
+                        "enum": [
+                          "calm",
+                          "warm",
+                          "dawn"
+                        ]
                       }
                     },
-                    "required": ["type", "tone"],
+                    "required": [
+                      "type",
+                      "tone"
+                    ],
                     "additionalProperties": false
                   },
                   {
@@ -780,10 +972,16 @@
                       },
                       "motion": {
                         "type": "string",
-                        "enum": ["still", "drift"]
+                        "enum": [
+                          "still",
+                          "drift"
+                        ]
                       }
                     },
-                    "required": ["type", "description"],
+                    "required": [
+                      "type",
+                      "description"
+                    ],
                     "additionalProperties": false
                   },
                   {
@@ -802,7 +1000,10 @@
                         "type": "string"
                       }
                     },
-                    "required": ["type", "description"],
+                    "required": [
+                      "type",
+                      "description"
+                    ],
                     "additionalProperties": false
                   }
                 ]
@@ -818,7 +1019,10 @@
                 "maxLength": 60
               }
             },
-            "required": ["type", "text"],
+            "required": [
+              "type",
+              "text"
+            ],
             "additionalProperties": false
           },
           {
@@ -840,7 +1044,12 @@
               },
               "transition": {
                 "type": "string",
-                "enum": ["fade", "rise", "push", "none"],
+                "enum": [
+                  "fade",
+                  "rise",
+                  "push",
+                  "none"
+                ],
                 "description": "Default fade; rise for section changes."
               },
               "background": {
@@ -853,7 +1062,9 @@
                         "const": "template"
                       }
                     },
-                    "required": ["type"],
+                    "required": [
+                      "type"
+                    ],
                     "additionalProperties": false
                   },
                   {
@@ -865,10 +1076,17 @@
                       },
                       "tone": {
                         "type": "string",
-                        "enum": ["base", "accent", "deep"]
+                        "enum": [
+                          "base",
+                          "accent",
+                          "deep"
+                        ]
                       }
                     },
-                    "required": ["type", "tone"],
+                    "required": [
+                      "type",
+                      "tone"
+                    ],
                     "additionalProperties": false
                   },
                   {
@@ -880,10 +1098,17 @@
                       },
                       "tone": {
                         "type": "string",
-                        "enum": ["calm", "warm", "dawn"]
+                        "enum": [
+                          "calm",
+                          "warm",
+                          "dawn"
+                        ]
                       }
                     },
-                    "required": ["type", "tone"],
+                    "required": [
+                      "type",
+                      "tone"
+                    ],
                     "additionalProperties": false
                   },
                   {
@@ -904,10 +1129,16 @@
                       },
                       "motion": {
                         "type": "string",
-                        "enum": ["still", "drift"]
+                        "enum": [
+                          "still",
+                          "drift"
+                        ]
                       }
                     },
-                    "required": ["type", "description"],
+                    "required": [
+                      "type",
+                      "description"
+                    ],
                     "additionalProperties": false
                   },
                   {
@@ -926,7 +1157,10 @@
                         "type": "string"
                       }
                     },
-                    "required": ["type", "description"],
+                    "required": [
+                      "type",
+                      "description"
+                    ],
                     "additionalProperties": false
                   }
                 ]
@@ -937,7 +1171,10 @@
                 "maxLength": 90
               }
             },
-            "required": ["type", "text"],
+            "required": [
+              "type",
+              "text"
+            ],
             "additionalProperties": false
           },
           {
@@ -959,7 +1196,12 @@
               },
               "transition": {
                 "type": "string",
-                "enum": ["fade", "rise", "push", "none"],
+                "enum": [
+                  "fade",
+                  "rise",
+                  "push",
+                  "none"
+                ],
                 "description": "Default fade; rise for section changes."
               },
               "background": {
@@ -982,10 +1224,16 @@
                       },
                       "motion": {
                         "type": "string",
-                        "enum": ["still", "drift"]
+                        "enum": [
+                          "still",
+                          "drift"
+                        ]
                       }
                     },
-                    "required": ["type", "description"],
+                    "required": [
+                      "type",
+                      "description"
+                    ],
                     "additionalProperties": false
                   },
                   {
@@ -1004,7 +1252,10 @@
                         "type": "string"
                       }
                     },
-                    "required": ["type", "description"],
+                    "required": [
+                      "type",
+                      "description"
+                    ],
                     "additionalProperties": false
                   }
                 ]
@@ -1015,7 +1266,10 @@
                 "maxLength": 90
               }
             },
-            "required": ["type", "background"],
+            "required": [
+              "type",
+              "background"
+            ],
             "additionalProperties": false
           },
           {
@@ -1037,7 +1291,12 @@
               },
               "transition": {
                 "type": "string",
-                "enum": ["fade", "rise", "push", "none"],
+                "enum": [
+                  "fade",
+                  "rise",
+                  "push",
+                  "none"
+                ],
                 "description": "Default fade; rise for section changes."
               },
               "background": {
@@ -1050,7 +1309,9 @@
                         "const": "template"
                       }
                     },
-                    "required": ["type"],
+                    "required": [
+                      "type"
+                    ],
                     "additionalProperties": false
                   },
                   {
@@ -1062,10 +1323,17 @@
                       },
                       "tone": {
                         "type": "string",
-                        "enum": ["base", "accent", "deep"]
+                        "enum": [
+                          "base",
+                          "accent",
+                          "deep"
+                        ]
                       }
                     },
-                    "required": ["type", "tone"],
+                    "required": [
+                      "type",
+                      "tone"
+                    ],
                     "additionalProperties": false
                   },
                   {
@@ -1077,10 +1345,17 @@
                       },
                       "tone": {
                         "type": "string",
-                        "enum": ["calm", "warm", "dawn"]
+                        "enum": [
+                          "calm",
+                          "warm",
+                          "dawn"
+                        ]
                       }
                     },
-                    "required": ["type", "tone"],
+                    "required": [
+                      "type",
+                      "tone"
+                    ],
                     "additionalProperties": false
                   },
                   {
@@ -1101,10 +1376,16 @@
                       },
                       "motion": {
                         "type": "string",
-                        "enum": ["still", "drift"]
+                        "enum": [
+                          "still",
+                          "drift"
+                        ]
                       }
                     },
-                    "required": ["type", "description"],
+                    "required": [
+                      "type",
+                      "description"
+                    ],
                     "additionalProperties": false
                   },
                   {
@@ -1123,7 +1404,10 @@
                         "type": "string"
                       }
                     },
-                    "required": ["type", "description"],
+                    "required": [
+                      "type",
+                      "description"
+                    ],
                     "additionalProperties": false
                   }
                 ]
@@ -1139,7 +1423,10 @@
                 "maxLength": 40
               }
             },
-            "required": ["type", "minutes"],
+            "required": [
+              "type",
+              "minutes"
+            ],
             "additionalProperties": false
           },
           {
@@ -1161,7 +1448,12 @@
               },
               "transition": {
                 "type": "string",
-                "enum": ["fade", "rise", "push", "none"],
+                "enum": [
+                  "fade",
+                  "rise",
+                  "push",
+                  "none"
+                ],
                 "description": "Default fade; rise for section changes."
               },
               "background": {
@@ -1174,7 +1466,9 @@
                         "const": "template"
                       }
                     },
-                    "required": ["type"],
+                    "required": [
+                      "type"
+                    ],
                     "additionalProperties": false
                   },
                   {
@@ -1186,10 +1480,17 @@
                       },
                       "tone": {
                         "type": "string",
-                        "enum": ["base", "accent", "deep"]
+                        "enum": [
+                          "base",
+                          "accent",
+                          "deep"
+                        ]
                       }
                     },
-                    "required": ["type", "tone"],
+                    "required": [
+                      "type",
+                      "tone"
+                    ],
                     "additionalProperties": false
                   },
                   {
@@ -1201,10 +1502,17 @@
                       },
                       "tone": {
                         "type": "string",
-                        "enum": ["calm", "warm", "dawn"]
+                        "enum": [
+                          "calm",
+                          "warm",
+                          "dawn"
+                        ]
                       }
                     },
-                    "required": ["type", "tone"],
+                    "required": [
+                      "type",
+                      "tone"
+                    ],
                     "additionalProperties": false
                   },
                   {
@@ -1225,10 +1533,16 @@
                       },
                       "motion": {
                         "type": "string",
-                        "enum": ["still", "drift"]
+                        "enum": [
+                          "still",
+                          "drift"
+                        ]
                       }
                     },
-                    "required": ["type", "description"],
+                    "required": [
+                      "type",
+                      "description"
+                    ],
                     "additionalProperties": false
                   },
                   {
@@ -1247,7 +1561,10 @@
                         "type": "string"
                       }
                     },
-                    "required": ["type", "description"],
+                    "required": [
+                      "type",
+                      "description"
+                    ],
                     "additionalProperties": false
                   }
                 ]
@@ -1263,13 +1580,20 @@
                 "maxLength": 160
               }
             },
-            "required": ["type", "heading"],
+            "required": [
+              "type",
+              "heading"
+            ],
             "additionalProperties": false
           }
         ]
       }
     }
   },
-  "required": ["schemaVersion", "title", "slides"],
+  "required": [
+    "schemaVersion",
+    "title",
+    "slides"
+  ],
   "additionalProperties": false
 }

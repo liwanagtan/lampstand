@@ -12,11 +12,14 @@ export function CountdownSlide({ slide, countdownEndsAt }: RenderProps<'countdow
   }, [countdownEndsAt]);
   const remaining = countdownEndsAt ? countdownEndsAt - now : slide.minutes * 60_000;
   return (
-    <div className={`${s.content} ${s.center} ${s['stack']}`}>
-      {slide.label && <p className={s.eyebrow}>{slide.label}</p>}
-      <p className={s.countdown} aria-live="off">
-        {formatClock(remaining)}
-      </p>
-    </div>
+    <>
+      <div className={`${s.glow} ${s.glowCenter}`} aria-hidden />
+      <div className={`${s.content} ${s.center} ${s['stack-sm']}`}>
+        <p className={s.eyebrow}>{slide.label ?? 'Service begins in'}</p>
+        <p className={s.countdown} aria-live="off">
+          {formatClock(remaining)}
+        </p>
+      </div>
+    </>
   );
 }

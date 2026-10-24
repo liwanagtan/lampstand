@@ -9,6 +9,8 @@ import { FeatureBoundary } from '@/design-system/components';
 import { posterExcerpt, usePosterInfo } from './posterInfo';
 import { ScenePlayer, type SceneData } from './ScenePlayer';
 import styles from './Poster.module.css';
+import { Backdrop } from '../Backdrop';
+import s from '../Slide.module.css';
 
 interface PosterProps {
   slide: SlideOf<'title'>;
@@ -49,6 +51,23 @@ export function Poster({ slide, template, live }: PosterProps) {
 
   const animate = live && (info?.animated ?? true) && !reduced;
   const long = slide.heading.length > 34;
+
+  if (template.id === 'lampstand') {
+    // The Lampstand title: the passage in gold, the sermon's name low and large, then who and
+    // when. No mark, no lines; the corner glows softly, or the photo shows under a shade.
+    const meta = [speaker, info?.date].filter(Boolean).join(' · ');
+    return (
+      <>
+        <Backdrop background={bg} template={template} animate={live} showPlaceholder={!live} />
+        {!photo && <div className={`${s.glow} ${s.glowCorner}`} aria-hidden />}
+        <div className={`${s.content} ${s.start} ${s.end} ${s['stack-sm']}`}>
+          {(ref ?? series) && <p className={s.eyebrow}>{ref ?? series}</p>}
+          <h1 className={`${s.display} ${s.titleHeading}`}>{slide.heading}</h1>
+          {meta && <p className={s.titleMeta}>{meta}</p>}
+        </div>
+      </>
+    );
+  }
 
   return (
     <div

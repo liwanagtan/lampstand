@@ -3,6 +3,7 @@ import { VerseBody } from '../VerseBody';
 import type { RenderProps } from '../types';
 import s from '../Slide.module.css';
 
+/** A passage on its own slide; a long one turns pages, shown as dots in the corner. */
 export function VerseSlide({ slide, template, animate, page, translation }: RenderProps<'verse'>) {
   const { passage, error } = usePassage(slide.ref, translation);
   const pages = usePages(passage, 'slide', template.id);
@@ -28,9 +29,11 @@ export function VerseSlide({ slide, template, animate, page, translation }: Rend
         animate={animate}
       />
       {pages.length > 1 && (
-        <p className={s.pageIndicator}>
-          {index + 1} / {pages.length}
-        </p>
+        <div className={s.pageDots} role="img" aria-label={`Page ${index + 1} of ${pages.length}`}>
+          {pages.map((_, i) => (
+            <span key={i} className={`${s.pageDot} ${i === index ? s.pageDotOn : ''}`} />
+          ))}
+        </div>
       )}
     </>
   );

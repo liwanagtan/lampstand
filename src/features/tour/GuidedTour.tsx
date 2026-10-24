@@ -156,9 +156,6 @@ export function GuidedTour() {
           }}
         />
       )}
-      <button type="button" className={styles.skip} onClick={() => end()}>
-        Skip tour
-      </button>
       {stop && rect && (
         <section
           key={index}
@@ -176,9 +173,16 @@ export function GuidedTour() {
           aria-describedby="tour-stop-body"
         >
           <Ember pose="look" size={76} className={styles.bubbleEmber} />
-          <p className={styles.eyebrow}>
-            Step {index + 1} of {stops.length}
-          </p>
+          <div className={styles.stepLine}>
+            <p className={styles.eyebrow}>
+              Step {index + 1} of {stops.length}
+            </p>
+            <span className={styles.dots} aria-hidden>
+              {stops.map((s, i) => (
+                <span key={s.target} className={styles.dot} data-on={i === index || undefined} />
+              ))}
+            </span>
+          </div>
           <h2 id="tour-stop" className={styles.bubbleTitle}>
             {stop.title}
           </h2>
@@ -186,11 +190,10 @@ export function GuidedTour() {
             {stop.body}
           </p>
           <div className={styles.row}>
-            <span className={styles.dots} aria-hidden>
-              {stops.map((s, i) => (
-                <span key={s.target} className={styles.dot} data-on={i === index || undefined} />
-              ))}
-            </span>
+            <button type="button" className={styles.skip} onClick={() => end()}>
+              Skip tour
+            </button>
+            <span className={styles.grow} />
             <button
               type="button"
               className={styles.quiet}

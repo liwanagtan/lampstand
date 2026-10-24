@@ -1,8 +1,8 @@
 /* The phone tour (design canvas, Phone tour and Motion spec). Calm light: the spotlight glides
    first, the card rises once it lands; reduced motion turns every step into a short crossfade. */
-/* A stop scrolls to the top, clear of Skip tour. */
+/* A stop scrolls near the top, with a little room above its spotlight. */
 :global([data-tour]) {
-  scroll-margin-top: 72px;
+  scroll-margin-top: 24px;
 }
 .layer {
   position: fixed;
@@ -125,14 +125,23 @@
     border-radius 400ms var(--ease-sheet);
   animation: ring 2.8s ease-in-out infinite;
 }
+/* In Ember's card, beside Back and Next: always one tap away, never louder than them. */
 .skip {
-  position: absolute;
-  top: calc(var(--space-4) + env(safe-area-inset-top));
-  right: var(--space-4);
-  padding-inline: var(--space-4);
-  background: color-mix(in srgb, var(--palette-white) 16%, transparent);
-  color: var(--palette-white);
+  padding-inline: 0;
+  background: transparent;
+  color: var(--color-text-muted);
   font-size: var(--text-14);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+.grow {
+  flex-grow: 1;
+}
+.stepLine {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding-right: 72px;
 }
 
 .bubble {
@@ -168,7 +177,6 @@
 }
 .dots {
   display: flex;
-  flex-grow: 1;
   gap: 6px;
 }
 .dot {

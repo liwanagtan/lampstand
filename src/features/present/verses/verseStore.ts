@@ -18,7 +18,7 @@ export interface QueueItem {
   label: string;
   translation?: string;
   emphasis?: string[];
-  source: 'slide' | 'extra' | 'manual';
+  source: 'slide' | 'attached' | 'extra' | 'manual';
   slideIndex?: number;
 }
 
@@ -71,7 +71,7 @@ let keySeq = 0;
 const nextKey = () => `v${++keySeq}`;
 
 export const useVerses = create<VerseState>((set, get) => ({
-  mode: 'lowerThird',
+  mode: 'sidePanel',
   translation: 'KJV',
   preview: null,
   queue: [],
@@ -81,20 +81,22 @@ export const useVerses = create<VerseState>((set, get) => ({
   init: (p, translation, mode) => {
     const queue: QueueItem[] = [];
     p.slides.forEach((s, i) => {
-      if (s.type !== 'verse') return;
-      const code = (s.translation ?? translation).toUpperCase();
-      const ref = canonical(s.ref, code);
-      if (ref) {
-        queue.push({
-          key: nextKey(),
-          ref,
-          label: labelFor(ref, code),
-          translation: s.translation,
-          emphasis: s.emphasis,
-          source: 'slide',
-          slideIndex: i,
-        });
-      }
+      const references = s.type === 'reading' ? [s] : 'verses' in s ? (s.verses ?? []) : [];
+      references.forEach((v) => {
+        const code = (v.translation ?? translation).toUpperCase();
+        const ref = canonical(v.ref, code);
+        if (ref) {
+          queue.push({
+            key: nextKey(),
+            ref,
+            label: labelFor(ref, code),
+            translation: v.translation,
+            emphasis: v.emphasis,
+            source: s.type === 'reading' ? 'slide' : 'attached',
+            slideIndex: i,
+          });
+        }
+      });
     });
     for (const extra of p.extraRefs ?? []) {
       const ref = canonical(extra, translation);

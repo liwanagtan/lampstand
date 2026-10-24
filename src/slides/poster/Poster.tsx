@@ -17,13 +17,14 @@ interface PosterProps {
   template: Template;
   /** Live on the TV or the Live canvas: may play the animated Scene. */
   live: boolean;
+  showMediaPlaceholders?: boolean;
 }
 
 /**
  * The sermon poster (Scene): series and date, a large title, a gold rule, the main verse,
  * the speaker and the lamp mark, over the title slide's photo or a designed backdrop.
  */
-export function Poster({ slide, template, live }: PosterProps) {
+export function Poster({ slide, template, live, showMediaPlaceholders = !live }: PosterProps) {
   const info = usePosterInfo();
   const reduced = useReducedMotion();
   const bg = slide.background;
@@ -58,7 +59,12 @@ export function Poster({ slide, template, live }: PosterProps) {
     const meta = [speaker, info?.date].filter(Boolean).join(' · ');
     return (
       <>
-        <Backdrop background={bg} template={template} animate={live} showPlaceholder={!live} />
+        <Backdrop
+          background={bg}
+          template={template}
+          animate={live}
+          showPlaceholder={showMediaPlaceholders}
+        />
         {!photo && <div className={`${s.glow} ${s.glowCorner}`} aria-hidden />}
         <div className={`${s.content} ${s.start} ${s.end} ${s['stack-sm']}`}>
           {(ref ?? series) && <p className={s.eyebrow}>{ref ?? series}</p>}

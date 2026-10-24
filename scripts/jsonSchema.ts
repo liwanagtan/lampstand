@@ -12,7 +12,7 @@ export function buildJsonSchema(): Record<string, unknown> {
     $id: `https://lampstand.app/schema/presentation-v${SCHEMA_VERSION}.json`,
     title: 'Lampstand presentation',
     description:
-      'A Lampstand sermon presentation (.lampstand.json). Verse slides store references only, never scripture text.',
+      'A Lampstand sermon presentation (.lampstand.json). Reading slides and attached verses store references only, never scripture text.',
     ...Object.fromEntries(Object.entries(schema).filter(([k]) => k !== '$schema')),
   };
 }

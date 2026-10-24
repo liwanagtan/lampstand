@@ -2,9 +2,11 @@
 export const SHORTCUTS: { keys: string[]; action: string }[] = [
   {
     keys: ['→', 'Space', 'PageDown'],
-    action: 'Next: the next list item, passage page, then slide',
+    action: 'Next slide',
   },
-  { keys: ['←', 'PageUp'], action: 'Back one step' },
+  { keys: ['←', 'PageUp'], action: 'Previous slide' },
+  { keys: ['R'], action: 'Reveal the next list item' },
+  { keys: ['V'], action: 'Open the verse queue (Slides)' },
   { keys: ['Enter'], action: 'Send the cued slide or verse' },
   { keys: ['/'], action: 'Focus verse command bar' },
   { keys: ['Enter'], action: 'Show verse live (in the bar)' },
@@ -12,10 +14,10 @@ export const SHORTCUTS: { keys: string[]; action: string }[] = [
   { keys: ['Ctrl+Enter'], action: 'Add verse to the queue (in the bar)' },
   { keys: ['Esc'], action: 'Hide the studied word, then clear the overlay (or close the bar)' },
   { keys: ['W'], action: 'Hide or show the studied word (Show the Bible)' },
-  { keys: ['[', ']'], action: 'Previous / next page of a long passage (Show the Bible)' },
+  { keys: ['[', ']'], action: 'Previous / next reading page (or Bible passage page)' },
   {
     keys: ['1', '2', '3', '4'],
-    action: 'Typed verse: lower third / side panel / full screen / popup',
+    action: 'Verse: side panel / lower third / full screen / popup',
   },
   { keys: ['Alt+→', 'Alt+←'], action: 'Next / previous verse or page' },
   { keys: ['T'], action: 'Cycle translation on the live verse' },

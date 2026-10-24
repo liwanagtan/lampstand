@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { ListOrdered, MonitorPlay } from 'lucide-react';
 import { EmptyState, cx } from '@/design-system/components';
 import { db } from '@/db/db';
-import { getTranslation } from '@/features/bible/bibleStore';
+import { getTranslation, resolveTranslation } from '@/features/bible/bibleStore';
 import { getPassage } from '@/features/bible/passage';
 import { fromOsis } from '@/features/bible/ref';
 import { useControl } from '../live/controlStore';
@@ -30,6 +30,7 @@ function useFirstLine(ref: string, code: string): string | null {
 
 const GROUPS: { source: QueueItem['source']; label: string }[] = [
   { source: 'slide', label: 'On slides' },
+  { source: 'attached', label: 'Other slide verses' },
   { source: 'extra', label: 'Likely mentioned' },
   { source: 'manual', label: 'Added' },
 ];
@@ -37,21 +38,31 @@ const GROUPS: { source: QueueItem['source']; label: string }[] = [
 /** The sermon's verses as one-click buttons (PRD §7.5 Verse queue). */
 export function QueuePanel({ translation }: { translation: string }) {
   const queue = useVerses((s) => s.queue);
+  const slideIndex = useControl((s) => s.live.slideIndex);
+  const current = queue.filter((q) => q.source === 'attached' && q.slideIndex === slideIndex);
+  const currentKeys = new Set(current.map((q) => q.key));
+  const groups = [
+    { label: 'For this slide', items: current },
+    ...GROUPS.map((g) => ({
+      label: g.label,
+      items: queue.filter((q) => q.source === g.source && !currentKeys.has(q.key)),
+    })),
+  ];
   if (queue.length === 0) {
     return (
       <EmptyState compact icon={<ListOrdered size={18} />} title="No verses queued">
-        Verse slides and likely references appear here. Press Ctrl+Enter in the command bar to add
-        one.
+        Reading slides, attached verses and likely references appear here. Press Ctrl+Enter in the
+        command bar to add one.
       </EmptyState>
     );
   }
   return (
     <div className={styles.queue}>
-      {GROUPS.map((g) => {
-        const items = queue.filter((q) => q.source === g.source);
+      {groups.map((g) => {
+        const items = g.items;
         if (!items.length) return null;
         return (
-          <section key={g.source} aria-label={g.label}>
+          <section key={g.label} aria-label={g.label}>
             <h3 className={styles.groupLabel}>{g.label}</h3>
             <ul className={styles.list} aria-label={g.label}>
               {items.map((q) => (
@@ -66,11 +77,13 @@ export function QueuePanel({ translation }: { translation: string }) {
 }
 
 function QueueRow({ item, translation }: { item: QueueItem; translation: string }) {
-  const code = (item.translation ?? translation).toUpperCase();
+  const code = resolveTranslation(item.translation, translation)?.code ?? translation;
   const line = useFirstLine(item.ref, code);
   const show = useVerses((s) => s.show);
   const shown = useVerses((s) => s.shown.has(item.ref));
-  const live = useControl((s) => s.live.overlay?.ref === item.ref);
+  const live = useControl(
+    (s) => s.live.overlay?.ref === item.ref && s.live.overlay?.translation === code,
+  );
   return (
     <li>
       <button

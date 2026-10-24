@@ -14,6 +14,7 @@ export async function countPages(
   templateId: TemplateId,
   /** Show the Bible's layout: a verse per line, whole verses, the reader's serif. */
   bible = false,
+  reading = false,
 ): Promise<number> {
   const t = getTranslation(translationCode);
   if (!t) return 1;
@@ -25,6 +26,7 @@ export async function countPages(
     })();
   if (!range) return 1;
   const passage = await getPassage(db, t, range);
+  if (reading) return Math.max(1, Math.ceil(passage.verses.length / 2));
   if (typeof document !== 'undefined' && document.fonts) await document.fonts.ready;
   return Math.max(1, pagesFor(passage.verses, mode, templateId, bible).length);
 }

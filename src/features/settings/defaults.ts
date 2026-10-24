@@ -4,7 +4,7 @@ import { ALL_FEATURES } from '@/app/features';
 export const DEFAULT_SETTINGS: Settings = {
   defaultTranslation: 'NLT',
   defaultTheme: 'lampstand',
-  defaultOverlayMode: 'lowerThird',
+  defaultOverlayMode: 'sidePanel',
   uiMode: 'light',
   reduceMotion: false,
   logoAssetId: null,

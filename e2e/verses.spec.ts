@@ -34,7 +34,7 @@ test('the 3-second test: / jn 3 16 Enter puts John 3:16 on the TV with the slide
   await expect(output.getByTestId('output')).toContainText('The Word reveals'); // slide underneath, lower third
 
   // Side panel keeps the slide visible too; full screen hides it.
-  await page.keyboard.press('2');
+  await page.keyboard.press('1');
   await expect(page.getByText('Side panel')).toBeVisible();
   await expect(output.getByTestId('output')).toContainText('The Word reveals');
   await page.keyboard.press('3');

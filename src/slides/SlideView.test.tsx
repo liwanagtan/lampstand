@@ -27,6 +27,20 @@ function renderSlide(slide: StoredSlide, extra: Partial<Parameters<typeof SlideV
 }
 
 describe('SlideView', () => {
+  it('keeps attached scripture off screen in previews and on the TV until the operator shows it', () => {
+    const slide: StoredSlide = {
+      id: 'attached',
+      type: 'point',
+      heading: 'One idea',
+      body: 'The full slide stays visible.',
+      verses: [{ ref: 'Psalm 24:1' }],
+      panel: 'side',
+    };
+    const { container } = renderSlide(slide);
+    expect(screen.getByText('The full slide stays visible.')).toBeVisible();
+    expect(container.querySelector('aside')).toBeNull();
+    expect(screen.queryByText('Psalm 24:1')).not.toBeInTheDocument();
+  });
   it('renders text slides as plain text', () => {
     renderSlide(find('title'));
     expect(screen.getByRole('heading', { name: 'A Lamp in the Dark' })).toBeInTheDocument();
@@ -74,9 +88,21 @@ describe('SlideView', () => {
     spy.mockRestore();
   });
 
+  it('holds the countdown duration until started and shows a message after zero', () => {
+    const slide = find('countdown');
+    const { unmount } = renderSlide(slide);
+    expect(screen.getByText('05:00')).toBeVisible();
+    unmount();
+    renderSlide(slide, { countdownEndsAt: Date.now() - 1000 });
+    expect(screen.getByText('Service begins shortly')).toBeVisible();
+    expect(screen.queryByText('0')).not.toBeInTheDocument();
+  });
+
   it('formats the countdown clock', () => {
     expect(formatClock(5 * 60_000)).toBe('05:00');
     expect(formatClock(61_500)).toBe('01:02');
-    expect(formatClock(-10)).toBe('00:00');
+    expect(formatClock(59_000)).toBe('59');
+    expect(formatClock(9_000)).toBe('9');
+    expect(formatClock(-10)).toBe('0');
   });
 });

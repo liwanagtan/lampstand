@@ -86,7 +86,7 @@ export function StepBar({
       <div className={styles.stepBar}>
         <div className={styles.stepText}>
           <strong>
-            Typed verse · {labelFor(o.ref, o.translation)} · {o.translation}
+            Verse · {labelFor(o.ref, o.translation)} · {o.translation}
             {overlayPages > 1 ? ` · page ${o.page + 1} of ${overlayPages}` : ''}
           </strong>
           <span>{slide ? `Over slide ${slideIndex + 1}, which stays underneath.` : ''}</span>
@@ -99,7 +99,7 @@ export function StepBar({
         >
           Remove verse
         </Button>
-        <div className={styles.modes} role="radiogroup" aria-label="How the typed verse shows">
+        <div className={styles.modes} role="radiogroup" aria-label="How the verse shows">
           {MODES.map((m) => (
             <button
               key={m.mode}
@@ -113,6 +113,25 @@ export function StepBar({
             </button>
           ))}
         </div>
+      </div>
+    );
+  }
+
+  if (slide?.type === 'countdown') {
+    return (
+      <div className={styles.stepBar}>
+        <div className={styles.stepText}>
+          <strong>{live.countdownEndsAt === null ? 'Countdown ready' : 'Countdown started'}</strong>
+          <span>
+            At zero, “Service begins shortly” stays on screen until you move to the next slide.
+          </span>
+        </div>
+        {live.countdownEndsAt === null && (
+          <Button variant="gold" onClick={() => dispatch({ type: 'startCountdown' })}>
+            Start countdown
+          </Button>
+        )}
+        {nextButton('Next slide')}
       </div>
     );
   }
@@ -133,18 +152,33 @@ export function StepBar({
           </strong>
           <span>
             {shown < items
-              ? `Next shows item ${shown + 1}: ${slide.items[shown]}`
+              ? `Ready to reveal item ${shown + 1}: ${slide.items[shown]}`
               : next
                 ? `All shown. Next: ${next.label}`
                 : 'All shown. This is the last slide.'}
           </span>
         </div>
-        {nextButton(shown < items ? `Show item ${shown + 1}` : 'Next slide')}
+        <Button
+          variant="secondary"
+          disabled={shown === 0}
+          onClick={() => dispatch({ type: 'revealStep', delta: -1 })}
+        >
+          Hide last
+        </Button>
+        <Button
+          variant="gold"
+          shortcut="R"
+          disabled={shown >= items}
+          onClick={() => dispatch({ type: 'revealStep', delta: 1 })}
+        >
+          {shown >= items ? 'All shown' : `Show item ${shown + 1}`}
+        </Button>
+        {nextButton('Next slide')}
       </div>
     );
   }
 
-  if (slide?.type === 'verse' && pages > 1) {
+  if (slide?.type === 'reading' && pages > 1) {
     const page = live.slidePage;
     return (
       <div className={styles.stepBar}>
@@ -159,7 +193,23 @@ export function StepBar({
           </strong>
           <span>{next ? `Next: ${next.label}` : 'This is the last page.'}</span>
         </div>
-        {nextButton(page < pages - 1 ? 'Next page' : 'Next slide')}
+        <Button
+          variant="secondary"
+          shortcut="["
+          disabled={page === 0}
+          onClick={() => dispatch({ type: 'slidePage', delta: -1 })}
+        >
+          Previous page
+        </Button>
+        <Button
+          variant="gold"
+          shortcut="]"
+          disabled={page >= pages - 1}
+          onClick={() => dispatch({ type: 'slidePage', delta: 1 })}
+        >
+          Next page
+        </Button>
+        {nextButton('Next slide')}
       </div>
     );
   }

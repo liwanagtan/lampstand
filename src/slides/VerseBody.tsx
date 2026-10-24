@@ -17,6 +17,7 @@ export interface VerseBodyProps {
   style?: CSSProperties;
   /** Show the Bible: the reader's serif (not the theme's body font), a verse per line. */
   bible?: boolean;
+  lines?: boolean;
 }
 
 /** Reference in the accent color above the verse text (PRD §8), with the verse moment motion (§9). */
@@ -28,6 +29,7 @@ export function VerseBody({
   className,
   style,
   bible = false,
+  lines = false,
 }: VerseBodyProps) {
   const refEl = useRef<HTMLParagraphElement>(null);
   const textEl = useRef<HTMLParagraphElement>(null);
@@ -57,7 +59,7 @@ export function VerseBody({
   }, [animate]);
 
   return (
-    <div className={className} style={style}>
+    <div className={className} style={style} data-emphasis-style={bible ? 'background' : 'color'}>
       <p ref={refEl} className={s.reference}>
         {reference}
       </p>
@@ -74,7 +76,9 @@ export function VerseBody({
             key={`${seg.osis}-${i}`}
             // A verse per line, with the gap paginate allows for (VERSE_GAP).
             style={
-              bible ? { display: 'block', marginTop: i ? `${VERSE_GAP}em` : undefined } : undefined
+              bible || lines
+                ? { display: 'block', marginTop: i ? `${VERSE_GAP}em` : undefined }
+                : undefined
             }
           >
             {seg.showNumber && <sup className={s.verseNum}>{seg.verse}</sup>}
@@ -100,7 +104,7 @@ export function VerseBody({
                 ),
               )
             )}
-            {!bible && i < page.segments.length - 1 ? ' ' : ''}
+            {!bible && !lines && i < page.segments.length - 1 ? ' ' : ''}
           </span>
         ))}
       </p>

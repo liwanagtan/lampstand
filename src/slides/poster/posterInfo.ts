@@ -36,7 +36,7 @@ export function posterInfoFor(
   animated = true,
 ): PosterInfo {
   const verse = p.slides.find(
-    (s): s is Extract<StoredSlide, { type: 'verse' }> => s.type === 'verse',
+    (s): s is Extract<StoredSlide, { type: 'reading' }> => s.type === 'reading',
   );
   return {
     series: p.series,

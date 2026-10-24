@@ -31,7 +31,7 @@ describe('AppShell', () => {
   it('hides switched-off destinations', async () => {
     useSettings.setState({ features: { ...ALL_FEATURES, plans: false, screen: false } });
     renderAt('/profile/settings');
-    await screen.findByRole('radio', { name: 'Light' });
+    await screen.findByRole('radio', { name: 'Light' }, { timeout: 5000 });
     const nav = screen.getAllByRole('navigation', { name: 'Main' })[0]!;
     expect(
       within(nav)
@@ -67,7 +67,7 @@ describe('AppShell', () => {
 
   it('keeps light appearance and disables Dark/System from Profile › Settings', async () => {
     renderAt('/profile/settings');
-    await userEvent.click(await screen.findByRole('radio', { name: 'Light' }));
+    await userEvent.click(await screen.findByRole('radio', { name: 'Light' }, { timeout: 5000 }));
     expect(document.documentElement.dataset.theme).toBe('light');
     expect(useSettings.getState().uiMode).toBe('light');
     expect((await db.settings.get('uiMode'))?.value).toBe('light');

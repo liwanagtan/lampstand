@@ -26,7 +26,14 @@ const load: LiveAction = { type: 'load', presentationId: 'p1', presentation, the
 const listIndex = presentation.slides.findIndex((s) => s.type === 'list');
 
 describe('liveReducer', () => {
-  it('loads at the first slide and starts its countdown', () => {
+  it('Next changes slides even when unrevealed items or reading pages remain', () => {
+    const c = ctx({ slidePages: () => 3 });
+    const s = run([load, { type: 'goTo', index: listIndex }, { type: 'next' }], c);
+    expect(s.slideIndex).toBe(listIndex + 1);
+    const index = presentation.slides.findIndex((s) => s.type === 'reading');
+    expect(run([load, { type: 'goTo', index }, { type: 'next' }], c).slideIndex).toBe(index + 1);
+  });
+  it('loads at the first slide without starting its countdown', () => {
     const s = run([load]);
     expect(s).toMatchObject({
       presentationId: 'p1',
@@ -34,7 +41,23 @@ describe('liveReducer', () => {
       screen: 'content',
       overlay: null,
     });
-    expect(s.countdownEndsAt).toBe(NOW + 5 * 60_000);
+    expect(s.countdownEndsAt).toBeNull();
+  });
+
+  it('starts only on request and does not restart an already running timer', () => {
+    const started = run([load, { type: 'startCountdown' }]);
+    expect(started.countdownEndsAt).toBe(NOW + 5 * 60_000);
+    expect(liveReducer(started, { type: 'startCountdown' }, ctx({ now: () => NOW + 60_000 }))).toBe(
+      started,
+    );
+    expect(run([load, { type: 'next' }, { type: 'startCountdown' }]).countdownEndsAt).toBeNull();
+  });
+
+  it('starts a countdown entered while presenting, but not during preparation', () => {
+    expect(run([load, { type: 'next' }, { type: 'prev' }]).countdownEndsAt).toBeNull();
+    expect(
+      run([load, { type: 'next' }, { type: 'prev' }], ctx({ presenting: true })).countdownEndsAt,
+    ).toBe(NOW + 5 * 60_000);
   });
 
   it('next and prev move between slides and clear the countdown', () => {
@@ -51,12 +74,12 @@ describe('liveReducer', () => {
     expect(s.slideIndex).toBe(last);
   });
 
-  it('reveals build items one per Next before advancing', () => {
+  it('reveals every item with its own control, while Next moves slides', () => {
     const items = (presentation.slides[listIndex] as { items: string[] }).items.length;
     let s = run([load, { type: 'goTo', index: listIndex }]);
     expect(s.buildStep).toBe(0);
     for (let i = 1; i <= items; i++) {
-      s = liveReducer(s, { type: 'next' }, ctx());
+      s = liveReducer(s, { type: 'revealStep', delta: 1 }, ctx());
       expect(s.slideIndex).toBe(listIndex);
       expect(s.buildStep).toBe(i);
     }
@@ -68,15 +91,15 @@ describe('liveReducer', () => {
     const items = (presentation.slides[listIndex] as { items: string[] }).items.length;
     let s = run([load, { type: 'goTo', index: listIndex + 1 }, { type: 'prev' }]);
     expect(s).toMatchObject({ slideIndex: listIndex, buildStep: items });
-    s = liveReducer(s, { type: 'prev' }, ctx());
+    s = liveReducer(s, { type: 'revealStep', delta: -1 }, ctx());
     expect(s.buildStep).toBe(items - 1);
   });
 
   it('walks through the pages of a long verse slide', () => {
-    const c = ctx({ slidePages: (slide) => (slide.type === 'verse' ? 2 : 1) });
-    const verse = presentation.slides.findIndex((s) => s.type === 'verse');
+    const c = ctx({ slidePages: (slide) => (slide.type === 'reading' ? 2 : 1) });
+    const verse = presentation.slides.findIndex((s) => s.type === 'reading');
     let s = run([load, { type: 'goTo', index: verse }], c);
-    s = liveReducer(s, { type: 'next' }, c);
+    s = liveReducer(s, { type: 'slidePage', delta: 1 }, c);
     expect(s).toMatchObject({ slideIndex: verse, slidePage: 1 });
     s = liveReducer(s, { type: 'next' }, c);
     expect(s).toMatchObject({ slideIndex: verse + 1, slidePage: 0 });

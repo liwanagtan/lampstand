@@ -50,7 +50,8 @@ const sans = fonts.ui;
 export const TEMPLATES: Record<TemplateId, Template> = {
   /**
    * Lampstand (the slide templates canvas, October 2026): ink and cream, gold only for light.
-   * Plus Jakarta Sans for every word but Scripture, which is Fraunces. No logo, no lines.
+   * Classic's Fraunces family, at regular weight, with regular Plus Jakarta Sans body text.
+   * No logo, no lines.
    */
   lampstand: {
     id: 'lampstand',
@@ -74,9 +75,9 @@ export const TEMPLATES: Record<TemplateId, Template> = {
       warm: 'radial-gradient(circle at 88% 12%, rgb(242 179 61 / 0.22), transparent 55%), #0A0F1C',
       dawn: 'radial-gradient(ellipse at 50% 112%, rgb(242 179 61 / 0.26), transparent 62%), #0A0F1C',
     },
-    heading: { family: sans, weight: 800, letterSpacing: '-0.03em' },
-    body: { family: sans, weight: 500 },
-    accentFont: { family: sans, weight: 700, letterSpacing: '-0.02em' },
+    heading: { family: serif, weight: 400, letterSpacing: '-0.01em' },
+    body: { family: sans, weight: 400 },
+    accentFont: { family: serif, weight: 400, style: 'italic' },
     verse: { family: serif, weight: 400 },
     texture: 'none',
     ambient: false,

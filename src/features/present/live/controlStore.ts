@@ -4,6 +4,7 @@ import type { OverlayMode } from '@/schema/common';
 import type { StoredPresentation } from '@/schema/presentation';
 import { openChannel, type Message } from './channel';
 import { countPages } from './pageCounts';
+import { slideTranslation } from '@/features/library/translation';
 import { liveReducer, type LiveAction, type LiveContext } from './reducer';
 import {
   BIBLE_ID,
@@ -78,6 +79,7 @@ export const useControl = create<ControlState>((set, get) => {
     slidePages: (slide) => get().slidePageCounts[slide.id] ?? 1,
     overlayPages: () => get().overlayPageCount,
     now: () => Date.now(),
+    presenting: get().presenting,
   });
 
   const apply = (action: LiveAction, extra: Partial<ControlState> = {}) => {
@@ -154,15 +156,17 @@ export const useControl = create<ControlState>((set, get) => {
       void (async () => {
         const counts: Record<string, number> = {};
         for (const s of presentation.slides) {
-          if (s.type !== 'verse') continue;
+          if (s.type !== 'reading') continue;
           counts[s.id] = await countPages(
             s.ref,
-            (s.translation ?? translation).toUpperCase(),
+            slideTranslation(s, translation),
             'slide',
             theme,
+            false,
+            true,
           );
         }
-        set({ slidePageCounts: counts });
+        if (get().presentation === presentation) set({ slidePageCounts: counts });
       })();
       void refreshOverlayPages(get().live.overlay);
     },
@@ -238,8 +242,10 @@ export const useControl = create<ControlState>((set, get) => {
 
     setOutput: (output) => set({ output }),
 
-    setPresenting: (presenting) =>
-      set({ presenting, ...(presenting ? {} : { frozen: null, output: 'none' as const }) }),
+    setPresenting: (presenting) => {
+      set({ presenting, ...(presenting ? {} : { frozen: null, output: 'none' as const }) });
+      if (presenting) apply({ type: 'startCountdown' });
+    },
 
     toggleFreeze: () => {
       if (get().frozen) set({ frozen: null, rev: get().rev + 1, changedAt: Date.now() });

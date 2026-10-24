@@ -29,25 +29,37 @@
   /* A solid band of ink: no blur (light on the laptop) and no lines (the slide templates). */
   background: var(--t-glass);
 }
-/* A warm card at the right, like a slide's own verse panel. */
+/* Full-height dark rail, matching the original Side panel composition. */
 .sidePanel {
-  top: var(--s-safe-y);
-  right: var(--s-safe-x);
-  bottom: var(--s-safe-y);
-  width: calc(var(--s-side-panel) - var(--s-safe-x));
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: var(--s-side-panel);
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: var(--s-panel-py) calc(var(--s-panel-px) / 2);
-  border-radius: 42px;
-  background: var(--t-panel);
+  padding: calc(var(--s-safe-y) + var(--s-panel-py)) var(--s-panel-px);
+  border-left: 2px solid color-mix(in srgb, var(--t-accent) 35%, transparent);
+  background: var(--t-bg);
+  --t-verse-font: var(--t-body-font);
+  --t-verse-weight: 400;
 }
 .panelBody > * + * {
   margin-top: 20px;
 }
 .panelBody p:last-child {
   max-width: none;
+}
+.sidePanel .panelBody > p:first-child {
+  font-size: var(--s-caption);
+  line-height: 1.25;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+}
+.sidePanel .panelBody > * + * {
+  margin-top: 36px;
 }
 .pageInline {
   position: absolute;
@@ -58,8 +70,8 @@
   color: var(--t-muted);
 }
 .sidePanel .pageInline {
-  right: calc(var(--s-panel-px) / 2);
-  bottom: 24px;
+  right: var(--s-panel-px);
+  bottom: var(--s-panel-py);
 }
 
 /* The slide dims behind a raised card: solid colours, no blur, no outline. */

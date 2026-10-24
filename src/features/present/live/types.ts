@@ -33,6 +33,7 @@ export interface LiveState {
   buildStep: number;
   /** Page of a long passage on a verse slide. */
   slidePage: number;
+
   overlay: LiveOverlay | null;
   screen: Screen;
   theme: TemplateId;

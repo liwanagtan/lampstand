@@ -83,11 +83,11 @@ export function SlidesPage() {
             template={template}
             mode="live"
             translation="KJV"
-            buildStep={slide.type === 'list' && slide.build ? step : undefined}
+            buildStep={slide.type === 'list' && slide.reveal ? step : undefined}
             countdownEndsAt={slide.type === 'countdown' ? endsAt : undefined}
             label="Live preview"
           />
-          {slide.type === 'list' && slide.build && (
+          {slide.type === 'list' && slide.reveal && (
             <Button onClick={() => setStep((n) => Math.min(n + 1, slide.items.length))}>
               Next build step
             </Button>

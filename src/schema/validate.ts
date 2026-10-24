@@ -3,7 +3,6 @@ import type { z } from 'zod';
 import { formatRef, parseRefDetailed, verseCountInRange } from '@/features/bible/ref';
 import { migrate } from './migrations';
 import {
-  LIMITS,
   PresentationSchema,
   SLIDE_TYPES,
   type Presentation,
@@ -101,7 +100,7 @@ function messageFor(issue: z.core.$ZodIssue, raw: unknown, slideType?: string): 
       if (issue.expected === 'int') return `${label(key)} must be a whole number.`;
       return `${label(key)} should be ${issue.expected === 'string' ? 'text' : issue.expected}, not ${describeType(value)}.`;
     case 'invalid_value':
-      if (key === 'schemaVersion') return 'schemaVersion must be 1.';
+      if (key === 'schemaVersion') return 'schemaVersion must be 2.';
       return `${label(key)} must be one of: ${issue.values.map((v) => String(v)).join(', ')}.`;
     default:
       return issue.message;
@@ -207,35 +206,70 @@ export function validatePresentation(
   const rawSlides = (raw as { slides?: unknown }).slides;
   if (Array.isArray(rawSlides)) {
     rawSlides.forEach((s, i) => {
-      if (!s || typeof s !== 'object' || (s as { type?: unknown }).type !== 'verse') return;
-      const { ref, translation } = s as { ref?: unknown; translation?: unknown };
-      if (typeof ref !== 'string' || !ref.trim()) return;
-      const r = parseRefDetailed(ref);
-      if (!r.ok) {
-        const message =
-          r.problem === 'verse' || r.problem === 'chapter'
-            ? `'${ref}' doesn't exist — ${r.hint}`
-            : r.problem === 'multiple'
-              ? `'${ref}' has more than one passage. Use one passage per verse slide.`
-              : `'${ref}' isn't a recognized reference.`;
-        errors.push({ slideIndex: i, slideType: 'verse', message });
-        return;
-      }
-      const count = verseCountInRange(r.range);
-      if (count > LIMITS.verse.versesPerSlide) {
-        warnings.push({
+      if (!s || typeof s !== 'object') return;
+      const row = s as {
+        type?: string;
+        ref?: unknown;
+        translation?: unknown;
+        verses?: unknown[];
+        panel?: unknown;
+      };
+      if (row.panel && !row.verses?.length)
+        errors.push({
           slideIndex: i,
-          slideType: 'verse',
-          message: `${formatRef(r.range)} has ${count} verses; it will show across several pages.`,
+          slideType: row.type,
+          message: 'A verse panel needs at least one attached verse.',
         });
-      }
-      if (known && typeof translation === 'string' && !known.includes(translation.toUpperCase())) {
-        warnings.push({
+      const references =
+        row.type === 'reading' ? [row] : Array.isArray(row.verses) ? row.verses : [];
+      let attachedCount = 0;
+      references.forEach((entry, attachedIndex) => {
+        if (!entry || typeof entry !== 'object') return;
+        const { ref, translation } = entry as { ref?: unknown; translation?: unknown };
+        if (typeof ref !== 'string' || !ref.trim()) return;
+        const r = parseRefDetailed(ref);
+        if (!r.ok) {
+          const message =
+            r.problem === 'verse' || r.problem === 'chapter'
+              ? `'${ref}' doesn't exist — ${r.hint}`
+              : r.problem === 'multiple'
+                ? `'${ref}' has more than one passage. Use one passage per verse slide.`
+                : `'${ref}' isn't a recognized reference.`;
+          errors.push({
+            slideIndex: i,
+            slideType: row.type,
+            message:
+              row.type === 'reading' ? message : `Attached verse ${attachedIndex + 1}: ${message}`,
+          });
+          return;
+        }
+        const count = verseCountInRange(r.range);
+        if (row.type !== 'reading') attachedCount += count;
+        if (row.type === 'reading' && count > 2) {
+          warnings.push({
+            slideIndex: i,
+            slideType: row.type,
+            message: `${formatRef(r.range)} has ${count} verses; it will show across several pages.`,
+          });
+        }
+        if (
+          known &&
+          typeof translation === 'string' &&
+          !known.includes(translation.toUpperCase())
+        ) {
+          warnings.push({
+            slideIndex: i,
+            slideType: row.type,
+            message: `translation "${translation}" isn't installed; ${options.defaultTranslation ?? 'the default'} will be used.`,
+          });
+        }
+      });
+      if (attachedCount > 3)
+        errors.push({
           slideIndex: i,
-          slideType: 'verse',
-          message: `translation "${translation}" isn't installed; ${options.defaultTranslation ?? 'the default'} will be used.`,
+          slideType: row.type,
+          message: 'Attach at most 3 verses total; move longer passages to a reading slide.',
         });
-      }
     });
   }
   const extraRefs = (raw as { extraRefs?: unknown }).extraRefs;

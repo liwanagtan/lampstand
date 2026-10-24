@@ -48,13 +48,15 @@ export function SlideRail({
 
   const chipsFor = (s: StoredSlide, live: boolean): Chip[] => {
     const chips: Chip[] = [];
-    if (s.type === 'verse') {
+    if (s.type === 'reading') {
       const total = pages(s);
       if (live && total > 1) chips.push({ text: `Page ${page + 1} of ${total}`, tone: 'progress' });
       else if (total > 1) chips.push({ text: `${total} pages`, tone: 'plain' });
       if (s.translation) chips.push({ text: s.translation.toUpperCase(), tone: 'verse' });
     }
     const items = buildItems(s);
+    if ('verses' in s && s.verses?.length)
+      chips.push({ text: s.verses.map((v) => v.ref).join(' · '), tone: 'verse' });
     if (items) {
       chips.push(
         live

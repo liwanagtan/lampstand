@@ -15,10 +15,14 @@ export function CountdownSlide({ slide, countdownEndsAt }: RenderProps<'countdow
     <>
       <div className={`${s.glow} ${s.glowCenter}`} aria-hidden />
       <div className={`${s.content} ${s.center} ${s['stack-sm']}`}>
-        <p className={s.eyebrow}>{slide.label ?? 'Service begins in'}</p>
-        <p className={s.countdown} aria-live="off">
-          {formatClock(remaining)}
+        <p className={s.eyebrow}>
+          {remaining <= 0 ? 'Service begins shortly' : (slide.label ?? 'Service begins in')}
         </p>
+        {remaining > 0 && (
+          <p className={s.countdown} aria-live="off">
+            {formatClock(remaining)}
+          </p>
+        )}
       </div>
     </>
   );

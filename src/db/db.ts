@@ -14,6 +14,7 @@ import type {
   VerseRecord,
 } from './types';
 import { markChapters } from './markChapters';
+import { upgradeStoredPresentation } from '@/schema/upgradeStored';
 
 export const DB_NAME = 'lampstand';
 
@@ -74,6 +75,16 @@ export class LampstandDB extends Dexie {
     });
     // Account sync: what each record looked like when last synced (src/features/account/sync.ts).
     this.version(7).stores({ syncBase: 'key' });
+    this.version(8)
+      .stores({})
+      .upgrade(async (tx) => {
+        await tx
+          .table('presentations')
+          .toCollection()
+          .modify((record: PresentationRecord) => {
+            record.data = upgradeStoredPresentation(record.data);
+          });
+      });
     // Every write (reader, backups) keeps the chapter list in step with the ref.
     this.marks.hook('creating', (_key, m) => {
       m.chapters = markChapters(m.ref);

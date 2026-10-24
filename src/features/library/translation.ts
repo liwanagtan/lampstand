@@ -9,7 +9,7 @@ export function presentationTranslation(p: Pick<StoredPresentation, 'translation
 }
 
 export function slideTranslation(slide: StoredSlide, presentationCode: string): string {
-  if (slide.type === 'verse' && slide.translation) {
+  if (slide.type === 'reading' && slide.translation) {
     return resolveTranslation(slide.translation, presentationCode)?.code ?? presentationCode;
   }
   return presentationCode;

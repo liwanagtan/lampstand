@@ -5,7 +5,7 @@ import { SLIDE_TYPES } from './presentation';
 const KNOWN = ['KJV', 'WEB', 'ASV', 'YLT', 'DBY'];
 
 function withSlides(slides: unknown[], extra: Record<string, unknown> = {}) {
-  return { schemaVersion: 1, title: 'Test', slides, ...extra };
+  return { schemaVersion: 2, title: 'Test', slides, ...extra };
 }
 
 function errorsOf(input: unknown): string[] {
@@ -21,7 +21,7 @@ describe('sample sermon', () => {
     if (!r.ok) return;
     expect(r.presentation.slides).toHaveLength(21);
     expect(new Set(r.presentation.slides.map((s) => s.id)).size).toBe(21);
-    expect(r.warnings).toEqual([]);
+    expect(r.warnings.every((w) => w.message.includes('several pages'))).toBe(true);
   });
 
   it('exercises every slide type', () => {
@@ -49,8 +49,8 @@ describe('valid slide of each type', () => {
     [{ type: 'title', heading: 'Hello', subtitle: 'Sub', speaker: 'Pastor' }],
     [{ type: 'section', label: 'Point 1', heading: 'The Word reveals' }],
     [{ type: 'point', heading: 'Main idea', body: 'Detail' }],
-    [{ type: 'list', heading: 'List', items: ['a', 'b'], build: true }],
-    [{ type: 'verse', ref: 'John 3:16', translation: 'web', emphasis: ['so loved'] }],
+    [{ type: 'list', heading: 'List', items: ['a', 'b'], reveal: true }],
+    [{ type: 'reading', ref: 'John 3:16', translation: 'web', emphasis: ['so loved'] }],
     [{ type: 'quote', text: 'Quote', author: 'Someone' }],
     [{ type: 'statement', text: 'Bold line' }],
     [
@@ -68,7 +68,7 @@ describe('valid slide of each type', () => {
 
   it('upper-cases translation codes', () => {
     const r = validatePresentation(
-      withSlides([{ type: 'verse', ref: 'jn 3 16', translation: 'web' }]),
+      withSlides([{ type: 'reading', ref: 'jn 3 16', translation: 'web' }]),
     );
     expect(r.ok && r.presentation.slides[0]).toMatchObject({ translation: 'WEB' });
   });
@@ -84,19 +84,19 @@ describe('errors by slide', () => {
         { type: 'list', heading: 'Too few', items: ['one'] },
         { type: 'point', heading: 'ok' },
         { type: 'point', heading: 'ok' },
-        { type: 'verse', ref: 'Jhn 3:166' },
+        { type: 'reading', ref: 'Jhn 3:166' },
       ]),
     );
     expect(errs).toEqual([
       'Slide 2 (point): Heading is 72 characters; the limit is 60.',
       'Slide 4 (list): A list needs at least 2 items.',
-      "Slide 7 (verse): 'Jhn 3:166' doesn't exist — John 3 has 36 verses.",
+      "Slide 7 (reading): 'Jhn 3:166' doesn't exist — John 3 has 36 verses.",
     ]);
   });
 
   it('reports unrecognized references in the PRD wording', () => {
-    expect(errorsOf(withSlides([{ type: 'verse', ref: 'Hezekiah 3:16' }]))).toEqual([
-      "Slide 1 (verse): 'Hezekiah 3:16' isn't a recognized reference.",
+    expect(errorsOf(withSlides([{ type: 'reading', ref: 'Hezekiah 3:16' }]))).toEqual([
+      "Slide 1 (reading): 'Hezekiah 3:16' isn't a recognized reference.",
     ]);
   });
 
@@ -169,7 +169,7 @@ describe('file-level problems', () => {
 
   it('requires a schema version and rejects newer ones', () => {
     expect(errorsOf({ title: 'x', slides: [] })[0]).toMatch(/schemaVersion is missing/);
-    expect(errorsOf({ schemaVersion: 2, title: 'x', slides: [] })[0]).toMatch(
+    expect(errorsOf({ schemaVersion: 3, title: 'x', slides: [] })[0]).toMatch(
       /newer version of Lampstand/,
     );
   });
@@ -194,15 +194,16 @@ describe('warnings', () => {
   it('warns about long passages and uninstalled translations without failing', () => {
     const r = validatePresentation(
       withSlides([
-        { type: 'verse', ref: 'Psalm 23', translation: 'NIV' },
-        { type: 'verse', ref: 'John 3:1-21' },
+        { type: 'reading', ref: 'Psalm 23', translation: 'NIV' },
+        { type: 'reading', ref: 'John 3:1-21' },
       ]),
       { knownTranslations: KNOWN, defaultTranslation: 'KJV' },
     );
     expect(r.ok).toBe(true);
     expect(r.warnings.map(formatIssue)).toEqual([
-      'Slide 1 (verse): translation "NIV" isn\'t installed; KJV will be used.',
-      'Slide 2 (verse): John 3:1–21 has 21 verses; it will show across several pages.',
+      'Slide 1 (reading): Psalm 23 has 6 verses; it will show across several pages.',
+      'Slide 1 (reading): translation "NIV" isn\'t installed; KJV will be used.',
+      'Slide 2 (reading): John 3:1–21 has 21 verses; it will show across several pages.',
     ]);
   });
 });

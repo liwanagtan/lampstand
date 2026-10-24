@@ -123,7 +123,7 @@ export function PresentPage() {
 /**
  * The slides console (Screen redesign canvas): the slide rail on the left; Live, its step bar and
  * the screen controls in the middle; Next with Notes and Verses on the right. Live is always
- * exactly the TV. Next means next: the next list item, passage page, then slide.
+ * exactly the TV. Next changes slides; reveals, reading pages and panels have separate controls.
  */
 function ControlScreen() {
   const navigate = useNavigate();
@@ -146,7 +146,7 @@ function ControlScreen() {
   const posterAnimated = useControl((s) => s.posterAnimated);
   const pageCounts = useControl((s) => s.slidePageCounts);
   const overlayPages = useControl((s) => s.overlayPageCount);
-  const [tab, setTab] = useState<SideTab>('notes');
+  const [tabChoice, setTabChoice] = useState<{ slideId: string; tab: SideTab } | null>(null);
   const [sheetOpen, setSheetOpen] = useState(false);
   const [paletteOpen, setPaletteOpen] = useState(false);
   const [exitOpen, setExitOpen] = useState(false);
@@ -156,6 +156,9 @@ function ControlScreen() {
   const slides = presentation.slides;
   const pages = useCallback((s: StoredSlide) => pageCounts[s.id] ?? 1, [pageCounts]);
   const liveSlide = slides[live.slideIndex];
+  const hasAttached = liveSlide && 'verses' in liveSlide && Boolean(liveSlide.verses?.length);
+  const tab =
+    tabChoice?.slideId === liveSlide?.id ? tabChoice!.tab : hasAttached ? 'verses' : 'notes';
   const next = nextBeat(slides, live.slideIndex, live.buildStep, live.slidePage, pages);
   const posterInfo = useMemo(
     () => posterInfoFor(presentation, translation, posterAnimated),
@@ -210,8 +213,8 @@ function ControlScreen() {
         else if (useControl.getState().previewIndex !== null) select(null);
         else dispatch({ type: 'clearOverlay' });
       },
-      '1': () => verses.setMode('lowerThird'),
-      '2': () => verses.setMode('sidePanel'),
+      '1': () => verses.setMode('sidePanel'),
+      '2': () => verses.setMode('lowerThird'),
       '3': () => verses.setMode('fullScreen'),
       '4': () => verses.setMode('popup'),
       'Alt+ArrowRight': () => void verses.step(1),
@@ -222,6 +225,10 @@ function ControlScreen() {
       b: () => toggleScreen('blank'),
       s: () => toggleScreen('sermon'),
       f: () => toggleFreeze(),
+      r: () => dispatch({ type: 'revealStep', delta: 1 }),
+      '[': () => dispatch({ type: 'slidePage', delta: -1 }),
+      ']': () => dispatch({ type: 'slidePage', delta: 1 }),
+      v: () => setTabChoice({ slideId: liveSlide?.id ?? '', tab: 'verses' }),
       Home: () => dispatch({ type: 'goTo', index: 0 }),
       End: () => dispatch({ type: 'goTo', index: slides.length - 1 }),
     },
@@ -333,7 +340,11 @@ function ControlScreen() {
           <main className={c.center} aria-label="Live">
             <div className={c.liveWrap}>
               <LivePane meta={liveMeta} frozen={Boolean(frozen)}>
-                <LiveScreen snapshot={frozen ?? snapshot} label="Live output" />
+                <LiveScreen
+                  snapshot={frozen ?? snapshot}
+                  label="Live output"
+                  showMediaPlaceholders
+                />
               </LivePane>
             </div>
             <FeatureBoundary name="The step bar">
@@ -364,7 +375,7 @@ function ControlScreen() {
               className={c.tabs}
               label="Notes and verses"
               value={tab}
-              onChange={setTab}
+              onChange={(tab) => setTabChoice({ slideId: liveSlide?.id ?? '', tab })}
               items={[
                 {
                   value: 'notes',
@@ -462,7 +473,7 @@ function NextPane({
     body = <LiveScreen snapshot={snapshot} label="What shows when you unfreeze" />;
     caption = `Slide ${snapshot.live.slideIndex + 1} · ${slides[snapshot.live.slideIndex] ? slideTitle(slides[snapshot.live.slideIndex]!) : ''}`;
   } else if (preview) {
-    head = { title: 'Typed verse, ready', key: 'Enter' };
+    head = { title: 'Verse, ready', key: 'Enter' };
     body = (
       <LiveScreen
         key={`${preview.ref}|${preview.translation}|${preview.mode}`}
@@ -470,7 +481,7 @@ function NextPane({
           ...snapshot,
           live: { ...snapshot.live, screen: 'content', overlay: { ...preview, page: 0 } },
         }}
-        label="Typed verse, ready to send"
+        label="Verse, ready to send"
       />
     );
     caption = `${labelFor(preview.ref, preview.translation)} · ${preview.translation} · ${MODES.find((m) => m.mode === preview.mode)?.label ?? ''}. Enter sends it, Esc puts it back.`;
@@ -666,14 +677,14 @@ function paletteCommands(o: {
     {
       id: 'clear',
       group: 'Verses',
-      label: 'Remove the typed verse',
+      label: 'Remove the verse',
       shortcut: 'Esc',
       run: () => o.dispatch({ type: 'clearOverlay' }),
     },
     ...MODES.map((m) => ({
       id: m.mode,
       group: 'Verses',
-      label: `Typed verse as ${m.label.toLowerCase()}`,
+      label: `Verse as ${m.label.toLowerCase()}`,
       shortcut: m.key,
       run: () => o.setMode(m.mode),
     })),

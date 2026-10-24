@@ -7,7 +7,7 @@ export type TemplateId = (typeof TEMPLATE_IDS)[number];
  */
 export const ACTIVE_TEMPLATE_IDS = ['lampstand'] as const satisfies readonly TemplateId[];
 
-export const OVERLAY_MODES = ['lowerThird', 'sidePanel', 'fullScreen', 'popup'] as const;
+export const OVERLAY_MODES = ['sidePanel', 'lowerThird', 'fullScreen', 'popup'] as const;
 export type OverlayMode = (typeof OVERLAY_MODES)[number];
 
 export const UI_MODES = ['light', 'dark', 'system'] as const;

@@ -7,7 +7,7 @@ const KIND: Record<StoredSlide['type'], string> = {
   section: 'Section',
   point: 'Point',
   list: 'List',
-  verse: 'Verse',
+  reading: 'Reading',
   quote: 'Quote',
   statement: 'Statement',
   image: 'Image',
@@ -22,7 +22,7 @@ export function slideKind(s: StoredSlide): string {
 /** The line that names a slide in the rail, the palette and Next. */
 export function slideTitle(s: StoredSlide): string {
   switch (s.type) {
-    case 'verse':
+    case 'reading':
       return s.ref;
     case 'quote':
     case 'statement':
@@ -36,9 +36,9 @@ export function slideTitle(s: StoredSlide): string {
   }
 }
 
-/** Items of a build list, or 0: Next shows them one at a time before moving on. */
+/** Number of items available to the separate reveal control. */
 export function buildItems(s: StoredSlide | undefined): number {
-  return s?.type === 'list' && s.build ? s.items.length : 0;
+  return s?.type === 'list' && s.reveal ? s.items.length : 0;
 }
 
 export interface NextBeat {
@@ -51,31 +51,17 @@ export interface NextBeat {
 }
 
 /**
- * What the next press of Next puts on the TV: the next list item, the next page of a passage,
- * or the next slide (from its start). Null at the end.
+ * Next always changes slides. Reveal, reading pages and verse panels have their own controls.
  */
 export function nextBeat(
   slides: readonly StoredSlide[],
   index: number,
-  buildStep: number,
-  page: number,
-  pages: (s: StoredSlide) => number,
+  _buildStep: number,
+  _page: number,
+  _pages: (s: StoredSlide) => number,
 ): NextBeat | null {
   const slide = slides[index];
   if (!slide) return null;
-  const items = buildItems(slide);
-  if (buildStep < items && slide.type === 'list') {
-    return {
-      index,
-      buildStep: buildStep + 1,
-      page,
-      label: `Item ${buildStep + 1}: ${slide.items[buildStep]}`,
-    };
-  }
-  const total = pages(slide);
-  if (page < total - 1) {
-    return { index, buildStep, page: page + 1, label: `Page ${page + 2} of ${total}` };
-  }
   const next = slides[index + 1];
   if (!next) return null;
   return {

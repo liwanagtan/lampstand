@@ -1,6 +1,6 @@
 /*
  * Slide layouts on the 1920×1080 canvas (the Lampstand theme: the slide templates canvas,
- * October 2026, drawn at 1280×720 and scaled 1.5×). Colours and fonts come from --t-* tokens.
+ * October 2026, with a quieter editorial type scale). Colours and fonts come from --t-* tokens.
  * No logo and no decorative lines: hierarchy is size, weight and gold.
  */
 
@@ -53,56 +53,57 @@
   font-style: var(--t-heading-style);
   letter-spacing: var(--t-heading-tracking);
   text-wrap: balance;
+  font-optical-sizing: auto;
 }
 /* Section and closing titles. */
 .display {
-  font-size: 132px;
-  line-height: 1.04;
+  font-size: 102px;
+  line-height: 1.12;
   max-width: 1230px;
 }
 .closingTitle {
-  font-size: 156px;
-  line-height: 1;
+  font-size: 108px;
+  line-height: 1.1;
   max-width: 1500px;
-  letter-spacing: -0.035em;
+  letter-spacing: var(--t-heading-tracking);
 }
 /* A point's main idea. */
 .heading {
-  font-size: 108px;
-  line-height: 1.06;
-  max-width: 1440px;
+  font-size: 80px;
+  line-height: 1.15;
+  max-width: 1280px;
 }
-/* One bold line, centred. */
+/* One quiet statement, centred. */
 .statement {
-  font-size: 120px;
-  line-height: 1.1;
-  max-width: 1500px;
+  font-size: 96px;
+  line-height: 1.2;
+  max-width: 1320px;
 }
 .subheading {
-  font-size: 96px;
-  line-height: 1.06;
+  font-size: 78px;
+  line-height: 1.15;
   max-width: 1500px;
 }
 .body {
   font-family: var(--t-body-font);
   font-weight: var(--t-body-weight);
-  font-size: 51px;
-  line-height: 1.45;
+  font-size: 42px;
+  line-height: 1.5;
   color: var(--t-muted);
-  max-width: 1350px;
+  max-width: 1220px;
   text-wrap: pretty;
 }
 .caption {
-  font-size: 39px;
+  font-size: 32px;
   line-height: 1.3;
   color: var(--t-muted);
 }
 .eyebrow {
   font-family: var(--t-body-font);
-  font-size: 36px;
+  font-size: 28px;
   line-height: 1.2;
-  font-weight: 700;
-  letter-spacing: 0.14em;
+  font-weight: 600;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--t-accent);
 }
@@ -115,23 +116,23 @@
   margin-top: 30px;
 }
 .stack > * + * {
-  margin-top: 54px;
+  margin-top: 42px;
 }
 .stack-lg > * + * {
-  margin-top: 96px;
+  margin-top: 72px;
 }
 
 /* Title: the sermon's name, low on the screen. */
 .titleMeta {
-  font-size: 45px;
-  font-weight: 500;
+  font-size: 32px;
+  font-weight: var(--t-body-weight);
   color: var(--t-muted);
 }
 .titleHeading {
-  font-size: 168px;
-  line-height: 1;
+  font-size: 112px;
+  line-height: 1.12;
   max-width: 1440px;
-  letter-spacing: -0.035em;
+  letter-spacing: var(--t-heading-tracking);
 }
 
 /* Section: a large numeral sits behind the title. */
@@ -142,49 +143,49 @@
   z-index: 0;
   transform: translateY(-50%);
   font-family: var(--t-verse-font);
-  font-size: 780px;
+  font-size: 600px;
   line-height: 1;
-  font-weight: 600;
-  color: color-mix(in srgb, var(--t-accent) 16%, transparent);
+  font-weight: 400;
+  color: color-mix(in srgb, var(--t-accent) 10%, transparent);
   pointer-events: none;
 }
 
 /* List: numbered, two columns; every item shows unless the slide reveals them. */
 .list {
   list-style: none;
-  /* Not the top: the stack's space under the title sits there (the template's 64px, ×1.5). */
+  /* Preserve the stack's spacing beneath the heading. */
   margin-inline: 0;
   margin-bottom: 0;
   padding: 0;
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   column-gap: 96px;
-  row-gap: 60px;
+  row-gap: 48px;
   width: 100%;
   max-width: 1584px;
 }
 .listItem {
   display: flex;
   align-items: center;
-  gap: 36px;
-  font-size: 63px;
-  line-height: 1.15;
-  font-weight: 700;
-  letter-spacing: -0.015em;
+  gap: 24px;
+  font-size: 44px;
+  line-height: 1.4;
+  font-weight: var(--t-body-weight);
+  letter-spacing: normal;
   color: var(--t-text);
 }
 .marker {
   flex: none;
-  width: 96px;
-  height: 96px;
+  width: 64px;
+  height: 64px;
   border-radius: 999px;
   background: var(--t-chip);
   color: var(--t-accent);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 42px;
-  font-weight: 800;
+  font-size: 28px;
+  font-weight: 500;
   letter-spacing: 0;
 }
 .hidden {
@@ -224,10 +225,18 @@
   font-style: italic;
 }
 .emphasis {
+  transition: color 600ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.emphasisOn {
+  color: var(--t-accent);
+}
+/* Keep Show the Bible's existing highlights separate from the Slides presentation style. */
+[data-emphasis-style='background'] .emphasis {
   border-radius: 9px;
   transition: background-color 600ms cubic-bezier(0.22, 1, 0.36, 1);
 }
-.emphasisOn {
+[data-emphasis-style='background'] .emphasisOn {
+  color: inherit;
   background: color-mix(in srgb, var(--t-accent) 34%, transparent);
   box-decoration-break: clone;
   -webkit-box-decoration-break: clone;
@@ -301,11 +310,11 @@
 
 /* Quote */
 .quoteMark {
-  font-family: var(--t-verse-font);
-  font-size: 240px;
-  font-weight: 600;
+  font-family: var(--t-accent-font);
+  font-size: 180px;
+  font-weight: 400;
   line-height: 0.6;
-  height: 108px;
+  height: 84px;
   color: var(--t-accent);
 }
 .quoteText {
@@ -313,15 +322,15 @@
   font-weight: var(--t-accent-weight);
   font-style: var(--t-accent-style);
   letter-spacing: var(--t-accent-tracking);
-  font-size: 84px;
-  line-height: 1.22;
-  max-width: 1470px;
+  font-size: 64px;
+  line-height: 1.35;
+  max-width: 1320px;
   text-wrap: balance;
 }
 .author {
   font-family: var(--t-body-font);
-  font-size: 39px;
-  font-weight: 700;
+  font-size: 32px;
+  font-weight: 500;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--t-accent);
@@ -342,7 +351,7 @@
   font-weight: var(--t-heading-weight);
   font-style: var(--t-heading-style);
   letter-spacing: var(--t-heading-tracking);
-  font-size: 84px;
+  font-size: 64px;
   line-height: 1.12;
   max-width: 1350px;
 }
@@ -351,7 +360,7 @@
 .countdown {
   font-family: var(--t-heading-font);
   font-weight: var(--t-heading-weight);
-  font-size: 360px;
+  font-size: 288px;
   line-height: 1;
   font-variant-numeric: tabular-nums;
   letter-spacing: -0.04em;

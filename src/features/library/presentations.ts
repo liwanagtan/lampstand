@@ -3,6 +3,7 @@ import { db } from '@/db/db';
 import type { PresentationRecord } from '@/db/types';
 import type { StoredPresentation } from '@/schema/presentation';
 import { toExportJson, withIds } from '@/schema/validate';
+import { upgradeStoredPresentation } from '@/schema/upgradeStored';
 
 export type LibraryRecord = PresentationRecord<StoredPresentation>;
 
@@ -37,7 +38,10 @@ export async function updatePresentation(id: string, p: StoredPresentation): Pro
 }
 
 export async function getPresentation(id: string): Promise<LibraryRecord | undefined> {
-  return (await db.presentations.get(id)) as LibraryRecord | undefined;
+  const record = await db.presentations.get(id);
+  return record
+    ? { ...record, data: upgradeStoredPresentation(record.data) as StoredPresentation }
+    : undefined;
 }
 
 export async function duplicatePresentation(id: string): Promise<LibraryRecord | undefined> {

@@ -22,7 +22,7 @@ const RENDERERS: { [T in SlideType]: ComponentType<RenderProps<T>> } = {
   section: SectionSlide,
   point: PointSlide,
   list: ListSlide,
-  verse: VerseSlide,
+  reading: VerseSlide,
   quote: QuoteSlide,
   statement: StatementSlide,
   image: ImageSlide,
@@ -38,6 +38,7 @@ export interface SlideViewProps {
   buildStep?: number;
   page?: number;
   countdownEndsAt?: number | null;
+  showMediaPlaceholders?: boolean;
 }
 
 /** Draws one slide on the canvas. The same renderer serves editor, preview, thumbnails and output. */
@@ -49,9 +50,11 @@ export function SlideView({
   buildStep,
   page = 0,
   countdownEndsAt,
+  showMediaPlaceholders = mode !== 'live',
 }: SlideViewProps) {
   const Renderer = RENDERERS[slide.type] as ComponentType<RenderProps>;
   const animate = mode === 'live';
+
   return (
     <SlideErrorBoundary key={slide.id} template={template}>
       {/* The title slide is the poster, which draws its own background. */}
@@ -60,7 +63,7 @@ export function SlideView({
           background={slide.background}
           template={template}
           animate={animate}
-          showPlaceholder={mode !== 'live'}
+          showPlaceholder={showMediaPlaceholders}
           textOver={slide.type !== 'image' || Boolean(slide.caption)}
         />
       )}
@@ -73,6 +76,7 @@ export function SlideView({
         page={page}
         translation={translation}
         countdownEndsAt={countdownEndsAt}
+        showMediaPlaceholders={showMediaPlaceholders}
       />
     </SlideErrorBoundary>
   );

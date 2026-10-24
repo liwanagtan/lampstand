@@ -40,6 +40,8 @@ export interface TipContext {
   parallel: string | null;
   activePlans: number;
   remindersOn: boolean;
+  /** Reviewing the tips (staging and local only): every moment gets its tip, rules aside. */
+  preview?: boolean;
 }
 
 export type DoAction =
@@ -259,6 +261,7 @@ const localDay = (t: number) => {
 export function pickTip(event: TipEvent, ctx: TipContext): Tip | null {
   const { tips, now } = ctx;
   if (!tips.enabled || ctx.presenting || ctx.touring) return null;
+  if (ctx.preview) return TIPS.find((tip) => tip.on === event && tip.when(ctx)) ?? null;
   if (!ctx.onboardedAt || localDay(ctx.onboardedAt) === localDay(now)) return null;
   if (tips.lastShownAt && now - tips.lastShownAt < TIP_GAP) return null;
   for (const tip of TIPS) {

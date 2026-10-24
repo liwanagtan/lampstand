@@ -4,6 +4,7 @@ import { useIsPhone } from '@/app/useIsPhone';
 import { Link, useNavigate } from 'react-router-dom';
 import { queueTour } from '@/features/tour/tour';
 import { TIPS } from '@/features/tips/tips';
+import { canPreviewTips, isTipsPreview, setTipsPreview } from '@/features/tips/tipLog';
 import { paths } from '@/app/paths';
 import { Check, ChevronRight } from 'lucide-react';
 import { Button, Input, Select, Sheet, Toggle } from '@/design-system/components';
@@ -303,6 +304,7 @@ export function TipsSection() {
   const phone = useIsPhone();
   const navigate = useNavigate();
   const seen = TIPS.filter((t) => tips.seen[t.id]);
+  const [preview, setPreview] = useState(isTipsPreview);
   return (
     <Section title="Tips">
       <Toggle
@@ -311,6 +313,18 @@ export function TipsSection() {
         label="Tips from Ember"
         description="Now and then, a short tip after you try something new. At most one a week, never while presenting."
       />
+      {canPreviewTips() && (
+        <Toggle
+          checked={preview}
+          onChange={(on) => {
+            setTipsPreview(on);
+            setPreview(on);
+            if (on && !tips.enabled) void set('tips', { ...tips, enabled: true });
+          }}
+          label="Try every tip now (staging)"
+          description="For reviewing: each tip shows the moment you do its thing, with no first-day wait or week between tips. Only on this computer and the staging site."
+        />
+      )}
       {seen.length > 0 && (
         <details className={styles.seenTips}>
           <summary>

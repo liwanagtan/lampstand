@@ -5,7 +5,7 @@ import { useControl } from '@/features/present/live/controlStore';
 import { useReader } from '@/features/bible-app/readerStore';
 import { useSettings } from '@/features/settings/settingsStore';
 import { useTour } from '@/features/tour/tour';
-import { recordTipEvent, readTipLog } from './tipLog';
+import { isTipsPreview, recordTipEvent, readTipLog } from './tipLog';
 import {
   AFTER_MS,
   pickTip,
@@ -93,6 +93,7 @@ export async function tipContext(detail: TipDetail = {}): Promise<TipContext> {
     parallel: useReader.getState().parallel,
     activePlans: await db.plans.count(),
     remindersOn: reminders.enabled || Boolean(reminders.reading?.enabled),
+    preview: isTipsPreview(),
   };
 }
 

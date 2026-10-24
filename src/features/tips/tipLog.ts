@@ -26,6 +26,31 @@ export function recordTipEvent(event: string, now = Date.now()): TipLog {
   return log;
 }
 
+const PREVIEW_KEY = 'lampstand.tipsPreview';
+
+/** Where tips can be reviewed: this computer and the staging site, never the live one. */
+export function canPreviewTips(): boolean {
+  const host = location.hostname;
+  return host === 'localhost' || host === '127.0.0.1' || host.includes('staging');
+}
+
+export function isTipsPreview(): boolean {
+  try {
+    return canPreviewTips() && localStorage.getItem(PREVIEW_KEY) === 'on';
+  } catch {
+    return false;
+  }
+}
+
+export function setTipsPreview(on: boolean): void {
+  try {
+    if (on) localStorage.setItem(PREVIEW_KEY, 'on');
+    else localStorage.removeItem(PREVIEW_KEY);
+  } catch {
+    // Nothing to remember it in.
+  }
+}
+
 /** How many times `event` happened, in the last `days` days if given. */
 export function countOf(log: TipLog, event: string, now: number, days?: number): number {
   const times = log[event] ?? [];

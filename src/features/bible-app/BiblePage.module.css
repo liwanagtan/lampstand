@@ -236,11 +236,12 @@
     background: none;
     color: var(--color-text);
     font-family: var(--font-display);
-    /* A place name, not a headline: calm beside the verses and room for "Song of Songs 8". */
-    font-size: var(--text-24);
+    /* A place name, not a headline: one calm line, even for "1 Chronicles 29". */
+    font-size: var(--text-20);
     font-weight: 600;
     line-height: 1.2;
     letter-spacing: 0;
+    white-space: nowrap;
   }
   .mobileReadingActions {
     display: flex;

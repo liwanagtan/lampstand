@@ -100,6 +100,26 @@ self.addEventListener('periodicsync', (event) => {
   if (event.tag === TAG) event.waitUntil(maybeRemind());
 });
 
+// The verse of the day at 8:00, sent by the Lampstand Worker (docs/SHARING-AND-DAILY-VERSE.md).
+// A push must always show something, so a message that can't be read still shows a plain one.
+self.addEventListener('push', (event) => {
+  let msg = {};
+  try {
+    msg = event.data ? event.data.json() : {};
+  } catch {
+    msg = {};
+  }
+  event.waitUntil(
+    self.registration.showNotification(msg.title || 'Verse of the day', {
+      body: msg.body || 'Today’s verse is waiting in Lampstand.',
+      tag: msg.tag || 'lampstand-daily-verse',
+      icon: '/icons/icon-192.png',
+      badge: '/icons/icon-192.png',
+      data: { url: msg.url || '/' },
+    }),
+  );
+});
+
 self.addEventListener('notificationclick', (event) => {
   event.notification.close();
   const url = (event.notification.data && event.notification.data.url) || '/';

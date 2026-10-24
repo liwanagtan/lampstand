@@ -86,7 +86,7 @@ export const DAILY_VERSES: readonly string[] = [
 ];
 
 /** A fixed shuffle so neighbouring days move around the Bible rather than walk through it. */
-const SHUFFLED: readonly string[] = (() => {
+export const SHUFFLED: readonly string[] = (() => {
   const out = [...DAILY_VERSES];
   let seed = 20261016;
   for (let i = out.length - 1; i > 0; i--) {

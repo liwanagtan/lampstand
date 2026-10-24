@@ -3,6 +3,7 @@ import { create } from 'zustand';
 import { BOOK_BY_CODE } from '@/features/bible/books';
 import { accountStorageKey } from '@/features/account/storage';
 import type { RefRange } from '@/features/bible/ref';
+import { recordTipEvent } from '@/features/tips/tipLog';
 
 const PREFS_KEY = 'lampstand.reader';
 
@@ -158,10 +159,12 @@ export const useReader = create<ReaderState>((set, get) => ({
     save(get());
   },
   setTranslation: (translation) => {
+    if (translation !== get().translation) recordTipEvent('translation-changed');
     set({ translation, parallel: get().parallel === translation ? null : get().parallel });
     save(get());
   },
   setParallel: (parallel) => {
+    if (parallel) recordTipEvent('parallel-on');
     set({ parallel });
     save(get());
   },

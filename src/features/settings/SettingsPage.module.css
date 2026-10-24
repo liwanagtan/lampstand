@@ -564,3 +564,29 @@
   border-color: var(--color-accent);
   background: var(--color-accent);
 }
+
+/* Settings › Tips: the tips already seen, to read again. */
+.seenTips summary {
+  min-height: 44px;
+  padding-block: var(--space-2);
+  font-weight: var(--weight-semibold);
+  cursor: pointer;
+}
+.seenTips ul {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.seenTips li {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: var(--text-14);
+}
+.seenTips li span {
+  line-height: 1.5;
+  color: var(--color-text-muted);
+}

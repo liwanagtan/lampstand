@@ -16,6 +16,7 @@ import { localDayNumber } from './dailyVerses';
 import returning from './plans/returning-to-the-word.lampstand-plan.json';
 import understanding from './plans/reading-with-understanding.lampstand-plan.json';
 import { clearPlanResume } from './readingResume';
+import { recordTipEvent } from '@/features/tips/tipLog';
 
 // Every bundled plan file in ./plans is a built-in plan.
 const BUNDLED = {
@@ -351,6 +352,7 @@ export function nextReadingDate(
 }
 
 export async function setPlanRhythm(planId: string, rhythm: PlanRhythm | null): Promise<void> {
+  recordTipEvent('pace-changed');
   await db.transaction('rw', db.plans, async () => {
     const progress = await db.plans.get(planId);
     if (!progress || progress.rhythm === (rhythm ?? undefined)) return;
@@ -412,7 +414,12 @@ export async function startPlan(planId: string): Promise<void> {
   const now = Date.now();
   await db.plans.put({ planId, startedAt: now, done: [], updatedAt: now });
   track('plan_started');
+  void tipMoment('plan-started');
 }
+
+/** Tell Ember's tips; loaded on demand, as the tips read plans themselves. */
+const tipMoment = async (event: 'plan-started' | 'plan-day-done') =>
+  (await import('@/features/tips/tipStore')).noteTipEvent(event);
 
 export async function stopPlan(planId: string): Promise<void> {
   await db.plans.delete(planId);
@@ -439,7 +446,10 @@ export async function setDayRead(planId: string, day: number, read: boolean): Pr
       updatedAt: Date.now(),
     });
   });
-  if (read) track('plan_day_completed');
+  if (read) {
+    track('plan_day_completed');
+    void tipMoment('plan-day-done');
+  }
 }
 
 export function usePlanProgress(): PlanProgressRecord[] | undefined {

@@ -1,65 +1,87 @@
 import { ALL_FEATURES } from '@/app/features';
-import { NOT_NOW_WAIT, TIP_GAP, pickTip, type TipContext } from './tips';
+import { NOT_NOW_WAIT, TIP_GAP, TIPS, pickTip, type TipContext } from './tips';
+import type { TipLog } from './tipLog';
 
 const DAY = 86_400_000;
 const NOW = new Date(2026, 9, 20, 9).getTime();
+const times = (n: number, ago = DAY) => Array.from({ length: n }, (_, i) => NOW - ago - i * 1000);
 const ctx = (over: Partial<TipContext> = {}): TipContext => ({
   now: NOW,
   tips: { enabled: true, lastShownAt: null, seen: {} },
   features: ALL_FEATURES,
   presenting: false,
+  touring: false,
   onboardedAt: NOW - 3 * DAY,
-  counts: { 'chapter-read': 3, 'note-saved': 1, highlighted: 2 },
+  log: {},
+  detail: {},
   parallel: null,
-  activePlans: 0,
+  activePlans: 1,
+  remindersOn: false,
   ...over,
 });
+const withLog = (log: TipLog, over: Partial<TipContext> = {}) => ctx({ log, ...over });
 
-describe('feature tips', () => {
-  it('suggests a tip at a natural moment', () => {
-    expect(pickTip('chapter-read', ctx())?.id).toBe('plans');
-    expect(pickTip('note-saved', ctx())?.id).toBe('journal-notes');
-    expect(pickTip('highlighted', ctx())?.id).toBe('screen');
+describe('Ember’s tips', () => {
+  it('comes just after the thing it builds on', () => {
+    expect(pickTip('verse-selected', ctx({ detail: { words: true } }))?.id).toBe('words');
+    expect(pickTip('verse-selected', ctx({ detail: { study: true } }))?.id).toBe('study');
+    expect(pickTip('highlighted', withLog({ highlighted: times(1) }))?.id).toBe('colours');
+    expect(pickTip('plan-started', ctx())?.id).toBe('pace');
+  });
+
+  it('never for a feature already used', () => {
+    expect(
+      pickTip('verse-selected', withLog({ 'words-opened': times(1) }, { detail: { words: true } })),
+    ).toBeNull();
+    expect(pickTip('plan-started', withLog({ 'pace-changed': times(1, 30 * DAY) }))).toBeNull();
   });
 
   it('waits for enough of the moment', () => {
-    expect(pickTip('chapter-read', ctx({ counts: { 'chapter-read': 2 } }))).toBeNull();
+    expect(pickTip('chapter-read', withLog({ 'chapter-read': times(2) }))).toBeNull();
+    expect(pickTip('chapter-read', withLog({ 'chapter-read': times(3) }))?.id).toBe('compare');
+    // Three chapters, but not this week: no comparing yet.
+    expect(pickTip('chapter-read', withLog({ 'chapter-read': times(3, 10 * DAY) }))).toBeNull();
   });
 
-  it('never on the first day, never while presenting, never when switched off', () => {
-    expect(pickTip('note-saved', ctx({ onboardedAt: NOW - 60_000 }))).toBeNull();
-    expect(pickTip('note-saved', ctx({ presenting: true }))).toBeNull();
-    expect(
-      pickTip('note-saved', ctx({ tips: { enabled: false, lastShownAt: null, seen: {} } })),
-    ).toBeNull();
+  it('stays quiet on the first day, during the tour, while presenting, or when off', () => {
+    const moment = { detail: { words: true } };
+    expect(pickTip('verse-selected', ctx({ ...moment, onboardedAt: NOW - 60_000 }))).toBeNull();
+    expect(pickTip('verse-selected', ctx({ ...moment, touring: true }))).toBeNull();
+    expect(pickTip('verse-selected', ctx({ ...moment, presenting: true }))).toBeNull();
+    const off = { enabled: false, lastShownAt: null, seen: {} };
+    expect(pickTip('verse-selected', ctx({ ...moment, tips: off }))).toBeNull();
   });
 
   it('shows at most one a week', () => {
+    const moment = { detail: { words: true } };
     const recent = { enabled: true, lastShownAt: NOW - TIP_GAP + DAY, seen: {} };
-    expect(pickTip('note-saved', ctx({ tips: recent }))).toBeNull();
+    expect(pickTip('verse-selected', ctx({ ...moment, tips: recent }))).toBeNull();
     const old = { enabled: true, lastShownAt: NOW - TIP_GAP - DAY, seen: {} };
-    expect(pickTip('note-saved', ctx({ tips: old }))?.id).toBe('journal-notes');
+    expect(pickTip('verse-selected', ctx({ ...moment, tips: old }))?.id).toBe('words');
   });
 
-  it('respects Not now and Don’t show this again', () => {
-    const later = { 'journal-notes': { at: NOW - NOT_NOW_WAIT + DAY } };
+  it('Not now waits three weeks; a tip acted on never returns', () => {
+    const moment = { detail: { words: true } };
+    const later = { words: { at: NOW - NOT_NOW_WAIT + DAY } };
     expect(
-      pickTip('note-saved', ctx({ tips: { enabled: true, lastShownAt: null, seen: later } })),
+      pickTip(
+        'verse-selected',
+        ctx({ ...moment, tips: { enabled: true, lastShownAt: null, seen: later } }),
+      ),
     ).toBeNull();
-    const never = { 'journal-notes': { at: NOW - 400 * DAY, never: true } };
+    const done = { words: { at: NOW - 400 * DAY, never: true } };
     expect(
-      pickTip('note-saved', ctx({ tips: { enabled: true, lastShownAt: null, seen: never } })),
+      pickTip(
+        'verse-selected',
+        ctx({ ...moment, tips: { enabled: true, lastShownAt: null, seen: done } }),
+      ),
     ).toBeNull();
   });
 
-  it('skips tips that no longer apply, and offers to turn features on', () => {
-    // A plan is running: the parallel tip comes instead, once there have been enough chapters.
-    expect(
-      pickTip('chapter-read', ctx({ activePlans: 1, counts: { 'chapter-read': 6 } }))?.id,
-    ).toBe('parallel');
-    const tip = pickTip('highlighted', ctx({ features: { ...ALL_FEATURES, screen: false } }))!;
-    expect(tip.action(ctx({ features: { ...ALL_FEATURES, screen: false } })).label).toBe(
-      'Turn on Screen',
-    );
+  it('gives every tip one of the three buttons, and offers to turn features on', () => {
+    for (const tip of TIPS) expect(['guide', 'do', 'got']).toContain(tip.action(ctx()).kind);
+    const screen = TIPS.find((t) => t.id === 'screen')!;
+    const action = screen.action(ctx({ features: { ...ALL_FEATURES, screen: false } }));
+    expect(action.kind === 'do' && action.label).toBe('Turn on Screen');
   });
 });

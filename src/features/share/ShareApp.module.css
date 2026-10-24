@@ -1,0 +1,8 @@
+.button {
+  align-self: flex-start;
+}
+.text {
+  font-size: var(--text-14);
+  line-height: 1.5;
+  color: var(--color-text-muted);
+}

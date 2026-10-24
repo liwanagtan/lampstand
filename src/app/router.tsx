@@ -33,6 +33,11 @@ export const routes: RouteObject[] = [
             path: 'bible',
             lazy: lazyPage(() => import('@/features/bible-app/BibleReaderPage'), 'BibleReaderPage'),
           },
+          // A shared verse (docs/SHARING-AND-DAILY-VERSE.md).
+          {
+            path: 'v/:osis',
+            lazy: lazyPage(() => import('@/features/share/SharedVersePage'), 'SharedVersePage'),
+          },
           {
             path: 'plans',
             lazy: lazyPage(() => import('@/features/bible-app/PlansPage'), 'PlansPage'),
@@ -41,8 +46,14 @@ export const routes: RouteObject[] = [
             path: 'salvation',
             lazy: lazyPage(() => import('@/features/salvation/SalvationPage'), 'SalvationPage'),
           },
-          { path: 'plans/good-news-personal-faith/:day', element: <Navigate to={paths.salvation} replace /> },
-          { path: 'plans/p/good-news-personal-faith', element: <Navigate to={paths.salvation} replace /> },
+          {
+            path: 'plans/good-news-personal-faith/:day',
+            element: <Navigate to={paths.salvation} replace />,
+          },
+          {
+            path: 'plans/p/good-news-personal-faith',
+            element: <Navigate to={paths.salvation} replace />,
+          },
           {
             path: 'plans/c/:categoryId',
             lazy: lazyPage(

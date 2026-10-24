@@ -9,9 +9,11 @@ import {
   MonitorPlay,
   MonitorStop,
   NotebookPen,
+  Share2,
   Sparkles,
   X,
 } from 'lucide-react';
+import { shareOrCopy, shareTranslation, verseLink, verseShareText } from '@/features/share/share';
 import { Button, IconButton, cx, toast } from '@/design-system/components';
 import { db } from '@/db/db';
 import { BOOK_BY_CODE } from '@/features/bible/books';
@@ -291,6 +293,24 @@ function VerseHero({
     .map((v) => v.text)
     .join(' ');
   const label = passage?.reference ?? ref;
+  // Shared words are always a translation that may be passed on (never the NLT).
+  const shareCode = shareTranslation(translation);
+  const { passage: sharePassage } = usePassage(osis, shareCode);
+  const share = () => {
+    const words = sharePassage?.verses
+      .filter((v) => !v.missing)
+      .map((v) => v.text)
+      .join(' ');
+    if (!words) return;
+    void shareOrCopy(
+      {
+        title: `${label} · Verse of the day`,
+        text: verseShareText(words, sharePassage?.reference ?? label, shareCode),
+        url: verseLink(osis),
+      },
+      'Copied the verse and its link',
+    );
+  };
 
   const copy = async () => {
     try {
@@ -355,6 +375,14 @@ function VerseHero({
             className={cx(styles.heroButton, styles.heroQuiet)}
           >
             Copy
+          </Button>
+          <Button
+            icon={<Share2 size={16} />}
+            aria-label="Share the verse of the day"
+            onClick={share}
+            className={cx(styles.heroButton, styles.heroQuiet)}
+          >
+            Share
           </Button>
         </div>
       </div>

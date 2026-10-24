@@ -17,6 +17,7 @@ import { ReadingSection, TipsSection } from './MeSections';
 import { RemindersSection } from '@/features/reminders/RemindersSection';
 import { Section } from './Section';
 import { InstallSection } from './InstallSection';
+import { ShareAppSection } from '@/features/share/ShareApp';
 import { AccountSection } from '@/features/account/AccountSection';
 import { PrivacySection } from '@/features/insights/PrivacySection';
 import { LAMPSTAND_PLANS, OPEN_CONTENT } from './credits';
@@ -40,6 +41,7 @@ export function SettingsPage() {
       <ReadingSection />
       <RemindersSection />
       <InstallSection />
+      <ShareAppSection />
       <AppearanceSection />
       {/* TV settings belong to the laptop that runs the screen, not to the phone. */}
       {screen && (
@@ -430,9 +432,9 @@ function DataSection({ embedded = false }: { embedded?: boolean }) {
       </div>
       <p className={styles.small}>
         Your backup includes journal entries, notes, highlights, bookmarks, plan progress, reading
-        positions, preferences and slides. Keep a copy before changing devices. Import merges
-        saved content, restores backed-up preferences and fills missing reading positions without
-        deleting existing entries.
+        positions, preferences and slides. Keep a copy before changing devices. Import merges saved
+        content, restores backed-up preferences and fills missing reading positions without deleting
+        existing entries.
       </p>
     </div>
   );

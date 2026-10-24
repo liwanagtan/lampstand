@@ -10,6 +10,7 @@ import { suggestedPlan, type FaithJourney } from '@/app/faithJourney';
 import { paths } from '@/app/paths';
 import { markOnboarded } from '@/app/onboarding';
 import { queueTour } from '@/features/tour/tour';
+import { takeAfterWelcome } from '@/features/share/share';
 import { builtinPlans, startPlan } from '@/features/bible-app/plans';
 import { useAccount } from '@/features/account/accountStore';
 import { useSettings } from '@/features/settings/settingsStore';
@@ -126,7 +127,7 @@ export function WelcomePage() {
       markOnboarded();
       queueTour();
       track('welcome_completed');
-      navigate(paths.today, { replace: true });
+      navigate(takeAfterWelcome() ?? paths.today, { replace: true });
     } catch {
       setSetupError('We couldn’t finish setting things up. Please try again.');
       setSettingUp(false);

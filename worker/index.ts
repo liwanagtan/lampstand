@@ -1,3 +1,5 @@
+import { isPreviewPage, previewPage } from './share';
+
 const NLT_BIBLE_ID = 'd6e14a625393b4da-01';
 const UPSTREAM = `https://rest.api.bible/v1/bibles/${NLT_BIBLE_ID}`;
 const CACHE_SECONDS = 14 * 24 * 60 * 60;
@@ -8,6 +10,7 @@ type WorkerEnv = Env & { NLT_API_KEY?: string };
 export default {
   async fetch(request: Request, env: WorkerEnv, ctx: ExecutionContext): Promise<Response> {
     const url = new URL(request.url);
+    if (request.method === 'GET' && isPreviewPage(url)) return previewPage(request, env.ASSETS);
     if (!url.pathname.startsWith('/api/nlt/')) return env.ASSETS.fetch(request);
     if (request.method !== 'GET') return new Response('Method not allowed', { status: 405 });
     if (!env.NLT_API_KEY) return Response.json({ available: false }, { status: 503 });

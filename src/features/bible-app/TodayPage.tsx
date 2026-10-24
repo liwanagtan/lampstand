@@ -38,6 +38,7 @@ import { showOnTv } from './tvActions';
 import { FlameCompanion } from '@/design-system/FlameCompanion';
 import { ClassicDevotional } from './ClassicDevotional';
 import { InstallOffer } from './InstallOffer';
+import { useTour } from '@/features/tour/tour';
 import styles from './Today.module.css';
 import { useIsPhone } from '@/app/useIsPhone';
 import { paths } from '@/app/paths';
@@ -89,6 +90,14 @@ export function TodayPage() {
     .filter((p) => p.plan)
     .sort((a, b) => b.timestamp - a.timestamp)[0];
   const evening = phone && now.getHours() >= 17 && Boolean(finishedToday);
+  // The tour's Start reading opens the verse of the day in its chapter.
+  useEffect(
+    () =>
+      useTour.subscribe((s, prev) => {
+        if (s.readVerse !== prev.readVerse) setPanel('context');
+      }),
+    [],
+  );
 
   return (
     <div className={styles.page} data-evening={evening || undefined}>
@@ -112,7 +121,7 @@ export function TodayPage() {
             <div className={styles.plansSlot}>
               <TodayPlans />
             </div>
-            <div className={styles.verseSlot}>
+            <div className={styles.verseSlot} data-tour="verse">
               <VerseHero
                 now={now}
                 onContext={() => setPanel('context')}
@@ -285,9 +294,7 @@ function VerseHero({
 
   const copy = async () => {
     try {
-      await navigator.clipboard.writeText(
-        `“${text ?? ''}”\n— ${label} (${translation})`,
-      );
+      await navigator.clipboard.writeText(`“${text ?? ''}”\n— ${label} (${translation})`);
       toast({ title: 'Copied the verse of the day', tone: 'success' });
     } catch {
       toast({ title: "Couldn't copy to the clipboard.", tone: 'warning' });
@@ -497,7 +504,7 @@ function TodayPlans() {
   }
   return (
     <>
-      <section className={styles.nextReading} aria-label="Continue your reading">
+      <section className={styles.nextReading} aria-label="Continue your reading" data-tour="plan">
         <h2 className={styles.nextHeading}>
           {currentDay(active[0]!.plan, active[0]!.p).kind === 'read'
             ? 'Continue your reading'

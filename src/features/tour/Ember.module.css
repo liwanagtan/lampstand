@@ -1,0 +1,135 @@
+.ember {
+  flex: none;
+  overflow: visible;
+  animation: bob 3.6s var(--ease-standard) infinite;
+}
+.glow {
+  fill: var(--color-accent);
+  opacity: 0.35;
+  filter: blur(14px);
+}
+.flame {
+  fill: var(--color-accent);
+}
+.core {
+  fill: var(--color-accent-soft);
+}
+.ink {
+  fill: var(--palette-ink);
+}
+.shine {
+  fill: var(--palette-white);
+}
+.line {
+  fill: none;
+  stroke: var(--palette-ink);
+  stroke-width: 3.4;
+  stroke-linecap: round;
+}
+.cheek {
+  fill: var(--color-accent-tint);
+  opacity: 0.9;
+}
+.body {
+  transform-box: fill-box;
+  transform-origin: 50% 92%;
+  animation: flicker 2.4s var(--ease-standard) infinite;
+}
+.eyes {
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+  animation: blink 4.2s infinite;
+}
+.wave {
+  fill: none;
+  stroke: var(--color-accent);
+  stroke-width: 10;
+  stroke-linecap: round;
+  transform-box: fill-box;
+  transform-origin: 20% 90%;
+  animation: wave 1.4s var(--ease-standard) 3;
+}
+.spark {
+  fill: var(--color-accent-soft);
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+  animation: rise 2.6s var(--ease-sheet) infinite;
+}
+.spark:nth-of-type(odd) {
+  fill: var(--color-accent);
+}
+@keyframes bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+@keyframes flicker {
+  0%,
+  100% {
+    transform: scaleY(1) skewX(0deg);
+  }
+  30% {
+    transform: scaleY(1.05) skewX(-2deg);
+  }
+  60% {
+    transform: scaleY(0.97) skewX(1.5deg);
+  }
+}
+@keyframes blink {
+  0%,
+  92%,
+  100% {
+    transform: scaleY(1);
+  }
+  95% {
+    transform: scaleY(0.1);
+  }
+}
+@keyframes wave {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(-16deg);
+  }
+}
+@keyframes rise {
+  0% {
+    transform: translateY(0) scale(1);
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-90px) scale(0.4);
+    opacity: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ember,
+  .body,
+  .eyes,
+  .wave,
+  .spark {
+    animation: none;
+  }
+  .spark {
+    opacity: 0;
+  }
+}
+:global([data-reduce-motion='true']) .ember,
+:global([data-reduce-motion='true']) .body,
+:global([data-reduce-motion='true']) .eyes,
+:global([data-reduce-motion='true']) .wave,
+:global([data-reduce-motion='true']) .spark {
+  animation: none;
+}
+:global([data-reduce-motion='true']) .spark {
+  opacity: 0;
+}

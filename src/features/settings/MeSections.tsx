@@ -1,7 +1,8 @@
 import { FAITH_JOURNEYS, faithJourneys } from '@/app/faithJourney';
 import { useState } from 'react';
 import { useIsPhone } from '@/app/useIsPhone';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { queueTour } from '@/features/tour/tour';
 import { paths } from '@/app/paths';
 import { Check, ChevronRight } from 'lucide-react';
 import { Button, Input, Select, Sheet, Toggle } from '@/design-system/components';
@@ -295,6 +296,8 @@ export function ReadingSection() {
 export function TipsSection() {
   const tips = useSettings((s) => s.tips);
   const set = useSettings((s) => s.set);
+  const phone = useIsPhone();
+  const navigate = useNavigate();
   return (
     <Section title="Tips">
       <Toggle
@@ -303,6 +306,17 @@ export function TipsSection() {
         label="Feature tips"
         description="Now and then — at most once a week, never while presenting — Lampstand suggests something it can do."
       />
+      {phone && (
+        <Button
+          variant="secondary"
+          onClick={() => {
+            queueTour();
+            navigate(paths.today);
+          }}
+        >
+          Replay the tour
+        </Button>
+      )}
     </Section>
   );
 }

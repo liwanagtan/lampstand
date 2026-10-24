@@ -9,6 +9,7 @@ import { USE_CASES, featuresFor, type UseCaseId } from '@/app/features';
 import { suggestedPlan, type FaithJourney } from '@/app/faithJourney';
 import { paths } from '@/app/paths';
 import { markOnboarded } from '@/app/onboarding';
+import { queueTour } from '@/features/tour/tour';
 import { builtinPlans, startPlan } from '@/features/bible-app/plans';
 import { useAccount } from '@/features/account/accountStore';
 import { useSettings } from '@/features/settings/settingsStore';
@@ -123,6 +124,7 @@ export function WelcomePage() {
       const remaining = SETUP_DURATION_MS - (Date.now() - started);
       if (remaining > 0) await new Promise((resolve) => setTimeout(resolve, remaining));
       markOnboarded();
+      queueTour();
       track('welcome_completed');
       navigate(paths.today, { replace: true });
     } catch {

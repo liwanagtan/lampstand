@@ -5,6 +5,7 @@ import { useControl } from '@/features/present/live/controlStore';
 import { useApplyDocumentTheme } from '@/features/settings/theme';
 import { useSettings } from '@/features/settings/settingsStore';
 import { TipHost } from '@/features/tips/TipHost';
+import { GuidedTour } from '@/features/tour/GuidedTour';
 import { Avatar } from '@/features/profile/Avatar';
 import { TopSearch } from '@/features/search/TopSearch';
 import { useReminders } from '@/features/reminders/useReminders';
@@ -92,12 +93,14 @@ export function AppShell() {
         <Outlet />
       </main>
       <TipHost />
+      <GuidedTour />
       <nav aria-label="Main" className={styles.tabbar}>
         {tabs.map(({ to, label, icon: Icon, glyph, end }) => (
           <NavLink
             key={to}
             to={to}
             end={end}
+            data-tour={`tab-${label.toLowerCase()}`}
             className={({ isActive }) => cx(styles.tab, isActive && styles.tabActive)}
             onClick={() => {
               // Tapping the tab you're on takes you back to the top, as phones expect.

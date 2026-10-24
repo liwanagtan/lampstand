@@ -12,8 +12,8 @@ The current build is about 46 MB in 227 files; the largest file is about 4.2 MB.
 
 ## Release sequence
 
-1. **Cloudflare connection — done.** The owner connected the GitHub repository and deployed Worker `lampstand` on the free `workers.dev` address. Verify that future pushes to `main` deploy automatically and that pushes to `design/responsive-redesign` create previews, never production changes. [Build branches](https://developers.cloudflare.com/workers/ci-cd/builds/build-branches/)
-2. **Make deployment reproducible.** Check in an explicit Wrangler configuration on `design/responsive-redesign` with `dist/` as the asset directory and `single-page-application` fallback. Keep `npm run build` and the existing typecheck, lint, and tests in release checks. Merge the config into `main` only with the owner’s approval under [AGENTS.md](../AGENTS.md).
+1. **Cloudflare connection — done.** The owner connected the GitHub repository and deployed Worker `lampstand` on the free `workers.dev` address. Verify that future pushes to `main` deploy automatically and that pushes to `staging` and `design/*` branches create previews, never production changes. [Build branches](https://developers.cloudflare.com/workers/ci-cd/builds/build-branches/)
+2. **Make deployment reproducible.** Check in an explicit Wrangler configuration on `staging` with `dist/` as the asset directory and `single-page-application` fallback. Keep `npm run build` and the existing typecheck, lint, and tests in release checks. Merge the config into `main` only with the owner’s approval under [AGENTS.md](../AGENTS.md).
 3. **Test a preview.** Verify first-run onboarding, Today, Plans, Salvation, direct deep links, every bundled Bible translation, Screen presentation, installability, offline reading, and the update prompt. On mobile, test Safari and Chrome installation and a full reading after disconnecting. Check that imported presentations and journal entries remain only on the device, and that export/import works.
 4. **Finish the content gate.** The owner reviews the Salvation reading and the other items in [content/LAUNCH-REVIEW.md](content/LAUNCH-REVIEW.md). Verify translation, photo, study-note, story, and devotional attribution in Settings → Credits and licences. Do not describe content as pastor-approved until that review is complete.
 5. **Review public basics.** Confirm the `/privacy` copy, the GitHub issue-based support path, the app name and icons, and the public URL shown to users. A GitHub account is currently needed to submit a support issue. Decide whether that is sufficient for launch.
@@ -22,5 +22,5 @@ The current build is about 46 MB in 227 files; the largest file is about 4.2 MB.
 
 ## Branch flow
 
-`design/responsive-redesign` remains the working branch. `main` is the production release branch, now connected to Cloudflare. Preview work on design, then merge to main only with the owner’s approval as required by [AGENTS.md](../AGENTS.md). Confirm Cloudflare’s preview branch behavior before relying on it; a design push must never deploy to the production URL.
+Work happens on `design/<topic>` branches made from `staging`, the long-lived staging branch. `main` is the production release branch, now connected to Cloudflare. Preview work on staging, then merge to main only with the owner’s approval as required by [AGENTS.md](../AGENTS.md). Confirm Cloudflare’s preview branch behavior before relying on it; a design push must never deploy to the production URL.
 

@@ -1,9 +1,9 @@
 # Lampstand growth milestones
 
 Status: proposed roadmap, 2026-10-22. This extends the historical milestones in
-`PRD-ADDENDUM-GROW.md`; it does not reopen completed work. Work on
-`design/responsive-redesign`, review each milestone with the owner, and merge to
-`main` only when requested. Each milestone ends with a working preview, relevant
+`PRD-ADDENDUM-GROW.md`; it does not reopen completed work. Work on a
+`design/<topic>` branch from `staging`, review each milestone with the owner, and
+merge to `staging`, then `main`, only when requested. Each milestone ends with a working preview, relevant
 automated checks, phone and desktop review, and a short account of what changed.
 
 ## Product guardrails

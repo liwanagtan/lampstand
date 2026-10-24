@@ -56,6 +56,6 @@ Do not put name, email, journal text, prayer text, search terms, Bible text, ver
 3. **Phase 3 — Welcome and migration:** guest data is imported by choice; existing account data remains intact; failed import can be retried.
 4. **Phase 4 — cross-device sync:** two-device and offline-conflict demonstrations, RLS tests, export/delete drill, and rollback path.
 5. **Phase 5 — usage insights:** event payload audit, dashboard, privacy copy, retention check, and guest-vs-Google adoption review.
-6. **Release:** validate on `design/responsive-redesign`; merge into `main` only after explicit owner approval. No paid plan or billing method without separate approval.
+6. **Release:** validate on `staging`; merge into `main` only after explicit owner approval. No paid plan or billing method without separate approval.
 
 Supabase references: [Google sign-in](https://supabase.com/docs/guides/auth/social-login/auth-google), [RLS](https://supabase.com/docs/guides/database/postgres/row-level-security), [pricing](https://supabase.com/pricing). Cloudflare reference: [Web Analytics](https://developers.cloudflare.com/web-analytics/about/).

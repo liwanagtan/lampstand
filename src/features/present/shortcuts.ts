@@ -1,8 +1,11 @@
 /** Keyboard shortcuts (PRD §7.8), shown in the shortcut sheet. */
 export const SHORTCUTS: { keys: string[]; action: string }[] = [
-  { keys: ['→', 'Space', 'PageDown'], action: 'Next slide or build step' },
-  { keys: ['←', 'PageUp'], action: 'Previous slide' },
-  { keys: ['Enter'], action: 'Send Preview live' },
+  {
+    keys: ['→', 'Space', 'PageDown'],
+    action: 'Next: the next list item, passage page, then slide',
+  },
+  { keys: ['←', 'PageUp'], action: 'Back one step' },
+  { keys: ['Enter'], action: 'Send the cued slide or verse' },
   { keys: ['/'], action: 'Focus verse command bar' },
   { keys: ['Enter'], action: 'Show verse live (in the bar)' },
   { keys: ['Shift+Enter'], action: 'Preview verse only (in the bar)' },
@@ -10,11 +13,14 @@ export const SHORTCUTS: { keys: string[]; action: string }[] = [
   { keys: ['Esc'], action: 'Hide the studied word, then clear the overlay (or close the bar)' },
   { keys: ['W'], action: 'Hide or show the studied word (Show the Bible)' },
   { keys: ['[', ']'], action: 'Previous / next page of a long passage (Show the Bible)' },
-  { keys: ['1', '2', '3', '4'], action: 'Lower third / side panel / full screen / popup' },
+  {
+    keys: ['1', '2', '3', '4'],
+    action: 'Typed verse: lower third / side panel / full screen / popup',
+  },
   { keys: ['Alt+→', 'Alt+←'], action: 'Next / previous verse or page' },
   { keys: ['T'], action: 'Cycle translation on the live verse' },
   { keys: ['B'], action: 'Blank screen toggle' },
-  { keys: ['L'], action: 'Logo screen toggle' },
+  { keys: ['L'], action: 'Logo screen toggle (Show the Bible)' },
   { keys: ['S'], action: 'Sermon poster toggle' },
   { keys: ['F'], action: 'Freeze or unfreeze the output' },
   { keys: ['Ctrl+K'], action: 'App command palette' },

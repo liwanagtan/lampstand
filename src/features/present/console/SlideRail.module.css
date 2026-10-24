@@ -1,0 +1,177 @@
+/* The slide rail (Screen redesign canvas): text rows, red for live, gold for cued. */
+.rail {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  border-right: 1px solid var(--color-border);
+  background: var(--color-surface);
+}
+.head {
+  display: flex;
+  justify-content: space-between;
+  padding: var(--space-3) var(--space-4) var(--space-2);
+  font-size: var(--text-12);
+  font-weight: var(--weight-bold);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+.count {
+  letter-spacing: 0;
+  text-transform: none;
+  font-variant-numeric: tabular-nums;
+}
+.list {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  margin: 0;
+  padding: 0 var(--space-2) var(--space-3);
+  list-style: none;
+}
+.row,
+.section {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  width: 100%;
+  min-height: 44px;
+  padding: var(--space-2) var(--space-3);
+  border: 0;
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--color-text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.row:hover,
+.section:hover {
+  background: color-mix(in srgb, var(--color-text) 6%, transparent);
+}
+.row:focus-visible,
+.section:focus-visible {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: -2px;
+}
+/* A section heads the slides after it, in gold capitals like an outline's heading. */
+.section {
+  margin-top: var(--space-3);
+  align-items: center;
+}
+.sectionText {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  font-size: var(--text-12);
+  font-weight: var(--weight-extrabold);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--palette-gold);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.num {
+  flex: none;
+  width: 20px;
+  padding-top: 2px;
+  font-size: var(--text-12);
+  font-weight: var(--weight-extrabold);
+  color: var(--color-text-muted);
+  font-variant-numeric: tabular-nums;
+}
+.section .num {
+  padding-top: 0;
+}
+.body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+.title {
+  overflow: hidden;
+  font-size: var(--text-14);
+  font-weight: var(--weight-bold);
+  line-height: 1.3;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+.kind {
+  font-size: var(--text-12);
+  font-weight: var(--weight-semibold);
+  color: var(--color-text-muted);
+}
+.chip {
+  padding: 2px 8px;
+  border-radius: var(--radius-pill);
+  font-size: var(--text-12);
+  font-weight: var(--weight-bold);
+}
+.verse {
+  background: var(--palette-gold-tint-dark);
+  color: var(--palette-gold);
+}
+.plain {
+  background: var(--color-border);
+  color: var(--color-text);
+}
+.progress {
+  background: var(--palette-gold);
+  color: var(--palette-ink);
+}
+.tag {
+  flex: none;
+  align-self: center;
+  padding: 2px 6px;
+  border-radius: 6px;
+  font-size: var(--text-12);
+  font-weight: var(--weight-extrabold);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* Live: the only red in the rail. */
+.live {
+  background: var(--color-surface-raised);
+  box-shadow: inset 0 0 0 2px var(--color-live);
+}
+.live .num {
+  color: var(--color-live);
+}
+.live .tag {
+  background: var(--color-live);
+  color: var(--color-live-contrast);
+}
+/* Frozen: the slide the TV holds is blue; where the operator is stays red. */
+.held {
+  background: var(--color-surface-raised);
+  box-shadow: inset 0 0 0 2px var(--palette-preview-blue);
+}
+.held .num {
+  color: var(--palette-preview-blue);
+}
+.held .tag {
+  background: var(--palette-preview-blue);
+  color: var(--palette-ink);
+}
+/* Cued for Next: gold, sent with Enter. */
+.cued {
+  background: var(--color-surface-raised);
+  box-shadow: inset 0 0 0 2px var(--palette-gold);
+}
+.cued .num {
+  color: var(--palette-gold);
+}
+.cued .tag {
+  background: var(--palette-gold);
+  color: var(--palette-ink);
+}

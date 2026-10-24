@@ -1,0 +1,269 @@
+/*
+ * The slides console (Screen redesign canvas, October 2026): the slide rail, Live with its step
+ * bar and screen controls, and Next with Notes and Verses. Dark stage in both themes; red only
+ * means "on the TV". Designed for 1280×720 and up.
+ */
+.shell {
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr);
+  /* The header and the disconnect banner place themselves by these names (PresentPage.module.css). */
+  grid-template-areas: 'top' 'banner' 'main';
+  height: 100%;
+  min-width: 1180px;
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+.body {
+  grid-area: main;
+  display: grid;
+  grid-template-columns: 280px minmax(0, 1fr) 340px;
+  min-height: 0;
+}
+
+/* The state pill: what the TV is doing, in words as well as colour. */
+.pill {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: var(--space-2);
+  height: 32px;
+  padding: 0 var(--space-3);
+  border-radius: var(--radius-pill);
+  font-size: var(--text-12);
+  font-weight: var(--weight-extrabold);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.pill::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: currentColor;
+}
+.pillLive {
+  background: color-mix(in srgb, var(--color-live) 16%, transparent);
+  color: var(--color-live);
+}
+.pillFrozen {
+  background: var(--palette-preview-blue);
+  color: var(--palette-ink);
+}
+.pillCovered {
+  background: var(--palette-gold-tint-dark);
+  color: var(--palette-gold);
+}
+
+.center {
+  container-type: size;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  min-width: 0;
+  min-height: 0;
+  padding: var(--space-4) var(--space-5);
+  overflow: hidden;
+}
+/* Live is as large as the column allows, leaving room for the step bar and controls. */
+.liveWrap {
+  width: min(100cqw, calc((100cqh - 210px) * 16 / 9));
+  align-self: center;
+}
+
+.stepBar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-4);
+  min-height: 76px;
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+}
+.stepText {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+  font-size: var(--text-14);
+  color: var(--color-text-muted);
+}
+.stepText strong {
+  overflow: hidden;
+  font-weight: var(--weight-extrabold);
+  color: var(--color-text);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.stepText span {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.dots {
+  display: flex;
+  flex: none;
+  gap: 6px;
+}
+.dot {
+  width: 12px;
+  height: 12px;
+  border: 2px solid var(--color-text-muted);
+  border-radius: 50%;
+}
+.dotOn {
+  border-color: var(--palette-gold);
+  background: var(--palette-gold);
+}
+/* The typed verse's four layouts, on their own row across the step bar. */
+.modes {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  flex-basis: 100%;
+  gap: 4px;
+  padding: 3px;
+  border-radius: var(--radius-pill);
+  background: var(--color-surface-raised);
+}
+.mode {
+  min-height: 32px;
+  padding: 0 var(--space-3);
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--color-text-muted);
+  font: inherit;
+  font-size: var(--text-12);
+  font-weight: var(--weight-bold);
+  cursor: pointer;
+}
+.mode:focus-visible {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 2px;
+}
+.modeOn {
+  background: var(--color-text);
+  color: var(--color-bg);
+}
+.frozenIcon {
+  flex: none;
+  color: var(--palette-preview-blue);
+}
+.unfreeze,
+.freezeOn {
+  background: var(--palette-preview-blue);
+  color: var(--palette-ink);
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+.grow {
+  flex: 1;
+}
+
+/* Next, and the notes and verses beneath it. */
+.side {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  min-height: 0;
+  padding: var(--space-4);
+  border-left: 1px solid var(--color-border);
+  background: var(--color-surface);
+}
+.nextPane {
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.nextHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: var(--text-12);
+  font-weight: var(--weight-bold);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+.key {
+  padding: 2px 7px;
+  border-radius: 6px;
+  background: var(--color-border);
+  letter-spacing: 0;
+}
+.nextFrame {
+  overflow: hidden;
+  border-radius: var(--radius-md);
+  outline: 1px solid var(--color-border);
+}
+.nextCued {
+  outline: 2px solid var(--palette-gold);
+}
+.nextCaption {
+  font-size: var(--text-14);
+  font-weight: var(--weight-semibold);
+  line-height: 1.4;
+}
+.endCard {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 16 / 9;
+  background: var(--color-surface-raised);
+  color: var(--color-text-muted);
+  font-weight: var(--weight-semibold);
+}
+.tabs {
+  flex: 1;
+  min-height: 0;
+}
+.history {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  margin: var(--space-4) 0 0;
+  padding: 0;
+  list-style: none;
+}
+.historyLabel {
+  margin-top: var(--space-4);
+  font-size: var(--text-12);
+  font-weight: var(--weight-bold);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+.historyRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  width: 100%;
+  min-height: 40px;
+  padding: 0 var(--space-3);
+  border: 0;
+  border-radius: var(--radius-md);
+  background: var(--color-surface-raised);
+  color: var(--color-text);
+  font: inherit;
+  font-size: var(--text-14);
+  font-weight: var(--weight-bold);
+  cursor: pointer;
+}
+.historyRow:focus-visible {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 2px;
+}
+.historyMeta {
+  font-size: var(--text-12);
+  font-weight: var(--weight-semibold);
+  color: var(--color-success);
+}

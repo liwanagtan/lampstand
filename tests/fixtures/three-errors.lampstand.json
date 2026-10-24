@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "title": "A Lamp in the Dark",
   "speaker": "Pastor Daniel Cruz",
   "date": "2026-10-18",
@@ -25,7 +25,7 @@
       }
     },
     {
-      "type": "verse",
+      "type": "reading",
       "ref": "Psalm 119:105",
       "emphasis": ["lamp", "light"],
       "transition": "rise",
@@ -47,12 +47,12 @@
       "body": "Scripture uncovers the truth about God, the world, and our own hearts."
     },
     {
-      "type": "verse",
+      "type": "reading",
       "ref": "John 1:5",
       "emphasis": ["light shineth in darkness"]
     },
     {
-      "type": "verse",
+      "type": "reading",
       "ref": "Hebrews 4:12"
     },
     {
@@ -62,18 +62,18 @@
       "transition": "rise"
     },
     {
-      "type": "verse",
+      "type": "reading",
       "ref": "Proverbs 3:5-6",
       "emphasis": ["direct thy paths"]
     },
     {
       "type": "list",
       "heading": "How the Word guides us",
-      "build": true,
+      "reveal": true,
       "items": ["only one"]
     },
     {
-      "type": "verse",
+      "type": "reading",
       "ref": "Isaiah 30:21"
     },
     {
@@ -92,7 +92,7 @@
       "transition": "rise"
     },
     {
-      "type": "verse",
+      "type": "reading",
       "ref": "Jhn 3:166",
       "emphasis": ["every word"]
     },
@@ -102,7 +102,7 @@
       "author": "Charles Spurgeon"
     },
     {
-      "type": "verse",
+      "type": "reading",
       "ref": "Isaiah 40:8",
       "emphasis": ["for ever"]
     },
@@ -117,7 +117,7 @@
     {
       "type": "list",
       "heading": "This week",
-      "build": true,
+      "reveal": true,
       "items": [
         "Read one chapter each morning",
         "Write down one verse to carry",
@@ -125,7 +125,7 @@
       ]
     },
     {
-      "type": "verse",
+      "type": "reading",
       "ref": "Psalm 119:105"
     },
     {

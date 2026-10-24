@@ -1,13 +1,13 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://lampstand.app/schema/presentation-v1.json",
+  "$id": "https://lampstand.app/schema/presentation-v2.json",
   "title": "Lampstand presentation",
-  "description": "A Lampstand sermon presentation (.lampstand.json). Verse slides store references only, never scripture text.",
+  "description": "A Lampstand sermon presentation (.lampstand.json). Reading slides and attached verses store references only, never scripture text.",
   "type": "object",
   "properties": {
     "schemaVersion": {
       "type": "number",
-      "const": 1
+      "const": 2
     },
     "title": {
       "type": "string",
@@ -31,7 +31,7 @@
     },
     "theme": {
       "type": "string",
-      "enum": ["classic", "modern", "warm"]
+      "enum": ["lampstand", "classic", "modern", "warm"]
     },
     "translation": {
       "type": "string",
@@ -416,6 +416,40 @@
                   }
                 ]
               },
+              "verses": {
+                "minItems": 1,
+                "maxItems": 3,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "ref": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 60
+                    },
+                    "translation": {
+                      "type": "string",
+                      "pattern": "^[A-Za-z][A-Za-z0-9]{1,7}$"
+                    },
+                    "emphasis": {
+                      "maxItems": 6,
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 60
+                      }
+                    }
+                  },
+                  "required": ["ref"],
+                  "additionalProperties": false
+                }
+              },
+              "panel": {
+                "type": "string",
+                "enum": ["side", "bottom"]
+              },
               "heading": {
                 "type": "string",
                 "minLength": 1,
@@ -540,6 +574,40 @@
                   }
                 ]
               },
+              "verses": {
+                "minItems": 1,
+                "maxItems": 3,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "ref": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 60
+                    },
+                    "translation": {
+                      "type": "string",
+                      "pattern": "^[A-Za-z][A-Za-z0-9]{1,7}$"
+                    },
+                    "emphasis": {
+                      "maxItems": 6,
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 60
+                      }
+                    }
+                  },
+                  "required": ["ref"],
+                  "additionalProperties": false
+                }
+              },
+              "panel": {
+                "type": "string",
+                "enum": ["side", "bottom"]
+              },
               "heading": {
                 "type": "string",
                 "minLength": 1,
@@ -555,9 +623,9 @@
                   "maxLength": 70
                 }
               },
-              "build": {
+              "reveal": {
                 "type": "boolean",
-                "description": "true reveals one item per click."
+                "description": "Opt in to revealing items with the reveal control."
               }
             },
             "required": ["type", "heading", "items"],
@@ -568,7 +636,7 @@
             "properties": {
               "type": {
                 "type": "string",
-                "const": "verse"
+                "const": "reading"
               },
               "id": {
                 "type": "string",
@@ -807,6 +875,40 @@
                   }
                 ]
               },
+              "verses": {
+                "minItems": 1,
+                "maxItems": 3,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "ref": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 60
+                    },
+                    "translation": {
+                      "type": "string",
+                      "pattern": "^[A-Za-z][A-Za-z0-9]{1,7}$"
+                    },
+                    "emphasis": {
+                      "maxItems": 6,
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 60
+                      }
+                    }
+                  },
+                  "required": ["ref"],
+                  "additionalProperties": false
+                }
+              },
+              "panel": {
+                "type": "string",
+                "enum": ["side", "bottom"]
+              },
               "text": {
                 "type": "string",
                 "minLength": 1,
@@ -930,6 +1032,40 @@
                     "additionalProperties": false
                   }
                 ]
+              },
+              "verses": {
+                "minItems": 1,
+                "maxItems": 3,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "ref": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 60
+                    },
+                    "translation": {
+                      "type": "string",
+                      "pattern": "^[A-Za-z][A-Za-z0-9]{1,7}$"
+                    },
+                    "emphasis": {
+                      "maxItems": 6,
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 60
+                      }
+                    }
+                  },
+                  "required": ["ref"],
+                  "additionalProperties": false
+                }
+              },
+              "panel": {
+                "type": "string",
+                "enum": ["side", "bottom"]
               },
               "text": {
                 "type": "string",
@@ -1251,6 +1387,40 @@
                     "additionalProperties": false
                   }
                 ]
+              },
+              "verses": {
+                "minItems": 1,
+                "maxItems": 3,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "ref": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 60
+                    },
+                    "translation": {
+                      "type": "string",
+                      "pattern": "^[A-Za-z][A-Za-z0-9]{1,7}$"
+                    },
+                    "emphasis": {
+                      "maxItems": 6,
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 60
+                      }
+                    }
+                  },
+                  "required": ["ref"],
+                  "additionalProperties": false
+                }
+              },
+              "panel": {
+                "type": "string",
+                "enum": ["side", "bottom"]
               },
               "heading": {
                 "type": "string",

@@ -5,7 +5,7 @@ import { getTranslation, useBible } from '@/features/bible/bibleStore';
 import { fromOsis, parseRefDetailed, type RefParseResult } from '@/features/bible/ref';
 import { verseCountsFor } from '@/features/bible/versification';
 import type { OverlayMode, TemplateId } from '@/schema/common';
-import { pagesFor, type Page } from './paginate';
+import { pagesFor, readingPages, type Page } from './paginate';
 
 export interface PassageState {
   passage?: Passage;
@@ -60,6 +60,7 @@ export function usePages(
   mode: OverlayMode | 'slide',
   templateId: TemplateId,
   bible = false,
+  reading = false,
 ): Page[] {
   const [fontsReady, setFontsReady] = useState(
     () => typeof document === 'undefined' || !document.fonts,
@@ -74,8 +75,10 @@ export function usePages(
   }, [fontsReady]);
   return useMemo(() => {
     if (!passage) return [];
-    return pagesFor(passage.verses, mode, templateId, bible);
+    return reading
+      ? readingPages(passage.verses, templateId)
+      : pagesFor(passage.verses, mode, templateId, bible);
     // fontsReady re-measures once the real font metrics are available.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [passage, mode, templateId, bible, fontsReady]);
+  }, [passage, mode, templateId, bible, reading, fontsReady]);
 }

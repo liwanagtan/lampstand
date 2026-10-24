@@ -18,7 +18,7 @@ export function migrate(data: Record<string, unknown>): MigrationResult {
   if (v === undefined) {
     return {
       ok: false,
-      message: 'schemaVersion is missing. Lampstand files start with "schemaVersion": 1.',
+      message: 'schemaVersion is missing. Lampstand files start with "schemaVersion": 2.',
     };
   }
   if (typeof v !== 'number' || !Number.isInteger(v) || v < 1) {
@@ -31,6 +31,13 @@ export function migrate(data: Record<string, unknown>): MigrationResult {
     return {
       ok: false,
       message: `This file was made for a newer version of Lampstand (schema ${v}). Update Lampstand to open it.`,
+    };
+  }
+  if (v < SCHEMA_VERSION) {
+    return {
+      ok: false,
+      message:
+        'This file uses the old Lampstand slide format (schema 1). Regenerate it with the current Lampstand slides skill (schema 2).',
     };
   }
   let current = data;

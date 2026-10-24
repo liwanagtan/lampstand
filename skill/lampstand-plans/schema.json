@@ -38,7 +38,11 @@
     },
     "pace": {
       "type": "string",
-      "enum": ["daily", "weekly", "monthly"],
+      "enum": [
+        "daily",
+        "weekly",
+        "monthly"
+      ],
       "description": "\"daily\": one day at a time. \"weekly\": a new lesson each Sunday. \"monthly\": a new lesson each month."
     },
     "categories": {
@@ -117,7 +121,10 @@
     "audience": {
       "description": "Version 2. \"personal\" reading, or lessons for a \"group\" or class.",
       "type": "string",
-      "enum": ["personal", "group"]
+      "enum": [
+        "personal",
+        "group"
+      ]
     },
     "level": {
       "description": "Version 2. Optional, e.g. \"New to faith\".",
@@ -193,11 +200,21 @@
             "maxLength": 1000
           }
         },
-        "required": ["readings"],
+        "required": [
+          "readings"
+        ],
         "additionalProperties": false
       }
     }
   },
-  "required": ["format", "version", "id", "name", "description", "pace", "days"],
+  "required": [
+    "format",
+    "version",
+    "id",
+    "name",
+    "description",
+    "pace",
+    "days"
+  ],
   "additionalProperties": false
 }

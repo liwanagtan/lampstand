@@ -20,6 +20,8 @@ Docs: [docs/PRD.md](docs/PRD.md) (spec) · [docs/PRD-ADDENDUM-GROW.md](docs/PRD-
 
 Publishing: [docs/PUBLISH-LIVE.md](docs/PUBLISH-LIVE.md) (hosting choice, release gates, and branch flow).
 
+Slide authoring: [docs/SLIDE-RULES.md](docs/SLIDE-RULES.md) — current v2 layouts, content limits, sermon poster, Reading pages, attached verses, reveal behavior, theme and operator rules; includes a complete format example and requirements for future authoring skills.
+
 Working branch policy for contributors and agents: [AGENTS.md](AGENTS.md). Work belongs on a `design/<topic>` branch made from `staging`, the long-lived staging branch; `main` changes only with the owner's explicit merge approval.
 
 Content: [library coverage and pathways](docs/CONTENT-LIBRARY.md) · [editorial and salvation standards](docs/CONTENT-EDITORIAL.md) · [gamification UX brief](docs/GAMIFICATION-UX-BRIEF.md) (design pending). The library includes 47 plans and a separate, expandable salvation reading, with age and life-stage collections under Grow in faith. New content is implemented locally for owner theological review.

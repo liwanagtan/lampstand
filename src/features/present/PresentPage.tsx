@@ -1,15 +1,6 @@
-import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { AnimatePresence, motion } from 'motion/react';
-import {
-  ArrowLeft,
-  BookOpen,
-  ChevronLeft,
-  ChevronRight,
-  MonitorOff,
-  MonitorPlay,
-  Play,
-} from 'lucide-react';
+import { ArrowLeft, BookOpen, MonitorOff, MonitorPlay, Play } from 'lucide-react';
 import {
   Button,
   ChipButton,
@@ -18,20 +9,19 @@ import {
   FeatureBoundary,
   IconButton,
   Menu,
-  ShortcutHint,
   Skeleton,
   Tabs,
   cx,
 } from '@/design-system/components';
-import { transition } from '@/design-system/motion/presets';
 import { useSettings } from '@/features/settings/settingsStore';
-import { useApplyDocumentTheme, useReducedMotion } from '@/features/settings/theme';
+import { useApplyDocumentTheme } from '@/features/settings/theme';
 import { getPresentation, markPresented } from '@/features/library/presentations';
 import { presentationTranslation, slideTranslation } from '@/features/library/translation';
 import { getTemplate } from '@/templates/templates';
 import { SlideFrame } from '@/slides/SlideView';
 import type { StoredSlide } from '@/schema/presentation';
 import { connectControl, readSavedLive, useControl } from './live/controlStore';
+import type { LiveSnapshot } from './live/types';
 import { closeOutput } from './live/outputWindow';
 import { startOutput } from './live/startOutput';
 import { LiveScreen } from './LiveScreen';
@@ -46,19 +36,16 @@ import { labelFor, useVerses } from './verses/verseStore';
 import { ShortcutSheet } from './ShortcutSheet';
 import { CommandPalette, type PaletteCommand } from './CommandPalette';
 import type { OverlayMode } from '@/schema/common';
-import { ModeIcon } from './OverlayModes';
 import { MODES } from './overlayModeList';
-import {
-  DisconnectedBanner,
-  Dock,
-  DockButton,
-  LivePane,
-  OutputStatus,
-} from './console/ConsoleParts';
+import { DisconnectedBanner, LivePane, OutputStatus } from './console/ConsoleParts';
+import { SlideRail } from './console/SlideRail';
+import { ScreenControls, StepBar } from './console/StepBar';
+import { nextBeat, slideKind, slideTitle } from './console/slideInfo';
 import styles from './PresentPage.module.css';
+import c from './console/PresentConsole.module.css';
 import { paths } from '@/app/paths';
 
-type RailTab = 'notes' | 'queue';
+type SideTab = 'notes' | 'verses';
 
 export function PresentPage() {
   useApplyDocumentTheme();
@@ -133,6 +120,11 @@ export function PresentPage() {
   return <ControlScreen />;
 }
 
+/**
+ * The slides console (Screen redesign canvas): the slide rail on the left; Live, its step bar and
+ * the screen controls in the middle; Next with Notes and Verses on the right. Live is always
+ * exactly the TV. Next changes slides; reveals, reading pages and panels have separate controls.
+ */
 function ControlScreen() {
   const navigate = useNavigate();
   const presentation = useControl((s) => s.presentation)!;
@@ -152,39 +144,26 @@ function ControlScreen() {
   const logoAssetId = useControl((s) => s.logoAssetId);
   const reduceMotion = useControl((s) => s.reduceMotion);
   const posterAnimated = useControl((s) => s.posterAnimated);
-  const [rail, setRail] = useState<RailTab>('notes');
+  const pageCounts = useControl((s) => s.slidePageCounts);
+  const overlayPages = useControl((s) => s.overlayPageCount);
+  const [tabChoice, setTabChoice] = useState<{ slideId: string; tab: SideTab } | null>(null);
   const [sheetOpen, setSheetOpen] = useState(false);
   const [paletteOpen, setPaletteOpen] = useState(false);
   const [exitOpen, setExitOpen] = useState(false);
   const verses = useVerses();
   const translations = useBible((s) => s.translations);
-  const overlayPages = useControl((s) => s.overlayPageCount);
-  const [ghost, setGhost] = useState<{ key: number; from: DOMRect; to: DOMRect } | null>(null);
-  const reduced = useReducedMotion();
 
-  /** Sends Preview live; the preview frame flies into the Live canvas (PRD §9 Going live). */
-  const sendPreview = () => {
-    const from = document.querySelector('[data-pane="preview"]')?.getBoundingClientRect();
-    const to = document.querySelector('[data-pane="live"]')?.getBoundingClientRect();
-    if (from && to && !reduced) setGhost({ key: Date.now(), from, to });
-    if (useVerses.getState().preview) void useVerses.getState().goLivePreview();
-    else goLive();
-  };
-
-  const focusBar = useCallback(() => {
-    setTimeout(focusCommandBar, 50);
-  }, []);
-
-  const template = getTemplate(live.theme);
   const slides = presentation.slides;
+  const pages = useCallback((s: StoredSlide) => pageCounts[s.id] ?? 1, [pageCounts]);
+  const liveSlide = slides[live.slideIndex];
+  const hasAttached = liveSlide && 'verses' in liveSlide && Boolean(liveSlide.verses?.length);
+  const tab =
+    tabChoice?.slideId === liveSlide?.id ? tabChoice!.tab : hasAttached ? 'verses' : 'notes';
+  const next = nextBeat(slides, live.slideIndex, live.buildStep, live.slidePage, pages);
   const posterInfo = useMemo(
     () => posterInfoFor(presentation, translation, posterAnimated),
     [presentation, translation, posterAnimated],
   );
-  const liveSlide = slides[live.slideIndex];
-  const previewTarget = previewIndex ?? Math.min(live.slideIndex + 1, slides.length - 1);
-  const previewSlide = slides[previewTarget];
-  const atEnd = live.slideIndex >= slides.length - 1 && previewIndex === null;
   const snapshot = useMemo(
     () => ({
       rev,
@@ -199,14 +178,20 @@ function ControlScreen() {
     [rev, live, presentation, translation, logoAssetId, reduceMotion, posterAnimated, changedAt],
   );
 
-  const startPresentation = startOutput;
+  /** Enter sends what is cued: a slide picked in the rail, or a verse checked in Next first. */
+  const sendCued = () => {
+    if (useVerses.getState().preview) void useVerses.getState().goLivePreview();
+    else if (useControl.getState().previewIndex !== null) goLive();
+  };
+  const focusBar = useCallback(() => {
+    setTimeout(focusCommandBar, 50);
+  }, []);
 
   const exitPresentation = () => {
     setExitOpen(false);
     useControl.getState().setPresenting(false);
     closeOutput();
   };
-
   const requestExit = () => {
     if (useControl.getState().output === 'connected') setExitOpen(true);
     else exitPresentation();
@@ -221,14 +206,15 @@ function ControlScreen() {
       ArrowLeft: () => dispatch({ type: 'prev' }),
       PageUp: () => dispatch({ type: 'prev' }),
       ArrowUp: () => dispatch({ type: 'prev' }),
-      Enter: () => sendPreview(),
+      Enter: sendCued,
       '/': focusCommandBar,
       Escape: () => {
         if (useVerses.getState().preview) useVerses.getState().clearPreview();
+        else if (useControl.getState().previewIndex !== null) select(null);
         else dispatch({ type: 'clearOverlay' });
       },
-      '1': () => verses.setMode('lowerThird'),
-      '2': () => verses.setMode('sidePanel'),
+      '1': () => verses.setMode('sidePanel'),
+      '2': () => verses.setMode('lowerThird'),
       '3': () => verses.setMode('fullScreen'),
       '4': () => verses.setMode('popup'),
       'Alt+ArrowRight': () => void verses.step(1),
@@ -237,123 +223,39 @@ function ControlScreen() {
       '?': () => setSheetOpen(true),
       'Mod+k': () => setPaletteOpen(true),
       b: () => toggleScreen('blank'),
-      l: () => toggleScreen('logo'),
       s: () => toggleScreen('sermon'),
       f: () => toggleFreeze(),
+      r: () => dispatch({ type: 'revealStep', delta: 1 }),
+      '[': () => dispatch({ type: 'slidePage', delta: -1 }),
+      ']': () => dispatch({ type: 'slidePage', delta: 1 }),
+      v: () => setTabChoice({ slideId: liveSlide?.id ?? '', tab: 'verses' }),
       Home: () => dispatch({ type: 'goTo', index: 0 }),
+      End: () => dispatch({ type: 'goTo', index: slides.length - 1 }),
     },
     ['Mod+k'],
   );
 
-  const buildTotal = liveSlide?.type === 'list' && liveSlide.build ? liveSlide.items.length : 0;
-  const pageTotal = useControl((s) => (liveSlide ? (s.slidePageCounts[liveSlide.id] ?? 1) : 1));
-
   const liveMeta = [
-    liveSlide ? `Slide ${live.slideIndex + 1} of ${slides.length}` : null,
-    buildTotal ? `item ${live.buildStep} of ${buildTotal}` : null,
-    pageTotal > 1 ? `page ${live.slidePage + 1} of ${pageTotal}` : null,
+    liveSlide ? `Slide ${live.slideIndex + 1} of ${slides.length} · ${slideKind(liveSlide)}` : null,
     live.countdownEndsAt ? <Countdown key="cd" endsAt={live.countdownEndsAt} /> : null,
     live.overlay
-      ? `${labelFor(live.overlay.ref, live.overlay.translation)} ${live.overlay.translation}${overlayPages > 1 ? ` (${live.overlay.page + 1}/${overlayPages})` : ''}`
+      ? `${labelFor(live.overlay.ref, live.overlay.translation)} over the slide${overlayPages > 1 ? ` (${live.overlay.page + 1}/${overlayPages})` : ''}`
       : null,
   ];
 
-  const previewContent = frozen ? (
-    <LiveScreen snapshot={snapshot} label="Preview: what shows when you unfreeze" />
-  ) : verses.preview ? (
-    <LiveScreen
-      key={`${verses.preview.ref}|${verses.preview.translation}|${verses.preview.mode}`}
-      snapshot={{
-        ...snapshot,
-        live: { ...live, screen: 'content', overlay: { ...verses.preview, page: 0 } },
-      }}
-      label="Preview: verse"
-    />
-  ) : previewSlide && !atEnd ? (
-    <SlideFrame
-      slide={previewSlide}
-      template={template}
-      mode="preview"
-      translation={slideTranslation(previewSlide, translation)}
-      label={`Preview: slide ${previewTarget + 1}`}
-    />
-  ) : (
-    <div className={styles.endCard}>End of slides</div>
-  );
-
-  const previewMeta = frozen
-    ? 'Shows when you unfreeze'
-    : verses.preview
-      ? `Verse · ${labelFor(verses.preview.ref, verses.preview.translation)} · ${verses.preview.translation}`
-      : previewSlide && !atEnd
-        ? `Slide ${previewTarget + 1} · ${previewSlide.type}`
-        : undefined;
-
-  const previewPane = (
-    <div className={cx(styles.pane, styles.stack, styles.previewStack)}>
-      <div className={styles.paneHead}>
-        <h2 className={styles.paneTitle}>Preview</h2>
-        {previewMeta && <span className={styles.paneMeta}>{previewMeta}</span>}
-      </div>
-      <div className={styles.paneBody} data-pane="preview">
-        <FeatureBoundary name="Preview">{previewContent}</FeatureBoundary>
-      </div>
-      <div className={styles.sendRow}>
-        <DockButton
-          label="Previous slide"
-          keys="←"
-          hint="prev"
-          icon={<ChevronLeft size={18} />}
-          onClick={() => dispatch({ type: 'prev' })}
-          iconOnly
-          showKey={false}
-        />
-        <ShortcutHint id="goLive" keys="Enter">
-          <Button
-            variant="primary"
-            icon={<MonitorPlay size={16} />}
-            shortcut="Enter"
-            onClick={sendPreview}
-            className={styles.sendButton}
-            disabled={Boolean(frozen) || (!verses.preview && (atEnd || !previewSlide))}
-          >
-            Send to screen
-          </Button>
-        </ShortcutHint>
-        <DockButton
-          label="Next slide"
-          keys="→"
-          hint="next"
-          icon={<ChevronRight size={18} />}
-          onClick={() => dispatch({ type: 'next' })}
-          iconOnly
-          showKey={false}
-        />
-      </div>
-    </div>
-  );
-
-  const livePane = (
-    <div className={cx(styles.stack, styles.liveStack)}>
-      <LivePane meta={liveMeta} frozen={Boolean(frozen)}>
-        <LiveScreen snapshot={frozen ?? snapshot} label="Live output" />
-      </LivePane>
-      <Dock
-        screen={live.screen}
-        frozen={Boolean(frozen)}
-        hasOverlay={Boolean(live.overlay)}
-        mode={verses.mode}
-        onScreen={toggleScreen}
-        onFreeze={toggleFreeze}
-        onMode={verses.setMode}
-        onClear={() => dispatch({ type: 'clearOverlay' })}
-      />
-    </div>
-  );
+  const pill = frozen
+    ? { text: 'Frozen', className: c.pillFrozen }
+    : live.screen === 'blank'
+      ? { text: 'Blank', className: c.pillCovered }
+      : live.screen === 'sermon'
+        ? { text: 'Poster', className: c.pillCovered }
+        : presenting && output === 'connected'
+          ? { text: 'Live', className: c.pillLive }
+          : null;
 
   return (
     <PosterContext.Provider value={posterInfo}>
-      <div className={styles.shell} data-atmosphere="screen">
+      <div className={c.shell} data-atmosphere="stage">
         <header className={styles.top}>
           <IconButton
             label="Back to Screen"
@@ -389,21 +291,25 @@ function ControlScreen() {
                 onSelect: () => verses.setTranslation(t.code),
               }))}
             />
-            <ModeChip mode={verses.mode} />
             <OutputStatus
               status={output}
               presenting={presenting}
-              onReopen={() => void startPresentation()}
+              onReopen={() => void startOutput()}
             />
+            {pill && (
+              <span className={cx(c.pill, pill.className)} role="status">
+                {pill.text}
+              </span>
+            )}
             {presenting ? (
               <Button variant="secondary" icon={<MonitorOff size={16} />} onClick={requestExit}>
-                Exit Presentation
+                Exit
               </Button>
             ) : (
               <Button
                 variant="primary"
                 icon={<Play size={16} />}
-                onClick={() => void startPresentation()}
+                onClick={() => void startOutput()}
               >
                 Start Presentation
               </Button>
@@ -411,86 +317,88 @@ function ControlScreen() {
           </div>
         </header>
 
-        <DisconnectedBanner status={output} onReopen={() => void startPresentation()} />
+        <DisconnectedBanner status={output} onReopen={() => void startOutput()} />
 
-        <main className={styles.main}>
-          <section className={styles.stage} aria-label="Preview and live">
-            <div className={styles.canvases}>
-              <div className={styles.narrow}>
-                {previewPane}
-                <section className={styles.sidePanel} aria-label="Notes and queue">
-                  <FeatureBoundary name="The side panel">
-                    <Tabs<RailTab>
-                      fill
-                      label="Side panel"
-                      value={rail}
-                      onChange={setRail}
-                      items={[
-                        {
-                          value: 'notes',
-                          label: 'Notes',
-                          content: (
-                            <Notes
-                              slide={liveSlide}
-                              index={live.slideIndex}
-                              next={slides[live.slideIndex + 1]}
-                            />
-                          ),
-                        },
-                        {
-                          value: 'queue',
-                          label: 'Queue',
-                          badge: verses.queue.length || undefined,
-                          content: <QueuePanel translation={verses.translation} />,
-                        },
-                      ]}
-                    />
-                  </FeatureBoundary>
-                </section>
-              </div>
-              <div className={styles.wide}>{livePane}</div>
-            </div>
-          </section>
-        </main>
-
-        <FeatureBoundary name="The slide strip">
-          <SlideStrip
-            slides={slides}
-            liveIndex={live.slideIndex}
-            previewIndex={previewIndex}
-            onSelect={(i) => {
-              verses.clearPreview();
-              select(i);
-            }}
-            onGoLive={(i) => dispatch({ type: 'goTo', index: i })}
-            translation={translation}
-          />
-        </FeatureBoundary>
-        <AnimatePresence>
-          {ghost && (
-            <motion.div
-              key={ghost.key}
-              className={styles.ghost}
-              initial={{
-                left: ghost.from.left,
-                top: ghost.from.top,
-                width: ghost.from.width,
-                height: ghost.from.height,
-                opacity: 0.9,
+        <div className={c.body}>
+          <FeatureBoundary name="The slide rail">
+            <SlideRail
+              slides={slides}
+              liveIndex={live.slideIndex}
+              cuedIndex={previewIndex}
+              buildStep={live.buildStep}
+              page={live.slidePage}
+              pages={pages}
+              frozenIndex={frozen ? frozen.live.slideIndex : null}
+              covered={live.screen !== 'content'}
+              onCue={(i) => {
+                verses.clearPreview();
+                select(i === previewIndex ? null : i);
               }}
-              animate={{
-                left: ghost.to.left,
-                top: ghost.to.top,
-                width: ghost.to.width,
-                height: ghost.to.height,
-                opacity: 0,
-              }}
-              transition={transition('standard')}
-              onAnimationComplete={() => setGhost((g) => (g?.key === ghost.key ? null : g))}
-              aria-hidden
             />
-          )}
-        </AnimatePresence>
+          </FeatureBoundary>
+
+          <main className={c.center} aria-label="Live">
+            <div className={c.liveWrap}>
+              <LivePane meta={liveMeta} frozen={Boolean(frozen)}>
+                <LiveScreen
+                  snapshot={frozen ?? snapshot}
+                  label="Live output"
+                  showMediaPlaceholders
+                />
+              </LivePane>
+            </div>
+            <FeatureBoundary name="The step bar">
+              <StepBar
+                slide={liveSlide}
+                slideIndex={live.slideIndex}
+                next={next}
+                pages={liveSlide ? pages(liveSlide) : 1}
+              />
+            </FeatureBoundary>
+            <ScreenControls />
+          </main>
+
+          <aside className={c.side} aria-label="Next, notes and verses">
+            <FeatureBoundary name="Next">
+              <NextPane
+                snapshot={snapshot}
+                frozen={Boolean(frozen)}
+                cuedIndex={previewIndex}
+                next={next}
+                slides={slides}
+                translation={translation}
+                onSend={sendCued}
+              />
+            </FeatureBoundary>
+            <Tabs<SideTab>
+              fill
+              className={c.tabs}
+              label="Notes and verses"
+              value={tab}
+              onChange={(tab) => setTabChoice({ slideId: liveSlide?.id ?? '', tab })}
+              items={[
+                {
+                  value: 'notes',
+                  label: 'Notes',
+                  content: (
+                    <Notes
+                      slide={liveSlide}
+                      index={live.slideIndex}
+                      next={slides[live.slideIndex + 1]}
+                    />
+                  ),
+                },
+                {
+                  value: 'verses',
+                  label: 'Verses',
+                  badge: verses.queue.length || undefined,
+                  content: <VersesTab translation={verses.translation} />,
+                },
+              ]}
+            />
+          </aside>
+        </div>
+
         <Dialog
           open={exitOpen}
           onOpenChange={setExitOpen}
@@ -515,7 +423,7 @@ function ControlScreen() {
           commands={paletteCommands({
             slides,
             presenting,
-            start: () => void startPresentation(),
+            start: () => void startOutput(),
             exit: requestExit,
             dispatch,
             toggleScreen,
@@ -528,6 +436,136 @@ function ControlScreen() {
         />
       </div>
     </PosterContext.Provider>
+  );
+}
+
+/**
+ * Next: exactly what the next press puts on the TV, or what Enter sends when something is cued
+ * (a slide picked in the rail, a verse checked first). While frozen: what unfreezing shows.
+ */
+function NextPane({
+  snapshot,
+  frozen,
+  cuedIndex,
+  next,
+  slides,
+  translation,
+  onSend,
+}: {
+  snapshot: LiveSnapshot;
+  frozen: boolean;
+  cuedIndex: number | null;
+  next: ReturnType<typeof nextBeat>;
+  slides: StoredSlide[];
+  translation: string;
+  onSend: () => void;
+}) {
+  const preview = useVerses((s) => s.preview);
+  const template = getTemplate(snapshot.live.theme);
+  const cued = cuedIndex !== null ? slides[cuedIndex] : undefined;
+
+  let head: { title: string; key: string };
+  let body: ReactNode;
+  let caption: string;
+  let send = false;
+  if (frozen) {
+    head = { title: 'Shows when you unfreeze', key: 'F' };
+    body = <LiveScreen snapshot={snapshot} label="What shows when you unfreeze" />;
+    caption = `Slide ${snapshot.live.slideIndex + 1} · ${slides[snapshot.live.slideIndex] ? slideTitle(slides[snapshot.live.slideIndex]!) : ''}`;
+  } else if (preview) {
+    head = { title: 'Verse, ready', key: 'Enter' };
+    body = (
+      <LiveScreen
+        key={`${preview.ref}|${preview.translation}|${preview.mode}`}
+        snapshot={{
+          ...snapshot,
+          live: { ...snapshot.live, screen: 'content', overlay: { ...preview, page: 0 } },
+        }}
+        label="Verse, ready to send"
+      />
+    );
+    caption = `${labelFor(preview.ref, preview.translation)} · ${preview.translation} · ${MODES.find((m) => m.mode === preview.mode)?.label ?? ''}. Enter sends it, Esc puts it back.`;
+    send = true;
+  } else if (cued && cuedIndex !== null) {
+    head = { title: `Cued · slide ${cuedIndex + 1}`, key: 'Enter' };
+    body = (
+      <SlideFrame
+        slide={cued}
+        template={template}
+        mode="preview"
+        translation={slideTranslation(cued, translation)}
+        label={`Cued: slide ${cuedIndex + 1}`}
+      />
+    );
+    caption = `${slideKind(cued)} · ${slideTitle(cued)}. Enter sends it, Esc un-cues.`;
+    send = true;
+  } else if (next) {
+    const slide = slides[next.index]!;
+    head = { title: 'Next', key: '→' };
+    body = (
+      <SlideFrame
+        slide={slide}
+        template={template}
+        mode="preview"
+        translation={slideTranslation(slide, translation)}
+        buildStep={next.buildStep}
+        page={next.page}
+        label={`Next: ${next.label}`}
+      />
+    );
+    caption = next.label;
+  } else {
+    head = { title: 'Next', key: '→' };
+    body = <div className={c.endCard}>End of slides</div>;
+    caption = 'This is the last slide.';
+  }
+
+  return (
+    <section aria-label="Next" className={c.nextPane}>
+      <div className={c.nextHead}>
+        <span>{head.title}</span>
+        <span className={c.key}>{head.key}</span>
+      </div>
+      <div className={cx(c.nextFrame, send && c.nextCued)}>{body}</div>
+      <p className={c.nextCaption}>{caption}</p>
+      {send && (
+        <Button variant="gold" icon={<MonitorPlay size={16} />} shortcut="Enter" onClick={onSend}>
+          Send to screen
+        </Button>
+      )}
+    </section>
+  );
+}
+
+/** The sermon's verses (on slides, likely mentioned, added) and every verse shown this service. */
+function VersesTab({ translation }: { translation: string }) {
+  const history = useVerses((s) => s.history);
+  const show = useVerses((s) => s.show);
+  return (
+    <div>
+      <QueuePanel translation={translation} />
+      {history.length > 0 && (
+        <>
+          <h3 className={c.historyLabel}>Shown this service</h3>
+          <ul className={c.history}>
+            {history.map((h) => (
+              <li key={h.key}>
+                <button
+                  type="button"
+                  className={c.historyRow}
+                  onClick={() => void show({ ref: h.ref, translation: h.translation })}
+                >
+                  <span>
+                    {h.label} · {h.translation}
+                  </span>
+                  <span className={c.historyMeta}>Show again</span>
+                </button>
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
+    </div>
   );
 }
 
@@ -580,7 +618,7 @@ function Notes({
         <div className={styles.notesContext}>
           <span className={styles.notesSlide}>
             Slide {index + 1}
-            {slide ? ` · ${slide.type}` : ''}
+            {slide ? ` · ${slideKind(slide)}` : ''}
           </span>
           {slide && <span className={styles.notesHeading}>{slideTitle(slide)}</span>}
         </div>
@@ -618,134 +656,6 @@ function Notes({
   );
 }
 
-function SlideStrip({
-  slides,
-  liveIndex,
-  previewIndex,
-  onSelect,
-  onGoLive,
-  translation,
-}: {
-  slides: StoredSlide[];
-  liveIndex: number;
-  previewIndex: number | null;
-  onSelect: (i: number) => void;
-  onGoLive: (i: number) => void;
-  translation: string;
-}) {
-  const theme = useControl((s) => s.live.theme);
-  const template = getTemplate(theme);
-  const listRef = useRef<HTMLOListElement>(null);
-  const reduced = useReducedMotion();
-  const [hover, setHover] = useState<{ index: number; left: number } | null>(null);
-  const hoverTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
-
-  useLayoutEffect(() => {
-    const list = listRef.current;
-    const el = list?.children[liveIndex] as HTMLElement | undefined;
-    if (!list || !el) return;
-    list.scrollTo({
-      left: el.offsetLeft - list.clientWidth / 2 + el.clientWidth / 2,
-      behavior: reduced ? 'auto' : 'smooth',
-    });
-  }, [liveIndex, reduced]);
-
-  /** Laptops may have no trackpad gestures: page through the strip one screen at a time. */
-  const scrollPage = (dir: 1 | -1) => {
-    const list = listRef.current;
-    if (!list) return;
-    list.scrollBy({ left: dir * list.clientWidth * 0.9, behavior: reduced ? 'auto' : 'smooth' });
-  };
-
-  return (
-    <nav className={styles.strip} aria-label="Slides">
-      <IconButton
-        label="Scroll slides left"
-        icon={<ChevronLeft size={18} />}
-        variant="ghost"
-        className={styles.stripArrow}
-        onClick={() => scrollPage(-1)}
-      />
-      <ol ref={listRef} className={styles.stripList}>
-        {slides.map((s, i) => (
-          <li
-            key={s.id}
-            className={cx(
-              styles.thumb,
-              i === liveIndex && styles.thumbLive,
-              i === previewIndex && styles.thumbPreview,
-            )}
-            onMouseEnter={(e) => {
-              clearTimeout(hoverTimer.current);
-              const el = e.currentTarget;
-              hoverTimer.current = setTimeout(() => {
-                const strip = el.closest('nav')!.getBoundingClientRect();
-                const r = el.getBoundingClientRect();
-                setHover({ index: i, left: r.left - strip.left + r.width / 2 });
-              }, 400);
-            }}
-            onMouseLeave={() => {
-              clearTimeout(hoverTimer.current);
-              setHover((h) => (h?.index === i ? null : h));
-            }}
-          >
-            <div className={styles.thumbWrap}>
-              <SlideFrame
-                slide={s}
-                template={template}
-                mode="thumbnail"
-                translation={slideTranslation(s, translation)}
-              />
-              <span className={styles.thumbNum} aria-hidden>
-                {i + 1}
-              </span>
-              <button
-                type="button"
-                className={styles.thumbButton}
-                aria-current={i === liveIndex ? 'true' : undefined}
-                onClick={() => onSelect(i)}
-                onDoubleClick={() => onGoLive(i)}
-              >
-                <span className="visually-hidden">{`Slide ${i + 1}, ${s.type}${i === liveIndex ? ', live' : ''}`}</span>
-              </button>
-            </div>
-          </li>
-        ))}
-      </ol>
-      <IconButton
-        label="Scroll slides right"
-        icon={<ChevronRight size={18} />}
-        variant="ghost"
-        className={styles.stripArrow}
-        onClick={() => scrollPage(1)}
-      />
-      {hover && slides[hover.index] && (
-        <div
-          className={styles.hoverPreview}
-          style={{ left: Math.max(180, hover.left) }}
-          aria-hidden
-        >
-          <SlideFrame
-            slide={slides[hover.index]!}
-            template={template}
-            mode="thumbnail"
-            translation={slideTranslation(slides[hover.index]!, translation)}
-          />
-        </div>
-      )}
-    </nav>
-  );
-}
-
-function ModeChip({ mode }: { mode: OverlayMode }) {
-  const label = MODES.find((m) => m.mode === mode)?.label ?? mode;
-  return (
-    <span className={styles.modeChip} title="Verse overlay mode">
-      <ModeIcon mode={mode} /> {label}
-    </span>
-  );
-}
-
 function paletteCommands(o: {
   slides: StoredSlide[];
   presenting: boolean;
@@ -767,28 +677,28 @@ function paletteCommands(o: {
     {
       id: 'clear',
       group: 'Verses',
-      label: 'Clear verse',
+      label: 'Remove the verse',
       shortcut: 'Esc',
       run: () => o.dispatch({ type: 'clearOverlay' }),
     },
     ...MODES.map((m) => ({
       id: m.mode,
       group: 'Verses',
-      label: `Overlay: ${m.label}`,
+      label: `Verse as ${m.label.toLowerCase()}`,
       shortcut: m.key,
       run: () => o.setMode(m.mode),
     })),
     {
       id: 'next',
       group: 'Slides',
-      label: 'Next slide',
+      label: 'Next',
       shortcut: '→',
       run: () => o.dispatch({ type: 'next' }),
     },
     {
       id: 'prev',
       group: 'Slides',
-      label: 'Previous slide',
+      label: 'Back',
       shortcut: '←',
       run: () => o.dispatch({ type: 'prev' }),
     },
@@ -800,13 +710,6 @@ function paletteCommands(o: {
       run: () => o.toggleScreen('blank'),
     },
     {
-      id: 'logo',
-      group: 'Screen',
-      label: 'Logo screen',
-      shortcut: 'L',
-      run: () => o.toggleScreen('logo'),
-    },
-    {
       id: 'sermon',
       group: 'Screen',
       label: 'Sermon poster',
@@ -816,7 +719,7 @@ function paletteCommands(o: {
     {
       id: 'freeze',
       group: 'Screen',
-      label: 'Freeze or unfreeze the output',
+      label: 'Freeze or unfreeze the TV',
       shortcut: 'F',
       run: o.toggleFreeze,
     },
@@ -830,20 +733,4 @@ function paletteCommands(o: {
       run: () => o.dispatch({ type: 'goTo', index: i }),
     })),
   ];
-}
-
-function slideTitle(s: StoredSlide): string {
-  switch (s.type) {
-    case 'verse':
-      return s.ref;
-    case 'quote':
-    case 'statement':
-      return s.text.slice(0, 50);
-    case 'image':
-      return s.caption ?? 'Image';
-    case 'countdown':
-      return `Countdown ${s.minutes} min`;
-    default:
-      return s.heading;
-  }
 }

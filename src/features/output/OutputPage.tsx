@@ -84,7 +84,7 @@ export function OutputPage() {
     if (!next) return;
     const bg = next.background;
     if ((bg?.type === 'image' || bg?.type === 'video') && bg.assetId) preloadAsset(bg.assetId);
-    if (next.type === 'verse') {
+    if (next.type === 'reading') {
       const t = getTranslation(slideTranslation(next, snapshot.translation));
       const range = parseRef(next.ref);
       if (t && range) void getPassage(db, t, range).catch(() => {});

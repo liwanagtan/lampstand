@@ -1,9 +1,9 @@
-// Slide file schema v1 (PRD §5). The JSON Schema in skill/lampstand-slides/schema.json is
+// Slide file schema v2. The JSON Schema in skill/lampstand-slides/schema.json is
 // generated from these definitions by scripts/export-schema.ts.
 import { z } from 'zod';
 import { TEMPLATE_IDS, TRANSITIONS } from './common';
 
-export const SCHEMA_VERSION = 1 as const;
+export const SCHEMA_VERSION = 2 as const;
 
 /** Character and count limits, shared by validation, the editor counters and the skill. */
 export const LIMITS = {
@@ -58,6 +58,17 @@ export const BackgroundSchema = z.discriminatedUnion('type', [
 ]);
 export type Background = z.infer<typeof BackgroundSchema>;
 
+export const AttachedVerseSchema = z.strictObject({
+  ref: text(60, 'Reference'),
+  translation: translationCode.optional(),
+  emphasis: z.array(text(60, 'Emphasis')).max(6).optional(),
+});
+
+const attached = {
+  verses: z.array(AttachedVerseSchema).min(1).max(3).optional(),
+  panel: z.enum(['side', 'bottom']).optional(),
+};
+
 const base = {
   id: z.string().min(1).max(64).optional(),
   notes: z
@@ -90,6 +101,7 @@ export const SectionSlideSchema = z.strictObject({
 export const PointSlideSchema = z.strictObject({
   type: z.literal('point'),
   ...base,
+  ...attached,
   heading: text(LIMITS.point.heading, 'Heading'),
   body: text(LIMITS.point.body, 'Body').optional(),
 });
@@ -97,6 +109,7 @@ export const PointSlideSchema = z.strictObject({
 export const ListSlideSchema = z.strictObject({
   type: z.literal('list'),
   ...base,
+  ...attached,
   heading: text(LIMITS.list.heading, 'Heading'),
   items: z
     .array(text(LIMITS.list.item, 'List item'))
@@ -104,11 +117,14 @@ export const ListSlideSchema = z.strictObject({
     .max(LIMITS.list.itemsMax, {
       error: `A list can have at most ${LIMITS.list.itemsMax} items; split it across slides.`,
     }),
-  build: z.boolean().meta({ description: 'true reveals one item per click.' }).optional(),
+  reveal: z
+    .boolean()
+    .meta({ description: 'Opt in to revealing items with the reveal control.' })
+    .optional(),
 });
 
 export const VerseSlideSchema = z.strictObject({
-  type: z.literal('verse'),
+  type: z.literal('reading'),
   ...base,
   ref: z.string().trim().min(1, { error: "Reference can't be empty." }).max(60).meta({
     description:
@@ -129,6 +145,7 @@ export const VerseSlideSchema = z.strictObject({
 export const QuoteSlideSchema = z.strictObject({
   type: z.literal('quote'),
   ...base,
+  ...attached,
   text: text(LIMITS.quote.text, 'Quote'),
   author: text(LIMITS.quote.author, 'Author').optional(),
 });
@@ -136,6 +153,7 @@ export const QuoteSlideSchema = z.strictObject({
 export const StatementSlideSchema = z.strictObject({
   type: z.literal('statement'),
   ...base,
+  ...attached,
   text: text(LIMITS.statement.text, 'Statement'),
 });
 
@@ -163,6 +181,7 @@ export const CountdownSlideSchema = z.strictObject({
 export const ClosingSlideSchema = z.strictObject({
   type: z.literal('closing'),
   ...base,
+  ...attached,
   heading: text(LIMITS.closing.heading, 'Heading'),
   body: text(LIMITS.closing.body, 'Body').optional(),
 });

@@ -94,7 +94,7 @@ export function FieldsPanel({ slide }: { slide: StoredSlide }) {
             heading={text('heading', 'Heading', LIMITS.list.heading)}
           />
         )}
-        {slide.type === 'verse' && <VerseFields slide={slide} set={set} />}
+        {slide.type === 'reading' && <VerseFields slide={slide} set={set} />}
         {slide.type === 'quote' && (
           <>
             {text('text', 'Quote', LIMITS.quote.text, { multiline: true })}
@@ -126,6 +126,74 @@ export function FieldsPanel({ slide }: { slide: StoredSlide }) {
           </>
         )}
       </section>
+
+      {'verses' in slide ||
+      ['point', 'statement', 'list', 'quote', 'closing'].includes(slide.type) ? (
+        <section className={styles.group} aria-label="Attached verses">
+          <h3 className={styles.subheading}>Attached verses</h3>
+          {'verses' in slide &&
+            (slide.verses ?? []).map((verse, i) => (
+              <div key={i} className={styles.fieldset}>
+                <VerseFields
+                  slide={{ ...verse, id: `attached-${i}`, type: 'reading' }}
+                  set={(_key, patch) =>
+                    set(`verse-${i}`, (s) => {
+                      if (!('verses' in s)) return s;
+                      const next = patch({ ...verse, id: `attached-${i}`, type: 'reading' });
+                      if (next.type !== 'reading') return s;
+                      return {
+                        ...s,
+                        verses: s.verses?.map((v, j) =>
+                          j === i
+                            ? {
+                                ref: next.ref,
+                                translation: next.translation,
+                                emphasis: next.emphasis,
+                              }
+                            : v,
+                        ),
+                      };
+                    })
+                  }
+                />
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() =>
+                    set('verses', (s) => {
+                      if (!('verses' in s)) return s;
+                      const verses = s.verses?.filter((_, j) => j !== i);
+                      return {
+                        ...s,
+                        verses: verses?.length ? verses : undefined,
+                        panel: verses?.length ? s.panel : undefined,
+                      };
+                    })
+                  }
+                >
+                  Remove reference
+                </Button>
+              </div>
+            ))}
+          <Button
+            variant="secondary"
+            disabled={'verses' in slide && (slide.verses?.length ?? 0) >= 3}
+            onClick={() =>
+              set(
+                'verses',
+                (s) =>
+                  ({
+                    ...s,
+                    verses: [...('verses' in s ? (s.verses ?? []) : []), { ref: 'John 3:16' }],
+                  }) as StoredSlide,
+              )
+            }
+          >
+            Add reference
+          </Button>
+          <p>Up to 3 verses total. These wait in the verse queue until the operator shows them.</p>
+        </section>
+      ) : null}
 
       <section className={styles.group} aria-label="Look">
         <h3 className={styles.subheading}>Look</h3>
@@ -227,10 +295,10 @@ function ListFields({
         </Button>
       </fieldset>
       <Toggle
-        checked={Boolean(slide.build)}
-        onChange={(v) => set('build', (s) => ({ ...s, build: v || undefined }) as StoredSlide)}
+        checked={Boolean(slide.reveal)}
+        onChange={(v) => set('reveal', (s) => ({ ...s, reveal: v || undefined }) as StoredSlide)}
         label="Reveal one item per click"
-        description="Build the list on Next."
+        description="Use Show item or R to reveal each item. Next moves to the next slide."
       />
     </>
   );
@@ -246,7 +314,7 @@ function VerseFields({
   slide,
   set,
 }: {
-  slide: Extract<StoredSlide, { type: 'verse' }>;
+  slide: Extract<StoredSlide, { type: 'reading' }>;
   set: (k: string, p: Patch) => void;
 }) {
   const translations = useBible((s) => s.translations);

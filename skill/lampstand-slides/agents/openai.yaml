@@ -1,0 +1,4 @@
+interface:
+  display_name: "Lampstand Sermon Slides"
+  short_description: "Turn a sermon into validated Lampstand JSON"
+  default_prompt: "Use $lampstand-slides to turn my sermon into a Lampstand presentation, including the confirmed pastor and service date and starting with Countdown followed by the Title sermon poster."

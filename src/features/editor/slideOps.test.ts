@@ -12,7 +12,7 @@ import {
   slideIssues,
 } from './slideOps';
 
-const p = (slides: StoredSlide[]): StoredPresentation => ({ schemaVersion: 1, title: 'T', slides });
+const p = (slides: StoredSlide[]): StoredPresentation => ({ schemaVersion: 2, title: 'T', slides });
 const s = (id: string, heading = id): StoredSlide => ({ id, type: 'point', heading });
 
 it('new slides of every type are valid', () => {

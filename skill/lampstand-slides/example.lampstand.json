@@ -1,10 +1,10 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "title": "A Lamp in the Dark",
   "speaker": "Pastor Daniel Cruz",
   "date": "2026-10-18",
   "series": "The Living Word",
-  "theme": "classic",
+  "theme": "lampstand",
   "translation": "KJV",
   "extraRefs": ["2 Timothy 3:16", "Hebrews 4:12", "John 8:12", "Matthew 5:14-16"],
   "slides": [
@@ -21,7 +21,7 @@
       }
     },
     {
-      "type": "verse",
+      "type": "reading",
       "ref": "Psalm 119:105",
       "emphasis": ["lamp", "light"],
       "transition": "rise",
@@ -38,22 +38,22 @@
       "heading": "Light shows what is really there",
       "body": "Scripture uncovers the truth about God, the world, and our own hearts."
     },
-    { "type": "verse", "ref": "John 1:5", "emphasis": ["light shineth in darkness"] },
-    { "type": "verse", "ref": "Hebrews 4:12" },
+    { "type": "reading", "ref": "John 1:5", "emphasis": ["light shineth in darkness"] },
+    { "type": "reading", "ref": "Hebrews 4:12" },
 
     { "type": "section", "label": "Point 2", "heading": "The Word guides", "transition": "rise" },
-    { "type": "verse", "ref": "Proverbs 3:5-6", "emphasis": ["direct thy paths"] },
+    { "type": "reading", "ref": "Proverbs 3:5-6", "emphasis": ["direct thy paths"] },
     {
       "type": "list",
       "heading": "How the Word guides us",
-      "build": true,
+      "reveal": true,
       "items": [
         "It warns us before we fall",
         "It corrects us when we wander",
         "It points us back to Christ"
       ]
     },
-    { "type": "verse", "ref": "Isaiah 30:21" },
+    { "type": "reading", "ref": "Isaiah 30:21" },
     {
       "type": "image",
       "caption": "One step at a time",
@@ -65,13 +65,13 @@
     },
 
     { "type": "section", "label": "Point 3", "heading": "The Word sustains", "transition": "rise" },
-    { "type": "verse", "ref": "Matthew 4:4", "emphasis": ["every word"] },
+    { "type": "reading", "ref": "Matthew 4:4", "emphasis": ["every word"] },
     {
       "type": "quote",
       "text": "Visit many good books, but live in the Bible.",
       "author": "Charles Spurgeon"
     },
-    { "type": "verse", "ref": "Isaiah 40:8", "emphasis": ["for ever"] },
+    { "type": "reading", "ref": "Isaiah 40:8", "emphasis": ["for ever"] },
 
     {
       "type": "statement",
@@ -81,14 +81,14 @@
     {
       "type": "list",
       "heading": "This week",
-      "build": true,
+      "reveal": true,
       "items": [
         "Read one chapter each morning",
         "Write down one verse to carry",
         "Share it with one person"
       ]
     },
-    { "type": "verse", "ref": "Psalm 119:105" },
+    { "type": "reading", "ref": "Psalm 119:105" },
     {
       "type": "closing",
       "heading": "Let us pray",

@@ -1,6 +1,42 @@
 import { LampstandDB } from './db';
 
 describe('LampstandDB', () => {
+  it('upgrades saved v1 decks when opening an existing library', async () => {
+    const { default: Dexie } = await import('dexie');
+    const old = new Dexie('test-slides-v2-upgrade');
+    old
+      .version(7)
+      .stores({ presentations: 'id, title, speaker, createdAt, updatedAt, lastPresentedAt' });
+    await old.table('presentations').put({
+      id: 'deck',
+      title: 'Keep',
+      createdAt: 1,
+      updatedAt: 2,
+      data: {
+        schemaVersion: 1,
+        title: 'Keep',
+        slides: [
+          { id: 'reading', type: 'verse', ref: 'John 3:16', notes: 'Keep notes' },
+          { id: 'list', type: 'list', heading: 'Keep', items: ['a', 'b'], build: true },
+        ],
+      },
+    });
+    old.close();
+    const db = new LampstandDB('test-slides-v2-upgrade');
+    const record = await db.presentations.get('deck');
+    expect(record).toMatchObject({
+      updatedAt: 2,
+      data: {
+        schemaVersion: 2,
+        slides: [
+          { id: 'reading', type: 'reading', notes: 'Keep notes' },
+          { id: 'list', reveal: true },
+        ],
+      },
+    });
+    db.close();
+    await db.delete();
+  });
   it('opens with all PRD tables', async () => {
     const db = new LampstandDB('test-open');
     await db.open();

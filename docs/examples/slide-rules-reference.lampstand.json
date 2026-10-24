@@ -1,0 +1,74 @@
+{
+  "schemaVersion": 2,
+  "title": "A Light for the Next Step",
+  "speaker": "Pastor Daniel Cruz",
+  "date": "2026-10-18",
+  "theme": "lampstand",
+  "translation": "KJV",
+  "extraRefs": ["James 1:22"],
+  "slides": [
+    { "type": "countdown", "minutes": 5, "label": "Service begins soon" },
+    {
+      "type": "title",
+      "heading": "A Light for the Next Step",
+      "speaker": "Pastor Daniel Cruz",
+      "subtitle": "Learning to walk faithfully",
+      "notes": "Format example only. Replace the illustrative pastor and date with the user's confirmed details before using it for a service."
+    },
+    {
+      "type": "reading",
+      "ref": "Psalm 119:105-110",
+      "notes": "The app shows this as three two-verse pages. Use the reading page controls before moving to the next slide."
+    },
+    {
+      "type": "statement",
+      "text": "We can take a faithful step without seeing the whole journey.",
+      "verses": [{ "ref": "Psalm 119:105", "emphasis": ["lamp", "light"] }]
+    },
+    {
+      "type": "section",
+      "label": "Point 1",
+      "heading": "Listen before you move",
+      "transition": "rise"
+    },
+    {
+      "type": "point",
+      "heading": "Take the next faithful step",
+      "body": "Let what you have understood shape one practical choice.",
+      "verses": [{ "ref": "Proverbs 3:5-6", "emphasis": ["Trust in the LORD"] }]
+    },
+    {
+      "type": "list",
+      "heading": "A simple reading rhythm",
+      "items": ["Read attentively", "Reflect honestly", "Respond practically"]
+    },
+    {
+      "type": "list",
+      "heading": "Questions for this week",
+      "items": ["What have I understood?", "What needs to change?", "What will I do next?"],
+      "reveal": true,
+      "notes": "Use Show item or R to reveal each question. Next changes slides."
+    },
+    {
+      "type": "quote",
+      "text": "Insert a verified quotation here.",
+      "notes": "This is placeholder wording for the format example. Replace it with a verified quotation and its correct author before presenting."
+    },
+    {
+      "type": "image",
+      "background": {
+        "type": "image",
+        "description": "Soft morning light crossing a quiet footpath, with uncluttered space for a short caption",
+        "motion": "still"
+      },
+      "caption": "One faithful step at a time.",
+      "notes": "Choose an actual image in Lampstand before presenting. The description is operator guidance, not audience content."
+    },
+    {
+      "type": "closing",
+      "heading": "Walk in the light.",
+      "body": "Read, reflect, and take one faithful step.",
+      "verses": [{ "ref": "Psalm 119:105" }]
+    }
+  ]
+}

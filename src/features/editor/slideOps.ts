@@ -1,5 +1,5 @@
 // Slide operations for the editor (PRD §7.3).
-import { parseRefDetailed } from '@/features/bible/ref';
+import { validatePresentation } from '@/schema/validate';
 import {
   SlideSchema,
   SLIDE_TYPES,
@@ -17,7 +17,7 @@ export const SLIDE_TYPE_LABELS: Record<SlideType, string> = {
   section: 'Section',
   point: 'Point',
   list: 'List',
-  verse: 'Verse',
+  reading: 'Reading',
   quote: 'Quote',
   statement: 'Statement',
   image: 'Image',
@@ -36,7 +36,7 @@ export function newSlide(type: SlideType): StoredSlide {
       return { id, type, heading: 'One main idea' };
     case 'list':
       return { id, type, heading: 'List heading', items: ['First item', 'Second item'] };
-    case 'verse':
+    case 'reading':
       return { id, type, ref: 'John 3:16' };
     case 'quote':
       return { id, type, text: 'Quote text' };
@@ -157,7 +157,13 @@ export function convertSlide(s: StoredSlide, to: SlideType): StoredSlide | null 
     if (!target || out[target] !== undefined) return null;
     out[target] = v;
   }
-  const base = { id: s.id, notes: s.notes, transition: s.transition, background: s.background };
+  const base = {
+    id: s.id,
+    notes: s.notes,
+    transition: s.transition,
+    background: s.background,
+    ...('verses' in s && s.verses?.length ? { verses: s.verses, panel: s.panel } : {}),
+  };
   const candidate = { ...base, type: to, ...out };
   const parsed = SlideSchema.safeParse(candidate);
   return parsed.success ? ({ ...parsed.data, id: s.id } as StoredSlide) : null;
@@ -169,14 +175,6 @@ export function compatibleTypes(s: StoredSlide): SlideType[] {
 
 /** Problems with a slide as edited, for the strip badge and fields panel. */
 export function slideIssues(s: StoredSlide): string[] {
-  const r = SlideSchema.safeParse(s);
-  const issues = r.success ? [] : r.error.issues.map((i) => i.message);
-  if (s.type === 'verse' && s.ref.trim()) {
-    const ref = parseRefDetailed(s.ref);
-    if (!ref.ok)
-      issues.push(
-        ref.problem === 'unrecognized' ? `'${s.ref}' isn't a recognized reference.` : ref.hint,
-      );
-  }
-  return issues;
+  const r = validatePresentation({ schemaVersion: 2, title: 'Slide', slides: [s] });
+  return r.ok ? [] : r.errors.map((issue) => issue.message);
 }

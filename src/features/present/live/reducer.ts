@@ -10,8 +10,11 @@ export type LiveAction =
       presentation: StoredPresentation;
       theme: LiveState['theme'];
     }
+  | { type: 'startCountdown' }
   | { type: 'next' }
   | { type: 'prev' }
+  | { type: 'revealStep'; delta: 1 | -1 }
+  | { type: 'slidePage'; delta: 1 | -1 }
   | { type: 'goTo'; index: number }
   | { type: 'toggleScreen'; screen: 'blank' | 'logo' | 'sermon' }
   | { type: 'showOverlay'; overlay: Omit<LiveOverlay, 'page'> & { page?: number } }
@@ -33,10 +36,11 @@ export interface LiveContext {
   /** Number of pages the current overlay needs. */
   overlayPages: (overlay: LiveOverlay) => number;
   now: () => number;
+  presenting?: boolean;
 }
 
 const buildItems = (slide: StoredSlide | undefined) =>
-  slide?.type === 'list' && slide.build ? slide.items.length : 0;
+  slide?.type === 'list' && slide.reveal ? slide.items.length : 0;
 
 function enterSlide(state: LiveState, index: number, ctx: LiveContext, fromEnd = false): LiveState {
   const slides = ctx.presentation?.slides ?? [];
@@ -49,11 +53,14 @@ function enterSlide(state: LiveState, index: number, ctx: LiveContext, fromEnd =
     slideIndex: clamped,
     buildStep: fromEnd ? buildItems(slide) : 0,
     slidePage: fromEnd && slide ? Math.max(0, ctx.slidePages(slide) - 1) : 0,
+
     countdownEndsAt:
       slide?.type === 'countdown'
         ? sameCountdown
           ? state.countdownEndsAt
-          : ctx.now() + slide.minutes * 60_000
+          : ctx.presenting
+            ? ctx.now() + slide.minutes * 60_000
+            : null
         : null,
   };
 }
@@ -75,22 +82,35 @@ export function liveReducer(state: LiveState, action: LiveAction, ctx: LiveConte
         0,
         { ...ctx, presentation: action.presentation },
       );
+    case 'startCountdown':
+      return slide?.type === 'countdown' && state.countdownEndsAt === null
+        ? { ...state, countdownEndsAt: ctx.now() + slide.minutes * 60_000 }
+        : state;
     case 'next': {
       if (!slide) return state;
-      if (state.buildStep < buildItems(slide)) return { ...state, buildStep: state.buildStep + 1 };
-      if (state.slidePage < ctx.slidePages(slide) - 1)
-        return { ...state, slidePage: state.slidePage + 1 };
       if (state.slideIndex >= slides.length - 1) return state;
       return enterSlide(state, state.slideIndex + 1, ctx);
     }
     case 'prev': {
       if (!slide) return state;
-      if (buildItems(slide) && state.buildStep > 0)
-        return { ...state, buildStep: state.buildStep - 1 };
-      if (state.slidePage > 0) return { ...state, slidePage: state.slidePage - 1 };
       if (state.slideIndex <= 0) return state;
       return enterSlide(state, state.slideIndex - 1, ctx, true);
     }
+    case 'revealStep':
+      return {
+        ...state,
+        buildStep: Math.max(0, Math.min(buildItems(slide), state.buildStep + action.delta)),
+      };
+    case 'slidePage':
+      return slide?.type === 'reading'
+        ? {
+            ...state,
+            slidePage: Math.max(
+              0,
+              Math.min(ctx.slidePages(slide) - 1, state.slidePage + action.delta),
+            ),
+          }
+        : state;
     case 'goTo':
       if (action.index < 0 || action.index >= slides.length) return state;
       return enterSlide(

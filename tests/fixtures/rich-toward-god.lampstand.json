@@ -1,0 +1,134 @@
+{
+  "schemaVersion": 2,
+  "title": "Rich Toward God",
+  "theme": "classic",
+  "translation": "KJV",
+  "extraRefs": ["Luke 12:15", "Matthew 6:19-21", "1 Corinthians 15:3-4"],
+  "slides": [
+    {
+      "type": "title",
+      "heading": "Rich Toward God",
+      "subtitle": "Luke 12:16–21",
+      "background": { "type": "image", "description": "man looking at large barns full of harvest, darker sky above suggesting eternity", "motion": "drift" }
+    },
+    {
+      "type": "reading",
+      "ref": "Luke 12:16-21",
+      "notes": "Main text. Read the whole parable."
+    },
+    {
+      "type": "statement",
+      "text": "You can be rich in this world and still be poor before God.",
+      "verses": [{ "ref": "Luke 12:21", "emphasis": ["rich toward God"] }]
+    },
+    {
+      "type": "point",
+      "heading": "What makes a life successful?",
+      "body": "Not what we possess, but what matters in eternity. He prepared everything except his soul."
+    },
+    {
+      "type": "section",
+      "label": "Point 1",
+      "heading": "The Problem of His Priority",
+      "transition": "rise"
+    },
+    {
+      "type": "point",
+      "heading": "My fruits. My barns. My goods.",
+      "body": "Everything centered on himself.",
+      "verses": [{ "ref": "Luke 12:17-18", "emphasis": ["my fruits", "my barns", "my goods"] }],
+      "background": { "type": "image", "description": "barns filled with crops, overflowing harvest", "motion": "still" }
+    },
+    {
+      "type": "point",
+      "heading": "Not his possessions, but his priority",
+      "body": "The danger is not having possessions. The danger is when our possessions possess us.",
+      "verses": [{ "ref": "Psalm 24:1" }]
+    },
+    {
+      "type": "section",
+      "label": "Point 2",
+      "heading": "The Presumption of His Plan",
+      "transition": "rise"
+    },
+    {
+      "type": "point",
+      "heading": "He planned for many years",
+      "body": "But God said: this night.",
+      "verses": [{ "ref": "Luke 12:19-20", "emphasis": ["many years", "this night"] }]
+    },
+    {
+      "type": "statement",
+      "text": "He planned for many years. God knew he had only one night.",
+      "background": { "type": "color", "tone": "deep" }
+    },
+    {
+      "type": "list",
+      "heading": "Do not give God the leftovers",
+      "reveal": true,
+      "items": ["Serve God now", "Forgive now", "Share the Gospel now", "Be faithful now"],
+      "verses": [{ "ref": "James 4:14-15", "emphasis": ["on the morrow"] }]
+    },
+    {
+      "type": "section",
+      "label": "Point 3",
+      "heading": "The Poverty of His Soul",
+      "transition": "rise"
+    },
+    {
+      "type": "statement",
+      "text": "He was prepared to live, but not prepared to die.",
+      "verses": [{ "ref": "Luke 12:20", "emphasis": ["thy soul shall be required"] }]
+    },
+    {
+      "type": "list",
+      "heading": "He prepared everything except his soul",
+      "items": ["Full: barns, possessions, plans, comfort", "Empty: soul, eternity, relationship with God"]
+    },
+    {
+      "type": "section",
+      "label": "The Gospel",
+      "heading": "Christ, the True Riches",
+      "transition": "rise"
+    },
+    {
+      "type": "list",
+      "heading": "Two different answers",
+      "items": ["The rich fool: I will keep everything for myself.", "Jesus Christ: I will give Myself for you."],
+      "verses": [{ "ref": "2 Corinthians 8:9", "emphasis": ["he became poor"] }],
+      "panel": "bottom",
+      "background": { "type": "image", "description": "simple cross silhouette against a soft evening sky", "motion": "still" }
+    },
+    {
+      "type": "list",
+      "heading": "Christ gave everything",
+      "reveal": true,
+      "items": ["He came", "He suffered", "He died", "He was buried", "He rose again"]
+    },
+    {
+      "type": "statement",
+      "text": "Salvation is by grace through faith in Jesus Christ.",
+      "verses": [{ "ref": "Ephesians 2:8-9", "emphasis": ["by grace"] }]
+    },
+    {
+      "type": "list",
+      "heading": "Three questions",
+      "reveal": true,
+      "items": ["What are you living for?", "What are you storing up?", "Are you rich toward God?"]
+    },
+    {
+      "type": "statement",
+      "text": "Do not build everything and neglect your soul.",
+      "verses": [{ "ref": "Luke 12:20" }]
+    },
+    {
+      "type": "quote",
+      "text": "Do not spend your whole life becoming rich in things you cannot keep, while remaining poor in the things you can never afford to lose."
+    },
+    {
+      "type": "closing",
+      "heading": "Be rich toward God.",
+      "verses": [{ "ref": "Luke 12:21", "emphasis": ["rich toward God"] }]
+    }
+  ]
+}

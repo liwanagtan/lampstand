@@ -3,7 +3,7 @@ import { Play } from 'lucide-react';
 import { Page } from '@/app/Page';
 import { Button, Tabs } from '@/design-system/components';
 import { validatePresentation } from '@/schema/validate';
-import { TEMPLATE_IDS, type TemplateId } from '@/schema/common';
+import { ACTIVE_TEMPLATE_IDS, type TemplateId } from '@/schema/common';
 import { getTemplate } from '@/templates/templates';
 import { SlideFrame } from '@/slides/SlideView';
 import type { StoredPresentation } from '@/schema/presentation';
@@ -40,7 +40,7 @@ export function SlidesPage() {
       setPresentation({ ...base, slides });
     })();
   }, [base]);
-  const [templateId, setTemplateId] = useState<TemplateId>('classic');
+  const [templateId, setTemplateId] = useState<TemplateId>('lampstand');
   const [selected, setSelected] = useState(1);
   const [liveKey, setLiveKey] = useState(0);
   const [step, setStep] = useState(0);
@@ -70,7 +70,7 @@ export function SlidesPage() {
           label="Template"
           value={templateId}
           onChange={(v) => setTemplateId(v)}
-          items={TEMPLATE_IDS.map((id) => ({
+          items={ACTIVE_TEMPLATE_IDS.map((id) => ({
             value: id,
             label: getTemplate(id).name,
             content: null,
@@ -83,11 +83,11 @@ export function SlidesPage() {
             template={template}
             mode="live"
             translation="KJV"
-            buildStep={slide.type === 'list' && slide.build ? step : undefined}
+            buildStep={slide.type === 'list' && slide.reveal ? step : undefined}
             countdownEndsAt={slide.type === 'countdown' ? endsAt : undefined}
             label="Live preview"
           />
-          {slide.type === 'list' && slide.build && (
+          {slide.type === 'list' && slide.reveal && (
             <Button onClick={() => setStep((n) => Math.min(n + 1, slide.items.length))}>
               Next build step
             </Button>

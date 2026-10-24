@@ -24,7 +24,7 @@ it('finds the main verse from the first verse slide', () => {
     date: '2026-10-18',
     slides: [
       { id: 'a', type: 'title', heading: 'T' },
-      { id: 'b', type: 'verse', ref: 'Psalm 119:105', translation: 'web' },
+      { id: 'b', type: 'reading', ref: 'Psalm 119:105', translation: 'web' },
     ],
   } as unknown as StoredPresentation;
   expect(posterInfoFor(p, 'KJV')).toMatchObject({

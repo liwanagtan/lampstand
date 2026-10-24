@@ -64,13 +64,22 @@ interface LiveScreenProps {
   fit?: 'contain' | 'width';
   label?: string;
   className?: string;
+  /** Operator-only missing image/video note and dashed border. Audience output defaults off. */
+  showMediaPlaceholders?: boolean;
 }
 
 /**
  * Draws exactly what the audience sees for a snapshot: slide, verse overlay, blank or logo.
- * Used by the output window and the control screen's Live pane.
+ * Used by the output window and the control screen's Live pane. Only the operator opts in to
+ * missing-media guidance; it is never part of the broadcast snapshot or audience rendering.
  */
-export function LiveScreen({ snapshot, fit = 'width', label, className }: LiveScreenProps) {
+export function LiveScreen({
+  snapshot,
+  fit = 'width',
+  label,
+  className,
+  showMediaPlaceholders = false,
+}: LiveScreenProps) {
   const reduced = useReducedMotion();
   const { live, presentation } = snapshot;
   const template = getTemplate(live.theme);
@@ -162,6 +171,7 @@ export function LiveScreen({ snapshot, fit = 'width', label, className }: LiveSc
                   buildStep={live.buildStep}
                   page={live.slidePage}
                   countdownEndsAt={live.countdownEndsAt}
+                  showMediaPlaceholders={showMediaPlaceholders}
                 />
               </motion.div>
             )}
@@ -247,6 +257,7 @@ export function LiveScreen({ snapshot, fit = 'width', label, className }: LiveSc
                   presentation={presentation}
                   template={template}
                   translation={translation}
+                  showMediaPlaceholders={showMediaPlaceholders}
                 />
               )}
             </motion.div>
@@ -274,10 +285,12 @@ function SermonScreen({
   presentation,
   template,
   translation,
+  showMediaPlaceholders,
 }: {
   presentation: NonNullable<LiveSnapshot['presentation']>;
   template: ReturnType<typeof getTemplate>;
   translation: string;
+  showMediaPlaceholders: boolean;
 }) {
   const slide =
     presentation.slides.find((s) => s.type === 'title') ??
@@ -289,7 +302,13 @@ function SermonScreen({
     } as const);
   return (
     <div className={styles.sermon}>
-      <SlideView slide={slide} template={template} mode="live" translation={translation} />
+      <SlideView
+        slide={slide}
+        template={template}
+        mode="live"
+        translation={translation}
+        showMediaPlaceholders={showMediaPlaceholders}
+      />
     </div>
   );
 }

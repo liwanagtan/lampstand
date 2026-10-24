@@ -1,5 +1,7 @@
 # Lampstand — PRD & Build Roadmap
 
+> **Slide authoring update, 2026-10-24:** [SLIDE-RULES.md](SLIDE-RULES.md) documents the current schema 2 slide contract and Screen Slides behavior. For slide authoring it supersedes this PRD's original v1 slide types, template choices, verse panels and reveal/navigation descriptions. See that document's release-context note before targeting a deployed app.
+
 > **Amended 2026-10-17:** see [PRD-ADDENDUM-GROW.md](PRD-ADDENDUM-GROW.md) — Grow (daily reading) becomes the main feature, a new navigation (Today · Bible · Plans · Journal · Screen + Me), and milestones 11–16. Where they differ, the addendum wins.
 
 2026-10-16 · Jonathan Liwanag

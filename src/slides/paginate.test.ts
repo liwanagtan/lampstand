@@ -1,6 +1,13 @@
 import type { PassageVerse } from '@/features/bible/passage';
 import { TYPE } from '@/templates/metrics';
-import { BIBLE_LAYOUT, approxMeasure, countLines, paginate, verseBox } from './paginate';
+import {
+  BIBLE_LAYOUT,
+  approxMeasure,
+  countLines,
+  paginate,
+  readingPages,
+  verseBox,
+} from './paginate';
 
 function verses(n: number, words = 20): PassageVerse[] {
   return Array.from({ length: n }, (_, i) => ({
@@ -13,6 +20,16 @@ function verses(n: number, words = 20): PassageVerse[] {
 }
 
 describe('paginate', () => {
+  it('pages readings in pairs without splitting, losing, or duplicating verses', () => {
+    const input = verses(5, 80);
+    input[1]!.missing = true;
+    const pages = readingPages(input, 'lampstand');
+    expect(pages.map((p) => p.segments.map((v) => v.verse))).toEqual([[1, 2], [3, 4], [5]]);
+    expect(pages[0]!.segments[0]!.text).toBe(input[0]!.text);
+    expect(pages[0]!.segments[1]!.missing).toBe(true);
+    expect(pages[0]!.segments[1]!.text).toContain('not included');
+    expect(readingPages([], 'lampstand')).toEqual([]);
+  });
   it('keeps a short passage on one page at full size', () => {
     const pages = paginate(verses(1, 12), verseBox('slide'), approxMeasure);
     expect(pages).toHaveLength(1);

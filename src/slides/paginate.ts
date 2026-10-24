@@ -29,8 +29,12 @@ export function verseBox(mode: OverlayMode | 'slide'): TextBox {
     case 'sidePanel': {
       const w = CANVAS.width * OVERLAY.sidePanelWidth;
       return {
-        width: w - SAFE.x - OVERLAY.panelPaddingX,
-        height: CANVAS.height - SAFE.y * 2 - OVERLAY.panelPaddingY * 2 - refLine - pageLine,
+        width: w - OVERLAY.panelPaddingX * 2 - 2,
+        height:
+          CANVAS.height -
+          (SAFE.y + OVERLAY.panelPaddingY) * 2 -
+          (TYPE.caption * 1.25 + 36) -
+          pageLine,
       };
     }
     case 'popup':
@@ -51,6 +55,28 @@ export function verseBox(mode: OverlayMode | 'slide'): TextBox {
 /** Show the Bible: a verse per line, whole verses only (and measured in the reader's serif). */
 export const BIBLE_LAYOUT: VerseLayout = { lines: true, wholeVerses: true };
 
+/** Reading slides always advance in pairs of whole verses, independent of the Bible console. */
+export function readingPages(verses: PassageVerse[], templateId: TemplateId): Page[] {
+  const t = getTemplate(templateId);
+  const measure = browserMeasure((t.verse ?? t.body).family, (t.verse ?? t.body).weight);
+  const box = verseBox('slide');
+  return Array.from({ length: Math.ceil(verses.length / 2) }, (_, i) => {
+    const segments = verses.slice(i * 2, i * 2 + 2).map((v) => ({
+      ...v,
+      showNumber: true,
+      text: v.missing ? 'This verse is not included in this translation.' : v.text,
+    }));
+    return {
+      segments,
+      size: bestSize(segments, box, measure, {
+        lines: true,
+        wholeVerses: true,
+        max: LAMPSTAND_SLIDE_MAX,
+      }),
+    };
+  });
+}
+
 /** Pages as the screens draw them: the renderers and the page counter share this. */
 export function pagesFor(
   verses: PassageVerse[],
@@ -59,10 +85,16 @@ export function pagesFor(
   bible: boolean,
 ): Page[] {
   const t = getTemplate(templateId);
+  const face = mode === 'sidePanel' ? t.body : (t.verse ?? t.body);
   const measure = bible
     ? browserMeasure(fonts.display, 400)
-    : browserMeasure(t.body.family, t.body.weight);
-  return paginate(verses, verseBox(mode), measure, bible ? BIBLE_LAYOUT : {});
+    : browserMeasure(face.family, mode === 'sidePanel' ? 400 : face.weight);
+  const layout: VerseLayout = bible
+    ? BIBLE_LAYOUT
+    : mode === 'slide' && t.id === 'lampstand'
+      ? { max: LAMPSTAND_SLIDE_MAX }
+      : {};
+  return paginate(verses, verseBox(mode), measure, layout);
 }
 
 /** Approximate width for environments without canvas text metrics. */
@@ -124,7 +156,12 @@ export function fits(text: string, box: TextBox, size: number, measure: Measure)
 export interface VerseLayout {
   lines?: boolean;
   wholeVerses?: boolean;
+  /** Largest size a page may use (TYPE.verse when unset). */
+  max?: number;
 }
+
+/** A passage on its own Lampstand slide may grow to the Reading template's size. */
+const LAMPSTAND_SLIDE_MAX = 69;
 
 /** Space between verses on their own lines, in em (VerseBody draws the same). */
 export const VERSE_GAP = 0.3;
@@ -213,7 +250,7 @@ function bestSize(
   layout: VerseLayout,
 ): number {
   const floor = layout.wholeVerses ? WHOLE_VERSE_MIN : TYPE.minimumBody;
-  for (let size = TYPE.verse; size > floor; size -= 2) {
+  for (let size = layout.max ?? TYPE.verse; size > floor; size -= 2) {
     if (pageFits(segs, box, size, measure, layout)) return size;
   }
   return floor;

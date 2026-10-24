@@ -15,4 +15,6 @@ export interface RenderProps<T extends SlideType = SlideType> {
   page: number;
   translation: string;
   countdownEndsAt?: number | null;
+  /** Missing-media guidance is for operator surfaces only, never the audience output. */
+  showMediaPlaceholders?: boolean;
 }

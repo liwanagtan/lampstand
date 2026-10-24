@@ -11,8 +11,11 @@ export function isPreviewPage(url: URL): boolean {
 /** The app's page, with its preview tags filled in for this link. */
 export async function previewPage(request: Request, assets: Fetcher): Promise<Response> {
   const url = new URL(request.url);
-  const page = await assets.fetch(new Request(new URL('/', url), request));
-  if (!page.ok || !page.headers.get('content-type')?.includes('text/html')) return page;
+  const served = await assets.fetch(new Request(new URL('/', url), request));
+  if (!served.ok || !served.headers.get('content-type')?.includes('text/html')) return served;
+  // Say UTF-8 in the header too, so a preview never garbles the "·" in a title.
+  const page = new Response(served.body, served);
+  page.headers.set('content-type', 'text/html; charset=utf-8');
 
   const reference = url.pathname.startsWith('/v/')
     ? referenceFor(decodeURIComponent(url.pathname.slice(3)))

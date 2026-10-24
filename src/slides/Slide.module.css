@@ -152,7 +152,9 @@
 /* List: numbered, two columns; every item shows unless the slide reveals them. */
 .list {
   list-style: none;
-  margin: 0;
+  /* Not the top: the stack's space under the title sits there (the template's 64px, ×1.5). */
+  margin-inline: 0;
+  margin-bottom: 0;
   padding: 0;
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));

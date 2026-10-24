@@ -6,6 +6,7 @@ import { useApplyDocumentTheme } from '@/features/settings/theme';
 import { useSettings } from '@/features/settings/settingsStore';
 import { TipHost } from '@/features/tips/TipHost';
 import { GuidedTour } from '@/features/tour/GuidedTour';
+import { rememberAfterWelcome } from '@/features/share/share';
 import { Avatar } from '@/features/profile/Avatar';
 import { TopSearch } from '@/features/search/TopSearch';
 import { useReminders } from '@/features/reminders/useReminders';
@@ -39,7 +40,10 @@ export function AppShell() {
   noteVisit();
   useReminders();
 
-  if (welcome) return <Navigate to="/welcome" replace />;
+  if (welcome) {
+    rememberAfterWelcome(pathname);
+    return <Navigate to="/welcome" replace />;
+  }
   return (
     <div className={styles.shell} data-focus-reading={focusedReading || undefined}>
       <header className={styles.topbar}>

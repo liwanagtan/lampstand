@@ -93,6 +93,7 @@ export function VerseActions({
         className={cx(styles.selectionBar, pinned && styles.pinned)}
         role="toolbar"
         aria-label="Selected verses"
+        data-tip-avoid
       >
         <span className={styles.selectionLabel}>
           {formatRef(range)}
@@ -155,6 +156,7 @@ export function VerseActions({
                 <BarButton
                   label={existingNote ? 'Edit note' : 'Add a note'}
                   text="Note"
+                  data-tip-target="note"
                   icon={<NotebookPen size={18} />}
                   onClick={() => onNote({ range, note: existingNote ?? null })}
                 />
@@ -166,6 +168,7 @@ export function VerseActions({
               <BarButton
                 label={`Study notes on verse ${studyVerse}`}
                 text="Study"
+                data-tip-target="study"
                 icon={<BookText size={18} />}
                 onClick={() => onStudy(studyVerse)}
               />
@@ -176,6 +179,7 @@ export function VerseActions({
               <BarButton
                 label={`Word study on verse ${selection.start}`}
                 text="Words"
+                data-tip-target="words"
                 icon={<Languages size={18} />}
                 onClick={onWords}
               />

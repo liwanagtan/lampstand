@@ -11,6 +11,7 @@ import { useOpenInReader } from './useOpenInReader';
 import { categoryById } from '@/schema/planCatalog';
 import { ActivePlan } from './ActivePlan';
 import { PlanOptions, PlanPaceHint } from './PlanPacingControls';
+import { InlineTip } from '@/features/tips/InlineTip';
 import { CompletedPlanActions } from './CompletedPlanActions';
 import { planMeta, plansIn, visibleChildren } from './discover';
 import { CategoryChip, CategoryLinks, PlanCard } from './PlanCards';
@@ -214,6 +215,7 @@ export function PlanPage() {
                   <PlanOptions plan={plan} progress={progress} />
                 </div>
               )}
+              <InlineTip place="plan" />
             </section>
           </>
         ) : (

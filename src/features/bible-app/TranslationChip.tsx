@@ -22,6 +22,7 @@ export function TranslationChip({
       <button
         type="button"
         className={styles.chip}
+        data-tip-target="translation"
         aria-label={`Reading settings: ${label}`}
         onClick={onClick}
       >

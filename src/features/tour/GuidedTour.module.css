@@ -1,0 +1,318 @@
+/* The phone tour (design canvas, Phone tour and Motion spec). Calm light: the spotlight glides
+   first, the card rises once it lands; reduced motion turns every step into a short crossfade. */
+/* A stop scrolls near the top, with a little room above its spotlight. */
+:global([data-tour]) {
+  scroll-margin-top: 24px;
+}
+.layer {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  font-family: var(--font-ui);
+  color: var(--color-text);
+}
+.scrim,
+.blocker {
+  position: absolute;
+  inset: 0;
+}
+.scrim {
+  background: var(--color-overlay);
+  animation: fade var(--dur-sheet) var(--ease-sheet) both;
+}
+
+.sheet {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  padding: 0 var(--space-6) calc(var(--space-8) + env(safe-area-inset-bottom));
+  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+  background: var(--color-surface-raised);
+  text-align: center;
+  animation: sheet-in var(--dur-sheet) var(--ease-sheet) both;
+}
+.sheetEmber {
+  margin-top: -76px;
+  animation:
+    pop 900ms var(--ease-overshoot) both,
+    bob 3.6s var(--ease-standard) 900ms infinite;
+}
+.eyebrow,
+.doneEyebrow {
+  font-size: var(--text-12);
+  font-weight: var(--weight-bold);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-accent-text);
+}
+.sheetTitle {
+  font-size: var(--text-24);
+  font-weight: var(--weight-extrabold);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+.text {
+  font-size: var(--text-16);
+  line-height: 1.5;
+  color: var(--color-text-muted);
+}
+
+.primary,
+.primaryWide,
+.quiet,
+.quietWide,
+.skip {
+  min-height: 44px;
+  padding: var(--space-3) var(--space-5);
+  border: 0;
+  border-radius: var(--radius-pill);
+  font: inherit;
+  font-size: var(--text-16);
+  font-weight: var(--weight-bold);
+  cursor: pointer;
+  transition:
+    transform var(--dur-tap) var(--ease-tap),
+    background-color var(--dur-state) var(--ease-state);
+}
+.primary:active,
+.primaryWide:active,
+.quiet:active,
+.quietWide:active,
+.skip:active {
+  transform: scale(0.96);
+}
+.primary:focus-visible,
+.primaryWide:focus-visible,
+.quiet:focus-visible,
+.quietWide:focus-visible,
+.skip:focus-visible {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 3px;
+}
+.primary,
+.primaryWide {
+  background: var(--color-accent);
+  color: var(--color-accent-contrast);
+}
+.primaryWide,
+.quietWide {
+  width: 100%;
+}
+.primaryWide {
+  min-height: 52px;
+  margin-top: var(--space-2);
+}
+.quiet,
+.quietWide {
+  padding-inline: var(--space-3);
+  background: transparent;
+  color: var(--color-text-muted);
+}
+
+.spot {
+  position: absolute;
+  pointer-events: none;
+  transition:
+    top 400ms var(--ease-sheet),
+    left 400ms var(--ease-sheet),
+    width 400ms var(--ease-sheet),
+    height 400ms var(--ease-sheet),
+    border-radius 400ms var(--ease-sheet);
+  animation: ring 2.8s ease-in-out infinite;
+}
+/* In Ember's card, beside Back and Next: always one tap away, never louder than them. */
+.skip {
+  padding-inline: 0;
+  background: transparent;
+  color: var(--color-text-muted);
+  font-size: var(--text-14);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+.grow {
+  flex-grow: 1;
+}
+.stepLine {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding-right: 72px;
+}
+
+.bubble {
+  position: absolute;
+  right: var(--space-5);
+  left: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-5) var(--space-5) var(--space-4);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface-raised);
+  box-shadow: var(--elevation-2);
+  animation: rise 320ms var(--ease-sheet) 160ms both;
+}
+.bubbleEmber {
+  position: absolute;
+  top: -48px;
+  right: var(--space-4);
+}
+.bubbleTitle {
+  padding-right: 72px;
+  font-size: var(--text-20);
+  font-weight: var(--weight-extrabold);
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+}
+.row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: var(--space-2);
+}
+.dots {
+  display: flex;
+  gap: 6px;
+}
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: var(--radius-pill);
+  background: var(--color-border-strong);
+  transition: width var(--dur-state) var(--ease-state);
+}
+.dot[data-on] {
+  width: 22px;
+  background: var(--color-accent);
+}
+
+.done {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-4);
+  padding: 0 var(--space-8);
+  background: var(--palette-ink);
+  color: var(--palette-white);
+  text-align: center;
+  animation: fade var(--dur-standard) var(--ease-standard) both;
+}
+.doneEyebrow {
+  color: var(--color-accent);
+}
+.doneEyebrow,
+.doneTitle,
+.doneText {
+  animation: rise 320ms var(--ease-sheet) 160ms both;
+}
+.doneTitle {
+  font-size: var(--text-32);
+  font-weight: var(--weight-extrabold);
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+}
+.doneText {
+  font-size: var(--text-16);
+  line-height: 1.5;
+  color: color-mix(in srgb, var(--palette-white) 70%, transparent);
+}
+.pop {
+  animation: pop 900ms var(--ease-overshoot) both;
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes sheet-in {
+  from {
+    transform: translateY(100%);
+  }
+}
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+}
+@keyframes pop {
+  0% {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  70% {
+    opacity: 1;
+    transform: scale(1.08);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+@keyframes bob {
+  50% {
+    transform: translateY(-4px);
+  }
+}
+@keyframes ring {
+  0%,
+  100% {
+    box-shadow:
+      0 0 0 200vmax var(--color-overlay),
+      0 0 0 2px var(--color-accent),
+      0 0 18px 4px color-mix(in srgb, var(--color-accent) 35%, transparent);
+  }
+  50% {
+    box-shadow:
+      0 0 0 200vmax var(--color-overlay),
+      0 0 0 2px var(--color-accent),
+      0 0 30px 10px color-mix(in srgb, var(--color-accent) 55%, transparent);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scrim,
+  .sheet,
+  .sheetEmber,
+  .bubble,
+  .done,
+  .doneEyebrow,
+  .doneTitle,
+  .doneText,
+  .pop {
+    animation: fade 120ms linear both;
+  }
+  .spot {
+    transition: none;
+    animation: none;
+    box-shadow:
+      0 0 0 200vmax var(--color-overlay),
+      0 0 0 2px var(--color-accent);
+  }
+}
+:global([data-reduce-motion='true']) .scrim,
+:global([data-reduce-motion='true']) .sheet,
+:global([data-reduce-motion='true']) .sheetEmber,
+:global([data-reduce-motion='true']) .bubble,
+:global([data-reduce-motion='true']) .done,
+:global([data-reduce-motion='true']) .doneEyebrow,
+:global([data-reduce-motion='true']) .doneTitle,
+:global([data-reduce-motion='true']) .doneText,
+:global([data-reduce-motion='true']) .pop {
+  animation: fade 120ms linear both;
+}
+:global([data-reduce-motion='true']) .spot {
+  transition: none;
+  animation: none;
+  box-shadow:
+    0 0 0 200vmax var(--color-overlay),
+    0 0 0 2px var(--color-accent);
+}

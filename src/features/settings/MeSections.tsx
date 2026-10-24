@@ -1,7 +1,10 @@
 import { FAITH_JOURNEYS, faithJourneys } from '@/app/faithJourney';
 import { useState } from 'react';
 import { useIsPhone } from '@/app/useIsPhone';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { queueTour } from '@/features/tour/tour';
+import { TIPS } from '@/features/tips/tips';
+import { canPreviewTips, isTipsPreview, setTipsPreview } from '@/features/tips/tipLog';
 import { paths } from '@/app/paths';
 import { Check, ChevronRight } from 'lucide-react';
 import { Button, Input, Select, Sheet, Toggle } from '@/design-system/components';
@@ -291,18 +294,63 @@ export function ReadingSection() {
   );
 }
 
-/** Settings › Tips: the occasional suggestion about something Lampstand can do. */
+/**
+ * Settings › Tips: one switch for Ember's tips, the way back into the tour, and the tips already
+ * seen, so one closed too quickly can be read again.
+ */
 export function TipsSection() {
   const tips = useSettings((s) => s.tips);
   const set = useSettings((s) => s.set);
+  const phone = useIsPhone();
+  const navigate = useNavigate();
+  const seen = TIPS.filter((t) => tips.seen[t.id]);
+  const [preview, setPreview] = useState(isTipsPreview);
   return (
     <Section title="Tips">
       <Toggle
         checked={tips.enabled}
         onChange={(enabled) => void set('tips', { ...tips, enabled })}
-        label="Feature tips"
-        description="Now and then — at most once a week, never while presenting — Lampstand suggests something it can do."
+        label="Tips from Ember"
+        description="Now and then, a short tip after you try something new. At most one a week, never while presenting."
       />
+      {canPreviewTips() && (
+        <Toggle
+          checked={preview}
+          onChange={(on) => {
+            setTipsPreview(on);
+            setPreview(on);
+            if (on && !tips.enabled) void set('tips', { ...tips, enabled: true });
+          }}
+          label="Try every tip now (staging)"
+          description="For reviewing: each tip shows the moment you do its thing, with no first-day wait or week between tips. Only on this computer and the staging site."
+        />
+      )}
+      {seen.length > 0 && (
+        <details className={styles.seenTips}>
+          <summary>
+            Tips you have seen · {seen.length} of {TIPS.length}
+          </summary>
+          <ul>
+            {seen.map((t) => (
+              <li key={t.id}>
+                <strong>{t.title}</strong>
+                <span>{t.body}</span>
+              </li>
+            ))}
+          </ul>
+        </details>
+      )}
+      {phone && (
+        <Button
+          variant="secondary"
+          onClick={() => {
+            queueTour();
+            navigate(paths.today);
+          }}
+        >
+          Replay the tour
+        </Button>
+      )}
     </Section>
   );
 }

@@ -32,6 +32,7 @@ import { WORD_STUDY_TRANSLATION, useBookWords, verseWords, type WordSpan } from 
 import { WordStudyPanel } from './WordStudyPanel';
 import { haptic } from '@/app/haptics';
 import { noteTipEvent } from '@/features/tips/tipStore';
+import { recordTipEvent } from '@/features/tips/tipLog';
 import { useSettings } from '@/features/settings/settingsStore';
 import { selectionRange, useReader } from './readerStore';
 import { chapterCount, useChapter } from './useChapter';
@@ -263,6 +264,18 @@ export function BibleReader({ toolbar, selectionActions }: BiblePageSlots) {
       ).find((v) => studyByVerse.has(v))
     : undefined;
 
+  // A verse just chosen is the moment for a tip about what you can do with it.
+  const chosen = selection?.start;
+  useEffect(() => {
+    if (chosen === undefined) return;
+    void noteTipEvent('verse-selected', {
+      words: studyOn && translation !== WORD_STUDY_TRANSLATION,
+      study: studyVerse !== undefined,
+    });
+    // Only a newly chosen verse counts, not every render while it stays chosen.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [chosen, book, chapter]);
+
   const onSearchGo = (r: RefRange, code?: string) => {
     if (code) setTranslation(code);
     const sameChapter = r.end.book === r.start.book && r.end.chapter === r.start.chapter;
@@ -413,6 +426,7 @@ export function BibleReader({ toolbar, selectionActions }: BiblePageSlots) {
                           active: words?.strong ?? null,
                           onPick: (verse, strong) => {
                             haptic('select');
+                            recordTipEvent('words-opened');
                             setStudyState(null);
                             setWords({ verse, strong });
                           },
@@ -475,10 +489,14 @@ export function BibleReader({ toolbar, selectionActions }: BiblePageSlots) {
             marks={marks}
             copyText={copyText}
             studyVerse={studyVerse}
-            onStudy={setStudy}
+            onStudy={(verse) => {
+              recordTipEvent('study-opened');
+              setStudy(verse);
+            }}
             onWords={
               studyOn && !inBsb
                 ? () => {
+                    recordTipEvent('words-opened');
                     setStudyState(null);
                     setWords({ verse: selection.start, strong: null });
                   }

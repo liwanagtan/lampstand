@@ -109,6 +109,7 @@ export function PlanOptions({ plan, progress }: { plan: Plan; progress: PlanProg
         trigger={
           <IconButton
             label="Plan options"
+            data-tip-target="plan-options"
             icon={<MoreHorizontal size={18} />}
             className={styles.optionsButton}
           />

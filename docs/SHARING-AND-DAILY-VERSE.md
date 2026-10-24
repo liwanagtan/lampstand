@@ -12,4 +12,12 @@ Status: built on `design/share` and `design/daily-verse`, 2026-10-24. Staging fi
 
 ## Verse of the day at 8:00
 
-See the section below once built; it is the only Lampstand feature that keeps anything off the device.
+The one Lampstand feature without an account that keeps anything off the device. Opt-in only.
+
+- **Turning it on** (Settings › Reminders › Verse of the day, 8:00 by default, time changeable): the browser asks for notification permission and gives a push address; the app sends that address, the time zone and the time to `POST /api/push/subscribe` (`src/features/reminders/dailyVersePush.ts`). Turning it off deletes the row (`/api/push/unsubscribe`). iPhone allows this only from Lampstand added to the Home Screen (iOS 16.4+); the switch says so.
+- **Sending** (`worker/dailyVerse.ts`): a cron trigger every five minutes reads the subscriptions, and for each whose local time has reached its time and hasn't had today's verse, sends one push. At most 40 a run, inside the free plan's 50 outbound requests; more than that in one five-minute window waits for the next run. A push service answering 404/410 means the subscription is gone and the row is deleted; any other failure waits until tomorrow.
+- **The verse** is the same as Today's: `worker/daily-verses.json` is the app's own shuffled list with BSB text (public domain), made by `npx tsx --tsconfig tsconfig.app.json scripts/build-daily-verses.ts`. Rebuild it whenever `dailyVerses.ts` changes; `tests/webpush.test.ts` checks the two agree.
+- **Push** (`worker/webpush.ts`): VAPID (RFC 8292) and aes128gcm encryption (RFC 8291) with WebCrypto, no dependency. The Worker makes its own VAPID keys on first use and keeps them in its database, so no key is ever copied by hand.
+- **Storage:** Cloudflare D1, one database per Worker: `lampstand-push` (live) and `lampstand-push-staging`, bound as `PUSH_DB` in `wrangler.jsonc`. Tables are created on first use. Free plan; nothing here needs a paid one.
+- **Phone side:** `public/reminder-sw.js` shows the push and opens Today when tapped.
+- **Privacy:** `/privacy` explains what is kept and how it is deleted.

@@ -7,14 +7,24 @@
     "directory": "./dist",
     "binding": "ASSETS",
     "not_found_handling": "single-page-application",
-    // Shared links get their preview tags from the Worker (worker/share.ts).
-    "run_worker_first": ["/", "/v/*"],
+    // The Worker answers /api/* and gives shared links their preview tags (worker/share.ts).
+    "run_worker_first": ["/", "/v/*", "/api/*"],
   },
   "observability": {
     "enabled": true,
     "logs": { "enabled": true, "head_sampling_rate": 1 },
     "traces": { "enabled": true, "head_sampling_rate": 0.01 },
   },
+  // The verse of the day at 8:00 (docs/SHARING-AND-DAILY-VERSE.md): push subscriptions and this
+  // Worker's own push keys, and a run every five minutes to send whoever's morning it is.
+  "d1_databases": [
+    {
+      "binding": "PUSH_DB",
+      "database_name": "lampstand-push",
+      "database_id": "b3a5fe0b-a0b5-49d3-ad43-e207e9ca744b",
+    },
+  ],
+  "triggers": { "crons": ["*/5 * * * *"] },
   // Two deployments (docs/PUBLISH-LIVE.md): the live site above deploys from `main`; the
   // staging site deploys from `staging` with `npx wrangler deploy --env staging`. It needs its
   // own NLT_API_KEY secret (secrets aren't shared between Workers).
@@ -25,14 +35,23 @@
         "directory": "./dist",
         "binding": "ASSETS",
         "not_found_handling": "single-page-application",
-        // Shared links get their preview tags from the Worker (worker/share.ts).
-        "run_worker_first": ["/", "/v/*"],
+        // The Worker answers /api/* and gives shared links their preview tags (worker/share.ts).
+        "run_worker_first": ["/", "/v/*", "/api/*"],
       },
       "observability": {
         "enabled": true,
         "logs": { "enabled": true, "head_sampling_rate": 1 },
         "traces": { "enabled": true, "head_sampling_rate": 0.01 },
       },
+      // Its own database, so staging subscriptions and keys never touch the live ones.
+      "d1_databases": [
+        {
+          "binding": "PUSH_DB",
+          "database_name": "lampstand-push-staging",
+          "database_id": "ecd0f06b-8b1b-4df4-a2bb-3787e115862c",
+        },
+      ],
+      "triggers": { "crons": ["*/5 * * * *"] },
     },
   },
 }

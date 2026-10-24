@@ -94,6 +94,11 @@ export interface RemindersState {
   lastNotified: string | null;
   /** Optional second reminder for a chosen reading time. Missing in older saved settings. */
   reading?: { enabled: boolean; time: string; lastNotified: string | null };
+  /**
+   * The verse of the day as a push notification, sent by the Lampstand Worker at this local time
+   * (docs/SHARING-AND-DAILY-VERSE.md). Missing in older saved settings.
+   */
+  dailyVerse?: { enabled: boolean; time: string };
 }
 
 export interface TipsState {

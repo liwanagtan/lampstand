@@ -20,9 +20,9 @@ export function PublicInfoPage() {
         <h2>Your reading data</h2>
         <p>
           Your name, faith journey choices, reading progress, journal entries, notes, highlights,
-          bookmarks, preferences and slides are stored in this browser on this device.
-          Without an account, nothing leaves the device. Anyone who can access this browser profile
-          may be able to access that data.
+          bookmarks, preferences and slides are stored in this browser on this device. Without an
+          account, none of it leaves the device. Anyone who can access this browser profile may be
+          able to access that data.
         </p>
         <p>
           Profile → Settings → Data lets you export a backup and import it on another device. A
@@ -43,11 +43,11 @@ export function PublicInfoPage() {
               While you are signed in, your profile name and faith journey, plan progress, journal
               entries, notes, highlights, bookmarks, preferences and the place you were reading are
               copied to Lampstand’s account database so they appear on your other devices. It is run
-              by Supabase on Lampstand’s behalf. Bible text, slides, pictures and reminder
-              times stay on each device. Records are sent over an encrypted connection and each
-              account can read only its own records, but they are not encrypted on your device
-              first, so the people who run Lampstand could technically read them. They do not look
-              at them except to fix a problem you report.
+              by Supabase on Lampstand’s behalf. Bible text, slides, pictures and reminder times
+              stay on each device. Records are sent over an encrypted connection and each account
+              can read only its own records, but they are not encrypted on your device first, so the
+              people who run Lampstand could technically read them. They do not look at them except
+              to fix a problem you report.
             </p>
             <p>
               Profile → Settings → Account lets you export a copy and delete your account. Deleting
@@ -57,6 +57,25 @@ export function PublicInfoPage() {
             </p>
           </>
         )}
+
+        {/* docs/SHARING-AND-DAILY-VERSE.md */}
+        <h2>Verse of the day notifications</h2>
+        <p>
+          If you turn on Verse of the day in Profile → Settings → Reminders, Lampstand keeps three
+          things on its server so it can send the notification while the app is closed: the push
+          address your browser gives it, your time zone and the time you chose. It keeps nothing
+          else about you, not your name or anything you read or write. The notification is delivered
+          by your browser’s push service (Google, Apple, Mozilla or Microsoft). Turning it off
+          deletes that record straight away, and a record your browser stops accepting is deleted
+          too.
+        </p>
+
+        <h2>Sharing</h2>
+        <p>
+          Share Lampstand and Share on the verse of the day use your phone’s own share sheet, or
+          copy the words where there isn’t one. A shared link says nothing about who shared it, and
+          Lampstand doesn’t record that you shared.
+        </p>
 
         <h2>Usage counts</h2>
         <p>
